@@ -1,0 +1,72 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.3",
+  "scenario_id": "monday-003",
+  "scenario_prompt_sha256": "aaf788f309d955d2b427c86fe7d95d2bbf88575fde7306adcfd74b0ec4a4103f",
+  "run_id": "monday-003__qwen3.8-flash__006",
+  "run_number": 6,
+  "model": {
+    "slug": "qwen3.8-flash",
+    "display_name": "Qwen 3.8 Flash",
+    "provider": "nan",
+    "model_id": "qwen3.8-flash"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 32000,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+    "extra_body": {
+      "caching": false
+    },
+    "config_sha256": "d4f97685c20e88bf1d656b87ed460f5c3c8e942fe30033f96123eeebea161b9b"
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "NOT_DELIVERED",
+    "tokens": 0,
+    "evidence": null,
+    "stream_observed": false,
+    "stream_event_count": 0
+  },
+  "timestamp_utc": "2026-08-28T20:37:02Z",
+  "usage": {
+    "input_tokens": 3755,
+    "output_tokens": 1697,
+    "reasoning_tokens": 0
+  },
+  "performance": {
+    "ttft_ms": 2708.7,
+    "ttfa_ms": 2708.7,
+    "total_latency_ms": 17316.6,
+    "tokens_per_second": 116.2
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "Here is the execution plan based on the provided data.\n\n### 1. CRITICAL PATH\nThe **Enterprise SSO** delivery to Atlas (Wednesday EOD) is the longest chain and determines the week's success. It relies entirely on Marcus, who has a hard blockage until Elena finishes her work.\n\n**Sequence:**\n1.  **Elena:** Billing Schema Migration (3h) — *Must start immediately.*\n2.  **Marcus:** SSO API Compatibility Patch (4h) — *Blocked by Step 1.*\n3.  **QA:** SSO Regression (2h) — *Blocked by Step 2.*\n4.  **Marcus:** SSO Production Rollout (1h) — *Blocked by Step 3.*\n\n*Note: The Contoso Compliance Export (Tuesday 16:00 CET deadline) is a parallel critical path but shorter. It requires: Daniel/Marcus Permission Fix (after Elena's migration) -> Julia Export Generation.*\n\n### 2. MY PLAN FOR TODAY (Monday)\n\n**09:10 – 09:30 | Unblock & Delegate**\n*   **Action:** Confirm with Elena that she starts the **Billing Schema Migration** immediately. This is the single biggest bottleneck for both SSO and Contoso fixes.\n*   **Action:** Reassign **Contoso Permission Patch** from Marcus to **Daniel**.\n    *   *Reasoning:* Marcus is the sole owner of the SSO compatibility patch (critical path). He cannot context-switch effectively between SSO and Contoso if he also has to do the permission fix. Daniel estimated 3.5h + 0.5h walk-through. If Daniel takes this, Marcus can focus purely on SSO once Elena finishes.\n    *   *Instruction:* Tell Daniel to sync with Marcus for the 30-min walk-through *while* Elena is working, or immediately after Elena finishes if Marcus is busy. Ideally, Daniel starts the code work as soon as Elena's schema lands.\n*   **Action:** Instruct **Julia** to begin the **Contoso Export Formatter** (2h). This is independent of the permission fix and needed for the Tuesday demo.\n\n**09:30 – 12:30 | Execution Window**\n*   **Elena:** Completes Billing Schema Migration (3h).\n*   **Julia:** Completes Contoso Export Formatter (2h).\n*   **Sarah:** Builds Pricing Page (3h) and prepares Packaging Approval Pack (1.5h). *Goal: Submit approval pack before 12:00 so Priya’s committee clears it today.*\n*   **Daniel:** Starts Contoso Permission Patch (if Marcus walks him through early) OR waits for Elena. *Optimal: Daniel does the 30-min walk-through with Marcus now, then starts coding as soon as Elena commits the schema.*\n\n**12:30 – 17:30 | Critical Path Acceleration**\n*   **Elena:** Kicks off Billing Backfill (automated, 90 mins). Transfers production permissions/runbook to Daniel (30 mins) *before* leaving Wednesday? No, she is here today. Do this handover today to de-risk Wednesday.\n*   **Marcus:** Once Elena’s schema is live (~12:30), Marcus starts **SSO API Compatibility Patch** (4h). Target finish: ~16:30.\n*   **Daniel:** Once Elena’s schema is live, Daniel executes **Contoso Permission Patch** (3.5h). Target finish: ~16:00.\n*   **QA:** Ready to pick up SSO regression tomorrow morning.\n\n**End of Day Check-in:**\n*   Verify SSO Compatibility Patch is complete.\n*   Verify Contoso Permission Patch is complete.\n*   Confirm Sarah submitted pricing approval pack.\n\n### 3. PARALLEL WORK\nThese items do not depend on the billing/SSO chain and should proceed independently:\n\n1.  **Onboarding Launch:** Julia owns launch support. Instrumentation is *not* a blocker (per Friday Slack). Julia can manage launch prep while doing Contoso formatting.\n2.  **Pricing Page & Approval:** Sarah builds page and submits pack. Independent of engineering.\n3.  **Board Pack (Non-Revenue):** Sarah works on narrative/customer sections. Independent.\n4.  **Contoso Demo Formatting:** Julia’s 2-hour task. Independent of the permission bug.\n\n### 4. BLOCKERS & DEPENDENCIES\n\n| Item | Blocker | Dependency Owner | Status / Action |\n| :--- | :--- | :--- | :--- |\n| **SSO Compat Patch** | Billing Schema Migration | Elena | **Critical.** Must land today. |\n| **Contoso Perm Fix** | Billing Schema Migration | Elena | **Critical.** Same dependency as SSO. |\n| **SSO Regression** | SSO Compat Patch | Marcus | QA slot open; ready when Marcus finishes. |\n| **Contoso Export** | Contoso Perm Fix | Daniel/Marcus | Julia generates file only after fix is deployed. |\n| **Board Revenue Charts** | Billing Backfill | Elena/Auto | Automated process; Sarah waits for completion. |\n| **Security Review** | None (Approved Scope) | Maya | **Resolved.** Email confirms no re-review needed for config/permission fixes within approved scope. Remove \"Outstanding\" flag. |\n\n### 5. EARLIEST DELIVERY\n\n*   **Contoso Compliance Export (Hard Deadline Tue 16:00 CET):**\n    *   Elena finishes schema: Mon ~12:30.\n    *   Daniel finishes perm fix: Mon ~16:00 (assuming immediate start post-schema).\n    *   Julia generates/sends export: Mon ~17:00.\n    *   **Status:** **Safe.** Delivered Monday evening, well before Tuesday deadline.\n\n*   **Enterprise SSO (Target Wed EOD):**\n    *   Elena finishes schema: Mon ~12:30.\n    *   Marcus finishes compat patch: Mon ~16:30.\n    *   QA finishes regression: Tue ~10:30 (Assuming QA starts first thing Tue).\n    *   Marcus rollout: Tue ~11:30.\n    *   **Status:** **Safe.** Delivered Tuesday afternoon, ahead of Wednesday commitment.\n\n*   **Pricing Page Public:**\n    *   Sarah submits pack Mon <12:00.\n    *   Priya approves Mon <12:00 (same day rule).\n    *   Sarah publishes page Mon/Tue.\n    *   **Status:** **Safe.**\n\n### 6. RISKS / UNKNOWNS\n\n1.  **Marcus’s Availability on Tuesday:** Marcus is in a session 09:00–13:00 Tuesday. If QA finds bugs in the SSO regression on Tuesday morning, Marcus cannot fix them until 13:00. This could push rollout to Wednesday morning. *Mitigation:* Ensure QA starts testing immediately upon receiving the build late Monday or very early Tuesday.\n2.  **Daniel’s Competence on Account Mapping:** Daniel hasn't been in the account-mapping layer since the spike. While he knows the SCIM permission model, the underlying mapping logic is new to him. If he hits unexpected complexity in the Contoso fix, it could delay the Tuesday export. *Mitigation:* Marcus must provide high-quality walkthrough today.\n3.  **Stale Task List:** The task list lists \"Product — unblock Security review.\" This is already done per Maya’s email. Ensure this doesn't distract anyone.\n4.  **Elena’s Departure:** Elena leaves Wednesday noon. If the Billing Backfill fails or requires manual intervention on Wednesday morning, she might be unavailable. *Mitigation:* Run backfill test on staging today/tomorrow to ensure automation works.",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "chatcmpl-25ecda07-aa13-99af-b174-94e5079748d2",
+    "raw_usage": {
+      "completion_tokens": 1697,
+      "prompt_tokens": 3755,
+      "total_tokens": 5452,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "text_tokens": 3755
+      }
+    }
+  }
+}

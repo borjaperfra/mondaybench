@@ -1,0 +1,71 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.3",
+  "scenario_id": "monday-003",
+  "scenario_prompt_sha256": "aaf788f309d955d2b427c86fe7d95d2bbf88575fde7306adcfd74b0ec4a4103f",
+  "run_id": "monday-003__qwen3.6__003",
+  "run_number": 3,
+  "model": {
+    "slug": "qwen3.6",
+    "display_name": "Qwen 3.6",
+    "provider": "helmcode",
+    "model_id": "qwen3.6"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 32000,
+    "reasoning_enabled": false,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": false,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+    "extra_body": {
+      "caching": false
+    },
+    "config_sha256": "c419b51a94573fd71bafd55325d40bb947140dacf70df3b9b573dd39149308fe"
+  },
+  "reasoning": {
+    "requested": false,
+    "status": "NOT_REQUESTED",
+    "tokens": 0,
+    "evidence": null,
+    "stream_observed": false,
+    "stream_event_count": 0
+  },
+  "timestamp_utc": "2026-08-28T19:48:37Z",
+  "usage": {
+    "input_tokens": 3755,
+    "output_tokens": 2052,
+    "reasoning_tokens": 0
+  },
+  "performance": {
+    "ttft_ms": 626.1,
+    "ttfa_ms": 626.1,
+    "total_latency_ms": 19104.5,
+    "tokens_per_second": 111.0
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "### 1. CRITICAL PATH\n\nThe week’s most fragile commitment is **Enterprise SSO for Atlas (Wednesday EOD)**. This path is blocked by Elena’s availability and Marcus’s schedule.\n\n1.  **Monday AM:** Elena completes Billing Schema Migration (3h).\n2.  **Monday Late AM/Early PM:** Marcus performs Compatibility Patch (4h). *Depends on #1.*\n3.  **Monday PM:** QA Regression (2h). *Depends on #2.*\n4.  **Monday EOD / Tuesday AM:** Marcus performs Production Rollout (1h). *Depends on #3.*\n    *   *Note:* Marcus is blocked Tuesday 09:00–13:00. If QA finishes late Monday, rollout must happen Monday EOD or Tuesday post-13:00. Given the \"Wednesday EOD\" deadline, Monday completion is ideal, but Tuesday 13:00+ is the hard fallback.\n\n**Secondary Critical Path: Contoso Compliance Export (Tuesday 16:00 CET)**\n1.  **Monday:** Fix permission check (Daniel, 3.5h + 0.5h sync with Marcus). *Depends on Marcus being available for sync.*\n2.  **Monday PM / Tuesday AM:** Julia produces/export file (1h). *Depends on #1.*\n3.  **Tuesday 16:00 CET:** Delivery.\n\n### 2. MY PLAN FOR TODAY (Monday)\n\n**09:10 – 09:40: Immediate Unblocking & Delegation**\n*   **Action:** Email/Slack Daniel. Confirm he is taking the `contoso_permission_patch`.\n*   **Action:** Slack Marcus. Confirm he is free for a 30-min sync with Daniel *today* (before 13:00 or after 17:30? No, Marcus is available 09:00-17:30 Monday. Daniel needs 3.5h. Marcus needs 0.5h sync. Best to sync early or late).\n*   **Action:** Slack Elena. Confirm she is starting the billing migration immediately. Ask her to block 30 mins with Daniel *today* to transfer permissions/runbook if Daniel is to be the backup, though Elena is doing it herself. *Correction:* Elena is doing it. She just needs to ensure Daniel *can* if she gets stuck. She said \"Daniel can take over... I need 30 mins with him.\" She should do this sync **today** to de-risk her Wednesday absence.\n\n**09:40 – 12:40: Deep Work / Coordination**\n*   **Focus:** Monitor Elena’s migration. It’s 3 hours.\n*   **Focus:** Sync with Marcus. He has 4 hours for the SSO patch *after* the migration. He also has the Contoso permission sync with Daniel.\n    *   *Constraint Check:* Marcus is needed for the Contoso sync (0.5h) and the SSO patch (4h). Total 4.5h.\n    *   *Timeline:* Elena finishes migration ~12:30-13:30. Marcus can start patch ~13:30.\n    *   *Contoso Sync:* Daniel needs 3.5h. If Marcus syncs with Daniel at 09:30, Daniel can work 10:00-13:30. This works.\n\n**13:30 – 17:30: Execution Oversight**\n*   **Marcus:** Starts SSO Compatibility Patch (4h). Should finish ~17:30.\n*   **QA:** Ready to start regression immediately after Marcus finishes.\n*   **Julia:** Start `contoso_export_formatter` (2h) in parallel. This is low risk and independent.\n*   **Sarah:** Continue `board_pack_non_revenue`.\n*   **Daniel:** Finish `contoso_permission_patch` (3.5h).\n\n**End of Day Actions:**\n*   Ensure Marcus hands off code to QA by 17:30.\n*   Confirm with Daniel that the permission patch is ready for testing/Julia’s use.\n*   Confirm with Elena that the migration is landed and backfill is scheduled/running.\n\n### 3. PARALLEL WORK\n\n*   **Julia:** `contoso_export_formatter` (2h). Independent of Contoso permission fix (formatting is client-side or separate logic, and she wrote the exporter). Can start immediately.\n*   **Sarah:** `board_pack_non_revenue` (4h). Independent of billing migration.\n*   **Sarah:** `packaging_approval_pack` (1.5h). Independent.\n*   **Sarah:** `pricing_page` (3h). Independent.\n*   **Daniel:** `contoso_permission_patch` (3.5h). Independent of SSO work, but requires Marcus sync.\n\n### 4. BLOCKERS & DEPENDENCIES\n\n*   **Blocker 1 (SSO):** Marcus cannot start the 4-hour compatibility patch until Elena’s billing schema migration lands.\n    *   *Mitigation:* Elena must start immediately. Marcus must wait.\n*   **Blocker 2 (SSO Rollout):** Marcus is unavailable Tuesday 09:00-13:00.\n    *   *Mitigation:* QA must complete regression by Monday EOD so Marcus can rollout Monday EOD, OR QA must complete by Tuesday 12:30 so Marcus can rollout Tuesday 13:00+. Given QA takes 2h, if Marcus finishes patch at 17:30 Monday, QA finishes 19:30 Monday (overtime) or Tuesday 09:00. If Tuesday 09:00, Marcus can rollout at 13:00. This is tight but feasible.\n*   **Blocker 3 (Contoso):** Daniel needs Marcus for a 30-min sync to understand the delegated-admin path.\n    *   *Mitigation:* Schedule this sync first thing Monday morning.\n*   **Dependency (Board Pack):** `board_pack_revenue` (2h) is blocked by Elena’s billing migration and backfill.\n    *   *Mitigation:* Sarah can do all other work. Revenue charts are the last step.\n\n### 5. EARLIEST DELIVERY\n\n*   **Enterprise SSO (Atlas):** **Tuesday 13:30 CET** (if QA starts Tuesday 09:00 and finishes 11:00, Marcus rolls out 13:00-14:00).\n    *   *Optimistic:* **Monday 18:00 CET** (if QA works late Monday or Marcus finishes patch early).\n    *   *Realistic:* **Tuesday 14:00 CET**.\n*   **Contoso Compliance Export:** **Tuesday 12:00 CET** (Daniel finishes patch Monday PM, Julia produces file Monday PM/Tuesday AM). Well before 16:00 CET deadline.\n*   **Contoso Export Format Fix:** **Monday EOD** (Julia can do this anytime).\n\n### 6. RISKS / UNKNOWNS\n\n*   **Security Review Status:** The task list says \"Product — unblock Security review for Enterprise SSO\" is Urgent. The Slack thread says \"Review closed. Approved... Re-review required only if auth flow changes.\" The meeting notes say \"Security review is still listed as outstanding.\"\n    *   *Risk:* There is a discrepancy. If the \"outstanding\" status is a bureaucratic hold, it could block deployment even if the code is ready.\n    *   *Action:* You must clarify this immediately. Is it a technical block or a checkbox? If it's a checkbox, you need to mark it done. If it's a technical block, you need to know why.\n*   **Marcus’s Bandwidth:** Marcus has:\n    1.  SSO Compatibility Patch (4h)\n    2.  SSO Rollout (1h)\n    3.  Contoso Permission Sync (0.5h)\n    4.  Onboarding Launch Support (2h) - *Wait, Julia said \"Launch support moves from Marcus to Julia with immediate effect.\"* So this is done.\n    5.  Onboarding Instrumentation (3h) - *Task list says \"Marcus — finish onboarding instrumentation before launch\". Slack says \"Noted... I have three hours held for it.\"*\n    *   *Conflict:* Slack says instrumentation is *not* a launch blocker and can ship afterwards. Task list says it's Urgent.\n    *   *Risk:* Marcus might try to do instrumentation (3h) + SSO patch (4h) + Contoso sync (0.5h) = 7.5h. He only has ~8h. This leaves no buffer for the SSO patch if the migration is late.\n    *   *Action:* Explicitly tell Marcus: **Drop onboarding instrumentation this week.** It is not a launch blocker. Focus 100% on SSO and Contoso.\n*   **Elena’s Wednesday Absence:** If the billing migration slips past Monday, Elena is gone Wednesday noon. Daniel is the backup.\n    *   *Risk:* Daniel doesn't have permissions. Elena must transfer them.\n    *   *Action:* Ensure the 30-min sync between Elena and Daniel happens Monday.",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "chatcmpl-974f1ff0affdc967",
+    "raw_usage": {
+      "completion_tokens": 2052,
+      "prompt_tokens": 3755,
+      "total_tokens": 5807,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 2096
+      }
+    }
+  }
+}

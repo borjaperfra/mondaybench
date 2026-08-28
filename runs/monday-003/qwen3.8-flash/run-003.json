@@ -1,0 +1,72 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.3",
+  "scenario_id": "monday-003",
+  "scenario_prompt_sha256": "aaf788f309d955d2b427c86fe7d95d2bbf88575fde7306adcfd74b0ec4a4103f",
+  "run_id": "monday-003__qwen3.8-flash__003",
+  "run_number": 3,
+  "model": {
+    "slug": "qwen3.8-flash",
+    "display_name": "Qwen 3.8 Flash",
+    "provider": "nan",
+    "model_id": "qwen3.8-flash"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 32000,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+    "extra_body": {
+      "caching": false
+    },
+    "config_sha256": "d4f97685c20e88bf1d656b87ed460f5c3c8e942fe30033f96123eeebea161b9b"
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "NOT_DELIVERED",
+    "tokens": 0,
+    "evidence": null,
+    "stream_observed": false,
+    "stream_event_count": 0
+  },
+  "timestamp_utc": "2026-08-28T20:28:37Z",
+  "usage": {
+    "input_tokens": 3755,
+    "output_tokens": 1685,
+    "reasoning_tokens": 0
+  },
+  "performance": {
+    "ttft_ms": 2111.3,
+    "ttfa_ms": 2111.3,
+    "total_latency_ms": 16803.6,
+    "tokens_per_second": 114.7
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "# Northstar Execution Plan — Week of Sept 21\n\n## 1. CRITICAL PATH\nThe **Enterprise SSO** delivery to Atlas is the longest dependency chain and determines the week's primary commitment (Wednesday EOD). The path is:\n`Billing Schema Migration (Elena)` → `SSO API Compatibility Patch (Marcus)` → `SSO Regression (QA)` → `SSO Production Rollout (Marcus)`.\n\n*Note:* The **Contoso Compliance Export** has a hard deadline of Tuesday 16:00 CET but runs on a parallel track that only intersects with the critical path at the *start* (both require Elena’s schema migration to land first, as Marcus confirmed the permission patch sits on the same account-mapping layer).\n\n## 2. MY PLAN FOR TODAY (Monday)\n\n| Time | Action | Owner | Context/Dependency |\n| :--- | :--- | :--- | :--- |\n| **09:15** | **Kick off Billing Schema Migration.** Confirm Elena starts immediately. This unblocks both Marcus (SSO & Contoso) and Sarah (Board Pack revenue charts). | Elena | Critical Path Start. Must finish by ~12:30 to allow Marcus afternoon work. |\n| **09:15** | **Unblock Contoso Permission Patch.** Assign Daniel to pair with Marcus for the delegated-admin logic review (30 mins), then Daniel executes the fix (3.5 hrs). *Reasoning:* Marcus is bottlenecked; Daniel knows the SCIM model. This must happen *after* Elena’s migration lands. | Daniel / Marcus | Depends on Elena finishing migration. Target completion: Today EOD. |\n| **10:00** | **Start Contoso Export Formatter.** Julia begins the date format change (2 hrs). This is independent of the permission fix but required for the Tuesday demo. | Julia | Independent task. |\n| **11:00** | **Prepare Packaging Approval Pack.** Sarah builds the mockups/screenshots and margin summary. Submit to Priya before 12:00 if possible, or first thing Tuesday. | Sarah | Needs pricing page visuals (can use mocks per Priya's email). |\n| **13:00** | **Handover for Onboarding Launch.** Julia takes over launch support from Marcus. Marcus drops \"Onboarding Instrumentation\" from his immediate priority list (it is not a launch blocker). | Julia / Marcus | Frees Marcus for SSO work. |\n| **14:00** | **Begin SSO API Compatibility Patch.** Marcus starts the 4-hour patch. *Prerequisite:* Elena’s migration must be live. If Elena slips past 13:00, this delays Wednesday rollout. | Marcus | Critical Path Step 2. |\n| **17:00** | **Review Security Status.** Confirm with Noah/Marcus that the \"Security Review Outstanding\" flag in tasks is stale. Maya’s email confirms approval for current scope. Update tracker. | Noah | Removes false blocker. |\n\n## 3. PARALLEL WORK\n*   **Julia:** Can complete the **Contoso Export Formatter** (date strings) today while waiting for the permission patch to deploy. She can also prepare the final export file generation script once the permission patch is merged.\n*   **Sarah:** Can build the **Pricing Page** (3 hrs) and **Non-Revenue Board Sections** (4 hrs) entirely independently of engineering dependencies.\n*   **Daniel:** Once the **Contoso Permission Patch** is done, he can assist with QA regression testing if needed, though Sam/QA are likely sufficient.\n*   **Onboarding:** Julia handles launch monitoring; no engineering time required until post-launch instrumentation.\n\n## 4. BLOCKERS & DEPENDENCIES\n\n| Blocker | Impact | Resolution |\n| :--- | :--- | :--- |\n| **Stale Task List** | Tasks show \"Security Review\" as outstanding and \"Onboarding Instrumentation\" as urgent. | **Action:** Mark Security as Approved (per Maya’s email). Demote Onboarding Instrumentation to \"Post-Launch.\" |\n| **Marcus’s Availability** | Marcus is unavailable Tue 09:00–13:00 (Atlas Session). He is the sole owner of the SSO compatibility patch. | **Risk:** If Elena’s migration slips past Mon 13:00, Marcus cannot start the 4-hour patch until Wed morning, jeopardizing the Wed EOD deadline. **Mitigation:** Ensure Elena finishes migration by Mon 12:30. |\n| **Elena’s Departure** | Elena leaves Wed 12:00. Backfill takes 90 mins. | **Constraint:** Migration + Backfill must start by Wed 10:30 at latest to finish before she leaves. Ideally, do it Monday/Tuesday to free up her handover time for Daniel. |\n| **Contoso Deadline** | Hard deadline Tue 16:00 CET for compliance export. | **Dependency:** Requires `contoso_permission_patch` (Daniel/Marcus) AND `contoso_export_formatter` (Julia). Both must merge by Tue 12:00 to allow 1 hr for Julia to generate/send file. |\n\n## 5. EARLIEST DELIVERY\n\n*   **Contoso Compliance Export:** **Tuesday 14:00.**\n    *   *Logic:* Migration (Mon AM) → Permission Patch (Mon PM) → Merge/Test (Tue AM) → Format Fix (Mon/Tue) → Generate File (Tue 13:00-14:00). Safe buffer before 16:00 deadline.\n*   **Enterprise SSO (Atlas):** **Wednesday 17:00.**\n    *   *Logic:* Migration (Mon 09:00-12:00) → Compat Patch (Mon 13:00-17:00) → Regression (Tue 09:00-11:00) → Rollout (Wed 09:00-10:00).\n    *   *Note:* This assumes Marcus works on the patch Monday afternoon. If he waits until Wednesday due to the Tuesday session, the deadline is missed. **Monday execution is mandatory.**\n*   **Pricing Page Public:** **Thursday.**\n    *   *Logic:* Sarah builds page (Mon/Tue) → Submits pack (Tue AM) → Priya approves (Tue PM/Wed AM) → Deploy (Wed/Thu).\n*   **Board Pack Final:** **Friday 10:00.**\n    *   *Logic:* Revenue charts depend on Backfill completion (likely Tue/Wed). Sarah finalizes Thu/Fri.\n\n## 6. RISKS / UNKNOWNS\n\n1.  **Marcus’s Single Point of Failure:** Only Marcus understands the account-mapping rewrite branch. If he gets sick or the compatibility patch hits unexpected bugs, there is no backup. Elena noted nobody else has been inside it since the spike.\n2.  **Elena’s Handover Window:** If the billing migration encounters issues on Monday, Elena may need more than 3 hours. If she slips into Tuesday, her Wednesday 12:00 departure becomes a risk for the backfill/handover to Daniel.\n3.  **Contoso \"Broken\" Perception:** CEO views the export as \"broken.\" While technically just a format issue, the *permission* bug is real. If the permission patch fails validation, we miss the contractual deadline. Julia’s confirmation that \"both formats import correctly\" mitigates the format risk, but the permission risk remains high.\n4.  **Security Scope Creep:** Maya approved the *current* implementation. If Marcus’s compatibility patch changes the auth flow structure (even slightly), it might trigger a re-review. We must ensure the patch is strictly data-mapping, not auth-flow logic.",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "chatcmpl-a43eddf6-9c3a-9834-8925-7c4de096e52f",
+    "raw_usage": {
+      "completion_tokens": 1685,
+      "prompt_tokens": 3755,
+      "total_tokens": 5440,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "text_tokens": 3755
+      }
+    }
+  }
+}

@@ -1,0 +1,54 @@
+# MondayBench #003 "Blockers" - OFFICIAL evaluator. Frozen.
+#
+# Bound to scenario 0.3 / rubric 0.3. Nothing in the rubric or the answer key
+# changed between the final calibration and this file; only the id and the
+# status did. The three calibration evaluators are archived with the scenario
+# versions they were written for:
+#
+#   evaluator-opus5-v0.3-calibration     -> archive/monday-003-v0.1/
+#   evaluator-opus5-v0.3-calibration-2   -> archive/monday-003-v0.2/
+#   evaluator-opus5-v0.3-calibration-3   -> archive/monday-003-v0.3-calibration/
+#
+# Rubric 0.3 is shared with the last of those, so its verdict files would replay
+# against these runs without error and score the wrong text: they are keyed by
+# run id, and `monday-003__<model>__001` now names a different response. Official
+# runs are served only from `verdicts/monday-003/`.
+#
+# Same architecture as the other official evaluators: one judge call per atomic
+# criterion returning PASS/PARTIAL/FAIL with evidence, a separate penalty judge,
+# and deterministic scoring from those labels. The judge never sees a total.
+#
+# `provider: anthropic` / `model_id: claude-opus-5` record WHICH MODEL reasoned
+# about the responses, for provenance. They are not a routing instruction: this
+# project never calls the Anthropic API and never spends Anthropic API credits.
+# Labels are produced in a recorded Claude Code session and replayed with
+# `evaluate --verdicts`.
+#
+# Scenario-bound: `validate` refuses to pair this with anything but monday-003,
+# and refuses to run if the rubric or scenario on disk moves off 0.3.
+id: evaluator-opus5-v0.3
+scenario: monday-003
+scenario_version: "0.3"
+rubric_version: "0.3"
+rubric_file: rubric.yaml
+status: official
+
+judge:
+  provider: anthropic
+  api_style: anthropic
+  model_id: claude-opus-5
+  prompt_file: judge-prompt.md
+  penalty_prompt_file: penalty-judge-prompt.md
+
+generation:
+  temperature: 0
+  max_output_tokens: 0
+
+behavior:
+  require_evidence: true
+
+# monday-003 ships a structured answer key (ground-truth.yaml) carrying both
+# dependency graphs, the resource graph, the factual anchors and the canonical
+# schedule. There are no per-criterion dotted paths to slice, so the judge is
+# given the whole key.
+ground_truth_map: {}

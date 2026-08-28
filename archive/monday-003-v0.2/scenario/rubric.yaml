@@ -1,0 +1,140 @@
+rubric_version: "0.2"
+scenario_id: monday-003
+total_points: 100
+dimensions:
+
+  critical_path_and_dependencies:
+    max_points: 25
+    criteria:
+      - id: sso_chain
+        points: 8
+        partial_points: 4
+        pass: "Reconstructs billing schema migration -> API compatibility patch -> QA regression -> production rollout as one dependent sequence, and treats it as what sets the Atlas delivery date."
+        partial: "Most of the chain, with one link missing, one owner wrong, or the sequence left ambiguous."
+      - id: contoso_blocker_chain
+        points: 6
+        partial_points: 3
+        pass: "Identifies the tenant export permission fix as a prerequisite of the Q3 compliance export, and keeps the date-format work off that chain. Naming either the SSO chain or this one as the critical path is acceptable provided both are reconstructed."
+        partial: "Finds the permission problem but does not connect it to the compliance delivery, or entangles it with the formatting request."
+      - id: pricing_dependency
+        points: 5
+        partial_points: 2.5
+        pass: "States that packaging approval gates the public pricing page, and that the approval submission does not have to wait for the page because mockups are accepted."
+        partial: "Gets the approval gate or the mockup route, not both."
+      - id: security_state_stale
+        points: 3
+        partial_points: 1.5
+        pass: "Security approval is closed for the current scope; the task-list and checklist entries are out of date and no Security action is required."
+        partial: "Notes the approval but still treats Security as something to chase or confirm."
+      - id: board_dependency
+        points: 3
+        partial_points: 1.5
+        pass: "The board revenue section depends on the migration and the backfill that follows it, not on the migration alone."
+        partial: "Sees a billing dependency but omits the backfill or misstates what waits on it."
+
+  resource_allocation:
+    max_points: 25
+    criteria:
+      - id: scarce_resource_allocation
+        points: 10
+        partial_points: 5
+        pass: "Detects that Marcus is claimed by two valuable paths at once and resolves it: Daniel takes the Contoso permission fix with the half-hour walkthrough, or an equivalent allocation that satisfies both commitments while respecting the stated capabilities and durations, with a reason given for the choice."
+        partial: "Recognises the contention but resolves it incompletely - no owner chosen, the handoff ignored, or an allocation asserted without reasoning."
+      - id: marcus_reserved_for_sso
+        points: 6
+        partial_points: 3
+        pass: "Keeps Marcus on the compatibility patch and the rollout, on the stated grounds that this work has no substitute, and releases the instrumentation hours he is holding."
+        partial: "Frees Marcus from the instrumentation but does not protect his capacity for the work only he can do."
+      - id: formatter_ownership
+        points: 4
+        partial_points: 2
+        pass: "The date-format change goes to Julia and costs neither Marcus nor the compliance delivery."
+        partial: "Treats it as low priority but leaves the owner or the action unstated."
+      - id: elena_migration_fallback
+        points: 5
+        partial_points: 2.5
+        pass: "Schedules the migration on Monday and treats Daniel as a fallback that first needs the production permissions and the runbook transferred, before Elena leaves at Wednesday midday."
+        partial: "Mentions the Wednesday absence but misses the transfer, its deadline, or the fallback."
+
+  planning_and_parallelization:
+    max_points: 20
+    criteria:
+      - id: monday_plan
+        points: 7
+        partial_points: 3.5
+        pass: "Monday starts the migration first and puts the dependent engineering behind it, with the delegable work handed out in the same morning rather than queued."
+        partial: "A workable Monday that loses meaningful time or leaves the ordering unclear."
+      - id: concurrent_sso_and_contoso
+        points: 7
+        partial_points: 3.5
+        pass: "Runs the SSO chain and the Contoso compliance chain concurrently once the migration lands, so neither commitment waits on the other."
+        partial: "Serialises the two paths, or runs them concurrently without saying who does what."
+      - id: pricing_board_parallel
+        points: 6
+        partial_points: 3
+        pass: "The approval pack, the board narrative and the non-revenue charts all start now, independent of the engineering work."
+        partial: "Finds some of this parallelism but not most of it."
+
+  decision_quality:
+    max_points: 15
+    criteria:
+      - id: formatting_urgent_not_blocking
+        points: 5
+        partial_points: 2.5
+        pass: "The escalated broken-export report is a cosmetic date-format preference for a demo, and it is handled without displacing committed work."
+        partial: "Right conclusion, weak or unstated reasoning."
+      - id: contoso_compliance_is_urgent
+        points: 5
+        partial_points: 2.5
+        pass: "Treats the delegated-admin export failure as a real dated commitment in its own right and commits to the Tuesday 16:00 delivery."
+        partial: "Notices the permission failure but leaves it undated, unowned, or lumped in with the formatting request."
+      - id: stale_task_list_overridden
+        points: 5
+        partial_points: 2.5
+        pass: "Overrides the Friday task list against the newer evidence on at least three of its four stale entries."
+        partial: "Overrides some of it."
+
+  state_reconstruction:
+    max_points: 10
+    criteria:
+      - id: sso_state_reconstructed
+        points: 4
+        partial_points: 2
+        pass: "The engineering chain is still outstanding, Security is closed, and Wednesday EOD still stands."
+        partial: "Two of the three."
+      - id: onboarding_state_reconstructed
+        points: 3
+        partial_points: 1.5
+        pass: "Core flow is launch-ready, instrumentation is not required for it, and launch support now sits with Julia."
+        partial: "Partly right."
+      - id: contoso_state_separated
+        points: 3
+        partial_points: 1.5
+        pass: "Separates the two open Contoso items: the export runs and its format is a preference, while a distinct permission defect stops delegated admins entirely."
+        partial: "Describes one of the two accurately and the other not at all, or conflates them."
+
+  timing_and_uncertainty:
+    max_points: 5
+    criteria:
+      - id: earliest_feasible_delivery
+        points: 3
+        partial_points: 1.5
+        pass: "Gives an earliest SSO completion that its own plan supports: dependencies in order, the stated durations used, and the Tuesday-morning absence respected. Tuesday afternoon is canonical; anything earlier must come with a schedule that breaks neither a dependency nor an availability window."
+        partial: "Correct day and dependency order, but the timing ignores an availability constraint or is asserted with no schedule behind it."
+      - id: uncertainty_discipline
+        points: 2
+        partial_points: 1
+        pass: "Invents no approvals, owners, durations or blockers, and flags what genuinely cannot be settled from the sources."
+        partial: "One unsupported item, or an item flagged as a hypothesis and then relied on anyway."
+
+global_penalties:
+  max_penalty: 25
+  types:
+    - {id: material_hallucination, points_each: 5}
+    - {id: prohibited_or_wasteful_action, points_each: 7}
+    - {id: critical_path_violation, points_each: 7}
+    - {id: major_contradiction, points_each: 5}
+
+scoring:
+  result_values: {PASS: 1.0, PARTIAL: 0.5, FAIL: 0.0}
+  final_score: "max(0, base_score - penalties)"

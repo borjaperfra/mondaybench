@@ -1,0 +1,39 @@
+# MondayBench #003 "Blockers" - calibration evaluator, NOT frozen.
+#
+# Same architecture as the official evaluators: one judge call per atomic
+# criterion returning PASS/PARTIAL/FAIL with evidence, a separate penalty judge,
+# and deterministic scoring from those labels. The judge never sees a total.
+#
+# `provider: anthropic` / `model_id: claude-opus-5` record WHICH MODEL reasoned
+# about the responses, for provenance. They are not a routing instruction: this
+# project never calls the Anthropic API and never spends Anthropic API credits.
+# Labels are produced in a recorded Claude Code session and replayed with
+# `evaluate --verdicts`.
+#
+# Scenario-bound: `validate` refuses to pair this with anything but monday-003,
+# and refuses to run if the rubric or scenario on disk moves off 0.1.
+id: evaluator-opus5-v0.3-calibration
+scenario: monday-003
+scenario_version: "0.1"
+rubric_version: "0.1"
+rubric_file: rubric.yaml
+status: calibration
+
+judge:
+  provider: anthropic
+  api_style: anthropic
+  model_id: claude-opus-5
+  prompt_file: judge-prompt.md
+  penalty_prompt_file: penalty-judge-prompt.md
+
+generation:
+  temperature: 0
+  max_output_tokens: 0
+
+behavior:
+  require_evidence: true
+
+# monday-003 ships a structured answer key (ground-truth.yaml) carrying the
+# dependency graph and the canonical schedule. There are no per-criterion dotted
+# paths to slice, so the judge is given the whole key.
+ground_truth_map: {}

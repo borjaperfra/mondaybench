@@ -88,10 +88,21 @@ class Rubric:
 
 
 # The rubric names penalty kinds in snake_case; the judge returns SCREAMING_CASE.
+# A rubric may name a penalty in its own terms; the stored type stays one of the
+# four shared ones so a penalty means the same thing across scenarios. Adding a
+# near-duplicate type per scenario is how a shared vocabulary stops being one -
+# the same mistake the leaderboard renderer made with dimensions.
 PENALTY_KEY_TO_TYPE = {
     "material_hallucination": "MATERIAL_HALLUCINATION",
     "prohibited_action": "PROHIBITED_ACTION",
+    # monday-003 widens the definition to cover wasted effort as well as
+    # forbidden action, and weights it differently. Same class of failure:
+    # the response tells the user to do something the evidence rules out.
+    "prohibited_or_wasteful_action": "PROHIBITED_ACTION",
     "major_planning_error": "MAJOR_PLANNING_ERROR",
+    # monday-003's name for the same thing monday-002 calls a planning error:
+    # a recommended plan that cannot run under the stated dependencies.
+    "critical_path_violation": "MAJOR_PLANNING_ERROR",
     "major_contradiction": "MAJOR_CONTRADICTION",
 }
 NOISE_DIMENSION = "noise_resistance"

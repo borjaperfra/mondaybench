@@ -1,0 +1,71 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.3",
+  "scenario_id": "monday-003",
+  "scenario_prompt_sha256": "aaf788f309d955d2b427c86fe7d95d2bbf88575fde7306adcfd74b0ec4a4103f",
+  "run_id": "monday-003__qwen3.6__001",
+  "run_number": 1,
+  "model": {
+    "slug": "qwen3.6",
+    "display_name": "Qwen 3.6",
+    "provider": "helmcode",
+    "model_id": "qwen3.6"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 32000,
+    "reasoning_enabled": false,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": false,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+    "extra_body": {
+      "caching": false
+    },
+    "config_sha256": "c419b51a94573fd71bafd55325d40bb947140dacf70df3b9b573dd39149308fe"
+  },
+  "reasoning": {
+    "requested": false,
+    "status": "NOT_REQUESTED",
+    "tokens": 0,
+    "evidence": null,
+    "stream_observed": false,
+    "stream_event_count": 0
+  },
+  "timestamp_utc": "2026-08-28T19:48:03Z",
+  "usage": {
+    "input_tokens": 3755,
+    "output_tokens": 1744,
+    "reasoning_tokens": 0
+  },
+  "performance": {
+    "ttft_ms": 893.3,
+    "ttfa_ms": 893.3,
+    "total_latency_ms": 12450.1,
+    "tokens_per_second": 150.9
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "### 1. CRITICAL PATH\n\nThe week’s primary commitment is **Enterprise SSO for Atlas (Wednesday EOD)**. This path is blocked by Elena’s availability and Marcus’s specific code ownership.\n\n1.  **Monday:** Elena performs Billing Schema Migration (3h).\n2.  **Monday (Post-Migration):** Marcus performs SSO Compatibility Patch (4h). *Depends on #1.*\n3.  **Monday (Post-Patch):** QA performs Regression (2h). *Depends on #2.*\n4.  **Monday (Post-QA):** Marcus performs Production Rollout (1h). *Depends on #3.*\n    *   **Target:** Wednesday EOD is the external deadline, but this path clears by Monday EOD if unblocked.\n\n*Note: The Contoso Permission Patch is also on the critical path for Tuesday’s compliance deadline, but it is technically dependent on the same \"account-mapping layer\" that Elena’s migration lands. Marcus states it \"can only go in after that lands.\" Therefore, the Contoso fix is also on the Monday critical path.*\n\n### 2. MY PLAN FOR TODAY (Monday)\n\n**09:10 – 09:30 | Triage & Delegation**\n*   **Action:** Reassign `contoso_permission_patch` from Marcus to **Daniel**.\n    *   *Reasoning:* Marcus explicitly stated Daniel can take it (3.5h) and Daniel was in the relevant SCIM work. Marcus is needed for the SSO patch which is on the critical path for Atlas. Marcus still needs 2h to walk Daniel through the delegated-admin path.\n*   **Action:** Confirm with **Daniel** that he accepts the Contoso permission patch and will coordinate the 30-min handoff with Marcus.\n*   **Action:** Confirm with **Elena** that she is starting the Billing Schema Migration immediately.\n\n**09:30 – 12:30 | Enable Elena & Marcus (The Bottleneck)**\n*   **Action:** Support Elena through the Billing Schema Migration (3h). Ensure no interruptions.\n*   **Action:** Once Elena finishes, Marcus starts the SSO Compatibility Patch (4h).\n*   **Action:** Marcus performs the 30-min handoff to Daniel regarding the delegated-admin path (can overlap with Marcus’s patch work if Marcus is blocked, but likely sequential).\n\n**12:30 – 13:00 | Lunch / Admin**\n\n**13:00 – 17:30 | Unblocking & Parallel Work**\n*   **Action:** Monitor Marcus’s SSO Patch. If he finishes early, he can help Daniel with the Contoso patch, or QA can start early if Marcus provides a staging build.\n*   **Action:** **Julia** executes the Contoso Export Formatter fix (2h). This is independent of the backend permission patch and can be done in parallel.\n*   **Action:** **Sarah** continues Board Pack (non-revenue) and Pricing Page.\n*   **Action:** **Daniel** executes the Contoso Permission Patch (3.5h).\n*   **Action:** **QA** prepares regression suite.\n\n**17:30 | End of Day Check**\n*   Verify SSO Patch is merged and deployed to staging for QA.\n*   Verify Contoso Permission Patch is merged and deployed to staging.\n*   Verify Contoso Export Formatter is ready for testing.\n\n### 3. PARALLEL WORK\n\n*   **Contoso Export Formatter (Julia):** 2 hours. Independent of backend permission fixes. Can be done Monday.\n*   **Board Pack (Sarah):** Non-revenue sections (4h) and Pricing Page (3h). Independent of billing migration.\n*   **Packaging Approval Pack (Sarah):** 1.5 hours. Independent.\n*   **Onboarding Launch (Julia):** 2 hours. Marcus is no longer blocking this (Julia confirmed analytics are sufficient). Julia can own this Monday/Tuesday.\n*   **Daniel’s Contoso Permission Patch:** 3.5 hours. Runs in parallel with Marcus’s SSO Patch (after the 30-min handoff).\n\n### 4. BLOCKERS & DEPENDENCIES\n\n*   **Blocker 1: Elena’s Migration.** Marcus’s SSO patch and Daniel’s Contoso patch both depend on the \"account-mapping layer\" which is updated by Elena’s schema migration.\n    *   *Mitigation:* Elena must start immediately Monday morning. She is available until 12:00 Wednesday, but doing it Monday clears the path for the rest of the week.\n*   **Blocker 2: Marcus’s Time.** Marcus is the bottleneck for SSO Patch (4h) and Rollout (1h). He is also blocked on Contoso until the migration lands.\n    *   *Mitigation:* Delegate Contoso Permission Patch to Daniel. Marcus focuses solely on SSO.\n*   **Blocker 3: Security Review Status.** The Friday meeting notes listed Security Review as \"outstanding.\" The email from Maya (Friday 16:48) says \"Review closed. Approved... Re-review required only if auth flow changes.\"\n    *   *Mitigation:* Assume approved. If QA or Marcus encounters an issue that changes the auth flow, re-review is needed. Noah/Product must confirm with Maya if there is any ambiguity, but the email seems definitive.\n*   **Dependency: QA Slot.** Sam needs the completed compatibility patch before regression.\n    *   *Mitigation:* Marcus must deploy to staging ASAP after his patch is done.\n\n### 5. EARLIEST DELIVERY\n\n*   **Enterprise SSO (Atlas):** **Monday EOD.**\n    *   Elena (3h) + Marcus (4h) + QA (2h) + Rollout (1h) = 10 hours of focused work.\n    *   If Elena starts at 09:00, she finishes at 12:00.\n    *   Marcus starts at 12:00, finishes at 16:00.\n    *   QA starts at 16:00, finishes at 18:00 (or earlier if Marcus deploys early).\n    *   Rollout at 18:00+.\n    *   *Realistic:* Tuesday morning for full validation, but technically shippable Monday EOD.\n*   **Contoso Compliance Export:** **Tuesday 16:00 CET.**\n    *   Daniel (3.5h) + Marcus Handoff (0.5h) + Julia (1h for file generation) = 5 hours.\n    *   Can be completed Monday. Julia can generate the file Monday afternoon.\n*   **Onboarding Launch:** **Tuesday/Wednesday.**\n    *   Julia owns this. No blockers.\n\n### 6. RISKS / UNKNOWNS\n\n*   **Security Review Ambiguity:** Maya’s email says \"Review closed,\" but the Friday meeting notes said \"outstanding.\" If the SSO patch changes anything in the \"approved scope\" (account-mapping rewrite), it’s fine. If it touches the auth flow, it’s not. *Risk: Low, but needs confirmation if Marcus’s patch touches auth flow.*\n*   **Elena’s Migration Complexity:** Elena estimates 3 hours. If it takes longer, it delays Marcus and Daniel. *Risk: Medium. Elena is the single point of failure for the week’s critical path.*\n*   **Daniel’s Contoso Patch Complexity:** Daniel estimates 3.5 hours. He was in the SCIM work, but the permission model might have diverged. *Risk: Low-Medium.*\n*   **Marcus’s Availability:** Marcus has a technical session Tuesday 09:00-13:00. If the SSO patch or Contoso patch slips into Tuesday, Marcus is blocked for half the day. *Risk: High. Must complete all Marcus-dependent work Monday.*\n*   **Contoso Export Formatter:** Julia estimates 2 hours. If the date format change is more complex (e.g., locale dependencies), it could slip. *Risk: Low.*",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "chatcmpl-a25c746823dde003",
+    "raw_usage": {
+      "completion_tokens": 1744,
+      "prompt_tokens": 3755,
+      "total_tokens": 5499,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 2096
+      }
+    }
+  }
+}

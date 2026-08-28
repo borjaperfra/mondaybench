@@ -1,0 +1,73 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.3-draft",
+  "scenario_id": "monday-003",
+  "scenario_prompt_sha256": "efd837502f4174663c8904fb3e01089de3017ffaff9f154ff611d4bc5286f84e",
+  "run_id": "monday-003__qwen3.8-flash__003",
+  "run_number": 3,
+  "model": {
+    "slug": "qwen3.8-flash",
+    "display_name": "Qwen 3.8 Flash",
+    "provider": "nan",
+    "model_id": "qwen3.8-flash"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 32000,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+    "extra_body": {
+      "caching": false
+    },
+    "config_sha256": "d4f97685c20e88bf1d656b87ed460f5c3c8e942fe30033f96123eeebea161b9b"
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "DELIVERED",
+    "tokens": 11525,
+    "evidence": "explicit_reasoning_tokens",
+    "stream_observed": true,
+    "stream_event_count": 3379
+  },
+  "timestamp_utc": "2026-08-28T17:29:24Z",
+  "usage": {
+    "input_tokens": 2491,
+    "output_tokens": 13349,
+    "reasoning_tokens": 11525
+  },
+  "performance": {
+    "ttft_ms": 2123.9,
+    "ttfa_ms": 106747.1,
+    "total_latency_ms": 121375.4,
+    "tokens_per_second": 111.9
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "## 1. CRITICAL PATH\n\n**Primary critical path: Enterprise SSO for Atlas by Wednesday EOD**\n\n```text\nElena: billing schema migration (3h)\n  ↓\nMarcus: SSO API compatibility patch (4h)\n  ↓\nQA: SSO regression (2h)\n  ↓\nMarcus: SSO production rollout (1h)\n```\n\n**Total work after migration lands:** 7 focused hours.\n\n**What is NOT on the critical path:**\n\n- Security review — already approved.\n- Onboarding instrumentation — not required for launch.\n- Contoso export “broken” issue — not production-blocking; only formatting for Tuesday demo.\n- Pricing page — can be unblocked with mockups, not live-page screenshots.\n\n**Earliest independent important delivery:** Contoso formatting, Tuesday afternoon, but it does not block the main SSO delivery.\n\n---\n\n## 2. MY PLAN FOR TODAY\n\n**Monday 09:10 — Elena: start billing migration now**\n\n- Ask Elena to begin the billing schema migration immediately.\n- Protect her time until roughly **12:10**.\n- Ask her to ping Marcus and QA the moment it lands.\n- Ask her to confirm whether “backfill” is included in the 3 hours or needs separate time, because board revenue charts depend on it.\n\n**09:10 — Update tracker and remove stale blockers**\n\nClose or downgrade these:\n\n- “Unblock Security review” → done/approved.\n- “Finish onboarding instrumentation before launch” → not launch-blocking.\n- “Investigate broken Contoso exports” → not broken; date formatting only.\n- “Finish pricing page before packaging approval” → false dependency; mockups are acceptable.\n\n**09:15 — Marcus: free him for SSO**\n\n- Tell Marcus to stop treating onboarding instrumentation as a launch blocker.\n- Reserve **12:10–16:10** for the SSO compatibility patch, or start earlier if migration lands earlier.\n- Ask him to hand off to QA immediately after the patch is complete.\n\n**09:15 — QA: reserve regression time**\n\n- Ask QA to reserve:\n  - **Monday 16:10–17:30**\n  - **Tuesday 09:00–10:10**\n- QA can start regression only after the completed patch is delivered.\n- Ask QA to notify Marcus immediately after green light.\n\n**09:20 — Julia: fix Contoso formatting today**\n\n- Delegate the DD/MM/YYYY export formatter to Julia.\n- Target: complete today, well before Tuesday demo.\n- Update CEO/Noah: this is not a production import issue, but we will fix the formatting for the demo.\n\n**09:30 — Sarah: break the pricing circular dependency**\n\n- Ask Sarah to spend **1.5 hours** on pricing mockups today.\n- Send mockups to Daniel for internal packaging approval.\n- Do not require the live pricing page before approval.\n- After approval, Sarah can proceed with the public pricing page.\n\n**09:30 — Sarah: continue board pack non-revenue work**\n\n- Board narrative, customer sections, and non-revenue charts can proceed independently.\n- Final revenue charts must wait until billing migration/backfill data is clean.\n\n**09:30 — Stakeholder update**\n\nSend a short status:\n\n- Security is approved.\n- Enterprise SSO is blocked only by billing migration.\n- Onboarding can launch without new instrumentation.\n- Contoso is a formatting request, not a broken export.\n- Pricing approval can use mockups.\n- SSO remains on track for Tuesday if migration starts now.\n\n**12:10 — Checkpoint**\n\n- Confirm migration landed.\n- Confirm Marcus started patch.\n- If migration has not landed, escalate immediately and assess Daniel handover contingency.\n\n**16:10 — Checkpoint**\n\n- Confirm patch complete.\n- Confirm QA started regression.\n- If patch slipped, move patch to Tuesday morning and QA to Tuesday afternoon; still Tuesday delivery is possible if migration lands early Tuesday.\n\n---\n\n## 3. PARALLEL WORK\n\nThese can proceed without waiting for the SSO critical path:\n\n| Work | Owner | Status |\n|---|---|---|\n| Contoso date formatter | Julia | Do today; 2h; needed for Tuesday demo |\n| Onboarding launch support | Julia | Flow is ready; instrumentation can ship later |\n| Pricing mockups | Sarah | Do today; 1.5h; unblocks packaging approval |\n| Packaging approval | Daniel | Can review mockups once ready |\n| Public pricing page | Sarah | After mockup approval; deadline Thursday EOD |\n| Board non-revenue pack | Sarah | Independent; deadline Friday 10:00 |\n| Security | Maya | No action unless scope changes |\n\n---\n\n## 4. BLOCKERS & DEPENDENCIES\n\n### True blocking chain\n\n| Blocker | Depends on | Impact |\n|---|---|---|\n| SSO compatibility patch | Billing schema migration | Blocks QA and rollout |\n| SSO QA regression | Completed compatibility patch | Blocks production rollout |\n| SSO production rollout | QA green light | Blocks Atlas Wednesday EOD commitment |\n| Board revenue charts | Billing migration/backfill dataset | Blocks final revenue section |\n| Public pricing page | Packaging approval | Approval can use mockups, not live page |\n\n### Stale or removable dependencies\n\n| Stale item | Reality |\n|---|---|\n| Security review blocks SSO | Approved Friday; no action unless scope changes |\n| Onboarding instrumentation blocks launch | Not required; existing analytics are enough |\n| Contoso export is broken | Export succeeds; only date format differs |\n| Pricing page must exist before approval | Mockups are acceptable for internal approval |\n| Billing migration deadline is Thursday 15:00 | Too late for SSO and Elena’s Wednesday availability; must land Monday or early Tuesday |\n\n### Contingency dependency\n\n- Daniel can take over billing migration only after Elena transfers production migration permissions.\n- That handover needs about **30 minutes before Elena leaves Wednesday 12:00**.\n- Do not rely on this unless Elena’s migration is at risk.\n\n---\n\n## 5. EARLIEST DELIVERY\n\n**Main critical path: Enterprise SSO production rollout**\n\nIf Elena starts immediately:\n\n```text\n09:10–12:10  Billing schema migration\n12:10–16:10  SSO compatibility patch\n16:10–17:30  QA regression, part 1\nTue 09:00–09:40 QA regression, part 2\nTue 09:40–10:40 SSO production rollout\n```\n\n**Theoretical earliest:** Tuesday around **10:40**.\n\n**Realistic earliest with handoff buffers:** Tuesday **11:00–12:00**.\n\n**Conservative fallback:** Tuesday EOD if migration lands Monday and Marcus does the patch Tuesday morning.\n\n**Wednesday EOD is still possible**, but only if:\n\n- migration lands by roughly Tuesday 10:30, or\n- QA is available Wednesday morning, which is not confirmed.\n\n---\n\n## 6. RISKS / UNKNOWNS\n\n- **Backfill scope is unclear.** Elena’s 3 hours may cover schema migration, but board revenue charts need post-migration/backfill data. Need confirmation today.\n- **QA Wednesday availability is not provided.** If migration slips to Tuesday afternoon, SSO delivery may depend on QA Wednesday morning.\n- **Focused time may be interrupted.** Marcus needs 4 focused hours; Elena needs 3 focused hours. Protect their calendars.\n- **Packaging approval turnaround is unknown.** Mockups can unblock approval, but no approval time is specified.\n- **Contoso demo timing is “Tuesday afternoon.”** Julia’s 2-hour fix today should satisfy it, but exact demo time is not provided.\n- **Onboarding launch date is not specified.** Instrumentation can be scheduled after SSO, but final priority needs confirmation.\n- **Security could re-enter if SSO scope changes.** No action needed unless implementation scope materially changes.\n- **Task list is stale.** It still shows false blockers and incorrect sequencing; update it before anyone acts on it.",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "chatcmpl-c6e86c03-cddd-9b92-963a-4d84deea2d75",
+    "raw_usage": {
+      "completion_tokens": 13349,
+      "prompt_tokens": 2491,
+      "total_tokens": 15840,
+      "completion_tokens_details": {
+        "reasoning_tokens": 11525,
+        "text_tokens": 13349
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "text_tokens": 2491
+      }
+    }
+  }
+}

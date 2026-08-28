@@ -1,0 +1,71 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.3-draft",
+  "scenario_id": "monday-003",
+  "scenario_prompt_sha256": "efd837502f4174663c8904fb3e01089de3017ffaff9f154ff611d4bc5286f84e",
+  "run_id": "monday-003__qwen3.6__001",
+  "run_number": 1,
+  "model": {
+    "slug": "qwen3.6",
+    "display_name": "Qwen 3.6",
+    "provider": "helmcode",
+    "model_id": "qwen3.6"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 32000,
+    "reasoning_enabled": false,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": false,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+    "extra_body": {
+      "caching": false
+    },
+    "config_sha256": "c419b51a94573fd71bafd55325d40bb947140dacf70df3b9b573dd39149308fe"
+  },
+  "reasoning": {
+    "requested": false,
+    "status": "NOT_REQUESTED",
+    "tokens": 0,
+    "evidence": null,
+    "stream_observed": false,
+    "stream_event_count": 0
+  },
+  "timestamp_utc": "2026-08-28T17:25:51Z",
+  "usage": {
+    "input_tokens": 2455,
+    "output_tokens": 1556,
+    "reasoning_tokens": 0
+  },
+  "performance": {
+    "ttft_ms": 1340.0,
+    "ttfa_ms": 1340.0,
+    "total_latency_ms": 13787.1,
+    "tokens_per_second": 125.0
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "### 1. CRITICAL PATH\n\nThe delivery of **Enterprise SSO** to Atlas by **Wednesday EOD** is the primary constraint. The path is linear and resource-constrained:\n\n1.  **Billing Schema Migration** (Elena, 3 hours)\n    *   *Constraint:* Must happen before Marcus can finish the compatibility patch.\n    *   *Deadline:* Elena is offline Wed 12:00. This **must** start Monday or Tuesday.\n2.  **SSO API Compatibility Patch** (Marcus, 4 hours)\n    *   *Constraint:* Depends on Billing Migration completion.\n    *   *Deadline:* Must be done before QA.\n3.  **SSO Regression QA** (QA, 2 hours)\n    *   *Constraint:* Depends on Marcus's patch.\n    *   *Deadline:* Must be done before rollout.\n4.  **SSO Production Rollout** (Marcus, 1 hour)\n    *   *Constraint:* Depends on QA sign-off.\n    *   *Deadline:* Wednesday EOD.\n\n**Total Critical Time:** 3h (Elena) + 4h (Marcus) + 2h (QA) + 1h (Marcus) = **10 hours of focused work**.\n**Resource Bottleneck:** Marcus is needed for both the Patch (4h) and Rollout (1h). Elena is needed for the Migration (3h).\n\n### 2. MY PLAN FOR TODAY (Monday)\n\n**Priority 1: Secure the Critical Path (Billing Migration)**\n*   **Action:** Immediately message Elena. Confirm she starts the **Billing Schema Migration** today.\n*   **Action:** If Elena starts today, she can finish in 3 hours (e.g., by 12:30 PM).\n*   **Action:** Schedule a 30-minute handoff with Daniel *only if* Elena cannot finish by 16:30 today. If she finishes early, the handoff is unnecessary risk. *Recommendation:* Let Elena own it. It’s her work, she knows the runbook, and Daniel is a backup, not a primary resource.\n\n**Priority 2: Unblock Marcus (SSO Patch)**\n*   **Action:** Message Marcus. Clarify that **Onboarding Instrumentation is NOT a blocker** (per Julia’s Slack message).\n*   **Action:** Instruct Marcus to **stop** working on onboarding instrumentation immediately.\n*   **Action:** Instruct Marcus to stand by for the Billing Migration completion. Once Elena finishes, Marcus starts the 4-hour Compatibility Patch.\n\n**Priority 3: Contoso Export (Julia)**\n*   **Action:** Assign Julia to fix the date formatting.\n*   **Context:** This is a 2-hour task. It is independent of the SSO critical path.\n*   **Timing:** Julia can do this anytime today or tomorrow. Deadline is Tuesday afternoon.\n\n**Priority 4: Board Pack (Sarah)**\n*   **Action:** Sarah can proceed with `board_pack_non_revenue` (4h) and `pricing_mockups` (1.5h) today.\n*   **Constraint:** She must wait for Billing Migration to finish before doing `board_pack_revenue` (2h).\n\n**Priority 5: Pricing Page (Sarah)**\n*   **Action:** Sarah can work on `pricing_page` (3h) in parallel with non-revenue board pack items, as it doesn't block the critical path.\n\n### 3. PARALLEL WORK\n\n*   **Julia:** Fix Contoso Export Formatter (2h). Can be done anytime Mon-Wed.\n*   **Sarah:**\n    *   Build non-revenue board pack sections (4h).\n    *   Create pricing mockups (1.5h).\n    *   Build public pricing page (3h).\n    *   *Note:* These are all independent of the SSO critical path.\n*   **QA:** No work until Marcus delivers the patch.\n\n### 4. BLOCKERS & DEPENDENCIES\n\n*   **Circular/Stale Dependency (Resolved):**\n    *   *Old State:* Marcus thought Onboarding Instrumentation was a launch blocker.\n    *   *New State:* Julia confirmed it is **not** required for launch. Marcus is holding 3 hours of capacity for this. **Unblock Marcus immediately.**\n*   **Hard Dependency:**\n    *   Marcus’s SSO Patch **cannot start** until Elena’s Billing Migration is complete.\n*   **Resource Dependency:**\n    *   Marcus is the bottleneck for both the Patch and the Rollout. He must have the patch done with enough time to execute the rollout on Wednesday.\n*   **Permission Dependency:**\n    *   Daniel *can* do the migration, but lacks permissions. Elena must transfer them if she doesn't do it. **Recommendation:** Elena does it to avoid handoff risk.\n\n### 5. EARLIEST DELIVERY\n\n**Scenario: Elena starts Migration Monday Morning**\n\n*   **Mon 09:00 - 12:00:** Elena works on Billing Migration (3h).\n*   **Mon 12:00:** Migration complete.\n*   **Mon 12:00 - 16:00:** Marcus works on SSO Compatibility Patch (4h).\n*   **Mon 16:00:** Patch complete.\n*   **Tue 09:00 - 11:00:** QA performs Regression (2h).\n*   **Tue 11:00:** QA Green Light.\n*   **Tue 11:00 - 12:00:** Marcus performs Production Rollout (1h).\n*   **Tue 12:00:** **Enterprise SSO Live.**\n\n**Earliest Realistic Delivery:** **Tuesday Noon.**\n*(This provides a full day buffer before the Wednesday EOD commitment.)*\n\n### 6. RISKS / UNKNOWNS\n\n*   **Elena’s Availability:** Elena is offline Wed 12:00. If she does not start the migration today, she has only Tuesday to do it. If she starts Tuesday, Marcus starts Tuesday afternoon, QA is Wed morning, Rollout is Wed mid-day. This is tight but feasible. **Risk:** If Elena gets sick or delayed on Monday, the whole week slips.\n*   **Marcus’s Context Switching:** Marcus is also needed for Contoso? No, Julia is handling Contoso. Marcus is only blocked by the stale onboarding task. Once unblocked, he is clear.\n*   **QA Availability:** QA is listed as available Mon-Wed. If QA is delayed on Tuesday, the rollout slips to Wednesday.\n*   **Contoso Demo:** Julia has until Tuesday afternoon. If she gets pulled into SSO support (unlikely, as she’s not on the critical path), the demo is at risk.\n*   **Board Pack Revenue:** Sarah cannot finish the revenue section until the billing migration is done. If the migration is delayed, the board pack (due Wed 10:00 AM) might miss the final revenue charts. **Mitigation:** Sarah should note in the board pack that revenue figures are pre-migration/backfill if the migration isn't done by Wed AM.",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "chatcmpl-9374e23bf0737262",
+    "raw_usage": {
+      "completion_tokens": 1556,
+      "prompt_tokens": 2455,
+      "total_tokens": 4011,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

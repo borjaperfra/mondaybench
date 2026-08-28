@@ -1,0 +1,71 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.3-draft",
+  "scenario_id": "monday-003",
+  "scenario_prompt_sha256": "aaf788f309d955d2b427c86fe7d95d2bbf88575fde7306adcfd74b0ec4a4103f",
+  "run_id": "monday-003__qwen3.6__002",
+  "run_number": 2,
+  "model": {
+    "slug": "qwen3.6",
+    "display_name": "Qwen 3.6",
+    "provider": "helmcode",
+    "model_id": "qwen3.6"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 32000,
+    "reasoning_enabled": false,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": false,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+    "extra_body": {
+      "caching": false
+    },
+    "config_sha256": "c419b51a94573fd71bafd55325d40bb947140dacf70df3b9b573dd39149308fe"
+  },
+  "reasoning": {
+    "requested": false,
+    "status": "NOT_REQUESTED",
+    "tokens": 0,
+    "evidence": null,
+    "stream_observed": false,
+    "stream_event_count": 0
+  },
+  "timestamp_utc": "2026-08-28T18:56:36Z",
+  "usage": {
+    "input_tokens": 3755,
+    "output_tokens": 2174,
+    "reasoning_tokens": 0
+  },
+  "performance": {
+    "ttft_ms": 1334.3,
+    "ttfa_ms": 1334.3,
+    "total_latency_ms": 23695.2,
+    "tokens_per_second": 97.2
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "### 1. CRITICAL PATH\n\nThe week’s primary commitment is **Enterprise SSO for Atlas (Wednesday EOD)**. This path is blocked by Elena’s availability and Marcus’s schedule.\n\n1.  **Monday AM:** Product unblocks Security Review (Prerequisite for SSO).\n2.  **Monday PM:** Elena completes Billing Schema Migration (3 hrs).\n3.  **Monday PM/Early Tuesday:** Marcus completes SSO API Compatibility Patch (4 hrs). *Note: Marcus can start this immediately after Elena’s migration lands, but he is blocked from working on it until the schema change is live. He has availability Monday 09:00–17:30.*\n4.  **Tuesday:** Marcus attends Atlas Technical Session (09:00–13:00). He can work on the patch in the afternoon (13:00–17:30).\n    *   *Calculation:* If Marcus starts the patch Monday afternoon, he needs 4 hours.\n    *   Monday: ~4 hours available after Elena’s migration? Let's assume Elena finishes migration by 13:00. Marcus has 13:00–17:30 (4.5 hrs). He can likely complete the 4-hour patch on **Monday**.\n    *   *Alternative:* If Marcus is delayed, he has Tuesday afternoon (4.5 hrs) and Wednesday morning (before 12:00? No, Elena leaves Wed noon, but Marcus is free Wed all day).\n5.  **Tuesday/Early Wednesday:** QA Regression (2 hrs).\n6.  **Wednesday:** Production Rollout (1 hr).\n\n**Secondary Critical Path: Contoso Compliance Export (Tuesday 16:00 CET)**\n1.  **Monday:** Fix permission check (2.5 hrs: 3.5 hrs work - 0.5 hrs with Marcus). Owner: Daniel.\n2.  **Monday:** Fix date format (2 hrs). Owner: Julia.\n3.  **Monday/Early Tuesday:** Generate and send file (1 hr). Owner: Julia.\n    *   *Constraint:* Daniel needs Marcus for 0.5 hrs. Marcus is free Monday 09:00–17:30.\n    *   *Constraint:* Julia needs the permission fix to work before she can successfully generate the file for delegated admins? The prompt says \"Once the permission check accepts delegated admins... producing... is Julia's time.\" This implies the fix must be deployed/verified before Julia can do her part.\n\n**Tertiary Path: Board Pack**\n1.  **Monday–Wednesday:** Sarah builds non-revenue sections.\n2.  **Thursday/Friday:** Sarah builds revenue sections (blocked by Elena’s backfill).\n\n---\n\n### 2. MY PLAN FOR TODAY (Monday)\n\n**09:10 – 10:00: Unblock Security Review (SSO)**\n*   **Action:** Contact Maya (Security) immediately. Confirm that the \"permission-check and configuration fixes\" (Contoso permission patch + SSO compatibility) fall under the existing SEC-4471 approval scope. Get written confirmation or a quick Slack approval to remove the \"outstanding\" status.\n*   **Owner:** Me (Product Lead).\n*   **Why:** This is a hard blocker for the SSO release checklist.\n\n**10:00 – 11:30: Coordinate Contoso Fix (Daniel & Marcus)**\n*   **Action:** Assign Daniel to `contoso_permission_patch`. Schedule a 30-minute sync with Marcus for 11:30 or 12:00 to walk through the delegated-admin path.\n*   **Owner:** Daniel (Execution), Marcus (Consultation).\n*   **Why:** Contoso deadline is Tuesday 16:00 CET. We need the fix in place by Monday EOD to allow Julia to test/generate the file.\n\n**11:30 – 12:00: Sync with Marcus (Contoso)**\n*   **Action:** 30-min handoff/walkthrough for Daniel.\n\n**12:00 – 13:00: Lunch / Async**\n\n**13:00 – 13:30: Align with Elena (Billing)**\n*   **Action:** Confirm Elena is starting the billing schema migration immediately. Ensure she has all access. Discuss the contingency: If she slips, Daniel needs the 30-min handoff *before* she leaves Wednesday noon. For now, assume she proceeds.\n*   **Owner:** Elena.\n\n**13:30 – 17:30: Monitor & Unblock**\n*   **Action:**\n    *   Monitor Daniel’s progress on the permission patch.\n    *   Once Daniel’s patch is ready, notify Julia to start the date format fix (`contoso_export_formatter`) and verify the permission fix works in staging.\n    *   Monitor Marcus’s availability. If he finishes the Contoso handoff early, he can start the SSO compatibility patch *if* Elena’s migration is done. If Elena is delayed, Marcus should work on the Contoso patch if Daniel is stuck, or wait.\n    *   *Correction:* Marcus owns the SSO compatibility patch. He is free Monday 09:00–17:30. He can do the 30-min handoff with Daniel at 11:30. He has 4.5 hours left. He can start the SSO patch *only after* Elena’s migration lands.\n    *   **Key Decision:** If Elena’s migration takes 3 hours starting at 13:00, it lands at 16:00. Marcus can start the SSO patch at 16:00. He has 1.5 hours left on Monday. He will need Tuesday afternoon (13:00–17:30) to finish the 4-hour patch. This is feasible.\n\n**Delegate:**\n*   **Julia:** Start `contoso_export_formatter` (date format) immediately. This is independent of the permission fix.\n*   **Sarah:** Continue `board_pack_non_revenue`.\n*   **Daniel:** Start `contoso_permission_patch` after Marcus handoff.\n\n---\n\n### 3. PARALLEL WORK\n\n*   **Julia:** `contoso_export_formatter` (2 hrs). Can start immediately.\n*   **Sarah:** `board_pack_non_revenue` (4 hrs). Can start immediately.\n*   **Daniel:** `contoso_permission_patch` (2.5 hrs effective). Starts after Marcus handoff (~12:00).\n*   **Marcus:** `api_compatibility_patch` (4 hrs). Starts after Elena’s migration lands (~16:00 Monday).\n*   **Elena:** `billing_schema_migration` (3 hrs). Starts ~13:00 Monday.\n\n---\n\n### 4. BLOCKERS & DEPENDENCIES\n\n*   **SSO Release:**\n    *   **Blocker:** Security Review status. **Unblock:** My action at 09:10.\n    *   **Dependency:** SSO Compatibility Patch depends on Billing Schema Migration.\n    *   **Dependency:** SSO Regression depends on Compatibility Patch.\n    *   **Dependency:** Production Rollout depends on Regression.\n*   **Contoso Compliance:**\n    *   **Dependency:** Permission Patch (Daniel) depends on Marcus’s knowledge transfer (30 mins).\n    *   **Dependency:** Julia’s file generation depends on Permission Patch being verified.\n    *   **Dependency:** Date Format Fix (Julia) is independent but must be combined with the permission fix for the final file.\n*   **Board Pack:**\n    *   **Dependency:** Revenue charts depend on Billing Backfill (Elena, post-migration).\n\n---\n\n### 5. EARLIEST DELIVERY\n\n*   **Contoso Compliance Export:** **Monday EOD / Tuesday Morning.**\n    *   If Daniel finishes patch by 15:00 Monday, Julia can fix format and generate by 17:00 Monday.\n*   **Enterprise SSO (Atlas):** **Wednesday EOD.**\n    *   Marcus finishes patch Tuesday afternoon.\n    *   QA tests Tuesday afternoon/Wednesday morning.\n    *   Rollout Wednesday.\n*   **Onboarding Launch:** **Friday (or earlier if approved).**\n    *   Julia owns launch support. Marcus’s instrumentation is *not* a blocker.\n*   **Board Pack:** **Friday 10:00 AM.**\n    *   Revenue section blocked until Elena’s backfill (Wed afternoon). Sarah can finish non-revenue parts.\n\n---\n\n### 6. RISKS / UNKNOWNS\n\n*   **Security Review Scope:** The email from Maya says \"Permission-check and configuration fixes... do not need to come back to us.\" However, the SSO compatibility patch is an \"account-mapping rewrite\" which was part of the original scope. The Contoso permission patch is a \"permission model\" fix. It is *likely* covered, but if Security re-opens the review, it kills the Wednesday SSO deadline. **Risk: High.**\n*   **Elena’s Migration Time:** She estimates 3 hours. If it takes longer, Marcus’s start time for the SSO patch is delayed, pushing QA and Rollout to Thursday. **Risk: Medium.**\n*   **Daniel’s Contoso Fix:** He estimates 3.5 hours. If he underestimates, the Contoso compliance deadline (Tuesday 16:00 CET) is at risk. **Risk: Medium.**\n*   **Marcus’s Availability:** He has a 4-hour block on Tuesday afternoon. If the SSO patch is not done by then, it slips to Wednesday. **Risk: Low** (if Monday starts well).\n*   **Billing Backfill:** Elena leaves Wednesday noon. The backfill runs 90 minutes. If the migration slips past 12:00 Wednesday, the backfill might not complete before the Board Pack is due Friday 10:00 AM. **Risk: Medium.**",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "chatcmpl-afe5581a10aaa55f",
+    "raw_usage": {
+      "completion_tokens": 2174,
+      "prompt_tokens": 3755,
+      "total_tokens": 5929,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

@@ -790,6 +790,11 @@ def leaderboard(
         None, "--models", help="Official battery membership (with --official)"
     ),
     runs: int = typer.Option(3, "--runs", help="Official runs required per model"),
+    calibration: bool = typer.Option(
+        False,
+        "--calibration",
+        help="Rank a calibration draft into analysis/leaderboards/ instead of leaderboard/",
+    ),
 ) -> None:
     """Aggregate evaluations into the published ranking."""
     if official:
@@ -801,10 +806,28 @@ def leaderboard(
         _fail(str(exc))
         return
 
+    # A calibration draft has one run per model against a rubric that is still
+    # moving. Written into `leaderboard/` it is indistinguishable from a
+    # published result, which is how monday-003 v0.2 briefly acquired one.
+    if loaded.is_calibration and not calibration:
+        _fail(
+            f"{loaded.id} is status={loaded.status}: it has no publishable ranking. "
+            "Use --calibration to write a draft ranking under analysis/leaderboards/, "
+            "or freeze the scenario first."
+        )
+        return
+    if calibration and not loaded.is_calibration:
+        _fail(
+            f"--calibration is only for scenarios with status: calibration; "
+            f"{loaded.id} is status={loaded.status}"
+        )
+        return
+
     payload, summaries = build_leaderboard(
         scenario_id=loaded.id,
         evaluator_id=evaluator,
         benchmark_version=loaded.benchmark_version or BENCHMARK_VERSION,
+        scenario_status=loaded.status,
     )
     if not summaries:
         _fail(f"no evaluations found under evaluations/{evaluator}/{loaded.id}/")
@@ -853,8 +876,19 @@ def leaderboard(
         for warning in s.warnings:
             console.print(f"[yellow]warning[/yellow] {s.model_slug}: {warning}")
 
-    json_path, csv_path, md_path = write_leaderboard(payload, summaries)
+    try:
+        json_path, csv_path, md_path = write_leaderboard(
+            payload, summaries, calibration=calibration
+        )
+    except ValueError as exc:
+        _fail(str(exc))
+        return
     console.print("")
+    if calibration:
+        console.print(
+            "[yellow]calibration draft - not an official result, not comparable with any "
+            "published leaderboard[/yellow]"
+        )
     for path in (json_path, csv_path, md_path):
         console.print(f"wrote {path.relative_to(repo_root())}")
 

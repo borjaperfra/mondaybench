@@ -1,0 +1,71 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.3-draft",
+  "scenario_id": "monday-003",
+  "scenario_prompt_sha256": "aaf788f309d955d2b427c86fe7d95d2bbf88575fde7306adcfd74b0ec4a4103f",
+  "run_id": "monday-003__mimo-v2.5__001",
+  "run_number": 1,
+  "model": {
+    "slug": "mimo-v2.5",
+    "display_name": "MIMO v2.5",
+    "provider": "nan",
+    "model_id": "mimo-v2.5"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 32000,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+    "extra_body": {
+      "caching": false
+    },
+    "config_sha256": "3ad2b0cfaea8e33030da7dd5840c37bdea327c767fbe7f524bfdb331dd85d753"
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "DELIVERED",
+    "tokens": 0,
+    "evidence": "explicit_reasoning_stream",
+    "stream_observed": true,
+    "stream_event_count": 4316
+  },
+  "timestamp_utc": "2026-08-28T18:16:58Z",
+  "usage": {
+    "input_tokens": 3624,
+    "output_tokens": 14158,
+    "reasoning_tokens": 0
+  },
+  "performance": {
+    "ttft_ms": 2189.3,
+    "ttfa_ms": 137186.7,
+    "total_latency_ms": 166264.4,
+    "tokens_per_second": 86.3
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "# Northstar — Monday 21 September, Execution Plan\n\n## Sitrep\n\nSecurity review is **already approved** (Maya, Fri 16:48) — the task tracker is stale. Onboarding instrumentation is **not a launch blocker** (Julia confirmed Fri 17:06) — tracker is also stale on that. Both can be closed immediately.\n\nEverything else pivots on one thing: **Elena's billing schema migration**. It gates both the Contoso compliance export (contractual, Tue 16:00 CET) and Enterprise SSO (Atlas commitment, Wed EOD). Getting her started is priority zero.\n\n---\n\n## 1. CRITICAL PATH\n\nThere are two critical paths sharing the same first step:\n\n**Path A — Contoso Compliance Export (contractual, Tue 16:00 CET)**\n```\nElena: billing_schema_migration (3h)\n  → Daniel: contoso_permission_patch (3.5h)\n    → deploy\n      → Julia: contoso_compliance_export (1h)\n        → deliver to Contoso\n```\n~8.5h sequential. Completes **Monday ~17:00** — 23h ahead of deadline.\n\n**Path B — Enterprise SSO (Atlas commitment, Wed EOD)**\n```\nElena: billing_schema_migration (3h)\n  → Marcus: api_compatibility_patch (4h)\n    → Sam: sso_regression (2h)\n      → Marcus: sso_production_rollout (1h)\n```\n~10h sequential. Completes **Tuesday ~14:00** — well ahead of Wednesday EOD.\n\n**Key decision:** Reassign `contoso_permission_patch` from Marcus to Daniel. Daniel was in the permission model two weeks ago, needs only a 30-min walk from Marcus, and his 3.5h runs in parallel with Marcus's 4h compatibility patch. This keeps the SSO critical path as short as possible. Marcus is the single point of failure for SSO — every hour he's diverted adds directly to that timeline.\n\n---\n\n## 2. MY PLAN FOR TODAY — Monday\n\n### Priority actions (in order)\n\n| # | Time | Action | Owner |\n|---|------|--------|-------|\n| 1 | 09:10 | **Update #enterprise-sso**: Security review approved. Close tracker item. Confirm Wed EOD commitment with Laura. | Noah |\n| 2 | 09:15 | **Message Elena**: Start billing_schema_migration now. Nothing else matters until this lands. | Noah |\n| 3 | 09:15 | **Post in #support-escalations**: Reassign `contoso_permission_patch` to Daniel. Explain rationale (frees Marcus for SSO). | Noah |\n| 4 | 09:20 | **Ping Marcus**: Do 30-min walk with Daniel on the delegated-admin path this morning (before schema migration lands). | Noah |\n| 5 | 09:20 | **Message Julia**: Start `contoso_export_formatter` (date format, 2h) immediately — independent, unblocks demo. | Noah |\n| 6 | 09:20 | **Message Sarah**: Start `pricing_page` now (3h). After that, `board_pack_non_revenue` (4h). Pricing page must land today to keep approval chain on track. | Noah |\n| 7 | 12:15 | **Check-in with Elena**: Schema migration should be landing. Confirm backfill kicked off. | Noah |\n| 8 | 12:30 | **Confirm Daniel and Marcus are unblocked** on their respective patches (both need the schema change). | Noah |\n| 9 | 16:15 | **Verify**: Daniel's permission patch on staging and validated. Julia has sent compliance export to Contoso. Marcus's compatibility patch substantially underway. | Noah |\n| 10 | 17:00 | **EOD sync**: Confirm all Monday deliverables landed. Check Tuesday readiness. | Noah |\n\n### Full team allocation for Monday\n\n| Person | AM (09:15–12:15) | PM (12:30–17:30) |\n|--------|-------------------|-------------------|\n| **Elena** | billing_schema_migration (3h) | Kick off backfill (~14:00 done). Free. Prep Wednesday handoff docs for Daniel. |\n| **Marcus** | onboarding_instrumentation (3h) + 30-min Daniel walk | api_compatibility_patch — SSO (4h) |\n| **Daniel** | 30-min Marcus walk + standby | contoso_permission_patch (3.5h) |\n| **Julia** | contoso_export_formatter (2h) | contoso_compliance_export (1h, after Daniel deploys) |\n| **Sarah** | pricing_page (3h) | board_pack_non_revenue (4h) |\n| **Sam/QA** | Available — prep regression environment for SSO | Available |\n\n---\n\n## 3. PARALLEL WORK — can proceed without waiting\n\n| Work | Owner | Dependency | Timeline |\n|------|-------|------------|----------|\n| contoso_export_formatter (date format) | Julia | None | Mon AM ✓ |\n| pricing_page | Sarah | None | Mon AM ✓ |\n| board_pack_non_revenue | Sarah | None | Mon PM ✓ |\n| onboarding_instrumentation | Marcus | None (not a launch blocker) | Mon AM (fills waiting time) ✓ |\n| packaging_approval_pack | Sarah | pricing_page done | Tue AM (submit before 12:00 for same-day Priya approval) |\n| board_pack_revenue | Sarah | billing_backfill (~14:00 Mon) | Mon PM or anytime after ✓ |\n| onboarding_launch | Julia | None confirmed | Wed or Thu (2h, no blockers) |\n| Elena → Daniel migration handoff (30 min) | Elena | None | Tue or Wed AM (contingency for Elena's Wed departure) |\n\n---\n\n## 4. BLOCKERS & DEPENDENCIES\n\n| What's blocked | By what | ETA unblocked | Buffer to deadline |\n|---|---|---|---|\n| Marcus: api_compatibility_patch | Elena: schema migration | Mon ~12:15 | SSO deadline Wed EOD — **large buffer** |\n| Daniel: contoso_permission_patch | Elena: schema migration | Mon ~12:15 | Contoso deadline Tue 16:00 — **~28h buffer** |\n| Julia: compliance export | Daniel: permission patch + deploy | Mon ~16:15 | Contoso deadline Tue 16:00 — **~23h buffer** |\n| Sam: sso_regression | Marcus: compatibility patch | Tue 09:00 | SSO deadline Wed EOD — **substantial buffer** |\n| Marcus: sso_production_rollout | Sam: regression | Tue ~14:00 (after Atlas session) | SSO deadline Wed EOD — **~27h buffer** |\n| Sarah: board_pack_revenue | billing_backfill (automated, 90 min) | Mon ~14:00 | Board Fri 10:00 — **large buffer** |\n| Sarah: packaging_approval_pack | pricing_page | Tue AM | No hard external deadline this week |\n| ~~Security review~~ | ~~OUTSTANDING~~ | ✅ **Resolved Fri 16:48** | Close tracker item |\n| ~~Onboarding instrumentation~~ | ~~Marcus~~ | ✅ **Not a launch blocker** | De-prioritize; ship post-launch |\n\n---\n\n## 5. EARLIEST DELIVERY\n\n| Deliverable | Earliest realistic time | Owner |\n|---|---|---|\n| Security review — closed | Already done | Maya (Fri) |\n| Contoso date format fix | **Mon 11:15** | Julia |\n| Billing schema migration + backfill | **Mon 14:00** | Elena |\n| Contoso compliance export delivered | **Mon 17:00** | Daniel + Julia |\n| Pricing page built | **Mon 12:15** | Sarah |\n| Enterprise SSO live in production | **Tue 14:00** | Marcus + Sam |\n| Packaging approval | **Tue afternoon** (if submitted before 12:00) | Sarah → Priya |\n| Pricing page public | **Tue EOD** | Sarah |\n| Board pack (all sections) | **Thu EOD** (revenue charts need backfill data) | Sarah |\n| Onboarding launch | **Wed or Thu** | Julia |\n\n**Critical path delivery (Contoso): Monday 17:00 — 23 hours ahead of contractual deadline.**\n\n---\n\n## 6. RISKS & UNKNOWNS\n\n1. **Elena's migration takes longer than 3h.** She said \"roughly.\" If it takes 4-5h, both paths slip by the difference. Contoso has ~23h buffer; SSO has ~27h. Manageable but erodes margin. **Mitigate:** Confirm with Elena at 12:15.\n\n2. **Marcus is a single point of failure for SSO.** The compatibility branch is his rewrite — \"nobody else has been inside it.\" If he's pulled into anything else, SSO has no fallback. **Mitigate:** Protect his afternoon. No other assignments.\n\n3. **Daniel's permission patch surprises.** He was in the permission model for SCIM, not for tenant exports. The 30-min Marcus walk may not surface all complexity. **Mitigate:** Contoso has 23h of buffer. If Daniel hits issues, Marcus can take over Tuesday morning.\n\n4. **SSO QA finds issues.** Sam said \"two hours if nothing surprising.\" Regression failures could delay rollout. **Mitigation:** Wednesday EOD deadline provides a full day of buffer after Tuesday QA.\n\n5. **Backfill data quality.** The 90-min automated reconciliation could encounter data anomalies. Sarah's revenue charts depend on it. **Mitigate:** Board pack deadline is Friday — plenty of time to investigate if needed.\n\n6. **Elena's Wednesday departure without Daniel handoff.** She said she needs 30 min with Daniel to transfer migration permissions and walk the runbook. This has not happened yet. If the backfill or migration has issues after Wednesday noon, Daniel can't step in. **Action: Schedule the handoff for Tuesday or Wednesday morning at the latest.**\n\n7. **Packaging approval timing.** If Sarah's pricing page slips or approval pack isn't submitted before 12:00, Priya's committee rolls to next morning. This doesn't block anything else this week but delays the public pricing page.\n\n8. **What I don't know and can't conclude:**\n   - Whether the backfill can be validated before Sarah starts revenue charts (or whether she needs to wait for a manual check).\n   - Whether the SSO production rollout requires any additional infrastructure or configuration steps beyond Marcus's 1h estimate.\n   - Whether Daniel has the right repository access and deploy permissions for the Contoso permission patch.\n   - Whether Julia's compliance export (after permission fix) produces the file Contoso's auditor needs, or whether there are format/content requirements beyond the date format fix.",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "chatcmpl-dcc13cc9-2bae-4d97-93e6-61a6a9caf135_0fe41825a80d4270bbed96439181dd79",
+    "raw_usage": {
+      "completion_tokens": 14158,
+      "prompt_tokens": 3624,
+      "total_tokens": 17782,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

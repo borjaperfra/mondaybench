@@ -329,6 +329,7 @@ def build_leaderboard(
     scenario_id: str,
     evaluator_id: str,
     benchmark_version: str,
+    scenario_status: str | None = None,
     root: Path | None = None,
 ) -> tuple[dict[str, Any], list[ModelSummary]]:
     summaries: list[ModelSummary] = []
@@ -374,6 +375,7 @@ def build_leaderboard(
         "scenario": scenario_id,
         "evaluator": evaluator_id,
         "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "scenario_status": scenario_status,
         "integrity_warning": cross_model_warning,
         "models": [
             {
@@ -467,10 +469,55 @@ def leaderboard_dir(scenario_id: str | None, root: Path | None = None) -> Path:
     return base / scenario_id
 
 
+def calibration_leaderboard_dir(scenario_id: str | None, root: Path | None = None) -> Path:
+    """Where a *calibration* ranking is allowed to land.
+
+    Never under `leaderboard/`. A calibration battery is one run per model
+    against a draft rubric, and a file sitting beside the published results is
+    read as a published result no matter what the header says - which is exactly
+    what happened to monday-003 during the v0.2 sweep.
+    """
+    base = (root or repo_root()) / "analysis" / "leaderboards"
+    return base / (scenario_id or "unknown")
+
+
 def write_leaderboard(
-    payload: dict[str, Any], summaries: list[ModelSummary], root: Path | None = None
+    payload: dict[str, Any],
+    summaries: list[ModelSummary],
+    root: Path | None = None,
+    *,
+    calibration: bool = False,
 ) -> tuple[Path, Path, Path]:
-    directory = leaderboard_dir(payload.get("scenario"), root)
+    scenario_id = payload.get("scenario")
+    # The payload carries the scenario's own status, so the guard holds even if
+    # a caller forgets the flag. A calibration draft cannot reach the official
+    # tree through this function at all.
+    if payload.get("scenario_status") == "calibration" and not calibration:
+        raise ValueError(
+            f"{scenario_id} is status=calibration: its ranking cannot be written under "
+            "leaderboard/. Pass calibration=True to write it under analysis/leaderboards/."
+        )
+    if calibration:
+        directory = calibration_leaderboard_dir(scenario_id, root)
+    else:
+        directory = leaderboard_dir(scenario_id, root)
+        # A published leaderboard must not be silently downgraded. A plain
+        # rebuild carries the "NOT AN OFFICIAL RESULT" banner, so writing it
+        # over a file that passed the gates replaces a published result with an
+        # unverified one - same class of accident as the calibration case above,
+        # and it has happened. `--official` still overwrites, as it must.
+        existing = directory / "leaderboard.json"
+        if not payload.get("official") and existing.is_file():
+            try:
+                previous = json.loads(existing.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError):
+                previous = {}
+            if previous.get("official"):
+                raise ValueError(
+                    f"{existing} is a published official leaderboard. Rebuilding it without "
+                    "the publication gates would replace it with an unverified one; "
+                    "re-run with --official."
+                )
     directory.mkdir(parents=True, exist_ok=True)
 
     json_path = directory / "leaderboard.json"

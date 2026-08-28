@@ -1,0 +1,140 @@
+rubric_version: "0.1"
+scenario_id: monday-003
+total_points: 100
+dimensions:
+
+  critical_path_and_dependencies:
+    max_points: 30
+    criteria:
+      - id: critical_path_identified
+        points: 10
+        partial_points: 5
+        pass: "Reconstructs billing schema migration -> API compatibility patch -> QA regression -> production rollout as the chain that sets the earliest Enterprise SSO delivery."
+        partial: "Most of the chain, with one dependency missing or materially incomplete."
+      - id: marcus_bottleneck
+        points: 7
+        partial_points: 3.5
+        pass: "Protects Marcus's capacity for the compatibility patch and rollout, and keeps unrelated Marcus work off the critical path."
+        partial: "Names Marcus as important but does not allocate or protect his capacity."
+      - id: instrumentation_nonblocking
+        points: 5
+        partial_points: 2.5
+        pass: "Onboarding instrumentation can ship after launch and is explicitly moved behind the critical work."
+        partial: "State is right but the planning implication is not drawn."
+      - id: security_not_blocking
+        points: 4
+        partial_points: 2
+        pass: "Security approval is complete; no action required absent a material scope change."
+        partial: "Notes the approval but still treats it as needing confirmation."
+      - id: hard_dependency_order
+        points: 4
+        partial_points: 2
+        pass: "Never violates migration -> patch -> QA -> rollout."
+        partial: "Broadly right but the ordering is left ambiguous."
+
+  resource_allocation:
+    max_points: 20
+    criteria:
+      - id: contoso_delegated
+        points: 6
+        partial_points: 3
+        pass: "Formatter goes to Julia (or an equivalent owner) and consumes neither Marcus nor the critical path."
+        partial: "Recognises it is non-blocking but leaves ownership or the action unclear."
+      - id: elena_risk_managed
+        points: 5
+        partial_points: 2.5
+        pass: "Schedules the migration early and treats Daniel as a fallback that first needs the permission and runbook transfer."
+        partial: "Mentions Elena's availability but misses the fallback mechanics."
+      - id: pricing_owner_and_mockups
+        points: 5
+        partial_points: 2.5
+        pass: "Sarah produces the mockups and they carry the approval and page forward."
+        partial: "Gets the owner or the mockups, not both."
+      - id: board_work_owned_correctly
+        points: 4
+        partial_points: 2
+        pass: "Board pack stays with Sarah, with independent and dependent sections distinguished."
+        partial: "Right owner but the split is not drawn."
+
+  planning_and_parallelization:
+    max_points: 20
+    criteria:
+      - id: monday_sequence
+        points: 7
+        partial_points: 3.5
+        pass: "Monday runs migration then compatibility, with the rest delegated in parallel."
+        partial: "Sound plan that loses meaningful time or leaves sequencing unclear."
+      - id: parallel_work
+        points: 7
+        partial_points: 3.5
+        pass: "Runs the Contoso formatter, the pricing mockups and the independent board work alongside the engineering path."
+        partial: "Finds some useful parallelism but not most of it."
+      - id: board_pack_partial_parallelization
+        points: 6
+        partial_points: 3
+        pass: "Non-revenue board work starts now; the revenue section waits for the post-migration dataset."
+        partial: "Sees a dependency but either delays all board work or freezes revenue too early."
+
+  replanning:
+    max_points: 15
+    criteria:
+      - id: urgent_vs_critical
+        points: 6
+        partial_points: 3
+        pass: "Neither the Contoso URGENT nor the stale task labels displace the SSO path."
+        partial: "Right actions, weak prioritisation."
+      - id: pricing_cycle_detected_and_broken
+        points: 5
+        partial_points: 2.5
+        pass: "Names the apparent loop between approval, page and screenshots, and uses mockups to break it."
+        partial: "Finds the loop or the workaround, not both."
+      - id: stale_tasks_overridden
+        points: 4
+        partial_points: 2
+        pass: "Overrides the stale urgent list against the newer evidence."
+        partial: "Overrides some of it."
+
+  state_reconstruction:
+    max_points: 10
+    criteria:
+      - id: sso_current_state
+        points: 4
+        partial_points: 2
+        pass: "SSO still needs the engineering chain, Security is approved, Wednesday stands."
+        partial: "Two of the three."
+      - id: contoso_current_state
+        points: 3
+        partial_points: 1.5
+        pass: "Export works; the issue is date formatting; the driver is Tuesday's demo."
+        partial: "Partly right."
+      - id: onboarding_current_state
+        points: 3
+        partial_points: 1.5
+        pass: "Core flow is launch-ready; instrumentation can follow."
+        partial: "Partly right."
+
+  delivery_and_uncertainty:
+    max_points: 5
+    criteria:
+      - id: earliest_delivery
+        points: 4
+        partial_points: 2
+        pass: "Tuesday, around 12:00-13:30, with the durations and dependencies respected."
+        partial: "Says Tuesday but the timing logic is materially incomplete."
+      - id: no_invented_blockers
+        points: 1
+        partial_points: 0.5
+        pass: "Invents no approvals, owners, causes or hard blockers."
+        partial: "One unsupported item, flagged as a hypothesis."
+
+global_penalties:
+  max_penalty: 25
+  types:
+    - {id: material_hallucination, points_each: 5}
+    - {id: prohibited_or_wasteful_action, points_each: 7}
+    - {id: critical_path_violation, points_each: 7}
+    - {id: major_contradiction, points_each: 5}
+
+scoring:
+  result_values: {PASS: 1.0, PARTIAL: 0.5, FAIL: 0.0}
+  final_score: "max(0, base_score - penalties)"

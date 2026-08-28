@@ -1,0 +1,148 @@
+# Ground truth — monday-003 "Blockers", scenario version 0.1
+#
+# EVALUATOR AND AUDIT ONLY. None of this reaches the candidate: `source_order`
+# in scenario.yaml lists the six files the model sees, and this is not one of
+# them. There is a test that fails if any candidate-visible source starts
+# stating the conclusions below.
+#
+# The design rule for this scenario: every *fact* is explicit somewhere in the
+# sources, and every *conclusion* is not. The model is told that the patch needs
+# the migration; it is never told that this is the critical path. It is told
+# that mock screenshots are accepted; it is never told that this breaks a loop.
+# It is told what Marcus owns; it is never told he is the bottleneck.
+
+critical_path:
+  - billing_schema_migration
+  - api_compatibility_patch
+  - sso_regression
+  - sso_production_rollout
+
+# Why this chain and not another: it is the only one that gates a dated external
+# commitment (Atlas, Wednesday EOD) and it is the longest dependent sequence.
+critical_path_drives: enterprise_sso_wednesday_commitment
+
+dependencies:
+  api_compatibility_patch:
+    requires: [billing_schema_migration]
+    stated_in: "slack.md #enterprise-sso, meetings.md"
+  sso_regression:
+    requires: [api_compatibility_patch]
+    stated_in: "slack.md #enterprise-sso (Sam), meetings.md"
+  sso_production_rollout:
+    requires: [sso_regression]
+    stated_in: "slack.md #enterprise-sso (Marcus), meetings.md"
+  packaging_approval:
+    requires: [pricing_mockups]
+    stated_in: "slack.md #pricing (Daniel), meetings.md"
+  pricing_page:
+    requires: [packaging_approval]
+    stated_in: "slack.md #pricing (Daniel)"
+  board_pack_revenue:
+    requires: [billing_migration_and_backfill]
+    stated_in: "slack.md #board (Sarah), meetings.md"
+
+independent_or_nonblocking:
+  - contoso_export_formatter
+  - onboarding_instrumentation
+  - board_pack_non_revenue
+
+stale_blockers:
+  security_review_for_sso:
+    tasks_md_says: "Product — unblock Security review for Enterprise SSO"
+    actual_state: "Approved Friday 16:51. No action unless implementation scope materially changes."
+  onboarding_instrumentation_as_launch_blocker:
+    tasks_md_says: "Marcus — finish onboarding instrumentation before launch"
+    actual_state: "Not required for launch; existing analytics suffice."
+  contoso_broken_export:
+    tasks_md_says: "Product — investigate broken Contoso exports"
+    actual_state: "Export succeeds. Date formatting only, and the customer confirms it imports correctly."
+  pricing_page_before_approval:
+    tasks_md_says: "Sarah — finish pricing page before packaging approval meeting"
+    actual_state: "Approval comes first and accepts mockups; the page follows it."
+
+resource_bottlenecks:
+  Marcus:
+    on_critical_path: [api_compatibility_patch, sso_production_rollout]
+    off_critical_path: [onboarding_instrumentation]
+    why: >
+      He is the only owner of two of the four critical-path steps, and the only
+      person assigned work that is on and off the path at once. Nothing in the
+      sources says this; it follows from work-items.csv.
+
+removable_cycles:
+  pricing:
+    apparent_cycle:
+      - packaging_approval
+      - pricing_page
+      - screenshots
+      - packaging_approval
+    break_with: pricing_mockups
+    why: "Internal approval accepts design mockups; screenshots need not come from the live page."
+
+# ---------------------------------------------------------------------------
+# Canonical earliest-feasible plan
+# ---------------------------------------------------------------------------
+# One valid schedule, not the only one. It exists so the evaluator can check a
+# candidate's timing against something concrete; equivalent orderings that
+# respect the same durations, dependencies and availability are equally correct.
+earliest_feasible_plan:
+  monday:
+    - task: billing_schema_migration
+      owner: Elena
+      start: "09:30"
+      end: "12:30"
+    - task: api_compatibility_patch
+      owner: Marcus
+      start: "13:00"
+      end: "17:00"
+  tuesday:
+    - task: sso_regression
+      owner: QA
+      start: "09:00"
+      end: "11:00"
+    - task: sso_production_rollout
+      owner: Marcus
+      start: "11:30"
+      end: "12:30"
+
+earliest_delivery:
+  canonical: "2026-09-22T12:30:00+02:00"
+  accept_between: ["2026-09-22T12:00:00+02:00", "2026-09-22T13:30:00+02:00"]
+  rationale: >
+    Work starts 09:30 Monday after coordination. Elena's three hours end 12:30;
+    a handoff gap puts Marcus at 13:00, and his four hours end 17:00 - the last
+    of Monday. QA's two hours therefore fall Tuesday morning, and Marcus's hour
+    of rollout follows. Wednesday EOD is met with more than a day to spare.
+  do_not_credit:
+    - "Rollout on Monday: the chain cannot compress into one day."
+    - "QA starting before the compatibility patch completes."
+    - "Rollout before QA passes."
+    - "Wednesday presented as the earliest when Tuesday is available."
+    - "Plans that spend Marcus's Monday on instrumentation and push SSO out."
+
+# ---------------------------------------------------------------------------
+# Facts the evaluator must treat as settled
+# ---------------------------------------------------------------------------
+# Written down because the ambiguity that cost monday-002 was not in the
+# candidate's reading but in the judge's. Once a candidate has found these, the
+# label should not be a matter of interpretation.
+settled_facts:
+  - "QA cannot start regression before the compatibility patch is complete."
+  - "Production rollout cannot start before QA passes."
+  - "Marcus performs both the compatibility patch and the rollout."
+  - "Security approval stands unless the planned implementation scope materially changes."
+  - "Onboarding instrumentation is not required for launch."
+  - "The Contoso formatter does not need Marcus; Julia owns it."
+  - "Mock screenshots are accepted for internal packaging approval."
+  - "The board revenue section needs the post-migration/backfill dataset."
+  - "Daniel does not currently hold production migration permissions."
+  - "Transferring those permissions plus the runbook walkthrough costs about 30 minutes of Elena's time."
+
+# A known gap, recorded rather than papered over: availability.csv lists Julia
+# and Sarah on Monday only, and QA on Monday and Tuesday. Absent rows mean
+# "not recorded", not "unavailable". A candidate that flags this under RISKS is
+# reading correctly and must not be marked down; one that concludes Sarah cannot
+# work on Thursday is over-reading, but that is a weak signal rather than an
+# error worth penalising.
+recorded_gaps:
+  availability_coverage: "Only Monday-to-Wednesday is enumerated, and not for every person."

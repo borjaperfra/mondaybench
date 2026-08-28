@@ -319,10 +319,17 @@ def test_the_pre_correction_leaderboard_is_archived():
     assert qwen["score"]["mean"] == 86.5
 
 
-def test_only_one_official_run_in_the_whole_repository_is_disqualified():
+def test_only_one_monday_002_run_is_disqualified():
+    """Scoped to the scenario it is about.
+
+    This asserted "one in the whole repository" until monday-003 landed and its
+    calibration hit the same provider defect twice. A fact about one battery
+    stated as a fact about the repo is the same mistake the leaderboard renderer
+    made with dimensions; scoping it keeps the guard and drops the false claim.
+    """
     offenders = [
         p
-        for p in sorted(REPO_ROOT.glob("runs/monday-00*/*/run-*.json"))
+        for p in sorted(REPO_ROOT.glob("runs/monday-002/*/run-*.json"))
         if reasoning_status(load_run(p)) == "NOT_DELIVERED"
     ]
     assert [p.name for p in offenders] == ["run-002.json"]
@@ -542,13 +549,34 @@ def test_the_genuinely_non_reasoning_models_stay_not_requested(slug):
             assert reasoning.classify_detailed(load_run(path))[0] == "NOT_REQUESTED", path
 
 
-def test_exactly_one_official_run_remains_disqualified():
+def test_every_disqualified_run_is_a_reasoning_model_returning_no_reasoning():
+    """Repo-wide, but asserting the *rule* rather than a count.
+
+    The count grows every time a provider serves a thinking model without
+    thinking, which is exactly what this guard exists to notice. What must stay
+    true is that nothing else ever lands in this list.
+    """
     offenders = [
         p.relative_to(REPO_ROOT).as_posix()
         for p in sorted(REPO_ROOT.glob("runs/monday-00*/*/run-*.json"))
         if reasoning.classify(load_run(p))[0] == "NOT_DELIVERED"
     ]
-    assert offenders == ["runs/monday-002/qwen3.8-flash/run-002.json"]
+    assert "runs/monday-002/qwen3.8-flash/run-002.json" in offenders
+    for rel in offenders:
+        run = load_run(REPO_ROOT / rel)
+        assert reasoning.was_requested(run), rel
+        assert reasoning.delivery_evidence(run)[0] is None, rel
+    # Every one of them is excluded from its scenario's qualifying runs.
+    for rel in offenders:
+        run = load_run(REPO_ROOT / rel)
+        verdict = qualify_run(
+            run,
+            path=REPO_ROOT / rel,
+            expected_prompt_sha256=run.scenario_prompt_sha256,
+            model=None,
+            scenario_id=run.scenario_id,
+        )
+        assert verdict.official is False, rel
 
 
 def test_no_official_score_moved():

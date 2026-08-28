@@ -1,0 +1,76 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.3-draft",
+  "scenario_id": "monday-003",
+  "scenario_prompt_sha256": "efd837502f4174663c8904fb3e01089de3017ffaff9f154ff611d4bc5286f84e",
+  "run_id": "monday-003__glm5.3-flash__001",
+  "run_number": 1,
+  "model": {
+    "slug": "glm5.3-flash",
+    "display_name": "GLM 5.3 Flash",
+    "provider": "nan",
+    "model_id": "glm5.3-flash"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 32000,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+    "extra_body": {
+      "caching": false
+    },
+    "config_sha256": "c4cbb40f3797b37258aaec04de5ba92ee03ae12e254e77f23d2326a81b8c671e"
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "DELIVERED",
+    "tokens": 2873,
+    "evidence": "explicit_reasoning_tokens",
+    "stream_observed": true,
+    "stream_event_count": 2873
+  },
+  "timestamp_utc": "2026-08-28T17:24:22Z",
+  "usage": {
+    "input_tokens": 2108,
+    "output_tokens": 4331,
+    "reasoning_tokens": 2873
+  },
+  "performance": {
+    "ttft_ms": 9851.2,
+    "ttfa_ms": 91726.3,
+    "total_latency_ms": 130090.3,
+    "tokens_per_second": 36.0
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "# Execution Plan — Monday 09:10\n\n## 1. CRITICAL PATH\n\n**Enterprise SSO for Atlas (committed Wednesday EOD; Atlas IT rollout starts Thursday, so Wednesday is a hard latest-useful date).**\n\nChain (all dependencies real and sequential):\n\n1. Billing schema migration — Elena, 3h\n2. SSO API compatibility patch — Marcus, 4h (blocked by #1)\n3. QA regression — QA, 2h (blocked by #2)\n4. Production rollout — Marcus, 1h (blocked by #3)\n\nTotal: ~10 working hours. Security review is **not** on this path (approved Friday). Everything else this week can run in parallel.\n\n## 2. MY PLAN FOR TODAY (in order)\n\n1. **09:15 — Kick Elena off on the migration now.** She's available from 09:00; 3h means done by ~12:30. This is the single gating item for the week.\n2. **09:20 — Tell Marcus:** start the compatibility patch the moment the migration lands (Mon 13:00–17:00, fits his day). Also tell him his instrumentation task is **off the critical list** (Julia confirmed Friday it's not needed for launch) — his held 3h is freed.\n3. **09:30 — Book Elena + Daniel 30-min handover today or Tuesday** (prod migration permissions + runbook). Must happen before Elena leaves Wednesday noon; this is the contingency for any migration slip.\n4. **09:30 — Assign Julia the Contoso formatter fix today (2h).** Investigation is already done (stale task); this is a build task for a €110k ARR account with a Tuesday-afternoon demo. Do it Monday, not Tuesday.\n5. **09:45 — Task-list hygiene (list is from Friday 14:20, pre-dates Friday's Slack):**\n   - Close \"unblock Security review\" — approved Friday.\n   - Remove \"instrumentation before launch\" — de-blocked Friday.\n   - Rewrite \"investigate Contoso exports\" → \"fix formatter (Julia, 2h).\"\n   - Fix \"Sarah: pricing page before packaging approval\" → **mockups first** (see §4).\n6. **10:00 — Direct Sarah:** pricing mockups (1.5h, due Tue 17:00) + start board non-revenue sections (4h).\n7. **Book QA for Tuesday 09:00** regression slot.\n8. **Comms:** reply to Peter (Contoso) confirming fix ships Monday; confirm to Laura (Atlas) we're targeting Tuesday, ahead of Wednesday EOD.\n9. **Ask Sarah/Daniel who owns the revenue backfill** and how long it takes (see §6).\n\n## 3. PARALLEL WORK (no dependency on the SSO chain)\n\n- **Julia — Contoso formatter (2h, Mon).** Independent.\n- **Sarah — pricing mockups (1.5h, Mon/Tue)** → Daniel runs internal packaging approval (mock screenshots accepted — confirmed by Daniel).\n- **Sarah — board pack non-revenue (4h, Mon–Tue).** Explicitly independent per Sarah/Noah.\n- **Sarah — public pricing page (3h)** once packaging approval lands (target Tue–Wed; deadline Thu 17:00).\n- **Marcus — onboarding instrumentation (3h)** — deferred to post-launch (Wed/Thu). Not a launch blocker.\n- **Onboarding launch itself** — flow is ready; can proceed on its own timeline.\n\n## 4. BLOCKERS & DEPENDENCIES\n\n**Real (keep):**\n- Migration → patch → QA → rollout (SSO chain).\n- Revenue board charts depend on post-migration/backfill dataset.\n- Pricing page depends on packaging approval; approval depends on mockups (not the live page).\n\n**Stale / removable (act on today):**\n- **Security review** — approved Friday 16:51. Remove as blocker.\n- **Onboarding instrumentation** — Julia confirmed existing analytics suffice. Remove as launch blocker; frees 3h of Marcus (the SSO bottleneck).\n- **Contoso \"investigation\"** — already done; root cause is date formatting only, and Contoso confirmed imports work either way. It's a 2h fix, not a crisis.\n- **Pricing circular dependency** — meeting notes imply approval → page → screenshots → approval. Broken by Daniel's clarification: mock screenshots are fine. Mockups (1.5h) unblock approval; the 3h page build follows approval.\n\n**Contingent:**\n- **Elena's Wednesday-12:00 departure.** If migration slips to Wednesday, Elena has exactly 3h (09:00–12:00) — zero buffer. Mitigation: start today + Daniel handover before Wed noon.\n\n**Broken recorded deadlines:** Work-item deadlines for patch/QA/rollout are all Wed 17:00 — impossible sequentially (would finish ~20:00). Treat Atlas's Wednesday EOD as the real deadline and target Tuesday.\n\n## 5. EARLIEST DELIVERY\n\n- Migration: Mon ~09:30–12:30 (Elena)\n- Patch: Mon 13:00–17:00 (Marcus)\n- QA: Tue 09:00–11:00\n- Rollout: **Tue ~11:00–12:00**\n\n**Earliest realistic SSO delivery: Tuesday midday — ~1.5 days ahead of the Wednesday EOD commitment.** Even a one-day slip still meets the commitment; only a slip to Wednesday morning creates a zero-buffer scenario, which today's plan prevents.\n\n## 6. RISKS / UNKNOWNS\n\n- **Revenue backfill:** Sarah requires \"migration/backfill\" data, but no backfill task, owner, or duration exists in the work items. If it's non-trivial and needs Elena, it must happen before Wed 12:00 — or the Friday 10:00 board pack is at risk. **Top unknown; resolve today.**\n- **QA surprises:** \"2h if nothing surprising appears\" — regression could run long; Tuesday-morning slot leaves Tuesday PM as buffer.\n- **Whether Marcus's compatibility work needs only the migration or also backfilled data** — evidence says migration only; confirm when he starts.\n- **Packaging approval meeting date** — not stated; mockups due Tue 17:00 implies approval Tue/Wed. If approval slips, the public page (Thu 17:00) slips with it.\n- **Exact Contoso demo time Tuesday** — \"before Tuesday afternoon\" per Peter; Monday fix removes the risk.\n- **Post-rollout Atlas needs** (credentials, IT coordination for Thursday) — not mentioned anywhere; confirm with Laura.\n- **Marcus's full workload** — I can only see the tasks listed; assume nothing else is on his plate, but verify with him this morning.",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "chatcmpl-1787937733-Jlfv0HP9HRc1R22YPA9G",
+    "raw_usage": {
+      "completion_tokens": 4331,
+      "prompt_tokens": 2108,
+      "total_tokens": 6439,
+      "completion_tokens_details": {
+        "audio_tokens": 0,
+        "reasoning_tokens": 2873,
+        "image_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 0,
+        "video_tokens": 0,
+        "cache_write_tokens": 0
+      }
+    }
+  }
+}

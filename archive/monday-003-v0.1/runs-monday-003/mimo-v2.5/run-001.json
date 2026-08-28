@@ -1,0 +1,71 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.3-draft",
+  "scenario_id": "monday-003",
+  "scenario_prompt_sha256": "efd837502f4174663c8904fb3e01089de3017ffaff9f154ff611d4bc5286f84e",
+  "run_id": "monday-003__mimo-v2.5__001",
+  "run_number": 1,
+  "model": {
+    "slug": "mimo-v2.5",
+    "display_name": "MIMO v2.5",
+    "provider": "nan",
+    "model_id": "mimo-v2.5"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 32000,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+    "extra_body": {
+      "caching": false
+    },
+    "config_sha256": "3ad2b0cfaea8e33030da7dd5840c37bdea327c767fbe7f524bfdb331dd85d753"
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "DELIVERED",
+    "tokens": 0,
+    "evidence": "explicit_reasoning_stream",
+    "stream_observed": true,
+    "stream_event_count": 904
+  },
+  "timestamp_utc": "2026-08-28T17:25:38Z",
+  "usage": {
+    "input_tokens": 2342,
+    "output_tokens": 4283,
+    "reasoning_tokens": 0
+  },
+  "performance": {
+    "ttft_ms": 5350.2,
+    "ttfa_ms": 40065.8,
+    "total_latency_ms": 75655.6,
+    "tokens_per_second": 60.9
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "## 1. CRITICAL PATH\n\n**Enterprise SSO delivery to Atlas by Wednesday EOD.**\n\n```\nElena: Billing schema migration (3h)\n  └─► Marcus: SSO API compatibility patch (4h)\n       └─► QA: SSO regression (2h)\n            └─► Marcus: SSO production rollout (1h)\n```\n\nTotal sequential work: **10 hours.** Every downstream step is blocked by the one before it. This chain is the only workstream that determines a hard external commitment (Atlas IT rollout starts Thursday morning).\n\n---\n\n## 2. MY PLAN FOR TODAY (Monday, in order)\n\n| Time | Action | Why |\n|---|---|---|\n| 09:10–09:20 | Message Elena: **start the billing schema migration immediately.** She is the gate for the entire SSO chain. | Every hour she starts earlier buys margin. 3 hours of work → done by ~12:15. |\n| 09:10–09:20 | Message Marcus: clear his calendar for afternoon. He cannot start until Elena lands the schema, but must be ready to pick up the compatibility patch the moment she does. | He currently holds 3h for onboarding instrumentation (stale blocker — see §4). He needs to know that's freed. |\n| 09:20–09:30 | Message Marcus + Julia: **confirm onboarding instrumentation is not a launch blocker**, and update the tracker. This releases 3 hours of Marcus's capacity. | Marcus said Friday \"the tracker still has it down as a launch blocker.\" The tracker is stale; Julia confirmed existing analytics suffice. |\n| 09:30–09:45 | Confirm with Julia: she picks up the **Contoso date formatter today** (2h). Deadline is Tuesday afternoon for Peter's demo. CEO flagged it. | Low effort, high-profile account. She should start this morning. |\n| 09:45–10:00 | Talk to Sarah: **start pricing mockups this morning** (1.5h). Packaging approval is sequential to the pricing page, and approval timing is unknown. Starting mockups today creates the most option value. | Sarah has 10.5h of work across multiple workstreams; she needs to start the earliest dependency first. |\n| 10:00–10:15 | Talk to Sarah: begin **board pack non-revenue section** (4h) after mockups. Revenue section (2h) must wait until billing migration/backfill is done, so defer it. | She can parallelize this with almost everything else. |\n| 10:15–10:45 | Schedule Elena's **insurance handover with Daniel** for Tuesday afternoon (30 min). Even if migration lands today, Daniel should have permissions and runbook knowledge before Elena disappears Wednesday noon. | Risk mitigation for a Wednesday-noon hard availability cutoff. |\n| 11:00 | Brief Noah: share this plan, confirm no one else needs to be unblocked. | Stakeholder alignment before the day gets away. |\n\n---\n\n## 3. PARALLEL WORK\n\nThese workstreams have **no dependency on the SSO critical path** and can proceed independently:\n\n| Work | Owner | Duration | Can start | Notes |\n|---|---|---|---|---|\n| Contoso date formatter | Julia | 2h | Monday AM | CEO attention. Low effort, high visibility. |\n| Pricing mockups | Sarah | 1.5h | Monday AM | Unlocks packaging approval → pricing page. |\n| Board pack (non-revenue) | Sarah | 4h | Monday AM | Explicitly cleared by Noah to proceed independently. |\n| Board pack (revenue) | Sarah | 2h | After billing migration completes | Blocked, but Sarah knows this and can sequence accordingly. |\n| Pricing page | Sarah | 3h | After packaging approval | Blocked by approval; approval blocked by mockups. |\n| Onboarding instrumentation | Marcus | 3h | After SSO work is done | **Not a launch blocker.** Lowest priority. Marcus can do this later in the week if time allows, or defer. |\n\n---\n\n## 4. BLOCKERS & DEPENDENCIES\n\n### Active blockers (must be resolved to ship SSO)\n\n| Blocker | Blocked item | Resolution |\n|---|---|---|\n| Billing schema migration not started | Everything in SSO chain | Elena must start **today, first thing.** |\n\n### Stale items on the task list (should be updated/closed)\n\n| Stale item | Actual status | Action |\n|---|---|---|\n| 🔴 Product — unblock Security review | **Done.** Maya approved Friday 16:51. | Close it. |\n| 🔴 Product — investigate broken Contoso exports | **Mischaracterized.** Export works; it's a date format preference. Julia diagnosed Friday. | Reprioritize to \"format fix.\" Done today. |\n| 🔴 Marcus — finish onboarding instrumentation before launch | **Not a blocker.** Julia confirmed Friday 17:06; existing analytics suffice. Marcus still tracks it as a blocker. | Update tracker immediately. Free Marcus's 3h. |\n| 🔴 Sarah — finish pricing page before packaging approval meeting | **Sequence is wrong.** Mockups → approval → pricing page. No approval meeting is on the calendar. | Replace with: Sarah builds mockups first; approval is a process gate. |\n\n### Circular / self-reinforcing dependency\n\n- **Pricing → Approval → Pricing page:** Daniel needs screenshots of the approved packaging. Mockups satisfy this. But approval timing is unknown — no meeting is scheduled, no approver is named. This could silently stall the pricing page if nobody drives the approval process. **Action needed: identify the approver and get a commitment for when approval will happen.**\n\n### Removable dependency\n\n- **Onboarding instrumentation → launch:** Already confirmed removable. Marcus is still holding capacity for it. Remove it from the tracker to prevent him from working on it during the SSO critical window.\n\n---\n\n## 5. EARLIEST DELIVERY\n\n**Enterprise SSO: Tuesday ~12:00–14:00**, assuming:\n\n- Elena starts the billing migration at 09:15 and finishes by ~12:15\n- Marcus begins the compatibility patch immediately after (early afternoon), finishes by ~16:15\n- QA begins regression first thing Tuesday morning, finishes by ~11:00\n- Marcus does production rollout by ~12:00\n\nThis is **well ahead of the Wednesday EOD commitment** and leaves ~1.5 days of buffer.\n\n**Worst case (if Elena can't start until Tuesday):** Chain finishes Wednesday ~16:00–17:00. Tight but still meets the deadline. At that point, Marcus is the only hand needed and he's available. Elena's absence Wednesday afternoon is not a problem *if the migration is done by Tuesday night.*\n\n**Contoso export:** Tuesday morning (well before Peter's Tuesday afternoon deadline).\n\n**Pricing mockups:** Tuesday (afternoon or evening, depending on approval speed).\n\n**Board pack:** Friday morning for non-revenue; revenue section depends on when billing backfill completes.\n\n---\n\n## 6. RISKS / UNKNOWNS\n\n| Risk | Severity | Mitigation |\n|---|---|---|\n| **Elena's migration slips past Tuesday.** If she can't finish by Tuesday EOD, Daniel must take over Wednesday morning. He needs the 30-min handover before she leaves at noon. | High | Do the handover Tuesday afternoon regardless of progress. Don't treat it as a contingency — treat it as scheduled. |\n| **Marcus's \"four focused hours\" for the compatibility patch is optimistic.** He says the \"current branch still assumes the old account mapping.\" If the branch is complex, the patch could take longer than 4 hours. | Medium | Ask Marcus for a rough scope estimate Monday morning. If it's >4h, we need to know now. |\n| **No approver identified for packaging.** The pricing page is blocked by an approval process with no named owner, no meeting, and no SLA. | Medium | Today: ask Daniel who approves and get a time commitment. |\n| **QA finds surprises during regression.** Sam flagged \"if nothing surprising appears.\" If it does, the 2-hour estimate is invalid. | Low-Medium | No mitigation beyond QA starting as early as possible. |\n| **Billing backfill timing unknown.** Sarah's revenue charts for the board pack depend on the billing migration/backfill. We know the migration is 3 hours, but we don't know how long the backfill takes or whether it's part of the same change. | Unknown | Clarify with Elena: does the schema migration include the backfill, or is that a separate step? |\n| **Board pack revenue section — what does \"backfill\" mean?** Sarah says \"the current revenue pipeline still duplicates some expansion events.\" We don't know if this is a data fix, a code fix, or an accounting adjustment. | Unknown | Ask Sarah or Elena for specifics. This affects whether the revenue section can ship Friday. |\n| **Daniel's backup capability.** Daniel can execute the migration if needed, but he's never done it. Risk of errors under time pressure. | Low (if handover happens) | Ensure the handover + runbook walkthrough happens Tuesday. |",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "chatcmpl-b49a51a1-14c7-4635-989d-8976f5c5b20b_52ce52f0afb14000ab5bb4a4ccf05b54",
+    "raw_usage": {
+      "completion_tokens": 4283,
+      "prompt_tokens": 2342,
+      "total_tokens": 6625,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}
