@@ -1,0 +1,95 @@
+id: evaluator-manual-v0.1
+
+# Human-recorded verdicts. Labels come from a reviewer filling in a worksheet
+# (`mondaybench worksheet`), not from a model call. Scoring is the same
+# deterministic code path as every other evaluator.
+#
+# Two reasons this exists:
+#   1. IMPLEMENTATION.md s33 requires a manual audit of every criterion label
+#      for the calibration runs. This makes that audit an artifact.
+#   2. It runs the whole pipeline with zero API spend.
+#
+# This is a DIFFERENT evaluator from evaluator-v0.1, so its scores must never
+# appear in the same ranking - that is exactly what evaluator versioning is for.
+judge:
+  provider: recorded
+  api_style: anthropic   # unused: RecordedJudge never builds a provider
+  model_id: recorded-manual
+  api_key_env: null
+
+generation:
+  temperature: null
+  effort: null
+  max_output_tokens: 0
+
+behavior:
+  evaluate_atomic_criteria: true
+  require_evidence: true
+
+# Identical to evaluator-v0.1: which ground-truth facts belong to which
+# criterion is a property of the rubric reading, not of who is judging.
+ground_truth_map:
+  contoso_action:
+    - critical_actions.contoso
+    - current_state.contoso_renewal
+  umbrella_action:
+    - critical_actions.umbrella
+    - current_state.umbrella_status
+  churn_action:
+    - critical_actions.enterprise_churn
+    - current_state.enterprise_churn
+    - current_state.board_meeting
+  analytics_action:
+    - critical_actions.analytics_release
+    - current_state.analytics_v2_release
+    - current_state.analytics_launch_email_owner
+
+  acme_resolved:
+    - current_state.acme_incident
+  release_wednesday:
+    - current_state.analytics_v2_release
+    - critical_actions.analytics_release
+  contoso_blocked:
+    - current_state.contoso_renewal
+    - critical_actions.contoso
+  launch_email_julia:
+    - current_state.analytics_launch_email_owner
+    - critical_actions.analytics_release
+  pricing_confidential:
+    - current_state.enterprise_pricing
+    - non_actions
+
+  contoso_first:
+    - critical_actions.contoso
+    - critical_actions.umbrella
+    - critical_actions.enterprise_churn
+    - critical_actions.analytics_release
+  umbrella_and_churn_high:
+    - critical_actions.umbrella
+    - critical_actions.enterprise_churn
+  no_false_priorities:
+    - non_actions
+    - current_state
+    - secondary_actions
+
+  umbrella_detected:
+    - critical_actions.umbrella
+  umbrella_metrics:
+    - critical_actions.umbrella
+  churn_numbers:
+    - current_state.enterprise_churn
+    - critical_actions.enterprise_churn
+  no_friday_conversion_claim:
+    - current_state.friday_conversion
+    - uncertainties
+
+  umbrella_unknown_cause:
+    - current_state.umbrella_status
+    - critical_actions.umbrella
+    - uncertainties
+  friday_conversion_unknown:
+    - current_state.friday_conversion
+    - uncertainties
+  churn_causality_unknown:
+    - critical_actions.enterprise_churn
+    - uncertainties

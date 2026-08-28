@@ -1,0 +1,59 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.2",
+  "scenario_id": "monday-002",
+  "scenario_prompt_sha256": "740e627cbc7413c321ede0d54000504de54821d34ff4677f82731b89600423a8",
+  "run_id": "monday-002__deepseek-v4-flash__001",
+  "run_number": 1,
+  "model": {
+    "slug": "deepseek-v4-flash",
+    "display_name": "DeepSeek V4 Flash",
+    "provider": "helmcode",
+    "model_id": "deepseek-v4-flash"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 32000,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true
+  },
+  "timestamp_utc": "2026-08-28T13:03:15Z",
+  "usage": {
+    "input_tokens": 2414,
+    "output_tokens": 14863,
+    "reasoning_tokens": 13476
+  },
+  "performance": {
+    "ttft_ms": 2754.6,
+    "ttfa_ms": 138968.9,
+    "total_latency_ms": 150835.5,
+    "tokens_per_second": 100.4
+  },
+  "economics": {
+    "input_cost_usd": 0.000422,
+    "output_cost_usd": 0.005202,
+    "total_cost_usd": 0.005624
+  },
+  "response": "### 1. CURRENT STATE\n\n- **Enterprise Controls release:** Friday’s staging build `2.9.4` passed Security verification and the session-preservation test, but the Friday production attempt failed on `eu-03` before rollout opened, with no customer impact. Marcus has two ready recovery options: **A** retry `2.9.4` (no code change, ~20m deploy, 8% session-reset risk) and **B** deploy `2.9.5-patch` (code change, ~45m deploy, <1% session-reset risk).\n- **Release policy is clear:** verified build → post-deploy check only; changed build → 25-minute Security delta review before production, then 20-minute post-deploy verification. Maya has explicitly removed any additional executive gate.\n- **Atlas:** renewal is signed. Missing Monday’s migration window does not threaten renewal, but it pushes migration to Thursday and creates executive noise. Rollout must begin before **12:00 Monday**.\n- **Customer announcement:** final draft is with Daniel, and Daniel sends it only after Sam confirms rollout is open.\n- **Pricing:** not public. No external quoting, no procurement send, no firm announcement date.\n- **Board pack:** September expansion target €180k; expected €126k; gap €54k. Wayne (-€18k) and Globex (-€12k) explain €30k. The remaining €24k is Soylent (-€10k) and Wonka (-€14k). Acme’s usage drop is contract-approved and not a revenue gap.\n- **Superseded tasks:** Maya approval, Zenith renewal call, and sending Enterprise pricing to Initech are stale or unsafe based on later evidence. Orion SCIM reply is blocked pending verification.\n\n---\n\n### 2. MY PLAN FOR TODAY\n\n**Choose Option B: `2.9.5-patch`.** It avoids the failing migration path and materially lowers session-reset risk, and it fits the Monday timeline if started immediately.\n\n1. **09:07–09:10** — Notify release team: select Option B. Ask Marcus to confirm/submit the `2.9.5-patch` diff now and ask Priya to start the 25-minute Security delta review immediately. Do not request Maya approval.\n2. **09:10–09:35** — Priya completes delta review. While this runs, draft the September expansion reconciliation and begin Orion org-ID verification.\n3. **09:35–10:20** — Marcus deploys `2.9.5-patch` (~45 minutes), with shard precheck for `eu-03`. Must finish before Marcus leaves at 10:20.\n4. **10:25–10:45** — Priya completes 20-minute post-deploy verification.\n5. **10:45–11:00** — Sam opens and sanity-checks rollout (~15 minutes). After Sam confirms, Daniel sends the customer announcement. Confirm actual Atlas rollout start (~11:00) before the 12:00 window.\n6. **By 10:55** — Send the expansion explanation to Maya. Use only actual arithmetic: Wayne + Globex = €30k gap; Soylent + Wonka = €24k gap; no invented causes.\n7. **11:00 onward** — Monitor rollout and Atlas start. Then focus on Globex support/renewal follow-up and Orion SCIM verification before replying.\n\n---\n\n### 3. CUSTOMER / REVENUE PRIORITIES\n\n- **Atlas** — top priority because of the Monday migration window. Signed renewal means revenue is safe, but missing the window creates unnecessary executive noise.\n- **Globex** — deserves immediate attention. Renewal in 18 days, September expansion was €12k and is now expected at €0 pending procurement, with three open support tickets including a high-severity SSO issue and sharply lower admin logins/usage. Support blockers may be delaying adoption and procurement.\n- **Acme** — do **not** treat as a problem. Usage down ~45% is expected after the approved shift to annual batch-processing, and the account has no expansion gap.\n- **Soylent / Wonka** — explain the remaining €24k gap, but neither has a documented contract cause. Soylent has open support tickets and lower usage; Wonka has no stated explanation. Do not assign causes without evidence.\n- **Zenith** — resolved and signed; no action needed.\n- **Orion** — technical verification priority, not a revenue escalation. Confirm the correct org ID before sending any status.\n\n---\n\n### 4. DO NOT DO\n\n- Do not ask Maya for another approval or add an executive gate — she explicitly removed it.\n- Do not call Zenith about renewal risk — contract is signed and resolved.\n- Do not send Enterprise pricing to Initech or any external party — pricing is not public, and the pinned workbook is not authoritative.\n- Do not quote any pricing workbook externally; use Daniel’s internal scenario values only internally.\n- Do not send the customer announcement before Sam confirms rollout is open — Daniel owns that send.\n- Do not promise Atlas a 10:30 launch — the verified rollout open is ~11:00; if Atlas was told 10:30, update them via Laura immediately.\n- Do not reply to Orion on SCIM until the correct org ID and live flag are confirmed.\n- Do not invent causes for Soylent/Wonka reductions in the board pack — state arithmetic only.\n- Do not treat Acme’s usage decline as a problem — it is contract-approved.\n- Do not start production deploy before Priya’s delta review, and do not open rollout before Sam’s sanity check.\n\n---\n\n### 5. UNCLEAR / MUST VERIFY\n\n- Confirm with Marcus/Priya that the `2.9.5-patch` diff is immediately available for delta review. This is the main dependency for the assumed timeline.\n- Orion’s correct org ID: ticket says `org_17A`, Laura may have checked `org_71A` in CRM. Read the live SCIM flag for the correct org before replying.\n- Whether Atlas was specifically told 10:30. If yes, verify that ~11:00 is acceptable, still within the required 12:00 window.\n- Whether the Initech “send pricing” task has any approved exception. Current evidence says no external pricing before announcement, so do not send until that conflict is resolved.\n- Missing cause evidence for Soylent and Wonka expansion reductions — cannot be determined from current account/contract/support data.",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "gen-1787922043-xkKel4uaiDtHQH55chiH",
+    "raw_usage": {
+      "completion_tokens": 14863,
+      "prompt_tokens": 2414,
+      "total_tokens": 17277,
+      "completion_tokens_details": {
+        "audio_tokens": 0,
+        "reasoning_tokens": 13476,
+        "image_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 1979,
+        "video_tokens": 0,
+        "cache_write_tokens": 0
+      }
+    }
+  }
+}

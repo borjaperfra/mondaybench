@@ -1,0 +1,96 @@
+id: evaluator-gateway-v0.2
+
+# Same judge as evaluator-gateway-v0.1 (claude-opus-5 via the Helmcode gateway).
+# The only change is the rubric: 0.1 -> 0.2.
+#
+# rubric-0.2.yaml retires `no_friday_conversion_claim` - which duplicated
+# uncertainty.friday_conversion_unknown, making one insight worth 6 points - and
+# spends its 3 points on `umbrella_error_rate`, the dimension's only criterion
+# that requires reading more than one row of metrics.csv.
+#
+# Scores under 0.1 and 0.2 are NOT comparable. Both rubrics stay on disk and
+# every evaluation records its rubric_version, so either is reproducible and the
+# leaderboard refuses to blend them.
+judge:
+  provider: openai_compatible
+  api_style: openai_compatible
+  base_url_env: HELMCODE_BASE_URL
+  api_key_env: HELMCODE_API_KEY
+  model_id: claude-opus-5
+
+rubric_file: rubric-0.2.yaml
+
+generation:
+  # Unset: the gateway forwards temperature to Anthropic, which rejects it (400).
+  temperature: null
+  effort: null
+  max_output_tokens: 4000
+
+behavior:
+  evaluate_atomic_criteria: true
+  require_evidence: true
+
+ground_truth_map:
+  contoso_action:
+    - critical_actions.contoso
+    - current_state.contoso_renewal
+  umbrella_action:
+    - critical_actions.umbrella
+    - current_state.umbrella_status
+  churn_action:
+    - critical_actions.enterprise_churn
+    - current_state.enterprise_churn
+    - current_state.board_meeting
+  analytics_action:
+    - critical_actions.analytics_release
+    - current_state.analytics_v2_release
+    - current_state.analytics_launch_email_owner
+
+  acme_resolved:
+    - current_state.acme_incident
+  release_wednesday:
+    - current_state.analytics_v2_release
+    - critical_actions.analytics_release
+  contoso_blocked:
+    - current_state.contoso_renewal
+    - critical_actions.contoso
+  launch_email_julia:
+    - current_state.analytics_launch_email_owner
+    - critical_actions.analytics_release
+  pricing_confidential:
+    - current_state.enterprise_pricing
+    - non_actions
+
+  contoso_first:
+    - critical_actions.contoso
+    - critical_actions.umbrella
+    - critical_actions.enterprise_churn
+    - critical_actions.analytics_release
+  umbrella_and_churn_high:
+    - critical_actions.umbrella
+    - critical_actions.enterprise_churn
+  no_false_priorities:
+    - non_actions
+    - current_state
+    - secondary_actions
+
+  umbrella_detected:
+    - critical_actions.umbrella
+  umbrella_metrics:
+    - critical_actions.umbrella
+  churn_numbers:
+    - current_state.enterprise_churn
+    - critical_actions.enterprise_churn
+  umbrella_error_rate:
+    - critical_actions.umbrella
+
+  umbrella_unknown_cause:
+    - current_state.umbrella_status
+    - critical_actions.umbrella
+    - uncertainties
+  friday_conversion_unknown:
+    - current_state.friday_conversion
+    - uncertainties
+  churn_causality_unknown:
+    - critical_actions.enterprise_churn
+    - uncertainties

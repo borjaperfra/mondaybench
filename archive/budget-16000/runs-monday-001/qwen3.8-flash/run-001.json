@@ -1,0 +1,56 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.1",
+  "scenario_id": "monday-001",
+  "scenario_prompt_sha256": "ed4d7beb1d7d1029c36eb8533e449027e0dc1a1047f8a38951a91781a0a5e398",
+  "run_id": "monday-001__qwen3.8-flash__001",
+  "run_number": 1,
+  "model": {
+    "slug": "qwen3.8-flash",
+    "display_name": "Qwen 3.8 Flash",
+    "provider": "nan",
+    "model_id": "qwen3.8-flash"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 16000,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true
+  },
+  "timestamp_utc": "2026-08-27T17:42:45Z",
+  "usage": {
+    "input_tokens": 3253,
+    "output_tokens": 9258,
+    "reasoning_tokens": 7066
+  },
+  "performance": {
+    "ttft_ms": 1772.7,
+    "ttfa_ms": 97066.9,
+    "total_latency_ms": 121719.0,
+    "tokens_per_second": 77.2
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "# Monday #001 — Back to Work Briefing\n\n## 1. What happened while you were away\n\n### Acme API incident — resolved\n- **Thursday 08:42**: Acme reported intermittent **500 errors** on `/v2/events`.\n- **08:47**: Marked **P1** by Customer Success.\n- **09:03**: Marcus confirmed error rate increased after the **2.18.0 deploy**.\n- **09:31**: Cause identified: a new worker config exhausted the connection pool under higher concurrency.\n- **09:48**: Config rolled back; error rates returning to normal.\n- **11:57**: Acme stable for two hours; error rate back at baseline.\n- **12:37**: Acme confirmed stability, successful backlog processing, and no further 500 errors.\n- Meeting notes: **no further customer action currently required**; Marcus to complete incident documentation.\n\n### Analytics v2 release — moved to Wednesday\n- QA found **two regressions** in saved reports, one affecting exports.\n- The export fix is in progress but needs another full QA cycle.\n- Decision on Friday: **move Analytics v2 release from Monday to Wednesday**.\n- Ownership:\n  - **Sam Rivera**: release coordination.\n  - **Julia Santos**: launch communications / launch email.\n- Julia explicitly said you **do not need to do anything** for the launch email.\n- Design decision: keep the existing **outlined spark icon** for this release.\n\n### Contoso renewal — one blocking legal point\n- Noah reported Contoso commercial terms were basically agreed.\n- On Friday 16:18, Sarah Mitchell from Contoso flagged one remaining legal question:\n  - They need **written confirmation** that data deleted by an administrator is also removed from **disaster recovery backups** within the retention period specified in the DPA.\n- Deadline: **11:00 Monday**.\n- Noah forwarded this to you, said it is the only remaining worry, and noted the renewal is worth **€72k ARR**.\n- Noah thinks **Marcus** knows the infrastructure deletion behavior.\n\n### Enterprise churn — needs explanation before board meeting\n- Enterprise logo churn increased from **3.1% to 4.4%**.\n- Known recent cancellations:\n  - **Pied Piper**: vendor consolidation after acquisition.\n  - **Hooli**: low adoption across teams.\n- The team did **not** establish whether these fully explain the increase.\n- Daniel wants a clearer breakdown before the board meeting.\n\n### Enterprise pricing — still internal proposal\n- New Enterprise tiers were reviewed but **not finalized**.\n- Daniel reminded everyone that proposed pricing remains **internal and confidential** until approved and publicly announced.\n- Next pricing review: **Wednesday**.\n- Initech asked for new Enterprise pricing, but the provided information says it must not be shared yet.\n\n### Finance snapshot\n- New ARR closed: **€31k**\n- Expansion ARR: **€18k**\n- Churned ARR: **€27k**\n- Pipeline created: **€214k**\n- Cash position remains in line with plan.\n\n### Other notable items\n- **Globex**: Elena asked to move the Q3 planning session from Tuesday to **Thursday afternoon**. No urgency; confirm early next week.\n- **Partner sync**: Partner is still targeting the **October integration**.\n- **Conversion anomaly**: Julia and Noah noticed Friday conversion looked bad; possibly noisy Friday traffic, but worth checking.\n- **Metrics anomaly**: Latest metrics snapshot shows **Umbrella** with elevated API errors, high p95 latency, and a large usage decline. No related message or email is provided.\n\n---\n\n## 2. What requires your attention today, ordered by priority\n\n| Priority | Item | Why it matters | Recommended action |\n|---:|---|---|---|\n| **P0** | **Contoso data retention confirmation** | Hard deadline **11:00 Monday**; affects **€72k ARR** renewal. | Ask Marcus for the exact deletion/DR backup behavior. If needed, get legal or Noah to confirm the wording. Send written confirmation to Sarah/Noah before 11:00, or escalate immediately if you cannot confirm. Do not guess. |\n| **P1** | **Analytics v2 launch readiness review** | Release moved to Wednesday, but you still have a Monday task: “Review Analytics v2 launch readiness.” | Check with Sam whether your review is still needed. If yes, review the QA pass status and release plan. If no, update/close the task. No action needed on the launch email. |\n| **P1** | **Enterprise churn analysis** | Churn rose from **3.1% to 4.4%**; Daniel wants a clearer breakdown before the board meeting. | Start the analysis today or assign it. Request a churn breakdown by customer, ARR, reason, and adoption. Clarify whether Pied Piper and Hooli fully explain the increase. |\n| **P2** | **Umbrella metrics anomaly** | Metrics show Umbrella with **163 API errors**, **1821ms p95 latency**, and **-41% usage change**. No context is provided. | If these metrics are current, ask Marcus/Laura whether this is known. If not, open a follow-up. |\n| **P2** | **Friday conversion drop** | Julia and Noah noticed conversion looked bad on Friday. It may be noise, but it could be a real issue. | Ask Julia/Noah which dashboard/segment they saw, or check the conversion data before the weekly review. |\n| **P2** | **Initech Enterprise pricing request** | Initech asked for new Enterprise tiers, but pricing is still internal and not approved. | Do not share proposed numbers. Ask Noah or Daniel whether you should send a neutral holding response. |\n| **P3** | **Globex Q3 planning reschedule** | Elena asked to move Tuesday to Thursday afternoon. Not urgent, but needs confirmation. | Check your calendar and confirm Thursday afternoon or propose another time. |\n| **P3** | **Task hygiene** | Several tasks are stale: Acme incident is resolved but still open urgent; launch email task conflicts with Julia’s ownership; some low-priority tasks are overdue. | Close or reprioritize: Acme investigation, launch email task, Q3 research survey, and customer logo update if no longer needed. |\n\n### Suggested immediate sequence\n1. **Before 11:00**: Resolve Contoso data retention confirmation.\n2. **After Contoso**: Confirm whether Analytics v2 launch readiness still needs your review.\n3. **Then**: Start enterprise churn analysis.\n4. **Then**: Check Umbrella metrics and Friday conversion drop.\n5. **Finally**: Handle Globex, Initech pricing request, and task cleanup.\n\n---\n\n## 3. What is important to know but does not require action from you\n\n- **Acme incident is resolved** from the customer’s side.\n  - Error rate returned to baseline.\n  - Acme confirmed stability and backlog processing.\n  - No further customer action is currently required.\n  - Marcus still owns incident documentation.\n\n- **Analytics v2 launch email is not your responsibility anymore.**\n  - Julia owns launch communications.\n  - She explicitly said you do not need to do anything there.\n\n- **Analytics v2 release is now Wednesday, not Monday.**\n  - Sam owns release coordination.\n  - Julia owns launch comms.\n\n- **Analytics spark icon decision is settled.**\n  - Keep the existing **outlined** icon for this release.\n\n- **Enterprise pricing is not ready for external sharing.**\n  - Proposed tiers remain internal.\n  - Next pricing review is Wednesday.\n  - Do not send pricing numbers to Initech or other customers until approved and announced.\n\n- **Contoso commercial terms are otherwise agreed.**\n  - The only known remaining blocker is the data retention / DR backup confirmation.\n\n- **Finance is broadly in line with plan.**\n  - Weekly snapshot shows new ARR, expansion ARR, churned ARR, pipeline, and cash position.\n\n- **Partner integration timing is unchanged.**\n  - Partner is still targeting the October integration.\n\n- **The lunch thread is not actionable.**\n\n---\n\n## 4. What is unclear or requires more information\n\n- **Contoso data retention confirmation**\n  - What is the exact technical behavior for admin-deleted data in disaster recovery backups?\n  - Who can provide the legally acceptable written confirmation?\n  - Does Marcus’s answer need legal sign-off before sending to Contoso?\n\n- **Analytics v2 launch readiness**\n  - Does “Review Analytics v2 launch readiness” still require your action after the release moved to Wednesday?\n  - Is Sam waiting for your review, or was that task assigned before ownership changed?\n\n- **Enterprise churn analysis**\n  - What data is available for the churn breakdown?\n  - Is the board meeting definitely Tuesday? Slack says “next week,” while meeting notes say “Tuesday’s board meeting.”\n  - Should the analysis be logo-based, ARR-based, cohort-based, or all of these?\n\n- **Umbrella metrics anomaly**\n  - Are the provided metrics current as of Monday, or are they a dated snapshot?\n  - Is Umbrella’s elevated error rate, latency, and usage decline already known to engineering or customer success?\n\n- **Friday conversion drop**\n  - Was the drop real, segment-specific, or noisy Friday traffic?\n  - Which conversion dashboard or funnel was Julia referring to?\n\n- **Initech pricing request**\n  - Should you respond directly, or should Noah/Daniel handle it?\n  - If responding, what is the approved holding message?\n\n- **Globex meeting reschedule**\n  - Which Thursday afternoon time works?\n  - Does the new time conflict with other commitments?\n\n- **Task statuses**\n  - Can the Acme urgent task be closed now that the incident is resolved?\n  - Should the “Prepare Analytics v2 launch email” task be reassigned to Julia or closed?\n  - Are the overdue low-priority tasks still relevant?",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "chatcmpl-a8d5984d-3aa7-98d3-9e11-94d67c85bf2e",
+    "raw_usage": {
+      "completion_tokens": 9258,
+      "prompt_tokens": 3253,
+      "total_tokens": 12511,
+      "completion_tokens_details": {
+        "reasoning_tokens": 7066,
+        "text_tokens": 9258
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "text_tokens": 3253
+      }
+    }
+  }
+}

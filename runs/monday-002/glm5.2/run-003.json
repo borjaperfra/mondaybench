@@ -1,0 +1,59 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.2",
+  "scenario_id": "monday-002",
+  "scenario_prompt_sha256": "740e627cbc7413c321ede0d54000504de54821d34ff4677f82731b89600423a8",
+  "run_id": "monday-002__glm5.2__003",
+  "run_number": 3,
+  "model": {
+    "slug": "glm5.2",
+    "display_name": "GLM 5.2",
+    "provider": "helmcode",
+    "model_id": "glm5.2"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 32000,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true
+  },
+  "timestamp_utc": "2026-08-28T13:15:46Z",
+  "usage": {
+    "input_tokens": 2310,
+    "output_tokens": 6777,
+    "reasoning_tokens": 5210
+  },
+  "performance": {
+    "ttft_ms": 1097.7,
+    "ttfa_ms": 64739.7,
+    "total_latency_ms": 79108.0,
+    "tokens_per_second": 86.9
+  },
+  "economics": {
+    "input_cost_usd": 0.001617,
+    "output_cost_usd": 0.014909,
+    "total_cost_usd": 0.016526
+  },
+  "response": "## 1. CURRENT STATE\n\n- **Enterprise Controls release**: 2.9.4 passed staging + Security verification Friday, but its production attempt failed on shard eu-03 before rollout opened (no customer impact). Two recovery paths are ready; Product must choose. Maya has explicitly removed the executive-approval gate (\"Follow Security's release policy and Sam's rollout process\"), so the \"get Maya approval\" task is superseded.\n- **Release policy (Priya)**: exact verified build → production deploy + 20-min post-deploy verification only; code-changing patch → 25-min async delta review on submitted diff → production deploy → 20-min post-deploy verification.\n- **Rollout constraint (Sam)**: after Priya's verification, Sam needs 15 min to open + sanity-check. Atlas rollout must **begin before 12:00 Monday** or slips to Thursday (creates executive noise; renewal already signed, so not at-risk).\n- **Availability Monday**: Marcus 09:15–10:20 (must leave 10:20); Priya 09:00–09:35 and from 10:25; Sam 09:00–12:30; Daniel 09:00–12:30.\n- **Zenith**: signed €96k/24-mo; back to normal CS cadence; no Monday escalation.\n- **Orion**: org ID in doubt (org_17A vs org_71A); do not reply until confirmed and live flag read.\n- **Pricing**: workbook not authoritative; internal-only values (€2,500 platform / 40 seats / €55 extra seat); nothing external; no announcement date.\n- **Board pack**: Maya needs September expansion reconciliation by 11:00 Monday (board pack locks 11:30). Target €180k, expected €126k, gap €54k. Wayne (€18k→0) + Globex (€12k→0) = €30k; remaining €24k = Soylent (28→18, −10) + Wonka (24→10, −14). No stated cause for Soylent/Wonka reductions — do not invent.\n- **Customer announcement**: Daniel owns it; will send after Sam confirms rollout open. Don't send it myself.\n\n## 2. MY PLAN FOR TODAY\n\nChoose **Option B (2.9.5-patch)** — code-changing, but <1% session-reset risk and avoids the failing migration path that already broke 2.9.4 on eu-03; both paths fit the window, B is the safer customer outcome and Priya can do the delta review async.\n\n1. **09:07–09:10** — Pick Option B; tell Marcus to submit the 2.9.5-patch diff to Priya now; confirm Sam is ready.\n2. **09:10–09:25** — Priya runs 25-min async delta review on the submitted diff (within her 09:00–09:35 window).\n3. **09:25–10:10** — Marcus deploys 2.9.5-patch to production (45 min); completes before his 10:20 hard stop.\n4. **10:25–10:45** — Priya 20-min post-deploy verification (she's back at 10:25).\n5. **10:45–11:00** — Sam opens rollout + 15-min sanity check; rollout begins before the 12:00 Atlas deadline.\n6. **~10:30–11:00** — Confirm launch to Atlas once Sam signals open.\n7. **By 11:00** — Send Maya the expansion reconciliation (arithmetic only; flagged gaps vs. hypotheses).\n8. **After Sam confirms open** — Daniel sends the Enterprise Controls customer announcement (his task; I just confirm).\n9. **Today** — Verify Orion's org ID and live flag, then reply (Sam/Laura's guidance).\n10. **Today** — Triage Globex high-severity SSO + admin-login collapse; outreach on Wonka; check Soylent onboarding.\n\n## 3. CUSTOMER / REVENUE PRIORITIES\n\n1. **Globex** (top priority today): high-severity open ticket G-441 (admins can't complete SSO), admin logins −61% (30d), 3 open tickets, renewal in 18 days, September expansion pending procurement. The login drop is likely tied to the SSO issue — coordinate with Support/CS to resolve G-441 this week and protect the renewal.\n2. **Wonka**: usage −35%, admin logins −49%, zero tickets (silent signal), renewal in 31 days, expansion cut 24k→10k with no stated cause. Outbound check-in today to surface what's happening.\n3. **Soylent**: usage −22%, admin −28%, medium ticket SO-19 on slower onboarding, renewal in 44 days, expansion 28k→18k unexplained. Confirm onboarding fix and assess renewal risk.\n4. **Acme**: renewal in 9 days (most imminent) but the usage drop (−45%) is **explained** by the approved shift to annual batch-processing (40–50% expected reduction) — not a problem to fix today; just ensure CS/renewals closes the renewal on time.\n5. **Atlas**: launch + migration today; renewal already signed; managed via the release plan, not a revenue triage item.\n6. **Stark, Wayne, Zenith**: no action — Stark on plan (low doc ticket), Wayne expansion moved to October by signed amendment, Zenith signed and on normal cadence.\n\n## 4. DO NOT\n\n- Don't ask Maya for Enterprise Controls approval — she removed the executive gate.\n- Don't call Zenith about renewal risk — signed; Laura says no escalation needed.\n- Don't send the Enterprise Controls customer announcement yourself — Daniel owns it post-rollout.\n- Don't quote pricing externally or to Initech procurement — workbook not authoritative; no public announcement date.\n- Don't reply to Orion until the org ID (17A vs 71A) and the live `scim_enabled` flag for the correct org are confirmed.\n- Don't invent causes for the Soylent/Wonka/Acme reductions in the board reconciliation — state arithmetic only.\n- Don't retry 2.9.4 unchanged without the shard precheck (Option A's 8% session-reset risk and prior eu-03 failure make it the weaker path).\n\n## 5. UNCLEAR / MUST VERIFY\n\n- **Orion org ID**: is it org_17A or org_71A, and what does the live `scim_enabled` flag show for that org? (CRM confusion flagged by Laura; Sam requires confirmation before any status update.)\n- **Globex G-441 root cause**: not specified — needed before deciding whether the admin-login drop is recoverable inside the 18-day renewal window.\n- **2.9.5-patch diff content**: not shown; I'm assuming Marcus's \"ready\" means Priya can complete the 25-min review within her 09:00–09:35 window. If the diff surfaces issues, the fallback is Option A (same ~11:00 open) with its 8% session-reset risk — confirm Marcus has that ready as contingency.\n- **Soylent and Wonka reduction drivers**: no evidence provided; flagged as unknown, not assumed.",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "gen-1787922865-Om5FL2Ls03ccsncCx0WT",
+    "raw_usage": {
+      "completion_tokens": 6777,
+      "prompt_tokens": 2310,
+      "total_tokens": 9087,
+      "completion_tokens_details": {
+        "audio_tokens": 0,
+        "reasoning_tokens": 5210,
+        "image_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 2240,
+        "video_tokens": 0,
+        "cache_write_tokens": 0
+      }
+    }
+  }
+}

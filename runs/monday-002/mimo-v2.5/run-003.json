@@ -1,0 +1,54 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.2",
+  "scenario_id": "monday-002",
+  "scenario_prompt_sha256": "740e627cbc7413c321ede0d54000504de54821d34ff4677f82731b89600423a8",
+  "run_id": "monday-002__mimo-v2.5__003",
+  "run_number": 3,
+  "model": {
+    "slug": "mimo-v2.5",
+    "display_name": "MIMO v2.5",
+    "provider": "nan",
+    "model_id": "mimo-v2.5"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 32000,
+    "reasoning_enabled": false,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true
+  },
+  "timestamp_utc": "2026-08-28T13:38:18Z",
+  "usage": {
+    "input_tokens": 2616,
+    "output_tokens": 9180,
+    "reasoning_tokens": 0
+  },
+  "performance": {
+    "ttft_ms": 30506.2,
+    "ttfa_ms": 174172.4,
+    "total_latency_ms": 219321.1,
+    "tokens_per_second": 48.6
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "# MONDAY 14 SEPTEMBER — SITUATION RECONSTRUCTION & PLAN\n\n---\n\n## 1. CURRENT STATE\n\n**Enterprise Controls release is mid-recovery.** Build 2.9.4 passed staging verification but failed in production Friday on shard eu-03 (no customer impact). Two recovery options are staged. This is the top operational dependency today. The customer announcement, Atlas migration, and go-live all gate on production health + Security verification + Sam opening rollout.\n\n**Zenith is done.** Contract countersigned Friday — 24 months, €96k ARR. Laura confirmed resolved. No remaining risk or action.\n\n**Orion SCIM has a data-quality problem.** Laura validated provisioning against org_71A, but Rollout Bot shows `scim_enabled=false` for that ID. Laura's own note indicates the support ticket references org_17A — likely the wrong org was checked. Sam has blocked all further communication until the correct org ID is confirmed and the live flag read. **No one has done this yet.**\n\n**September revenue gap is €54k against €180k target (€126k expected).** Account-level arithmetic accounts for the full gap:\n\n| Account | Previous Exp. | Expected | Δ | Evidence |\n|---|---|---|---|---|\n| Stark | €32k | €32k | — | On plan |\n| Wayne | €18k | €0 | −€18k | Signed amendment moved expansion to October |\n| Globex | €12k | €0 | −€12k | Pending procurement, 18 days to renewal |\n| Soylent | €28k | €18k | −€10k | No contract explanation. Usage −22%, admin logins −28%, 2 open tickets |\n| Wonka | €24k | €10k | −€14k | No contract explanation. Usage −35%, admin logins −49%, 0 open tickets |\n| Acme | €0 | €0 | — | Approved shift to batch processing explains expected usage drop |\n\nWayne + Globex = €30k (explained). Soylent + Wonka = €24k (unexplained by contract data). The causes of the Soylent and Wonka shortfalls are genuinely unknown — no ticket, contract, or account note provides a reason.\n\n**Pricing is internal-only.** The authoritative internal figures are Daniel's: €2,500 platform / 40 seats / €55 extra seat. The pinned workbook is not authoritative. No external quote, no announcement date.\n\n---\n\n## 2. MY PLAN FOR TODAY\n\n**Decision: Option B — deploy 2.9.5-patch (code change).**\n\nRationale: Option A and Option B both reach rollout opening at approximately the same time (~11:00) because the binding constraint is Priya's 09:35–10:25 unavailability, which both paths must wait out. Option B has <1% session-reset risk versus 8% for Option A. The patch sidesteps the eu-03 failure path entirely. A Security delta review before deploy aligns with Maya's stated requirement that Security be comfortable with the migration. No extra time cost.\n\n### Sequenced timeline:\n\n**09:07–09:15 — Launch recovery**\n- Message Marcus: confirm Option B. Ask him to submit the diff to Priya immediately.\n- Message Priya: confirm she'll run the 25-minute delta review on receipt (she's available now through 09:35).\n- Message Sam: confirm the Option B timeline — production deploy ~09:25–10:10, post-deploy verification ~10:25–10:45, rollout opening ~10:45–11:00.\n- Cross off stale tasks: \"Get Maya approval\" (she explicitly declined an executive gate), \"Call Zenith\" (resolved), \"Send pricing to Initech\" (unsafe).\n\n**09:15–09:25 — Delta review**\n- Priya conducts 25-min Security delta review (async from submitted diff). Must complete before production deploy begins.\n\n**09:25–10:10 — Production deploy**\n- Marcus deploys 2.9.5-patch (45 min). He leaves at 10:20; deploy finishes ~10:10.\n\n**09:25–10:10 — Parallel: draft board pack (my work)**\n- Write September expansion reconciliation for Maya using the arithmetic table above. No causal hypotheses for Soylent/Wonka. Send to Maya by ~10:30.\n\n**10:10–10:25 — Gap**\n- Confirm to Atlas (via Laura or directly) that production deploy completed, post-deploy verification in progress, rollout projected to open ~11:00. Give Atlas's admins a heads-up to prepare. Note: if verification fails, the 12:00 deadline puts migration to Thursday.\n\n**10:25–10:45 — Post-deploy verification**\n- Priya verifies production (20 min).\n\n**10:45–11:00 — Open rollout**\n- Sam opens rollout and sanity-checks (15 min).\n- Send Enterprise Controls launch confirmation to Atlas.\n- Board pack to Maya (due 11:00).\n\n**~11:00 onwards — Post-rollout**\n- Daniel sends customer announcement once Sam confirms rollout open.\n- Investigate Orion SCIM: confirm correct org ID (org_17A vs org_71A), read live flag, then reply.\n- Follow up on Globex high-severity SSO ticket (G-441) — they have 18 days to renewal and admins can't complete SSO setup.\n\n---\n\n## 3. CUSTOMER / REVENUE PRIORITIES\n\n**1. Globex — highest priority.** 18 days to renewal, 3 open tickets including a **high-severity SSO blocker** (G-441). Admin logins down 61% — they may be locked out or barely using the platform. SCIM sync also affected (G-447). If admins can't authenticate, the renewal conversation becomes existential. Escalate G-441 with support today. The €12k expansion is pending procurement and will not close if they can't administer the product.\n\n**2. Soylent — investigate before renewal drift.** 44 days out, €10k unexplained expansion drop, usage −22%, admin logins −28%, onboarding ticket (SO-19). Could be a deal-stalling signal or could be seasonal. Reach out to their admin or account owner to understand what's happening. This is a diagnosis task, not yet an escalation.\n\n**3. Wonka — similar pattern, shorter runway.** 31 days to renewal, €14k unexplained drop, usage −35%, admin logins −49%. No tickets filed, which may mean they've disengaged rather than complained. Needs a proactive check-in.\n\n**4. Acme — low concern despite high usage drop.** 9-day renewal, usage −45%, admin logins −42%. Contract notes explicitly state an approved shift to batch processing with expected interactive usage reduction of 40–50%. The numbers match the explanation. No tickets. Likely fine, but close enough to renewal to warrant a quick confirmation that contract terms are agreed.\n\n**5. Atlas — operational priority, not revenue.** Must confirm migration path today or risk Thursday delay + executive noise per Laura. Our timeline should work (rollout ~11:00, deadline 12:00), but communicate proactively.\n\n**Not a priority today:** Stark (on plan, 1 low-severity doc question), Wayne (signed amendment, 210 days out), Zenith (done).\n\n---\n\n## 4. DO NOT DO\n\n- **Do not call Zenith.** Resolved Friday. Task is stale.\n- **Do not send Enterprise pricing to Initech procurement.** Daniel explicitly prohibited external sharing. No announcement date exists.\n- **Do not request or add an executive gate to Enterprise Controls.** Maya said \"I'm not adding another executive gate.\" The process is Security policy + Sam's rollout. Respect it.\n- **Do not send any Orion SCIM status to the customer.** Sam's instruction is clear: no reply until correct org ID confirmed and live flag read. Sending based on the wrong org would be worse than silence.\n- **Do not cite causal explanations for Soylent or Wonka expansion reductions in the board pack.** Data shows usage and login declines, but no evidence establishes *why*. Maya explicitly said don't invent causes. Present the numbers and flag the gap.\n- **Do not quote the pinned pricing workbook (enterprise-pricing-v4-final.xlsx) as authoritative.** Daniel's internal figures only.\n- **Do not treat Wayne, Acme, or Stark usage/admin-login changes as problems.** All have documented explanations or are on plan.\n- **Do not deploy Option A (retry 2.9.4) unless Option B is found to be infeasible.** 8% session-reset risk is unnecessary given Option B's equivalent timeline.\n\n---\n\n## 5. UNCLEAR / MUST VERIFY\n\n1. **Which Orion org ID is correct, and what is the live SCIM flag for it?** Laura suspects org_71A was wrong and the real ID is org_17A (from the support ticket). Neither the CRM nor the live flag has been confirmed. This is prerequisite to any customer communication.\n\n2. **Is the 2.9.5-patch diff ready for Priya's review?** Marcus said both options are \"ready\" Friday at 14:18, but we need to confirm the diff is submittable at 09:15. If the patch needs additional preparation, Option A becomes the fallback and the 8% session risk must be accepted.\n\n3. **What is the root cause of Soylent's €10k expansion reduction?** No contract note, no ticket, and Laura's account data shows declining usage. Is this a delayed procurement cycle, an internal reorganization, or an intent to reduce scope? Requires outreach.\n\n4. **What is the root cause of Wonka's €14k expansion reduction?** Even less signal — no tickets, no contract note, and significant usage/login drops. Is the account at risk of non-renewal or just slow?\n\n5. **Are Globex's SSO and SCIM tickets (G-441, G-447) blocked on our side or theirs?** If our bug, it directly impacts their renewal. If their configuration, we need to advise. Status is \"open\" with no resolution noted.\n\n6. **Does Atlas's Monday morning availability extend past 12:00, or is 12:00 a hard cutoff?** Sam's message says \"admins aren't available again until Thursday\" — need to confirm whether a brief delay (e.g., rollout opens 11:15) still works or if 12:00 is absolute.",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "chatcmpl-fbdb6242-8429-49bd-b4c3-0dca6ab6a80f_ec9977a53f404f18a1d99ae331e46549",
+    "raw_usage": {
+      "completion_tokens": 9180,
+      "prompt_tokens": 2616,
+      "total_tokens": 11796,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 2560
+      }
+    }
+  }
+}

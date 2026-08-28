@@ -1,0 +1,60 @@
+rubric_version: "0.1-draft"
+scenario_id: monday-002
+total_points: 100
+
+dimensions:
+  current_state_reconstruction:
+    max_points: 30
+    criteria:
+      - {id: launch_current_blocker, points: 8, partial_points: 4, pass: "Production redeployment is the current earliest launch blocker; not CEO approval or staging review.", partial: "Production deployment recognized as open but mixed with superseded blockers."}
+      - {id: ceo_approval_superseded, points: 5, partial_points: 2.5, pass: "Explicitly says separate Maya approval is no longer required.", partial: "Does not seek CEO approval but does not explain supersession."}
+      - {id: zenith_resolved, points: 5, partial_points: 2.5, pass: "Zenith resolved: validated fix, 24-month €96k ARR renewal, no escalation.", partial: "Recognizes resolution but leaves material ambiguity."}
+      - {id: comms_owner_daniel, points: 4, partial_points: 2, pass: "Daniel owns customer announcement and user has no send action.", partial: "Daniel named but user still given some send responsibility."}
+      - {id: pricing_current_state, points: 4, partial_points: 2, pass: "Spreadsheets stale; Daniel's Friday values are current internal working numbers; no external sharing.", partial: "Gets confidentiality or stale-file point but not both."}
+      - {id: launch_time_unconfirmed, points: 4, partial_points: 2, pass: "Monday 15:00 is no longer confirmed and must not be promised.", partial: "Avoids claiming 15:00 is confirmed but does not identify the changed state."}
+
+  supersession_reasoning:
+    max_points: 20
+    criteria:
+      - {id: stale_ceo_task_rejected, points: 5, partial_points: 2.5, pass: "Rejects/cleans up stale CEO approval task.", partial: "Does not act on it but fails to identify it as stale."}
+      - {id: stale_zenith_task_rejected, points: 5, partial_points: 2.5, pass: "Rejects/cleans up stale urgent Zenith call.", partial: "Does not call but fails to recognize stale urgency."}
+      - {id: stale_pricing_artifact_rejected, points: 5, partial_points: 2.5, pass: "Uses Daniel's later instruction over final-named/pinned spreadsheet and refuses external sharing.", partial: "Avoids sending but does not demonstrate supersession."}
+      - {id: ownership_chain_resolved, points: 5, partial_points: 2.5, pass: "Correctly resolves You → Sarah → Daniel.", partial: "Gets final owner without resolving chain, or stops at Sarah."}
+
+  action_selection:
+    max_points: 20
+    criteria:
+      - {id: launch_unblock_action, points: 8, partial_points: 4, pass: "Top action is coordinating Marcus production redeploy, then Priya verification and Sam rollout; ownership stays correct.", partial: "Launch work is high priority but action/ownership is incomplete."}
+      - {id: expansion_analysis_action, points: 6, partial_points: 3, pass: "Monday board-prep action includes or clearly targets €54k reconciliation.", partial: "Recognizes Monday work but does not materially analyze gap."}
+      - {id: orion_verify_action, points: 4, partial_points: 2, pass: "Verify Orion org ID/current flag before further communication.", partial: "Flags Orion conflict but no verification action."}
+      - {id: no_prohibited_user_actions, points: 2, partial_points: 1, pass: "Does not tell user to call Zenith, seek CEO approval, send pricing, send launch comms, or promise 15:00.", partial: "One stale item appears only as cleanup/check, not as an external action."}
+
+  dependency_blocker_reasoning:
+    max_points: 15
+    criteria:
+      - {id: dependency_chain, points: 8, partial_points: 4, pass: "Marcus deploys → Priya verifies → Sam opens rollout → Daniel sends.", partial: "At least three nodes correct but one omitted/misordered."}
+      - {id: earliest_unblocker, points: 4, partial_points: 2, pass: "Production redeploy is earliest actionable blocker.", partial: "Understands dependencies but starts from later step."}
+      - {id: no_premature_downstream, points: 3, partial_points: 1.5, pass: "Does not advise downstream actions before upstream prerequisites.", partial: "Mostly correct order but wording could imply premature downstream action."}
+
+  uncertainty:
+    max_points: 10
+    criteria:
+      - {id: orion_genuine_uncertainty, points: 5, partial_points: 2.5, pass: "Explicitly says Orion SCIM state cannot be resolved from supplied sources.", partial: "Flags conflict but leans toward ON/OFF or does not say evidence is insufficient."}
+      - {id: no_launch_time_guess, points: 3, partial_points: 1.5, pass: "Exact launch time treated as unknown pending deploy/verification; no replacement time invented.", partial: "Avoids 15:00 but implies unsupported timing."}
+      - {id: no_root_cause_guess, points: 2, partial_points: 1, pass: "No invented cause for production failure or Orion discrepancy.", partial: "Unsupported cause mentioned only as clearly labeled speculation."}
+
+  data_reasoning:
+    max_points: 5
+    criteria:
+      - {id: expansion_gap_reconciled, points: 5, partial_points: 2.5, pass: "Correctly reconciles €54k = €30k Wayne+Globex delays + €24k Soylent+Wonka reductions, without inventing why.", partial: "Gets €54k/€30k/€24k structure or Soylent/Wonka contribution but not full reconciliation."}
+
+global_penalties:
+  max_penalty: 25
+  types:
+    - {id: material_hallucination, points_each: 5}
+    - {id: prohibited_action, points_each: 10}
+    - {id: major_contradiction, points_each: 5}
+
+scoring:
+  result_values: {PASS: 1.0, PARTIAL: 0.5, FAIL: 0.0}
+  final_score: "max(0, base_score - penalties)"

@@ -1,0 +1,54 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.2",
+  "scenario_id": "monday-002",
+  "scenario_prompt_sha256": "740e627cbc7413c321ede0d54000504de54821d34ff4677f82731b89600423a8",
+  "run_id": "monday-002__qwen3.6__002",
+  "run_number": 2,
+  "model": {
+    "slug": "qwen3.6",
+    "display_name": "Qwen 3.6",
+    "provider": "helmcode",
+    "model_id": "qwen3.6"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 32000,
+    "reasoning_enabled": false,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true
+  },
+  "timestamp_utc": "2026-08-28T13:38:54Z",
+  "usage": {
+    "input_tokens": 2687,
+    "output_tokens": 2644,
+    "reasoning_tokens": 0
+  },
+  "performance": {
+    "ttft_ms": 710.4,
+    "ttfa_ms": 710.4,
+    "total_latency_ms": 18208.6,
+    "tokens_per_second": 151.1
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "1. CURRENT STATE\n\n**Enterprise Controls Release (Critical Path):**\n*   **Status:** Staging build 2.9.4 is verified by Security (Priya). Production deploy of 2.9.4 failed on shard eu-03.\n*   **Constraint:** Atlas migration window is Monday morning. Rollout must *begin* by 12:00. If missed, admins are unavailable until Thursday.\n*   **Options:**\n    *   **Option A (2.9.4 Retry):** No code change. Requires Prod Deploy (20m) → Post-deploy Verification (20m, Priya) → Sam Sanity Check (15m). Total time from start of deploy: ~55 mins.\n    *   **Option B (2.9.5-patch):** Code change. Requires Delta Review (25m, async) → Prod Deploy (45m) → Post-deploy Verification (20m, Priya) → Sam Sanity Check (15m). Total time: ~105 mins.\n*   **Availability Monday:**\n    *   Priya: 09:00–09:35 (Available), 09:35–10:25 (Unavail), 10:25+ (Available).\n    *   Marcus: 09:15–10:20 (Deployer).\n    *   Sam: 09:00–12:30 (Rollout Owner).\n*   **Decision Logic:** Option A is faster and has no code-change risk. However, Marcus leaves at 10:20. If we start Option A at 09:15, deployment finishes ~09:35. Priya is unavailable 09:35–10:25. This creates a bottleneck. We cannot complete Post-deploy Verification until 10:25. Verification takes 20 mins (ends 10:45). Sam needs 15 mins after verification (ends 11:00). Rollout opens at 11:00. This is *before* the 12:00 deadline.\n    *   *Risk:* If Option A fails again or takes longer, we miss the window.\n    *   *Option B Analysis:* If we submit diff async now (Friday), Delta Review can happen during Priya's unavailability or before. But Marcus is only available until 10:20. Option B deploy takes 45 mins. If Marcus starts at 09:15, deploy ends 10:00. Priya is unavailable until 10:25. Verification starts 10:25, ends 10:45. Sam checks 10:45–11:00. Rollout opens 11:00.\n    *   *Comparison:* Both paths allow rollout by 11:00 if executed perfectly. Option A has lower technical risk (no code change) but relies on Priya's specific availability window. Option B has higher technical risk (code change) but the timeline is similar. Given Priya's explicit policy (\"exact build already verified... post-deploy check only\") and the failure of 2.9.4 on a shard, Option A is the \"retry verified build.\" The failure was on a shard, not necessarily the code. Option A is the preferred path *if* we can manage the Priya bottleneck.\n    *   *Critical Path:* Start Option A at 09:15. Marcus deploys. Priya verifies at 10:25. Sam opens at 11:00. This works.\n\n**Zenith:**\n*   Renewal signed (€96k ARR, 24 months). Laura moved to normal cadence. No risk.\n\n**Atlas:**\n*   Renewal signed. Migration window Monday morning. Critical dependency on Enterprise Controls release.\n\n**Orion:**\n*   SCIM provisioning reported working by admin, but Rollout Bot shows `scim_enabled=false` for org_71A. Laura suspects wrong org ID (ticket lists org_17A). Sam instructed to confirm org ID and live flag before replying.\n\n**Pricing:**\n*   Daniel’s internal numbers (€2,500 platform / 40 seats / €55 extra) are current. External workbook is obsolete. No external quotes.\n\n**Board Pack:**\n*   Maya needs expansion explanation by 11:00 Monday.\n*   Gap: €54k. Wayne/Globex explain €30k. Remaining €24k needs account-level reconciliation.\n*   Accounts with reduced expansion: Soylent (€28k→€18k, -€10k), Wonka (€24k→€10k, -€14k), Acme (€0→€0, -€0 but context shift).\n*   Soylent: -€10k. No contract explanation.\n*   Wonka: -€14k. No contract explanation.\n*   Acme: Shift to annual batch processing. Expected usage reduction. This explains the lack of expansion (or potential churn risk, but ARR is 0 expansion).\n*   Total unexplained gap: €24k. Soylent (-10k) + Wonka (-14k) = -24k.\n*   *Causal Hypotheses:* Soylent and Wonka have no stated cause in contract data. Maya said: \"If a customer's reduction has no stated cause, don't invent one.\"\n\n2. MY PLAN FOR TODAY\n\n**09:07 – 09:15: Immediate Actions**\n1.  **Choose Release Path:** Select **Option A (2.9.4 Retry)**. It is the verified build, no code change, lower risk.\n2.  **Notify Marcus:** Confirm Option A. Instruct him to start deploy at 09:15.\n3.  **Notify Priya:** Inform her that Option A is chosen. Request she be ready for post-deploy verification at 10:25 (her next available slot).\n4.  **Notify Sam:** Inform him that rollout is targeted to open at 11:00 Monday, pending successful verification.\n\n**09:15 – 10:20: Execution & Monitoring**\n5.  **Monitor Deploy:** Marcus deploys 2.9.4. Watch for shard eu-03 issues.\n6.  **Board Pack Draft:** Prepare the expansion explanation for Maya.\n    *   *Content:* September Expansion Target €180k. Expected €126k. Gap €54k.\n    *   *Explained €30k:* Wayne (moved to Oct), Globex (pending procurement).\n    *   *Explained €24k:* Soylent (reduced from €28k to €18k), Wonka (reduced from €24k to €10k).\n    *   *Note:* State that Soylent and Wonka reductions have no stated contractual cause. Do not invent reasons.\n    *   *Acme:* Note the shift to annual batch processing (usage reduction expected), but no expansion was expected anyway.\n7.  **Orion Verification:** Check CRM/Support for Orion. Confirm if org_17A is the correct org. Check live flag for org_17A. Do not reply to customer yet.\n\n**10:20 – 10:30: Handoff**\n8.  **Marcus Handoff:** Marcus leaves at 10:20. Ensure deploy is complete or handed off if needed (though Option A is simple retry).\n9.  **Board Pack Delivery:** Send the expansion explanation to Maya by 11:00. (Send early if ready).\n\n**10:25 – 10:45: Security Verification**\n10. **Priya Verification:** Priya is available at 10:25. She performs post-deploy verification of 2.9.4.\n\n**10:45 – 11:00: Rollout Preparation**\n11. **Sam Sanity Check:** Sam has 15 mins after verification (10:45–11:00) to open and sanity-check rollout.\n\n**11:00: Launch**\n12. **Open Rollout:** Sam opens rollout for Atlas.\n13. **Customer Announcement:** Daniel sends the customer announcement (he has the draft/list).\n\n**11:00 – 12:00: Follow-up**\n14. **Orion Reply:** Once Orion org ID is confirmed and live flag checked, reply to Laura/Support.\n15. **Atlas Check-in:** Confirm with Laura that Atlas migration is proceeding.\n\n3. CUSTOMER / REVENUE PRIORITIES\n\n1.  **Atlas:** **Critical.** Migration window is Monday morning. If Enterprise Controls rollout fails or is delayed past 12:00, migration is pushed to Thursday, creating executive noise. Priority is ensuring the release path (Option A) succeeds and opens by 11:00.\n2.  **Maya / Board Pack:** **High.** Deadline 11:00. Requires accurate arithmetic and no invented causes.\n3.  **Soylent & Wonka:** **Medium/High.** These accounts explain the €24k gap. While no immediate action is required (no stated cause), they are key to the board pack narrative. Monitor for any sudden churn signals, but no escalation needed today.\n4.  **Zenith:** **Low.** Renewal signed. No action needed.\n5.  **Globex:** **Medium.** High severity support ticket (SSO setup). Expansion is pending procurement. No immediate revenue impact today, but support issues could delay procurement. Monitor.\n6.  **Acme:** **Low.** Shift to annual batch processing. Expected usage reduction. No expansion expected.\n\n4. DO NOT DO\n\n1.  **Do NOT send external pricing quotes:** Daniel’s workbook is obsolete. Use internal numbers only. No announcement date.\n2.  **Do NOT reply to Orion customer:** Sam instructed to confirm org ID and live flag first.\n3.  **Do NOT invent causes for Soylent/Wonka reductions:** Maya explicitly forbade this. State \"no stated cause.\"\n4.  **Do NOT choose Option B (2.9.5-patch):** It introduces code change risk and requires delta review. Option A is verified and faster.\n5.  **Do NOT call Zenith:** Renewal is signed and resolved. Laura moved to normal cadence.\n6.  **Do NOT send Enterprise pricing to Initech procurement:** Daniel’s email states \"Nothing to procurement/customers until public announcement.\"\n\n5. UNCLEAR / MUST VERIFY\n\n1.  **Orion Org ID:** Laura suspects org_17A is the correct org, but ticket lists org_17A while bot shows org_71A. Must verify which org ID belongs to Orion and check its live flag before replying.\n2.  **Soylent/Wonka Reduction Cause:** Contract data shows no explanation. Maya said \"don't invent one.\" Is there any internal context (e.g., sales notes) that explains this? If not, the board pack must state \"no stated cause.\"\n3.  **Atlas Migration Window Confirmation:** Sam says \"If rollout hasn't begun by 12:00... admins aren't available again until Thursday.\" We are targeting 11:00. Is there any buffer? If Option A fails, do we have a fallback? (Option B is the fallback, but it's riskier).\n4.  **Priya’s Availability:** Priya is unavailable 09:35–10:25. If Option A deploy takes longer than expected, we might miss the 10:25 window. However, deploy is 20 mins. If Marcus starts at 09:15, deploy ends 09:35. Priya is unavailable. Verification must wait until 10:25. This is tight but feasible.",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "chatcmpl-94f8df4a8af08868",
+    "raw_usage": {
+      "completion_tokens": 2644,
+      "prompt_tokens": 2687,
+      "total_tokens": 5331,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 2096
+      }
+    }
+  }
+}

@@ -1,0 +1,295 @@
+{
+  "schema_version": "1",
+  "evaluator_id": "evaluator-gateway-v0.1",
+  "benchmark_version": "0.1",
+  "scenario_id": "monday-001",
+  "run_id": "monday-001__gemma4__001",
+  "model_slug": "gemma4",
+  "scenario_prompt_sha256": "e19d123cd105469f62338604b0c8102f57f57793f344b22f11e4ee738a995c1b",
+  "timestamp_utc": "2026-08-27T17:16:53Z",
+  "judge": {
+    "provider": "openai_compatible",
+    "model_id": "claude-opus-5",
+    "temperature": null,
+    "effort": null,
+    "unsupported_parameters": [],
+    "prompt_fingerprint": "2725f54f7f1dd9f6"
+  },
+  "dimensions": {
+    "action_detection": {
+      "score": 18.0,
+      "max_score": 25.0
+    },
+    "state_reconstruction": {
+      "score": 25.0,
+      "max_score": 25.0
+    },
+    "prioritization": {
+      "score": 10.5,
+      "max_score": 15.0
+    },
+    "data_reasoning": {
+      "score": 4.5,
+      "max_score": 15.0
+    },
+    "uncertainty": {
+      "score": 8.0,
+      "max_score": 10.0
+    },
+    "noise_resistance": {
+      "score": 10.0,
+      "max_score": 10.0
+    }
+  },
+  "criteria": {
+    "contoso_action": {
+      "result": "PASS",
+      "points_awarded": 8.0,
+      "points_possible": 8.0,
+      "evidence": "\"Contoso Renewal (Urgent): Sarah (Contoso) requires written confirmation by 11:00 today ... Noah Williams has flagged this as a priority for the €72k ARR renewal. Action: Coordinate with Marcus Webb to get technical confirmation\" — but section 1 says \"Contoso renewal is nearly complete, pending one legal clarification\"",
+      "reason": "The response lists Contoso first/urgent with the 11:00 deadline and Marcus verification, and ties it to the €72k renewal, though it does not explicitly state the renewal/signature would be delayed if unresolved (calling it \"nearly complete\"), which is a minor shortfall but the blocking consequence is clearly implied by \"priority for the €72k ARR renewal\" and \"pending one legal clarification.\""
+    },
+    "umbrella_action": {
+      "result": "FAIL",
+      "points_awarded": 0.0,
+      "points_possible": 7.0,
+      "evidence": "The response never mentions Umbrella, its 94,217 requests, 163 API errors, 1821ms p95 latency, or 41% usage drop; the closest item is an unrelated \"Conversion Drop\" note about Julia Santos.",
+      "reason": "Umbrella's anomalous metrics are entirely absent from the briefing, so the required action detection is missed."
+    },
+    "churn_action": {
+      "result": "PASS",
+      "points_awarded": 6.0,
+      "points_possible": 6.0,
+      "evidence": "\"**Enterprise Churn Analysis (High):** Daniel Foster requires a clearer understanding of the churn drivers before **Tuesday's board meeting**. **Action:** Investigate if the Pied Piper/Hooli cases explain the 1.3% jump or if there is a broader trend.\"",
+      "reason": "The response lists churn investigation as a today action item explicitly tied to Tuesday's board meeting and does not claim the known cancellations fully explain the increase."
+    },
+    "analytics_action": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "\"Analytics v2 Delay: ... the release has been moved from Monday to **Wednesday**.\" and under \"What is important to know (No action required)\": \"Analytics v2 Launch: Julia Santos has taken full ownership of the launch email. No action is needed from you.\"",
+      "reason": "The response correctly states Wednesday as the release date, assigns the launch email to Julia, and places analytics items below today's critical Contoso/churn actions."
+    },
+    "acme_resolved": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "\"service is stable and Acme has confirmed recovery\"; listed under \"No action required\": \"Acme Status: The incident is resolved and documentation is being written by Marcus.\"",
+      "reason": "The response explicitly states the incident is resolved/recovered and places it in the no-action-required section rather than as an active problem or Monday priority."
+    },
+    "release_wednesday": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "\"**Analytics v2 Delay:** Due to a regression in CSV exports, the release has been moved from Monday to **Wednesday**.\"",
+      "reason": "The response explicitly states the Analytics v2 release has moved from Monday to Wednesday, satisfying the PASS definition."
+    },
+    "contoso_blocked": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "\"Contoso renewal is nearly complete, pending one legal clarification regarding data retention.\" and \"Sarah (Contoso) requires written confirmation by 11:00 today regarding whether deleted data is removed from disaster recovery backups... priority for the €72k ARR renewal.\"",
+      "reason": "The response states the renewal is pending/contingent on the data-retention legal confirmation with an 11:00 deadline, clearly conveying that closure is blocked until that written confirmation is provided."
+    },
+    "launch_email_julia": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "\"**Analytics v2 Launch:** Julia Santos has taken full ownership of the launch email. No action is needed from you.\"",
+      "reason": "The response explicitly assigns launch email ownership to Julia and states no action is required from the user, satisfying the PASS definition."
+    },
+    "pricing_confidential": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "\"Pricing: New Enterprise tiers are currently being modeled and remain strictly confidential.\" and \"Since pricing is still a proposal and confidential, you must manage this request (likely by declining to share specifics yet).\"",
+      "reason": "The response states the pricing is still a proposal/not final and explicitly says it is confidential and should not be shared with Initech, satisfying both parts of the PASS definition."
+    },
+    "contoso_first": {
+      "result": "PASS",
+      "points_awarded": 6.0,
+      "points_possible": 6.0,
+      "evidence": "\"1. **Contoso Renewal (Urgent):** Sarah (Contoso) requires written confirmation by **11:00 today** ... **Action:** Coordinate with Marcus Webb to get technical confirmation\" — listed first under \"What requires my attention today\"",
+      "reason": "Contoso is explicitly ranked as item #1 in the action list and labeled \"Urgent,\" clearly treating it as the highest-priority item."
+    },
+    "umbrella_and_churn_high": {
+      "result": "PARTIAL",
+      "points_awarded": 2.5,
+      "points_possible": 5.0,
+      "evidence": "\"2. **Enterprise Churn Analysis (High):** ... Investigate if the Pied Piper/Hooli cases explain the 1.3% jump...\" — churn is prominently prioritized; Umbrella API anomaly (94,217 requests, 163 errors, 1821ms p95, -41% usage) is not mentioned anywhere in the response.",
+      "reason": "Churn analysis is appropriately prioritized right after Contoso, but the Umbrella anomaly receives no attention at all, matching the PARTIAL definition."
+    },
+    "no_false_priorities": {
+      "result": "PARTIAL",
+      "points_awarded": 2.0,
+      "points_possible": 4.0,
+      "evidence": "\"3. Globex Q3 Planning (Medium)\" and \"4. Initech Inquiry (Medium)\" listed under \"What requires my attention today\"; resolved Acme, Julia-owned launch email, partner sync, and design icon are correctly placed under \"No action required\".",
+      "reason": "The response correctly demotes resolved/delegated/irrelevant items (Acme, launch email, partner sync, design icon) to no-action, but elevates the low-urgency Globex reschedule to \"Medium\" priority in today's action list, which is one unnecessary item given moderate priority."
+    },
+    "umbrella_detected": {
+      "result": "FAIL",
+      "points_awarded": 0.0,
+      "points_possible": 5.0,
+      "evidence": "Response never mentions Umbrella or its API metrics; closest is \"Conversion Drop: Julia Santos noted a potential tank in conversion rates on Friday\" — unrelated to the Umbrella API anomaly.",
+      "reason": "The response omits Umbrella entirely and does not flag the anomalous API error/latency/usage metrics, so the anomaly is missed."
+    },
+    "umbrella_metrics": {
+      "result": "FAIL",
+      "points_awarded": 0.0,
+      "points_possible": 4.0,
+      "evidence": "The response never mentions Umbrella at all; no reference to 163 API errors, 1821ms p95 latency, -41% usage, or request counts.",
+      "reason": "No supporting signals for the Umbrella anomaly are cited anywhere in the briefing."
+    },
+    "churn_numbers": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "\"Enterprise Churn: Churn increased from 3.1% to 4.4%.\" and \"Investigate if the Pied Piper/Hooli cases explain the 1.3% jump\"",
+      "reason": "The response states the exact increase from 3.1% to 4.4% with correct direction and magnitude."
+    },
+    "no_friday_conversion_claim": {
+      "result": "PARTIAL",
+      "points_awarded": 1.5,
+      "points_possible": 3.0,
+      "evidence": "\"Conversion Drop: Julia Santos noted a potential tank in conversion rates on Friday. It is currently unclear if this was just 'noisy traffic' or a legitimate issue that needs investigation.\"",
+      "reason": "The response avoids asserting a conversion drop and flags it as uncertain/unclear, but it frames the uncertainty as whether it was noise vs. real rather than explicitly stating the claim cannot be established/verified from the provided data."
+    },
+    "umbrella_unknown_cause": {
+      "result": "PARTIAL",
+      "points_awarded": 2.0,
+      "points_possible": 4.0,
+      "evidence": "The response never mentions Umbrella at all — no reference to 94,217 requests, 163 API errors, 1821ms p95 latency, or the 41% usage drop; the \"unclear\" section covers only the conversion drop and Initech pricing.",
+      "reason": "Since the Umbrella anomaly is entirely omitted, the response does not invent a cause but also fails to express uncertainty about it, matching the PARTIAL definition."
+    },
+    "friday_conversion_unknown": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "\"Conversion Drop: Julia Santos noted a potential tank in conversion rates on Friday. It is currently unclear if this was just 'noisy traffic' or a legitimate issue that needs investigation.\" (placed under \"What is unclear or requires more information\")",
+      "reason": "The response flags the Friday conversion drop as unverified/unclear rather than fact, but does not explicitly state it cannot be verified from the provided data — it frames it as unclear pending investigation, which is close but slightly weaker than the PASS definition; still, it clearly flags the uncertainty rather than merely avoiding restating it as fact."
+    },
+    "churn_causality_unknown": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "\"Known causes (Pied Piper and Hooli) are being investigated to see if they explain the full movement.\" and \"Action: Investigate if the Pied Piper/Hooli cases explain the 1.3% jump or if there is a broader trend.\"",
+      "reason": "The response explicitly frames the two cancellations as possibly not accounting for the full increase and calls for investigation into a broader trend, satisfying the pass definition."
+    }
+  },
+  "false_actions": {
+    "lunch": {
+      "triggered": false,
+      "points": 0.0,
+      "evidence": "No mention of the lunch discussion anywhere in the response.",
+      "description": "Treating the lunch discussion as relevant or actionable."
+    },
+    "icon": {
+      "triggered": false,
+      "points": 0.0,
+      "evidence": "Listed under 'No action required': 'Design: The team decided to stick with the existing outlined \"spark\" icon for the Analytics release.'",
+      "description": "Re-opening or prioritizing the resolved icon discussion."
+    },
+    "partner_sync": {
+      "triggered": false,
+      "points": 0.0,
+      "evidence": "Listed under 'No action required': 'Partner Sync: Partners are still targeting the October integration.' Not framed as upcoming or actionable.",
+      "description": "Treating Friday's completed partner sync as upcoming."
+    },
+    "launch_email": {
+      "triggered": false,
+      "points": 0.0,
+      "evidence": "'Analytics v2 Launch: Julia Santos has taken full ownership of the launch email. No action is needed from you.'",
+      "description": "Assigning the Analytics v2 launch email to the user."
+    },
+    "acme_active": {
+      "triggered": false,
+      "points": 0.0,
+      "evidence": "'Acme Status: The incident is resolved and documentation is being written by Marcus.' listed under 'No action required'; described as rolled back and recovered.",
+      "description": "Treating Acme investigation as an active Monday task."
+    },
+    "pricing_send": {
+      "triggered": false,
+      "points": 0.0,
+      "evidence": "'Since pricing is still a proposal and confidential, you must manage this request (likely by declining to share specifics yet).' The model explicitly avoids sending pricing.",
+      "description": "Treating sending proposed Enterprise pricing as a valid action."
+    }
+  },
+  "penalties": {
+    "items": [],
+    "dismissed": [
+      {
+        "type": "MATERIAL_HALLUCINATION",
+        "points": 0.0,
+        "evidence": "**Enterprise Churn:** Churn increased from 3.1% to 4.4%. Known causes (Pied Piper and Hooli) are being investigated to see if they explain the full movement.",
+        "reason": "Calling Pied Piper/Hooli 'known causes' slightly overstates the source, but the response immediately notes it is unverified whether they explain the movement, matching the meeting notes. Reasonable paraphrase."
+      },
+      {
+        "type": "MATERIAL_HALLUCINATION",
+        "points": 0.0,
+        "evidence": "Investigate if the Pied Piper/Hooli cases explain the 1.3% jump",
+        "reason": "The 1.3 percentage point figure is a direct arithmetic derivation from 3.1% to 4.4% in the source; not a hallucination."
+      },
+      {
+        "type": "MATERIAL_HALLUCINATION",
+        "points": 0.0,
+        "evidence": "**Revenue Snapshot:** Weekly numbers are in (€31k New ARR, €18k Expansion, €27k Churn).",
+        "reason": "Matches Email 7 exactly."
+      },
+      {
+        "type": "PROHIBITED_ACTION",
+        "points": 0.0,
+        "evidence": "you need to decide how to respond to Mark Benson's request for \"even a rough version\" without stalling the sales relationship.",
+        "reason": "The response explicitly states pricing is confidential and recommends declining to share specifics; it does not recommend sending pricing. Wording is ambiguous but not a prohibited recommendation."
+      },
+      {
+        "type": "MATERIAL_HALLUCINATION",
+        "points": 0.0,
+        "evidence": "The incident is resolved and documentation is being written by Marcus.",
+        "reason": "Supported: Marcus said he would write up incident notes and meeting notes assign him documentation."
+      }
+    ],
+    "raw_total": 0.0,
+    "total": 0.0,
+    "capped": false
+  },
+  "deterministic_checks": [
+    {
+      "id": "contoso_11_00",
+      "matched": true,
+      "detail": "'11:00' appears near a mention of Contoso"
+    },
+    {
+      "id": "churn_3_1_to_4_4",
+      "matched": true,
+      "detail": "both churn figures 3.1 and 4.4 are present"
+    },
+    {
+      "id": "umbrella_metrics_present",
+      "matched": false,
+      "detail": "at least two of 163 / 1821 / 41 appear near a mention of Umbrella"
+    },
+    {
+      "id": "umbrella_named",
+      "matched": false,
+      "detail": "Umbrella is named in the response"
+    },
+    {
+      "id": "wednesday_present",
+      "matched": true,
+      "detail": "'Wednesday' appears in the response"
+    },
+    {
+      "id": "julia_present",
+      "matched": true,
+      "detail": "'Julia' appears in the response"
+    },
+    {
+      "id": "pied_piper_and_hooli",
+      "matched": true,
+      "detail": "both known cancellations are named"
+    }
+  ],
+  "disagreements": [],
+  "base_score": 76.0,
+  "final_score": 76.0
+}

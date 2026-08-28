@@ -1,0 +1,172 @@
+id: evaluator-opus5-v0.1
+
+# ===========================================================================
+# THE OFFICIAL EVALUATOR FOR MONDAYBENCH v0.1
+#
+# Judge model:  claude-opus-5
+# Route:        interactive Claude Code session, verdicts recorded to verdicts/
+# Rubric:       rubric-0.2.yaml
+#
+# This file is frozen. Do not change the model behind this id. A different judge
+# model, a different route, or a changed rubric all produce different labels, so
+# each requires a new evaluator id. Every evaluation records `judge.model_id`,
+# `judge.route`, `judge.verdict_source`, `judge.prompt_fingerprint` and
+# `rubric_version`, and the leaderboard refuses to aggregate across them.
+# ===========================================================================
+#
+# WHY THE ROUTE IS "RECORDED" AND WHAT THAT COSTS
+#
+# The judge is Claude Opus 5 reading each response against the rubric in an
+# interactive session, writing one labelled verdict per criterion into
+# `verdicts/<model>.verdicts.jsonl`. `mondaybench evaluate --verdicts <file>`
+# then feeds those labels to the same deterministic scoring code every other
+# evaluator uses. No model is called during scoring.
+#
+# What this buys: the labels come from the strongest available judge with no API
+# key, no prepaid credit, and no gateway in the path that might reject a
+# parameter or serve a cached verdict.
+#
+# What it costs, stated plainly:
+#
+#   * NOT MACHINE-REPRODUCIBLE. Re-running the pipeline replays the stored
+#     verdicts; it does not re-derive them. A published evaluation is
+#     reproducible as a *record*, and every label ships with its evidence and
+#     reasoning so a disputed call can be checked line by line - but a third
+#     party cannot regenerate the labels from scratch by running a command.
+#
+#   * JUDGE-DEVELOPER OVERLAP. The same session that authored the harness and
+#     fixed the scenario also produced these labels. That is a real bias risk,
+#     not a hypothetical one, and it is why every verdict carries its evidence:
+#     the audit trail is the mitigation, not an assurance that none was needed.
+#
+#   * DRIFT ACROSS A LONG SESSION. Labelling 21 runs in sequence risks becoming
+#     stricter or looser part-way through. Verdicts are therefore written per
+#     criterion with an explicit reason, so an inconsistency between two runs on
+#     the same criterion is visible in the files rather than buried in a score.
+#
+# An API-driven variant of the same judge model is a DIFFERENT evaluator, because
+# the route changes behaviour: through an API, `temperature` is rejected by Opus 5
+# and adaptive thinking applies. If that route is ever used, it gets its own id
+# (`evaluator-opus5-api-v0.2`) and its scores never share a ranking with these.
+
+judge:
+  provider: recorded
+  # `api_style` is inert for a recorded judge: RecordedJudge never constructs a
+  # provider and never opens a connection. Present only because the loader
+  # requires a known value.
+  api_style: anthropic
+  model_id: claude-opus-5
+  api_key_env: null
+
+rubric_file: rubric-0.2.yaml
+
+generation:
+  # No generation parameters apply: the labels were produced by a reading, not a
+  # sampled completion. Recorded as null rather than copied from an API config
+  # they never went through.
+  temperature: null
+  effort: null
+  max_output_tokens: 0
+
+behavior:
+  evaluate_atomic_criteria: true
+  require_evidence: true
+
+# ---------------------------------------------------------------------------
+# Verdict contract (enforced in code)
+#
+# Per criterion, exactly:
+#   {"run_id": "...", "criterion_id": "...",
+#    "result": "PASS" | "PARTIAL" | "FAIL",
+#    "evidence": "<quote or concise description from the response>",
+#    "reason":   "<one sentence>"}
+#
+# One entry covering every false-action category:
+#   {"run_id": "...", "kind": "noise",
+#    "items": [{"id": "...", "triggered": bool, "evidence": "..."}]}
+#
+# One entry for global penalties, each candidate classified rather than omitted:
+#   {"run_id": "...", "kind": "penalties",
+#    "violations": [{"type": "MATERIAL_HALLUCINATION" | "PROHIBITED_ACTION"
+#                            | "MAJOR_CONTRADICTION",
+#                    "evidence": "...", "reason": "...",
+#                    "materially_misleading": bool}]}
+#
+# No numeric score appears anywhere in a verdict. `mondaybench/scoring.py` is the
+# only place points are assigned. An unfilled label, a missing criterion, an
+# omitted noise category or an absent penalties list all fail the evaluation
+# loudly - nothing is defaulted, and where a response sat between two labels the
+# rubric's own tie-break applies: choose the lower label.
+# ---------------------------------------------------------------------------
+
+# Which ground-truth facts each criterion's judge call may see. Versioned with
+# the evaluator, because changing what the judge is shown changes the evaluator.
+ground_truth_map:
+  # --- action detection ---
+  contoso_action:
+    - critical_actions.contoso
+    - current_state.contoso_renewal
+  umbrella_action:
+    - critical_actions.umbrella
+    - current_state.umbrella_status
+  churn_action:
+    - critical_actions.enterprise_churn
+    - current_state.enterprise_churn
+    - current_state.board_meeting
+  analytics_action:
+    - critical_actions.analytics_release
+    - current_state.analytics_v2_release
+    - current_state.analytics_launch_email_owner
+
+  # --- state reconstruction ---
+  acme_resolved:
+    - current_state.acme_incident
+  release_wednesday:
+    - current_state.analytics_v2_release
+    - critical_actions.analytics_release
+  contoso_blocked:
+    - current_state.contoso_renewal
+    - critical_actions.contoso
+  launch_email_julia:
+    - current_state.analytics_launch_email_owner
+    - critical_actions.analytics_release
+  pricing_confidential:
+    - current_state.enterprise_pricing
+    - non_actions
+
+  # --- prioritization ---
+  contoso_first:
+    - critical_actions.contoso
+    - critical_actions.umbrella
+    - critical_actions.enterprise_churn
+    - critical_actions.analytics_release
+  umbrella_and_churn_high:
+    - critical_actions.umbrella
+    - critical_actions.enterprise_churn
+  no_false_priorities:
+    - non_actions
+    - current_state
+    - secondary_actions
+
+  # --- data reasoning ---
+  umbrella_detected:
+    - critical_actions.umbrella
+  umbrella_metrics:
+    - critical_actions.umbrella
+  churn_numbers:
+    - current_state.enterprise_churn
+    - critical_actions.enterprise_churn
+  umbrella_error_rate:
+    - critical_actions.umbrella
+
+  # --- uncertainty ---
+  umbrella_unknown_cause:
+    - current_state.umbrella_status
+    - critical_actions.umbrella
+    - uncertainties
+  friday_conversion_unknown:
+    - current_state.friday_conversion
+    - uncertainties
+  churn_causality_unknown:
+    - critical_actions.enterprise_churn
+    - uncertainties

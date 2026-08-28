@@ -1,0 +1,45 @@
+# MondayBench #002 "Moving Targets" - official evaluator, frozen 2026-08-28.
+#
+# Same architecture as evaluator-opus5-v0.1: one judge call per atomic
+# criterion returning PASS/PARTIAL/FAIL with evidence, a separate penalty judge,
+# and deterministic scoring in scoring.py from those labels. The judge never
+# sees or assigns points.
+#
+# Scenario-bound on purpose. `validate` refuses to pair this evaluator with any
+# scenario other than monday-002, and refuses to run if the rubric or scenario
+# on disk has moved off 0.2 - a score is only meaningful against the content it
+# was written for.
+#
+# This is NOT evaluator-opus5-v0.2-draft. That id scored two different
+# calibration drafts against two different rubrics and is retained only in
+# archive/. Official monday-002 results carry this id.
+id: evaluator-opus5-v0.2
+scenario: monday-002
+scenario_version: "0.2"
+rubric_version: "0.2"
+rubric_file: rubric.yaml
+status: official
+
+judge:
+  provider: anthropic
+  api_style: anthropic
+  model_id: claude-opus-5
+  prompt_file: judge-prompt.md
+  penalty_prompt_file: penalty-judge-prompt.md
+
+generation:
+  # Determinism is the point: the same response and the same rubric must give
+  # the same label. Recorded-judge runs carry no generation budget of their own,
+  # which is why 0 is declared explicitly rather than left to a default.
+  temperature: 0
+  max_output_tokens: 0
+
+behavior:
+  require_evidence: true
+
+# monday-002 ships a prose answer key (ground_truth.md) rather than the dotted
+# fact tree monday-001 uses, so there is nothing to slice per criterion and the
+# judge is given the whole key. Recorded here as a deliberate choice, not an
+# oversight: per-criterion slicing is the stronger setup where a scenario
+# supports it.
+ground_truth_map: {}

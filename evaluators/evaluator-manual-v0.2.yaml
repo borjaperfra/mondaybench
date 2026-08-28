@@ -1,0 +1,94 @@
+id: evaluator-manual-v0.2
+
+# Human-recorded verdicts against rubric 0.2. Labels come from a reviewer
+# reading each response and filling in a worksheet (`mondaybench worksheet`),
+# not from a model call. Scoring is the same deterministic code path.
+#
+# Used here because the judge route is unavailable: claude-opus-5 through the
+# Helmcode gateway is a third-party model billed from prepaid credit, and the
+# credit ran out. The benchmarked models themselves are plan-covered and
+# unaffected.
+#
+# A recorded evaluation is real but NOT machine-reproducible, so it carries its
+# own evaluator id and must never share a ranking with a model-judged one.
+judge:
+  provider: recorded
+  api_style: anthropic   # unused: RecordedJudge never builds a provider
+  model_id: recorded-manual
+  api_key_env: null
+
+rubric_file: rubric-0.2.yaml
+
+generation:
+  temperature: null
+  effort: null
+  max_output_tokens: 0
+
+behavior:
+  evaluate_atomic_criteria: true
+  require_evidence: true
+
+ground_truth_map:
+  contoso_action:
+    - critical_actions.contoso
+    - current_state.contoso_renewal
+  umbrella_action:
+    - critical_actions.umbrella
+    - current_state.umbrella_status
+  churn_action:
+    - critical_actions.enterprise_churn
+    - current_state.enterprise_churn
+    - current_state.board_meeting
+  analytics_action:
+    - critical_actions.analytics_release
+    - current_state.analytics_v2_release
+    - current_state.analytics_launch_email_owner
+
+  acme_resolved:
+    - current_state.acme_incident
+  release_wednesday:
+    - current_state.analytics_v2_release
+    - critical_actions.analytics_release
+  contoso_blocked:
+    - current_state.contoso_renewal
+    - critical_actions.contoso
+  launch_email_julia:
+    - current_state.analytics_launch_email_owner
+    - critical_actions.analytics_release
+  pricing_confidential:
+    - current_state.enterprise_pricing
+    - non_actions
+
+  contoso_first:
+    - critical_actions.contoso
+    - critical_actions.umbrella
+    - critical_actions.enterprise_churn
+    - critical_actions.analytics_release
+  umbrella_and_churn_high:
+    - critical_actions.umbrella
+    - critical_actions.enterprise_churn
+  no_false_priorities:
+    - non_actions
+    - current_state
+    - secondary_actions
+
+  umbrella_detected:
+    - critical_actions.umbrella
+  umbrella_metrics:
+    - critical_actions.umbrella
+  churn_numbers:
+    - current_state.enterprise_churn
+    - critical_actions.enterprise_churn
+  umbrella_error_rate:
+    - critical_actions.umbrella
+
+  umbrella_unknown_cause:
+    - current_state.umbrella_status
+    - critical_actions.umbrella
+    - uncertainties
+  friday_conversion_unknown:
+    - current_state.friday_conversion
+    - uncertainties
+  churn_causality_unknown:
+    - critical_actions.enterprise_churn
+    - uncertainties

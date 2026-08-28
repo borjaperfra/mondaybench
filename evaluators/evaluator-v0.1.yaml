@@ -1,0 +1,101 @@
+id: evaluator-v0.1
+
+# The judge model is part of the evaluator's identity. If it changes, this file
+# does not - a new `evaluator-v0.2.yaml` is created instead, so no two official
+# rankings ever mix judges.
+judge:
+  provider: anthropic
+  api_style: anthropic
+  model_id: claude-opus-5
+  api_key_env: ANTHROPIC_API_KEY
+
+generation:
+  # The spec asks for temperature 0. Claude Opus 5 rejects `temperature` with a
+  # 400, so the judge provider drops it and records "temperature" in
+  # `judge.unsupported_parameters` on every evaluation. The request is recorded
+  # here rather than quietly deleted.
+  temperature: 0
+  # Opus 5 runs adaptive thinking; `effort` is the depth control that replaces
+  # a temperature/budget knob. `medium` is enough for label classification.
+  effort: medium
+  # Higher than the spec's 1000 because thinking tokens are billed inside the
+  # output budget - 1000 can truncate a verdict before the JSON closes.
+  max_output_tokens: 4000
+
+behavior:
+  evaluate_atomic_criteria: true
+  require_evidence: true
+
+# Which ground-truth facts each criterion's judge call is allowed to see.
+# Keeping this evaluator-versioned (rather than in the canonical rubric) means
+# changing what the judge is shown is, correctly, a change of evaluator.
+ground_truth_map:
+  # --- action detection ---
+  contoso_action:
+    - critical_actions.contoso
+    - current_state.contoso_renewal
+  umbrella_action:
+    - critical_actions.umbrella
+    - current_state.umbrella_status
+  churn_action:
+    - critical_actions.enterprise_churn
+    - current_state.enterprise_churn
+    - current_state.board_meeting
+  analytics_action:
+    - critical_actions.analytics_release
+    - current_state.analytics_v2_release
+    - current_state.analytics_launch_email_owner
+
+  # --- state reconstruction ---
+  acme_resolved:
+    - current_state.acme_incident
+  release_wednesday:
+    - current_state.analytics_v2_release
+    - critical_actions.analytics_release
+  contoso_blocked:
+    - current_state.contoso_renewal
+    - critical_actions.contoso
+  launch_email_julia:
+    - current_state.analytics_launch_email_owner
+    - critical_actions.analytics_release
+  pricing_confidential:
+    - current_state.enterprise_pricing
+    - non_actions
+
+  # --- prioritization ---
+  contoso_first:
+    - critical_actions.contoso
+    - critical_actions.umbrella
+    - critical_actions.enterprise_churn
+    - critical_actions.analytics_release
+  umbrella_and_churn_high:
+    - critical_actions.umbrella
+    - critical_actions.enterprise_churn
+  no_false_priorities:
+    - non_actions
+    - current_state
+    - secondary_actions
+
+  # --- data reasoning ---
+  umbrella_detected:
+    - critical_actions.umbrella
+  umbrella_metrics:
+    - critical_actions.umbrella
+  churn_numbers:
+    - current_state.enterprise_churn
+    - critical_actions.enterprise_churn
+  no_friday_conversion_claim:
+    - current_state.friday_conversion
+    - uncertainties
+
+  # --- uncertainty ---
+  umbrella_unknown_cause:
+    - current_state.umbrella_status
+    - critical_actions.umbrella
+    - uncertainties
+  friday_conversion_unknown:
+    - current_state.friday_conversion
+    - uncertainties
+  churn_causality_unknown:
+    - critical_actions.enterprise_churn
+    - uncertainties

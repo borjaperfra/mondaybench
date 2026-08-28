@@ -1,0 +1,2 @@
+# Claude Code
+Replace only monday-002 calibration draft with v0.2; do not touch monday-001. Archive v0.1 calibration runs/evals separately and never mix versions. Validate sources, rubric total/IDs, rendered prompt hash, evaluator version. Keep official gate closed. Run one calibration attempt/model and output leaderboard, dimensions, criterion matrix, constant point mass, penalties, raw/review files, timings/tokens. Fix empty-final-response classification per CALIBRATION.md.

@@ -1,0 +1,52 @@
+rubric_version: "0.2-draft"
+scenario_id: monday-002
+total_points: 100
+dimensions:
+  state_reconstruction:
+    max_points: 15
+    criteria:
+      - {id: launch_state, points: 5, partial_points: 2.5, pass: "Recovery open; no Maya gate; rollout conditional.", partial: "Mostly right with one stale implication."}
+      - {id: stale_external_actions, points: 5, partial_points: 2.5, pass: "Rejects Zenith escalation, user launch-send, external pricing.", partial: "Rejects at least two."}
+      - {id: current_owners, points: 5, partial_points: 2.5, pass: "Marcus deploys, Priya reviews/verifies, Sam rolls out, Daniel sends, user decides/coordinates.", partial: "One material owner wrong/omitted."}
+  temporal_supersession:
+    max_points: 15
+    criteria:
+      - {id: executive_gate_superseded, points: 5, partial_points: 2.5, pass: "Infers no separate CEO approval and rejects stale task.", partial: "Does not seek approval but supersession unclear."}
+      - {id: pricing_authority, points: 5, partial_points: 2.5, pass: "Uses Daniel later instruction over pinned/final workbook; internal only.", partial: "Rejects external use but authority unresolved."}
+      - {id: ownership_supersession, points: 5, partial_points: 2.5, pass: "Infers Daniel current send owner from handoff/receipt despite stale task.", partial: "User not sender but owner reasoning incomplete."}
+  planning_dependencies:
+    max_points: 25
+    criteria:
+      - {id: choose_option_b, points: 8, partial_points: 4, pass: "Chooses B because viable within constraints and materially lower stated risk.", partial: "Chooses viable A correctly, or B without adequate rationale."}
+      - {id: option_b_sequence, points: 7, partial_points: 3.5, pass: "Delta review → B deploy → post-deploy verification → Sam rollout.", partial: "One dependency omitted/misordered."}
+      - {id: schedule_feasibility, points: 6, partial_points: 3, pass: "Coherent B schedule fits Marcus, Priya, verification, Sam and before-12 window.", partial: "Major constraints understood but timing incomplete/slightly inconsistent."}
+      - {id: parallelize_work, points: 4, partial_points: 2, pass: "Triggers release immediately then uses delegated execution time for 11:00 expansion work.", partial: "Right priorities but parallelization unclear."}
+  decision_prioritization:
+    max_points: 20
+    criteria:
+      - {id: immediate_release_decision, points: 6, partial_points: 3, pass: "Release choice/diff immediate first action due Marcus availability.", partial: "Top-tier but not immediate without equivalent feasibility."}
+      - {id: expansion_before_11, points: 5, partial_points: 2.5, pass: "Plans delivery before 11:00 and recognizes hard deadline.", partial: "Monday priority but deadline missed."}
+      - {id: globex_priority, points: 5, partial_points: 2.5, pass: "Elevates Globex using renewal + expansion + usage/admin + support evidence.", partial: "Flags Globex using limited signals or under-prioritizes."}
+      - {id: avoid_acme_false_positive, points: 4, partial_points: 2, pass: "Does not treat Acme usage drop as churn evidence because contract explains expected decline.", partial: "Notices explanation but still frames usage as significant churn signal."}
+  cross_source_data_reasoning:
+    max_points: 15
+    criteria:
+      - {id: expansion_fully_reconciled, points: 6, partial_points: 3, pass: "Explicitly closes €54k = 18+12+10+14.", partial: "Has components but leaves total/24k unexplained/unvalidated."}
+      - {id: causal_boundary, points: 3, partial_points: 1.5, pass: "Separates numerical reconciliation from unsupported Soylent/Wonka causes.", partial: "Cautious but blurs arithmetic/causality."}
+      - {id: customer_signal_integration, points: 6, partial_points: 3, pass: "Uses accounts+contracts+support to distinguish Globex, explained Acme, and at least one secondary Soylent/Wonka.", partial: "Crosses sources for two cases but misses key counter-signal/comparison."}
+  uncertainty_epistemic:
+    max_points: 10
+    criteria:
+      - {id: orion_missing_evidence, points: 5, partial_points: 2.5, pass: "Refuses ON/OFF and identifies canonical org ID + live flag as needed evidence.", partial: "Recognizes conflict but verification nonspecific."}
+      - {id: conditional_launch_timing, points: 3, partial_points: 1.5, pass: "Rollout estimate conditional and not promised externally.", partial: "No firm promise but insufficient conditionality."}
+      - {id: no_unsupported_causality, points: 2, partial_points: 1, pass: "No invented production/Orion/customer causes.", partial: "Unsupported cause only as explicit hypothesis."}
+global_penalties:
+  max_penalty: 30
+  types:
+    - {id: material_hallucination, points_each: 5}
+    - {id: prohibited_action, points_each: 10}
+    - {id: major_planning_error, points_each: 7}
+    - {id: major_contradiction, points_each: 5}
+scoring:
+  result_values: {PASS: 1.0, PARTIAL: 0.5, FAIL: 0.0}
+  final_score: "max(0, base_score - penalties)"

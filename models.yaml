@@ -1,0 +1,262 @@
+# Benchmarked models.
+#
+# Credentials are never stored here - `base_url_env` / `api_key_env` name the
+# environment variable that holds them (see .env.example).
+#
+# Endpoints:
+#   helmcode -> HELMCODE_BASE_URL / HELMCODE_API_KEY   https://api.helmcode.com/v1
+#   nan      -> NAN_BASE_URL / NAN_API_KEY             https://api.nan.builders/v1
+#
+# Placement rule: Helmcode by default; NaN only when a model is not on Helmcode.
+#
+# ---------------------------------------------------------------------------
+# Model ids VERIFIED LIVE against GET /v1/models and a 1-token completion on
+# 2026-08-27. Do not trust the doc pages over this file:
+#
+#   * Helmcode's own docs say `glm-5.2`. The API serves `glm5.2` (no hyphen).
+#     The docs are wrong; `mondaybench endpoints` catches it.
+#   * The spec's ids `glm-5.3`, `qwen-3.8-flash` and `kimi-k3` exist nowhere.
+#   * The same model is spelled differently per platform. Never copy an id
+#     across endpoints - re-verify with `mondaybench endpoints`.
+#
+# Pricing below was measured from the `cost_details` the gateway returns, not
+# taken from a price list. Models whose responses carry no cost field are
+# covered by the plan and are left null rather than claimed as $0 - a plan has a
+# real cost, so "free per run" would be misleading. Cost never affects the
+# Monday Score.
+#
+# A reported `cost` does NOT mean a model draws on prepaid credit. When the
+# organisation's credit ran out, every model listed here kept working; only the
+# third-party frontier models (claude-*, gpt-*, gemini-*) failed, with
+# "not covered by any subscription tier". So the cost figures below are
+# accounting detail on plan-covered inference, not a prepaid balance being
+# drawn down. Only the JUDGE is exposed to credit exhaustion.
+# ---------------------------------------------------------------------------
+#
+# Response caching: DISABLED on every model, deliberately.
+#
+# Both endpoints cache a response for an identical prompt. Measured: a repeat of
+# the same request returned in 715ms with a byte-identical response, against
+# 32,327ms for the real generation. Three "official runs" would have been two
+# generations and a stored copy, deflating run_range and sigma to zero.
+#
+# `extra_body: {caching: false}` is sent in the request body. It changes nothing
+# the model sees - the messages are byte-identical and the prompt hash stays
+# ed4d7beb - so it is an API-specific parameter of the kind IMPLEMENTATION.md s35
+# allows, documented here rather than hidden. Verified: with caching:false the
+# same prompt produced a different response (39,357ms), i.e. a genuine sample.
+#
+# Run qualification independently rejects any run whose response duplicates
+# another run of the same model, so a cache hit cannot reach a published score
+# even if this flag stops working.
+#
+# Output budget: 32,000 for every model, uniformly.
+#
+# The spec's 4,000 is too small for the thinking models here. glm5.3-flash spent
+# its entire 4,000-token budget on `reasoning_content` and emitted no answer at
+# all - a zero score caused by configuration, not capability, which s35 warns
+# against ("do not artificially cripple every model into identical internals").
+# The budget is raised for ALL models rather than per-model so generation
+# settings stay identical and scores stay comparable; the non-reasoning models
+# used 1,000-3,300 tokens and are unaffected by the headroom.
+#
+# 16,000 -> 32,000 on 2026-08-28. deepseek-v4-flash hit the same wall glm5.3-flash
+# hit at 4,000: two consecutive attempts produced 69,501 and 70,207 characters of
+# reasoning and no answer at all, while its two earlier runs had completed at this
+# same budget the day before. Raising it for one model would have been per-model
+# tuning to rescue that model, so it was raised for all seven and the whole
+# battery regenerated - `official.qualify_run` rejects any run whose recorded
+# max_output_tokens differs from the configured one, which is exactly the rule
+# that forces the redo rather than allowing a mixed-budget ranking.
+#
+# The 16,000 battery (20 runs, judged) is kept under archive/budget-16000/.
+#
+# On NaN the cap is advisory: qwen3.8-flash returned 35 completion tokens against
+# max_tokens=1, and 10,464 against 4,000. Expect finish_reason=length to be
+# unreliable there - the runner records whatever the provider reports.
+#
+# Reasoning policy (IMPLEMENTATION.md s36): each model runs in its standard
+# public API mode. A reasoning-enabled variant needs its own slug
+# (`model-x-thinking`), never a shared one.
+
+models:
+
+  # ---- Helmcode (default endpoint) ----
+
+  deepseek-v4-flash:
+    display_name: "DeepSeek V4 Flash"
+    provider: helmcode
+    api_style: openai_compatible
+    model_id: "deepseek-v4-flash"
+    base_url_env: HELMCODE_BASE_URL
+    api_key_env: HELMCODE_API_KEY
+    generation:
+      temperature: 0
+      max_output_tokens: 32000
+    extra_body:
+      # See the cache note in the header. Not part of the prompt.
+      caching: false
+    capabilities:
+      reasoning: true
+    pricing:
+      input_per_million_usd: 0.175
+      output_per_million_usd: 0.35
+      source: "measured from gateway cost_details, 2026-08-27"
+    notes: >
+      1M context. Reports reasoning_tokens in usage, so it thinks by default -
+      capabilities.reasoning is true accordingly.
+
+  glm5.2:
+    display_name: "GLM 5.2"
+    provider: helmcode
+    api_style: openai_compatible
+    model_id: "glm5.2"
+    base_url_env: HELMCODE_BASE_URL
+    api_key_env: HELMCODE_API_KEY
+    generation:
+      temperature: 0
+      max_output_tokens: 32000
+    extra_body:
+      # See the cache note in the header. Not part of the prompt.
+      caching: false
+    capabilities:
+      reasoning: true
+    pricing:
+      input_per_million_usd: 0.70
+      output_per_million_usd: 2.20
+      source: "measured from gateway cost_details, 2026-08-27"
+    notes: >
+      500K context. The docs list this as a EUR 150/month add-on, but the key
+      calls it successfully and is billed per token, so no add-on gate applies
+      here. Reports reasoning_tokens.
+
+  qwen3.6:
+    display_name: "Qwen 3.6"
+    provider: helmcode
+    api_style: openai_compatible
+    model_id: "qwen3.6"
+    base_url_env: HELMCODE_BASE_URL
+    api_key_env: HELMCODE_API_KEY
+    generation:
+      temperature: 0
+      max_output_tokens: 32000
+    extra_body:
+      # See the cache note in the header. Not part of the prompt.
+      caching: false
+    capabilities:
+      reasoning: false
+    pricing:
+      input_per_million_usd: null
+      output_per_million_usd: null
+      source: "covered by plan; gateway returns no per-token cost"
+    notes: "256K context. Plan-covered."
+
+  gemma4:
+    display_name: "Gemma 4"
+    provider: helmcode
+    api_style: openai_compatible
+    model_id: "gemma4"
+    base_url_env: HELMCODE_BASE_URL
+    api_key_env: HELMCODE_API_KEY
+    generation:
+      temperature: 0
+      max_output_tokens: 32000
+    extra_body:
+      # See the cache note in the header. Not part of the prompt.
+      caching: false
+    capabilities:
+      reasoning: false
+    pricing:
+      input_per_million_usd: null
+      output_per_million_usd: null
+      source: "covered by plan; gateway returns no per-token cost"
+    notes: >
+      256K context. Plan-covered. Expected to be the weakest tier, which is
+      what calibration needs to check the rubric discriminates at the bottom.
+
+  # ---- NaN (only for models Helmcode does not serve) ----
+  #
+  # Enumerated live from api.nan.builders on 2026-08-27. NaN serves 6 language
+  # models: deepseek-v4-flash, gemma4, qwen3.6 (all also on Helmcode, so they
+  # stay on Helmcode per the placement rule), plus the three below.
+  #
+  # The two "new" models were absent from https://nan.builders/docs/models and
+  # the spec guessed their ids with the wrong hyphenation:
+  #   spec `glm-5.3-flash`   -> actually `glm5.3-flash`
+  #   spec `qwen-3.8-flash`  -> actually `qwen3.8-flash`
+  # `kimi-k3` is served by neither platform and has been dropped.
+  #
+  # NaN returns no per-token cost: it is quota-based (2B tokens/month for
+  # deepseek, 1B for mimo). Pricing stays null rather than claimed as $0.
+  #
+  # Token accounting note: on prompts under ~100 tokens NaN reports a floor of
+  # roughly 84 prompt tokens where Helmcode reports the true count. At realistic
+  # sizes the two agree exactly (verified: a 184-token prompt reads 184 on
+  # both), so the ~2,900-token benchmark prompt is unaffected and cross-platform
+  # comparison holds. It is not a hidden system prompt.
+
+  glm5.3-flash:
+    display_name: "GLM 5.3 Flash"
+    provider: nan
+    api_style: openai_compatible
+    model_id: "glm5.3-flash"
+    base_url_env: NAN_BASE_URL
+    api_key_env: NAN_API_KEY
+    generation:
+      temperature: 0
+      max_output_tokens: 32000
+    extra_body:
+      # See the cache note in the header. Not part of the prompt.
+      caching: false
+    capabilities:
+      reasoning: true
+    pricing:
+      input_per_million_usd: null
+      output_per_million_usd: null
+      source: "NaN is quota-based; no per-token cost reported"
+    notes: "Not on Helmcode. Reports reasoning_tokens, so it thinks by default."
+
+  qwen3.8-flash:
+    display_name: "Qwen 3.8 Flash"
+    provider: nan
+    api_style: openai_compatible
+    model_id: "qwen3.8-flash"
+    base_url_env: NAN_BASE_URL
+    api_key_env: NAN_API_KEY
+    generation:
+      temperature: 0
+      max_output_tokens: 32000
+    extra_body:
+      # See the cache note in the header. Not part of the prompt.
+      caching: false
+    capabilities:
+      reasoning: true
+    pricing:
+      input_per_million_usd: null
+      output_per_million_usd: null
+      source: "NaN is quota-based; no per-token cost reported"
+    notes: >
+      Not on Helmcode. Thinks by default and did NOT honour max_tokens=1 in a
+      probe (returned 35 completion tokens, 29 of them reasoning), so watch for
+      finish_reason=length - the runner records it and the leaderboard warns.
+
+  mimo-v2.5:
+    display_name: "MIMO v2.5"
+    provider: nan
+    api_style: openai_compatible
+    model_id: "mimo-v2.5"
+    base_url_env: NAN_BASE_URL
+    api_key_env: NAN_API_KEY
+    generation:
+      temperature: 0
+      max_output_tokens: 32000
+    extra_body:
+      # See the cache note in the header. Not part of the prompt.
+      caching: false
+    capabilities:
+      reasoning: false
+    pricing:
+      input_per_million_usd: null
+      output_per_million_usd: null
+      source: "NaN is quota-based; no per-token cost reported"
+    notes: "1M context. Not on Helmcode. NaN quota 1.0B tokens/month."

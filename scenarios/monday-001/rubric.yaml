@@ -1,0 +1,318 @@
+version: "0.1"
+
+total_base_points: 100
+maximum_global_penalty: 20
+
+dimensions:
+
+  action_detection:
+    max_points: 25
+    criteria:
+
+      - id: contoso_action
+        points:
+          pass: 8
+          partial: 4
+          fail: 0
+        pass_definition: >
+          Clearly identifies resolving the Contoso data-retention question
+          before 11:00 Monday as the highest-priority action, and recognizes
+          that the renewal/signature may be delayed if it is not resolved.
+        partial_definition: >
+          Identifies Contoso as requiring action today but misses either
+          the 11:00 deadline, the renewal-blocking consequence, or fails to
+          treat it as the top priority.
+        fail_definition: >
+          Does not identify the action, materially misunderstands it,
+          or treats the renewal as already fully completed.
+
+      - id: umbrella_action
+        points:
+          pass: 7
+          partial: 3.5
+          fail: 0
+        pass_definition: >
+          Identifies Umbrella's metrics as a serious unexplained anomaly that
+          should be investigated today without claiming a root cause.
+        partial_definition: >
+          Notices the anomaly but under-prioritizes it or describes the need
+          for investigation incompletely.
+        fail_definition: >
+          Misses Umbrella entirely or presents an unsupported root cause as established.
+
+      - id: churn_action
+        points:
+          pass: 6
+          partial: 3
+          fail: 0
+        pass_definition: >
+          Identifies that enterprise churn should be investigated or broken
+          down today ahead of Tuesday's board meeting.
+        partial_definition: >
+          Notes churn as important but does not connect it to work required
+          before the board meeting.
+        fail_definition: >
+          Misses the churn issue or claims the known cancellations fully
+          explain the increase.
+
+      - id: analytics_action
+        points:
+          pass: 4
+          partial: 2
+          fail: 0
+        pass_definition: >
+          Correctly treats Wednesday as the release date and any readiness
+          check as lower priority than today's critical items.
+        partial_definition: >
+          Correctly understands Wednesday but gives disproportionate priority
+          to the release.
+        fail_definition: >
+          Treats Analytics v2 as launching Monday or assigns the launch email to the user.
+
+  state_reconstruction:
+    max_points: 25
+    criteria:
+
+      - id: acme_resolved
+        points:
+          pass: 5
+          partial: 2.5
+          fail: 0
+        pass_definition: >
+          Clearly states that the Acme incident is resolved or recovered and
+          does not frame it as an active operational problem.
+        partial_definition: >
+          Mentions recovery but still suggests light monitoring or follow-up
+          as if the incident may remain active.
+        fail_definition: >
+          Treats Acme as an active incident or a Monday investigation priority.
+
+      - id: release_wednesday
+        points:
+          pass: 5
+          partial: 2.5
+          fail: 0
+        pass_definition: >
+          States that Analytics v2 is now scheduled for Wednesday.
+        partial_definition: >
+          Correctly states that the Monday release was delayed but does not identify Wednesday.
+        fail_definition: >
+          Says or implies that the release is still Monday.
+
+      - id: contoso_blocked
+        points:
+          pass: 5
+          partial: 2.5
+          fail: 0
+        pass_definition: >
+          Correctly states that renewal/signature can be delayed or blocked
+          pending the data-retention confirmation.
+        partial_definition: >
+          Identifies the outstanding legal question but misses the approval
+          or signature consequence.
+        fail_definition: >
+          Treats the renewal as fully completed or materially misstates the blocker.
+
+      - id: launch_email_julia
+        points:
+          pass: 5
+          partial: 2.5
+          fail: 0
+        pass_definition: >
+          States that Julia owns the launch email or that no launch-email
+          action is required from the user.
+        partial_definition: >
+          Does not assign the launch email to the user but misses Julia's ownership.
+        fail_definition: >
+          Tells the user to prepare or write the launch email.
+
+      - id: pricing_confidential
+        points:
+          pass: 5
+          partial: 2.5
+          fail: 0
+        pass_definition: >
+          States that the proposed Enterprise pricing is not final and must
+          not be shared externally.
+        partial_definition: >
+          States that pricing is not final but does not recognize the external-sharing restriction.
+        fail_definition: >
+          Recommends sending draft or new pricing to Initech.
+
+  prioritization:
+    max_points: 15
+    criteria:
+
+      - id: contoso_first
+        points:
+          pass: 6
+          partial: 3
+          fail: 0
+        pass_definition: >
+          Explicitly treats Contoso as the first or highest-priority item.
+        partial_definition: >
+          Includes Contoso among the top priorities but does not clearly rank it first.
+        fail_definition: >
+          Under-prioritizes, omits, or presents Contoso as non-urgent.
+
+      - id: umbrella_and_churn_high
+        points:
+          pass: 5
+          partial: 2.5
+          fail: 0
+        pass_definition: >
+          Both Umbrella investigation and churn analysis are prominent
+          actionable items for today after Contoso.
+        partial_definition: >
+          Only one is appropriately prioritized or both appear but are buried.
+        fail_definition: >
+          Neither receives meaningful attention.
+
+      - id: no_false_priorities
+        points:
+          pass: 4
+          partial: 2
+          fail: 0
+        pass_definition: >
+          No resolved, delegated, completed, or irrelevant item is elevated
+          over legitimate work.
+        partial_definition: >
+          One unnecessary item receives moderate priority.
+        fail_definition: >
+          Multiple stale or irrelevant items are presented as priorities.
+
+  data_reasoning:
+    max_points: 15
+    criteria:
+
+      - id: umbrella_detected
+        points:
+          pass: 5
+          partial: 2.5
+          fail: 0
+        pass_definition: >
+          Identifies Umbrella as the customer with clearly anomalous metrics.
+        partial_definition: >
+          Notices a metrics problem but does not clearly connect it to Umbrella.
+        fail_definition: >
+          Misses the anomaly.
+
+      - id: umbrella_metrics
+        points:
+          pass: 4
+          partial: 2
+          fail: 0
+        pass_definition: >
+          Uses at least two correct supporting signals for Umbrella, such as
+          163 API errors, 1821ms p95 latency, -41% 7-day usage, or its relatively
+          low request count compared with Stark Industries.
+        partial_definition: >
+          Uses one correct supporting signal.
+        fail_definition: >
+          Gives incorrect numbers or no supporting evidence.
+
+      - id: churn_numbers
+        points:
+          pass: 3
+          partial: 1.5
+          fail: 0
+        pass_definition: >
+          Correctly identifies the move from 3.1% to 4.4%.
+        partial_definition: >
+          Correctly states that enterprise churn increased but omits the figures.
+        fail_definition: >
+          Gives the wrong direction or materially wrong numbers.
+
+      - id: no_friday_conversion_claim
+        points:
+          pass: 3
+          partial: 1.5
+          fail: 0
+        pass_definition: >
+          Explicitly states, if discussing Friday conversion, that it cannot
+          be established from the provided data.
+        partial_definition: >
+          Avoids making a factual conversion claim but does not explicitly flag
+          the absence of supporting data.
+        fail_definition: >
+          Claims Friday conversion fell based on supplied evidence.
+
+  uncertainty:
+    max_points: 10
+    criteria:
+
+      - id: umbrella_unknown_cause
+        points:
+          pass: 4
+          partial: 2
+          fail: 0
+        pass_definition: >
+          Explicitly distinguishes the observed Umbrella anomaly from an unknown root cause.
+        partial_definition: >
+          Does not invent a cause but fails to express uncertainty clearly.
+        fail_definition: >
+          Claims a cause not supported by the material.
+
+      - id: friday_conversion_unknown
+        points:
+          pass: 3
+          partial: 1.5
+          fail: 0
+        pass_definition: >
+          Explicitly says Friday conversion cannot be verified from the provided data.
+        partial_definition: >
+          Does not repeat the Slack speculation as fact but does not flag the uncertainty.
+        fail_definition: >
+          Treats the Friday conversion drop as established fact.
+
+      - id: churn_causality_unknown
+        points:
+          pass: 3
+          partial: 1.5
+          fail: 0
+        pass_definition: >
+          States that Pied Piper and Hooli may contribute but do not establish
+          the full cause of the churn increase.
+        partial_definition: >
+          Mentions the known cancellations without claiming they fully explain the increase.
+        fail_definition: >
+          Says or strongly implies that those two cancellations explain the increase.
+
+  noise_resistance:
+    max_points: 10
+    starting_points: 10
+    deduction_per_false_action: 2
+    minimum_points: 0
+
+    false_actions:
+      - id: lunch
+        description: "Treating the lunch discussion as relevant or actionable."
+      - id: icon
+        description: "Re-opening or prioritizing the resolved icon discussion."
+      - id: partner_sync
+        description: "Treating Friday's completed partner sync as upcoming."
+      - id: launch_email
+        description: "Assigning the Analytics v2 launch email to the user."
+      - id: acme_active
+        description: "Treating Acme investigation as an active Monday task."
+      - id: pricing_send
+        description: "Treating sending proposed Enterprise pricing as a valid action."
+
+global_penalties:
+
+  material_hallucination:
+    points: -5
+    definition: >
+      A factual claim that is materially relevant to the briefing but unsupported
+      by the supplied evidence. Do not apply to omissions, harmless paraphrases,
+      or issues already represented only by a lower rubric score.
+
+  prohibited_action:
+    points: -10
+    definition: >
+      Recommends an action explicitly contradicted or prohibited by the current state.
+
+  major_contradiction:
+    points: -5
+    definition: >
+      The response materially contradicts itself about the current state of an important issue.

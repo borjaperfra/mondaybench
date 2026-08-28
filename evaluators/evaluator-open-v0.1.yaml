@@ -1,0 +1,98 @@
+id: evaluator-open-v0.1
+
+# An open model judging open models, on infrastructure you already pay for.
+#
+# Trade-off vs evaluator-v0.1 (claude-opus-5): zero marginal cost and no closed
+# model in the loop, against weaker label consistency and more JSON-format
+# retries. The judge prompt asks for `response_format: json_schema`; whether the
+# gateway honours it varies, which is why judge.py keeps a repair retry and
+# fails loudly rather than defaulting a label.
+#
+# Set JUDGE_BASE_URL / JUDGE_API_KEY / JUDGE_MODEL in .env. Changing JUDGE_MODEL
+# changes the evaluator: bump to -v0.2 rather than editing this file, so no two
+# rankings silently mix judges. The resolved model id is recorded in every
+# evaluation.
+judge:
+  provider: openai_compatible
+  api_style: openai_compatible
+  base_url_env: JUDGE_BASE_URL
+  api_key_env: JUDGE_API_KEY
+  model_env: JUDGE_MODEL
+
+generation:
+  # Open models accept temperature, so determinism is actually reachable here -
+  # unlike the Anthropic path, where the parameter is rejected.
+  temperature: 0
+  max_output_tokens: 2000
+
+behavior:
+  evaluate_atomic_criteria: true
+  require_evidence: true
+
+# Identical to evaluator-v0.1 and evaluator-manual-v0.1: which ground-truth
+# facts belong to which criterion is a property of the rubric, not the judge.
+ground_truth_map:
+  contoso_action:
+    - critical_actions.contoso
+    - current_state.contoso_renewal
+  umbrella_action:
+    - critical_actions.umbrella
+    - current_state.umbrella_status
+  churn_action:
+    - critical_actions.enterprise_churn
+    - current_state.enterprise_churn
+    - current_state.board_meeting
+  analytics_action:
+    - critical_actions.analytics_release
+    - current_state.analytics_v2_release
+    - current_state.analytics_launch_email_owner
+
+  acme_resolved:
+    - current_state.acme_incident
+  release_wednesday:
+    - current_state.analytics_v2_release
+    - critical_actions.analytics_release
+  contoso_blocked:
+    - current_state.contoso_renewal
+    - critical_actions.contoso
+  launch_email_julia:
+    - current_state.analytics_launch_email_owner
+    - critical_actions.analytics_release
+  pricing_confidential:
+    - current_state.enterprise_pricing
+    - non_actions
+
+  contoso_first:
+    - critical_actions.contoso
+    - critical_actions.umbrella
+    - critical_actions.enterprise_churn
+    - critical_actions.analytics_release
+  umbrella_and_churn_high:
+    - critical_actions.umbrella
+    - critical_actions.enterprise_churn
+  no_false_priorities:
+    - non_actions
+    - current_state
+    - secondary_actions
+
+  umbrella_detected:
+    - critical_actions.umbrella
+  umbrella_metrics:
+    - critical_actions.umbrella
+  churn_numbers:
+    - current_state.enterprise_churn
+    - critical_actions.enterprise_churn
+  no_friday_conversion_claim:
+    - current_state.friday_conversion
+    - uncertainties
+
+  umbrella_unknown_cause:
+    - current_state.umbrella_status
+    - critical_actions.umbrella
+    - uncertainties
+  friday_conversion_unknown:
+    - current_state.friday_conversion
+    - uncertainties
+  churn_causality_unknown:
+    - critical_actions.enterprise_churn
+    - uncertainties

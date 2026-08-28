@@ -1,0 +1,100 @@
+id: evaluator-gateway-v0.1
+
+# claude-opus-5 reached through Helmcode's OpenAI-compatible gateway, using the
+# Helmcode key you already have. No separate Anthropic key, no new secret.
+#
+# Verified live against api.helmcode.com on 2026-08-27:
+#   * response_format json_schema  -> WORKS (valid JSON returned)
+#   * temperature: 0               -> HTTP 400. LiteLLM forwards the parameter
+#     verbatim and Anthropic rejects it, so the whole call fails. It is left
+#     unset below, and the provider also drops it defensively and records
+#     "temperature" in judge.unsupported_parameters.
+#
+# vs evaluator-v0.1 (native Anthropic SDK): same model, but no `effort` control
+# through the gateway, so thinking depth is the model default. Billed from
+# Helmcode credits rather than an Anthropic account.
+judge:
+  provider: openai_compatible
+  api_style: openai_compatible
+  base_url_env: HELMCODE_BASE_URL
+  api_key_env: HELMCODE_API_KEY
+  model_id: claude-opus-5
+
+generation:
+  # Deliberately unset - see the 400 above. Consequence: the judge is not
+  # bit-deterministic, which is why judge verdicts are stored as artifacts.
+  temperature: null
+  effort: null
+  max_output_tokens: 4000
+
+behavior:
+  evaluate_atomic_criteria: true
+  require_evidence: true
+
+# Identical to the other evaluators: which ground-truth facts belong to which
+# criterion is a property of the rubric, not of who is judging.
+ground_truth_map:
+  contoso_action:
+    - critical_actions.contoso
+    - current_state.contoso_renewal
+  umbrella_action:
+    - critical_actions.umbrella
+    - current_state.umbrella_status
+  churn_action:
+    - critical_actions.enterprise_churn
+    - current_state.enterprise_churn
+    - current_state.board_meeting
+  analytics_action:
+    - critical_actions.analytics_release
+    - current_state.analytics_v2_release
+    - current_state.analytics_launch_email_owner
+
+  acme_resolved:
+    - current_state.acme_incident
+  release_wednesday:
+    - current_state.analytics_v2_release
+    - critical_actions.analytics_release
+  contoso_blocked:
+    - current_state.contoso_renewal
+    - critical_actions.contoso
+  launch_email_julia:
+    - current_state.analytics_launch_email_owner
+    - critical_actions.analytics_release
+  pricing_confidential:
+    - current_state.enterprise_pricing
+    - non_actions
+
+  contoso_first:
+    - critical_actions.contoso
+    - critical_actions.umbrella
+    - critical_actions.enterprise_churn
+    - critical_actions.analytics_release
+  umbrella_and_churn_high:
+    - critical_actions.umbrella
+    - critical_actions.enterprise_churn
+  no_false_priorities:
+    - non_actions
+    - current_state
+    - secondary_actions
+
+  umbrella_detected:
+    - critical_actions.umbrella
+  umbrella_metrics:
+    - critical_actions.umbrella
+  churn_numbers:
+    - current_state.enterprise_churn
+    - critical_actions.enterprise_churn
+  no_friday_conversion_claim:
+    - current_state.friday_conversion
+    - uncertainties
+
+  umbrella_unknown_cause:
+    - current_state.umbrella_status
+    - critical_actions.umbrella
+    - uncertainties
+  friday_conversion_unknown:
+    - current_state.friday_conversion
+    - uncertainties
+  churn_causality_unknown:
+    - critical_actions.enterprise_churn
+    - uncertainties

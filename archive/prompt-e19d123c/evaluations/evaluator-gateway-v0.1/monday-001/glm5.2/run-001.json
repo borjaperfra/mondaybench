@@ -1,0 +1,295 @@
+{
+  "schema_version": "1",
+  "evaluator_id": "evaluator-gateway-v0.1",
+  "benchmark_version": "0.1",
+  "scenario_id": "monday-001",
+  "run_id": "monday-001__glm5.2__001",
+  "model_slug": "glm5.2",
+  "scenario_prompt_sha256": "e19d123cd105469f62338604b0c8102f57f57793f344b22f11e4ee738a995c1b",
+  "timestamp_utc": "2026-08-27T17:18:27Z",
+  "judge": {
+    "provider": "openai_compatible",
+    "model_id": "claude-opus-5",
+    "temperature": null,
+    "effort": null,
+    "unsupported_parameters": [],
+    "prompt_fingerprint": "2725f54f7f1dd9f6"
+  },
+  "dimensions": {
+    "action_detection": {
+      "score": 21.5,
+      "max_score": 25.0
+    },
+    "state_reconstruction": {
+      "score": 25.0,
+      "max_score": 25.0
+    },
+    "prioritization": {
+      "score": 12.5,
+      "max_score": 15.0
+    },
+    "data_reasoning": {
+      "score": 15.0,
+      "max_score": 15.0
+    },
+    "uncertainty": {
+      "score": 10.0,
+      "max_score": 10.0
+    },
+    "noise_resistance": {
+      "score": 10.0,
+      "max_score": 10.0
+    }
+  },
+  "criteria": {
+    "contoso_action": {
+      "result": "PASS",
+      "points_awarded": 8.0,
+      "points_possible": 8.0,
+      "evidence": "\"1. **Contoso data retention confirmation — deadline 11:00 today.** Get Marcus to confirm exactly how admin-deleted data is handled in DR backups... Draft written confirmation to Sarah/Noah before 11:00. €72k ARR at stake.\" and \"Response needed by 11:00 Monday or renewal slips to next approval window.\"",
+      "reason": "The response lists Contoso as the #1 priority action with the 11:00 deadline, verification via Marcus, written confirmation, and explicitly notes the renewal slips to the next approval window if unresolved."
+    },
+    "umbrella_action": {
+      "result": "PARTIAL",
+      "points_awarded": 3.5,
+      "points_possible": 7.0,
+      "evidence": "\"**Umbrella metrics.** ... 163 API errors, p95 latency of 1821ms, and usage down 41% over 7 days. This is not mentioned in any Slack thread, email, or meeting note. It may warrant investigation, but no one has flagged it — flagging here as an anomaly, not assuming action.\" Placed in section 4 \"Unclear / needs more information\", not in the \"requires my attention today\" priority list.",
+      "reason": "The response correctly identifies the Umbrella anomaly without asserting a root cause, but under-prioritizes it by hedging (\"may warrant investigation\", \"not assuming action\") and excluding it from today's action list."
+    },
+    "churn_action": {
+      "result": "PASS",
+      "points_awarded": 6.0,
+      "points_possible": 6.0,
+      "evidence": "\"Enterprise churn breakdown — for Tuesday board meeting. Daniel wants to understand whether Pied Piper + Hooli explain the 3.1% → 4.4% move or whether something broader is happening. You own this task (due Tuesday).\" and \"Needs analysis before Tuesday.\"",
+      "reason": "The response lists the churn breakdown as a priority action item for today explicitly tied to Tuesday's board meeting and notes the known cancellations may not fully explain the increase."
+    },
+    "analytics_action": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "\"Analytics v2 release moved to Wednesday... Sam owns release coordination; Julia owns the launch email and explicitly told you no action is needed from you.\" Task cleanup item #5: \"'Prepare Analytics v2 launch email' — Julia owns this now; close. 'Review Analytics v2 launch readiness' — release moved to Wednesday; keep but due date shifts.\"",
+      "reason": "The response treats Wednesday as the release date, assigns the launch email to Julia rather than the user, and places the readiness review as a low-priority cleanup item below today's critical Contoso deadline."
+    },
+    "acme_resolved": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "\"Acme confirmed full recovery by email Thursday afternoon. Incident is closed.\"; \"Acme incident is fully resolved and documented by Marcus\"; task cleanup: \"'Investigate Acme API failures' — resolved; close.\"",
+      "reason": "The response explicitly states the Acme incident is resolved/closed, places it under \"no action required,\" and recommends closing the related task rather than treating it as an active problem."
+    },
+    "release_wednesday": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "\"**Analytics v2 release moved to Wednesday:** ... Daniel approved the slip.\" and \"Analytics v2 is now targeting Wednesday. Sam coordinating, Julia on comms.\"",
+      "reason": "The response explicitly states the Analytics v2 release has moved to and is now targeting Wednesday, meeting the PASS definition."
+    },
+    "contoso_blocked": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "\"Response needed by 11:00 Monday or renewal slips to next approval window. Noah flagged this as the only remaining risk on a €72k ARR deal.\" and \"Contoso backup/deletion behaviour. We don't yet have the technical confirmation from Marcus... Required before 11:00.\"",
+      "reason": "The response explicitly states the renewal is pending the written data-retention confirmation and will slip to the next approval window if not answered by 11:00, correctly capturing the blocked state and its approval consequence."
+    },
+    "launch_email_julia": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "\"Julia owns the launch email and explicitly told you no action is needed from you\"; \"'Prepare Analytics v2 launch email' — Julia owns this now; close.\"; \"You are not expected to touch the launch email.\"",
+      "reason": "The response explicitly assigns launch email ownership to Julia and states no action is required from the user."
+    },
+    "pricing_confidential": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "\"Proposed new Enterprise tiers discussed but not finalized. All numbers remain confidential — not to be shared with customers.\" and \"Pricing is still proposal-only and confidential... Do not send numbers.\"",
+      "reason": "The response explicitly states the pricing is only a non-final proposal and must not be shared externally with customers, including a direct instruction not to send numbers to Initech."
+    },
+    "contoso_first": {
+      "result": "PASS",
+      "points_awarded": 6.0,
+      "points_possible": 6.0,
+      "evidence": "\"## 2. What requires my attention today (by priority) 1. **Contoso data retention confirmation — deadline 11:00 today.** ... €72k ARR at stake.\"",
+      "reason": "Contoso is explicitly listed as item #1 in an ordered priority list with its 11:00 deadline and €72k ARR stakes, clearly ranking it first."
+    },
+    "umbrella_and_churn_high": {
+      "result": "PARTIAL",
+      "points_awarded": 2.5,
+      "points_possible": 5.0,
+      "evidence": "Churn is item #2 in \"What requires my attention today (by priority)\" — \"Enterprise churn breakdown — for Tuesday board meeting.\" Umbrella appears only in section 4 \"Unclear / needs more information\": \"Umbrella metrics... It may warrant investigation, but no one has flagged it — flagging here as an anomaly, not assuming action.\"",
+      "reason": "Churn is prominently prioritized right after Contoso, but Umbrella is buried at the very bottom in a non-action section with hedged framing rather than as an actionable item for today."
+    },
+    "no_false_priorities": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "Priority list: 1) Contoso retention deadline, 2) Enterprise churn breakdown for board, 3) Initech pricing holding reply (\"Do not send numbers\"), 4) Globex reschedule (\"Low urgency\"), 5) Task list cleanup — closing \"Investigate Acme API failures\" (resolved) and \"Prepare Analytics v2 launch email\" (Julia owns). Partner sync listed as completed; conversion dip listed as \"no action required... not yet actionable.\"",
+      "reason": "Resolved/delegated/completed items (Acme, launch email, partner sync) are correctly demoted to closure or no-action status, and the top priorities are the legitimate Contoso deadline and churn analysis, with Globex explicitly marked low urgency."
+    },
+    "umbrella_detected": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "\"**Umbrella metrics.** In the company metrics snapshot, Umbrella shows 163 API errors, p95 latency of 1821ms, and usage down 41% over 7 days... flagging here as an anomaly\"",
+      "reason": "The response explicitly names Umbrella and cites its anomalous error count, latency, and usage decline, flagging it as an anomaly warranting investigation without asserting a root cause."
+    },
+    "umbrella_metrics": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "\"Umbrella shows 163 API errors, p95 latency of 1821ms, and usage down 41% over 7 days.\"",
+      "reason": "The response cites three correct supporting signals (163 API errors, 1821ms p95 latency, -41% 7-day usage) with no incorrect numbers, satisfying the two-signal threshold."
+    },
+    "churn_numbers": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "\"Daniel noted enterprise logo churn moved from 3.1% → 4.4%\" and repeated in priorities/unclear sections as \"the 3.1% → 4.4% move\"",
+      "reason": "The response states the exact churn figures and correct upward direction from 3.1% to 4.4%."
+    },
+    "no_friday_conversion_claim": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "\"Conversion dip (Friday): Julia and Noah noticed the conversion dashboard looked bad. Possibly noisy Friday traffic; flagged to check this week.\" / \"Friday conversion dip is noted but unconfirmed — may just be noise.\" / \"Conversion dip. Not yet determined whether Friday's numbers were noise or a real signal. Needs a look early this week.\"",
+      "reason": "The response attributes the dip only to what Julia and Noah observed, repeatedly labels it unconfirmed and possibly noise, and places it under \"Unclear / needs more information,\" which explicitly signals the conversion drop cannot be established from the provided data rather than asserting it as fact."
+    },
+    "umbrella_unknown_cause": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "\"**Umbrella metrics.** ... shows 163 API errors, p95 latency of 1821ms, and usage down 41% over 7 days. This is not mentioned in any Slack thread, email, or meeting note. It may warrant investigation, but no one has flagged it — flagging here as an anomaly, not assuming action.\" (placed under \"Unclear / needs more information\")",
+      "reason": "The response reports the observed Umbrella metrics as an unexplained anomaly under a section explicitly labeled \"Unclear / needs more information,\" noting no source explains it and suggesting investigation without asserting any root cause."
+    },
+    "friday_conversion_unknown": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "\"Conversion dip (Friday): Julia and Noah noticed the conversion dashboard looked bad. Possibly noisy Friday traffic; flagged to check this week.\" / \"Friday conversion dip is noted but unconfirmed — may just be noise.\" / \"Conversion dip. Not yet determined whether Friday's numbers were noise or a real signal.\"",
+      "reason": "The response repeatedly flags the Friday conversion dip as unconfirmed and undetermined (noise vs. real signal), treating it as an open uncertainty rather than fact, though it stops just short of explicitly stating it cannot be verified from the provided data — the substance of the uncertainty flag is clearly present."
+    },
+    "churn_causality_unknown": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "\"Known cancellations are Pied Piper (post-acquisition vendor consolidation) and Hooli (low adoption). Unclear whether these fully explain the movement.\" and \"It's not established whether Pied Piper and Hooli fully account for the 3.1% → 4.4% move or whether there's a broader pattern.\"",
+      "reason": "The response explicitly names the two cancellations as contributors while stating it is not established that they fully explain the churn increase, meeting the PASS definition."
+    }
+  },
+  "false_actions": {
+    "lunch": {
+      "triggered": false,
+      "points": 0.0,
+      "evidence": "No mention of the lunch discussion anywhere in the response.",
+      "description": "Treating the lunch discussion as relevant or actionable."
+    },
+    "icon": {
+      "triggered": false,
+      "points": 0.0,
+      "evidence": "No mention of the icon discussion; not re-opened or prioritized.",
+      "description": "Re-opening or prioritizing the resolved icon discussion."
+    },
+    "partner_sync": {
+      "triggered": false,
+      "points": 0.0,
+      "evidence": "Listed under 'no action required': 'Partner sync completed Friday; October integration target unchanged.' Treated as completed.",
+      "description": "Treating Friday's completed partner sync as upcoming."
+    },
+    "launch_email": {
+      "triggered": false,
+      "points": 0.0,
+      "evidence": "'Julia owns the launch email and explicitly told you no action is needed from you'; 'Prepare Analytics v2 launch email' — Julia owns this now; close.' Only action is closing a stale task, not writing the email.",
+      "description": "Assigning the Analytics v2 launch email to the user."
+    },
+    "acme_active": {
+      "triggered": false,
+      "points": 0.0,
+      "evidence": "'Incident is closed.' and task list cleanup: 'Investigate Acme API failures' — resolved; close.' Not treated as an active investigation.",
+      "description": "Treating Acme investigation as an active Monday task."
+    },
+    "pricing_send": {
+      "triggered": false,
+      "points": 0.0,
+      "evidence": "'Pricing is still proposal-only and confidential. You need to respond without disclosing — likely a holding reply. Do not send numbers.' Sending pricing is explicitly rejected.",
+      "description": "Treating sending proposed Enterprise pricing as a valid action."
+    }
+  },
+  "penalties": {
+    "items": [],
+    "dismissed": [
+      {
+        "type": "MATERIAL_HALLUCINATION",
+        "points": 0.0,
+        "evidence": "Acme incident is fully resolved and documented by Marcus",
+        "reason": "Marcus said he would write up incident notes later; the meeting notes list 'Marcus to complete incident documentation' as still pending. Saying it is already documented is a small overstatement, but the substantive point (incident resolved, no action needed from You) is supported."
+      },
+      {
+        "type": "MATERIAL_HALLUCINATION",
+        "points": 0.0,
+        "evidence": "Sarah Mitchell (Contoso legal) raised one final question",
+        "reason": "Sarah Mitchell is a Contoso contact relaying her legal team's flag, not necessarily legal herself. Minor attribution imprecision; the substance is accurate."
+      },
+      {
+        "type": "MATERIAL_HALLUCINATION",
+        "points": 0.0,
+        "evidence": "Next pricing review is Wednesday (Daniel owns).",
+        "reason": "Meeting notes state next pricing review is Wednesday, and the task list shows 'Review proposed Enterprise pricing — Owner: Daniel — Wednesday'. Supported."
+      },
+      {
+        "type": "PROHIBITED_ACTION",
+        "points": 0.0,
+        "evidence": "Reply to Elena confirming Thursday afternoon works (or proposing alternatives).",
+        "reason": "Globex reschedule confirmation is an expected secondary action; Elena said early next week is fine. Not prohibited."
+      },
+      {
+        "type": "MATERIAL_HALLUCINATION",
+        "points": 0.0,
+        "evidence": "Julia and Noah noticed the conversion dashboard looked bad.",
+        "reason": "Supported by the #growth thread; the response correctly frames it as unverified rather than inferring an actual conversion drop."
+      }
+    ],
+    "raw_total": 0.0,
+    "total": 0.0,
+    "capped": false
+  },
+  "deterministic_checks": [
+    {
+      "id": "contoso_11_00",
+      "matched": true,
+      "detail": "'11:00' appears near a mention of Contoso"
+    },
+    {
+      "id": "churn_3_1_to_4_4",
+      "matched": true,
+      "detail": "both churn figures 3.1 and 4.4 are present"
+    },
+    {
+      "id": "umbrella_metrics_present",
+      "matched": true,
+      "detail": "at least two of 163 / 1821 / 41 appear near a mention of Umbrella"
+    },
+    {
+      "id": "umbrella_named",
+      "matched": true,
+      "detail": "Umbrella is named in the response"
+    },
+    {
+      "id": "wednesday_present",
+      "matched": true,
+      "detail": "'Wednesday' appears in the response"
+    },
+    {
+      "id": "julia_present",
+      "matched": true,
+      "detail": "'Julia' appears in the response"
+    },
+    {
+      "id": "pied_piper_and_hooli",
+      "matched": true,
+      "detail": "both known cancellations are named"
+    }
+  ],
+  "disagreements": [],
+  "base_score": 94.0,
+  "final_score": 94.0
+}

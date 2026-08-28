@@ -1,0 +1,54 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.2",
+  "scenario_id": "monday-002",
+  "scenario_prompt_sha256": "740e627cbc7413c321ede0d54000504de54821d34ff4677f82731b89600423a8",
+  "run_id": "monday-002__qwen3.6__001",
+  "run_number": 1,
+  "model": {
+    "slug": "qwen3.6",
+    "display_name": "Qwen 3.6",
+    "provider": "helmcode",
+    "model_id": "qwen3.6"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 32000,
+    "reasoning_enabled": false,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true
+  },
+  "timestamp_utc": "2026-08-28T13:38:36Z",
+  "usage": {
+    "input_tokens": 2687,
+    "output_tokens": 2629,
+    "reasoning_tokens": 0
+  },
+  "performance": {
+    "ttft_ms": 1327.0,
+    "ttfa_ms": 1327.0,
+    "total_latency_ms": 17498.4,
+    "tokens_per_second": 162.6
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "1. CURRENT STATE\n\n**Enterprise Controls Release (Atlas Migration)**\n*   **Status:** Critical path blocked by Security policy and availability windows.\n*   **Build:** Staging build 2.9.4 is verified. Production deploy of 2.9.4 failed on shard eu-03 (no customer impact).\n*   **Options:**\n    *   *Option A (2.9.4 retry):* No code change. Requires Marcus deploy → Priya 20m post-deploy verify → Sam 15m rollout check. Total time: ~35-40 mins of active coordination.\n    *   *Option B (2.9.5-patch):* Code change. Requires Marcus deploy → Priya 25m delta review (async) → Priya 20m post-deploy verify → Sam 15m rollout check. Total time: ~60-65 mins of active coordination, plus async wait.\n*   **Constraints:**\n    *   Atlas migration window: Monday morning. Rollout must **begin** by 12:00.\n    *   Marcus: Available 09:15–10:20.\n    *   Priya: Available 09:00–09:35 and 10:25–12:30. Unavailable 09:35–10:25.\n    *   Sam: Available 09:00–12:30.\n    *   Policy: Maya refuses executive gate; follow Security/Release policy.\n*   **Resolution:** Option A (2.9.4 retry) is the only viable path to meet the 12:00 deadline with Marcus’s limited window. Option B risks missing the window due to the 25-minute delta review requirement and Marcus’s 10:20 departure. If Option A fails again, Option B is the fallback, but it is high-risk for the 12:00 start time.\n\n**Zenith Renewal**\n*   **Status:** Closed. Signed €96k ARR, 24 months. Laura confirms \"All resolved.\" No action needed.\n\n**Atlas Customer Comms**\n*   **Status:** Daniel holds final draft and recipient list. He will send after Sam confirms rollout is open.\n*   **Constraint:** Sarah (author) is out Monday. Daniel is the single point of failure for comms.\n\n**Orion SCIM Issue**\n*   **Status:** Confusion over Org ID. Laura saw `org_71A` in CRM but ticket references `org_17A`. Sam instructed: \"Don't send another status until we confirm which org ID is theirs and read the live flag.\"\n*   **Action:** Must verify live flag for both orgs before replying.\n\n**Board Pack / Expansion Reconciliation**\n*   **Status:** Maya needs expansion explanation by 11:00 Monday.\n*   **Data:** Target €180k, Expected €126k, Gap €54k.\n*   **Knowns:** Wayne (€18k moved to Oct), Globex (€12k pending procurement). Gap remaining: €24k.\n*   **Accounts to Analyze:** Soylent (€10k drop), Wonka (€14k drop), Acme (€0 expected, but contract explains 40-50% usage reduction).\n*   **Policy:** Maya wants \"actual arithmetic\" and \"no invented causes.\"\n\n**Pricing**\n*   **Status:** Workbook is obsolete. Daniel’s Slack values (€2,500 platform / 40 seats / €55 extra) are internal only. No external quotes.\n\n2. MY PLAN FOR TODAY\n\n**09:07 – 09:15: Immediate Actions**\n1.  **Choose Release Path:** Select **Option A (2.9.4 retry)**. It avoids the 25-minute delta review, fits Marcus’s window, and prioritizes the 12:00 Atlas deadline.\n2.  **Notify Marcus & Priya:** Send message to `#enterprise-launch`: \"Choosing Option A (2.9.4 retry). Marcus, please prepare deploy at 09:15. Priya, standby for post-deploy verify at ~09:35.\"\n3.  **Decline \"Get Maya Approval\":** Maya already stated: \"Follow Security's release policy.\" No approval needed for the technical path, only execution.\n4.  **Decline \"Call Zenith\":** Laura confirmed renewal is signed and resolved. Calling is unnecessary noise.\n\n**09:15 – 09:35: Execution Window (Marcus & Priya)**\n1.  **Monitor Deploy:** Marcus deploys 2.9.4.\n2.  **Monitor Post-Deploy Verify:** Priya performs 20-minute verification (09:35–09:55).\n    *   *Contingency:* If 2.9.4 fails again, Marcus must switch to Option B (2.9.5-patch) immediately. This triggers the 25-minute delta review. Priya is unavailable 09:35–10:25, so the review would happen asynchronously. Post-deploy verify would be 10:25+. Sam can open rollout by 11:00. This is tight but possible.\n3.  **Orion Verification:** While waiting for Priya, check live flag for `org_71A` and `org_17A` in the system. Determine which is Orion’s active org.\n\n**09:35 – 10:00: Verification & Comms Prep**\n1.  **Confirm Rollout Health:** If Priya verifies 2.9.4 successfully, notify Sam.\n2.  **Sam Opens Rollout:** Sam needs 15 mins to sanity-check. If verify finishes at 09:55, rollout opens ~10:10.\n3.  **Notify Daniel:** \"Rollout open. Please send customer announcement.\"\n4.  **Orion Reply:** Once Org ID is confirmed, reply to Laura/Sam with the correct status. Do not send generic \"SCIM worked\" until verified.\n\n**10:00 – 11:00: Board Pack & Expansion Reconciliation**\n1.  **Draft Expansion Explanation:**\n    *   **Wayne:** €18k reduction explained by signed amendment moving expansion to October.\n    *   **Globex:** €12k reduction explained by pending procurement approval (not slipped, just delayed).\n    *   **Soylent:** €10k reduction. Contract shows \"no contract explanation.\" Usage down 22%. *Action:* Check if there is a known reason (e.g., churn, downsell). If none, state: \"€10k reduction; no stated cause in contract or support tickets. Usage down 22%.\"\n    *   **Wonka:** €14k reduction. Contract shows \"no contract explanation.\" Usage down 35%. *Action:* State: \"€14k reduction; no stated cause. Usage down 35%.\"\n    *   **Acme:** €0 expected. Contract explains \"approved shift to annual batch-processing; expected interactive usage reduction 40-50%.\" This is a known structural change, not a slip.\n    *   **Total Gap:** €18k (Wayne) + €12k (Globex) + €10k (Soylent) + €14k (Wonka) = €54k. Matches gap.\n2.  **Send to Maya:** Email Maya with the arithmetic breakdown. Separate data (contract terms, usage stats) from hypotheses (none, per Maya’s instruction).\n\n**11:00 – 12:00: Follow-up**\n1.  **Monitor Atlas Rollout:** Ensure rollout is proceeding.\n2.  **Pricing:** Do not send pricing to Initech. Daniel’s instruction is clear: \"Nothing to procurement... until public announcement.\"\n3.  **Support:** Review Globex tickets (G-441, G-447, G-451). High severity SSO issue may need escalation if it impacts Atlas migration, but Atlas is a separate org. Monitor.\n\n3. CUSTOMER / REVENUE PRIORITIES\n\n1.  **Atlas (Enterprise Controls Migration):**\n    *   **Priority:** Critical.\n    *   **Reason:** Migration window is Monday morning. If rollout doesn't begin by 12:00, admins are unavailable until Thursday. Renewal is signed, but delay creates \"executive noise.\"\n    *   **Action:** Execute Option A release path immediately.\n\n2.  **Globex (Support & Procurement):**\n    *   **Priority:** High.\n    *   **Reason:** 3 open tickets (High/Medium/Medium). SSO setup failure (G-441) is a blocker for admin operations. Expansion is pending procurement.\n    *   **Action:** Monitor SSO ticket. Do not quote pricing until procurement clears.\n\n3.  **Soylent & Wonka (Expansion Gap):**\n    *   **Priority:** Medium.\n    *   **Reason:** Significant expansion reductions (€10k and €14k). No contract explanation. Maya needs the \"actual arithmetic\" for the board pack.\n    *   **Action:** Document the lack of stated cause in the expansion reconciliation. Do not invent reasons.\n\n4.  **Zenith:**\n    *   **Priority:** Low (Closed).\n    *   **Reason:** Renewal signed. No action needed.\n\n5.  **Initech (Pricing):**\n    *   **Priority:** Low (Blocked).\n    *   **Reason:** Daniel explicitly forbids sending pricing. Do not engage.\n\n4. DO NOT DO\n\n1.  **Do NOT choose Option B (2.9.5-patch) as primary:** It requires a 25-minute delta review and risks missing the 12:00 Atlas rollout window given Marcus’s 10:20 departure and Priya’s 09:35–10:25 unavailability.\n2.  **Do NOT send Enterprise Pricing to Initech Procurement:** Daniel’s email and Slack instructions are explicit: \"Internal scenario planning... Still not external.\"\n3.  **Do NOT call Zenith:** Laura confirmed renewal is signed and resolved.\n4.  **Do NOT send Orion status update:** Sam instructed: \"Don't send another status until we confirm which org ID is theirs.\"\n5.  **Do NOT invent causes for Soylent/Wonka expansion drops:** Maya’s instruction: \"If a customer's reduction has no stated cause, don't invent one.\"\n6.  **Do NOT seek Maya’s approval for the release path:** Maya already delegated to Security/Release policy.\n\n5. UNCLEAR / MUST VERIFY\n\n1.  **Orion Org ID:** Laura saw `org_71A` in CRM, but ticket references `org_17A`. Must verify which org is live and active for Orion before replying.\n2.  **Soylent/Wonka Expansion Drop Cause:** Contract data shows \"no contract explanation.\" Support tickets show \"slower onboarding\" (Soylent) and no tickets (Wonka). Is there a known sales reason? If not, the \"lack of stated cause\" is the answer, but verify if any internal notes exist.\n3.  **Atlas Migration Success Criteria:** Does \"rollout begun\" mean the build is deployed, or that admins have started the migration? Sam says \"rollout must BEGIN by 12:00.\" Assume this means the technical rollout is open and admins can start.\n4.  **Priya’s Delta Review Availability:** If Option A fails, Priya is unavailable 09:35–10:25. Can Marcus submit the diff for async review during that window? Yes, Priya said \"asynchronously from a submitted diff.\" This is viable, but tight.",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "chatcmpl-9676b8c5fcf31298",
+    "raw_usage": {
+      "completion_tokens": 2629,
+      "prompt_tokens": 2687,
+      "total_tokens": 5316,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}
