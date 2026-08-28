@@ -98,6 +98,16 @@ deliberately no "efficiency score" and no combined speed/quality number.
 
 ## The official evaluator
 
+> **Judging never uses the Anthropic API.** Every official label in this
+> repository was produced by Claude Opus 5 reading each response against the
+> rubric in a recorded Claude Code session, and written into
+> `verdicts/<scenario>/<model>.verdicts.jsonl`. `mondaybench evaluate
+> --verdicts` then scores those labels deterministically. **Do not set
+> `ANTHROPIC_API_KEY` and do not spend Anthropic API credits on this project** -
+> that is a hard project rule, not a preference. The `provider: anthropic` /
+> `model_id: claude-opus-5` fields in the evaluator config record *which model
+> reasoned about the responses*; they are not an instruction to call an API.
+
 `evaluator-opus5-v0.1` pins the judge model (`claude-opus-5`), the provider route
 (native Anthropic Messages API), the rubric (`rubric-0.2.yaml`), the generation
 parameters and the expected output shape. Every evaluation records the exact
@@ -159,7 +169,7 @@ mondaybench run --scenario monday-001 \
     --models glm5.3-flash,glm5.2,mimo-v2.5,deepseek-v4-flash,qwen3.8-flash,qwen3.6,gemma4 \
     --runs 3 --reuse-valid-runs
 
-# 4. Judge all 21 runs (needs ANTHROPIC_API_KEY)
+# 4. Replay the recorded judge labels (no API key, no credits)
 mondaybench evaluate --scenario monday-001 \
     --models glm5.3-flash,glm5.2,mimo-v2.5,deepseek-v4-flash,qwen3.8-flash,qwen3.6,gemma4 \
     --evaluator evaluator-opus5-v0.1 --review

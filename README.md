@@ -140,6 +140,16 @@ raw response  ->  per-criterion label + evidence  ->  deterministic points  ->  
 
 ## The judge
 
+> **Judging never uses the Anthropic API.** Every official label in this
+> repository was produced by Claude Opus 5 reading each response against the
+> rubric in a recorded Claude Code session, and written into
+> `verdicts/<scenario>/<model>.verdicts.jsonl`. `mondaybench evaluate
+> --verdicts` then scores those labels deterministically. **Do not set
+> `ANTHROPIC_API_KEY` and do not spend Anthropic API credits on this project** -
+> that is a hard project rule, not a preference. The `provider: anthropic` /
+> `model_id: claude-opus-5` fields in the evaluator config record *which model
+> reasoned about the responses*; they are not an instruction to call an API.
+
 `evaluator-opus5-v0.1` is the **official** evaluator for v0.1. The others ship
 alongside it for calibration and for anyone without an Anthropic key. They are
 never mixed in one ranking — that is what evaluator versioning is for.
@@ -149,7 +159,7 @@ and 35k output tokens**, or about 21 judge calls per run.
 
 | Evaluator | Judge | Cost | Trade-off |
 |---|---|---|---|
-| **`evaluator-opus5-v0.1`** | **`claude-opus-5`, native Anthropic API** | **~$3 per 7-model × 1-run sweep** | **Official. Structured output, effort control, reproducible by anyone with an Anthropic key** |
+| **`evaluator-opus5-v0.1`** | **`claude-opus-5`, recorded session** | **no API spend** | **Official. Labels recorded with their evidence and replayed deterministically** |
 | `evaluator-gateway-v0.2` | `claude-opus-5` via an OpenAI-compatible gateway | Billed from gateway credits | Same model, but `temperature` is rejected and `effort` is unavailable |
 | `evaluator-open-v0.1` | Any OpenAI-compatible model (`JUDGE_MODEL`) | Zero marginal cost on your own infra | No closed model judging open ones; weaker label consistency |
 | `evaluator-manual-v0.1` | Verdicts recorded in a worksheet | No credentials at all | Labels come from a reviewer, so they are not machine-reproducible |
@@ -378,7 +388,7 @@ mondaybench run --scenario monday-001 \
     --models glm5.3-flash,glm5.2,mimo-v2.5,deepseek-v4-flash,qwen3.8-flash,qwen3.6,gemma4 \
     --runs 3 --reuse-valid-runs
 
-# 4. Judge all 21 runs (needs ANTHROPIC_API_KEY)
+# 4. Replay the recorded judge labels (no API key, no credits)
 mondaybench evaluate --scenario monday-001 \
     --models glm5.3-flash,glm5.2,mimo-v2.5,deepseek-v4-flash,qwen3.8-flash,qwen3.6,gemma4 \
     --evaluator evaluator-opus5-v0.1 --review
