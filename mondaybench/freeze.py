@@ -103,7 +103,7 @@ def write_manifest(manifest: FreezeManifest, directory: Path) -> Path:
     )
     target = directory / MANIFEST_NAME
     target.write_text(
-        header + yaml.safe_dump(payload, sort_keys=False, allow_unicode=True), encoding="utf-8"
+        header + yaml.safe_dump(payload, sort_keys=False, allow_unicode=True), encoding="utf-8", newline="\n"
     )
     return target
 

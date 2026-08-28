@@ -16,7 +16,9 @@ from pathlib import Path
 from typing import Any
 
 from .config import repo_root
+from .config import ConfigError, load_models
 from .evaluator import find_evaluations, load_evaluation, models_with_evaluations
+from .official import qualify_run, reasoning_status
 from .runner import find_runs, load_run
 from .schemas import Evaluation
 
@@ -55,6 +57,14 @@ class ModelSummary:
     judge_model_id: str | None = None
     rank: int = 0
     warnings: list[str] = field(default_factory=list)
+    # Runs that exist and were scored but do not qualify as official evidence.
+    # Never contributes to any statistic; published so the exclusion is visible.
+    excluded_runs: list[dict[str, Any]] = field(default_factory=list)
+    # Effective-configuration fingerprints of the qualifying runs. `None` for a
+    # run written before the field existed - reported, never guessed.
+    config_fingerprints: list[str | None] = field(default_factory=list)
+    # Reasoning status of each qualifying run, from the response.
+    reasoning_statuses: list[str] = field(default_factory=list)
     # Per-criterion detail, for the public breakdown. Kept off the score path.
     missed: list[dict[str, Any]] = field(default_factory=list)
     got_wrong: list[dict[str, Any]] = field(default_factory=list)
@@ -98,7 +108,6 @@ def summarize_model(
         return None
 
     evaluations: list[Evaluation] = [load_evaluation(p) for p in evaluation_paths]
-    scores = [e.final_score for e in evaluations]
 
     run_by_id = {}
     run_path_by_id = {}
@@ -106,6 +115,62 @@ def summarize_model(
         run = load_run(path)
         run_by_id[run.run_id] = run
         run_path_by_id[run.run_id] = path
+
+    # A run that fails qualification is not official evidence, so its
+    # evaluation must not reach the mean, the range, the dimension averages or
+    # any median. It is recorded in `excluded` instead: the score stays
+    # readable and the reason travels with it. Introduced after
+    # monday-002/qwen3.8-flash/run-002 - scored 66.5 on zero reasoning tokens -
+    # was found to have been served outside the reasoning regime its two
+    # sibling runs used.
+    excluded: list[dict[str, Any]] = []
+    try:
+        model_cfg = load_models().get(model_slug)
+    except ConfigError:
+        model_cfg = None
+    if model_cfg is not None:
+        kept: list[Evaluation] = []
+        kept_paths: list[Path] = []
+        for evaluation, ev_path in zip(evaluations, evaluation_paths):
+            run = run_by_id.get(evaluation.run_id)
+            if run is None:
+                kept.append(evaluation)
+                kept_paths.append(ev_path)
+                continue
+            verdict = qualify_run(
+                run,
+                path=run_path_by_id[evaluation.run_id],
+                expected_prompt_sha256=run.scenario_prompt_sha256,
+                model=model_cfg,
+                scenario_id=scenario_id,
+            )
+            if verdict.official:
+                kept.append(evaluation)
+                kept_paths.append(ev_path)
+            else:
+                excluded.append(
+                    {
+                        "run_id": evaluation.run_id,
+                        "score": evaluation.final_score,
+                        "reasons": list(verdict.reasons),
+                    }
+                )
+        evaluations, evaluation_paths = kept, kept_paths
+
+    if not evaluations:
+        return None
+
+    scores = [e.final_score for e in evaluations]
+    config_fingerprints = [
+        getattr(run_by_id[e.run_id].generation, "config_sha256", None)
+        if e.run_id in run_by_id
+        else None
+        for e in evaluations
+    ]
+    reasoning_statuses = [
+        reasoning_status(run_by_id[e.run_id]) if e.run_id in run_by_id else "UNOBSERVABLE"
+        for e in evaluations
+    ]
 
     warnings: list[str] = []
     display_name = model_slug
@@ -239,6 +304,9 @@ def summarize_model(
         stddev=round(statistics.stdev(scores), 2) if len(scores) > 1 else 0.0,
         dimensions=dimensions,
         dimension_max=dimension_max,
+        excluded_runs=excluded,
+        config_fingerprints=config_fingerprints,
+        reasoning_statuses=reasoning_statuses,
         median_ttfa_ms=_median_or_none(ttfas),
         median_total_latency_ms=_median_or_none(latencies),
         median_cost_usd=median_cost,
@@ -323,6 +391,7 @@ def build_leaderboard(
                 },
                 "run_scores": s.run_scores,
                 "dimensions": s.dimensions,
+                "excluded_runs": s.excluded_runs,
                 # Recorded alongside the score and never folded into it.
                 "performance": {
                     "median_ttfa_ms": s.median_ttfa_ms,
@@ -406,7 +475,7 @@ def write_leaderboard(
 
     json_path = directory / "leaderboard.json"
     json_path.write_text(
-        json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
+        json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n"
     )
 
     csv_path = directory / "leaderboard.csv"
@@ -459,7 +528,7 @@ def write_leaderboard(
             writer.writerow(row)
 
     md_path = directory / "leaderboard.md"
-    md_path.write_text(render_markdown(payload, summaries), encoding="utf-8")
+    md_path.write_text(render_markdown(payload, summaries), encoding="utf-8", newline="\n")
 
     return json_path, csv_path, md_path
 
@@ -699,6 +768,32 @@ def official_blockers(
             f"evaluations used rubric {sorted(str(r) for r in rubrics)[0]}, "
             f"official evaluator pins {expected_rubric_version}"
         )
+
+    # An excluded run is not itself a blocker: `summarize_model` has already
+    # dropped it from every statistic, and if that left the model short the
+    # run-count gate above has said so. Blocking on the mere existence of one
+    # would make a correctly replaced run unpublishable forever. It is carried
+    # in the payload as `excluded_runs` so the exclusion stays visible.
+
+    # Every run of a model must have been asked for under the same effective
+    # configuration. Runs written before this field existed carry None; those
+    # are reported as unrecorded rather than treated as a mismatch, because a
+    # missing fingerprint is not evidence of a different one.
+    for summary in summaries:
+        known = {f for f in summary.config_fingerprints if f}
+        if len(known) > 1:
+            blockers.append(
+                f"{summary.model_slug}: runs span {len(known)} generation configs: "
+                + ", ".join(sorted(f[:12] for f in known))
+            )
+    regimes = {
+        (s.model_slug, frozenset(s.reasoning_statuses)) for s in summaries
+    }
+    for slug, statuses in regimes:
+        if "NOT_DELIVERED" in statuses:
+            blockers.append(
+                f"{slug}: an official run is missing the reasoning it requested"
+            )
 
     judges = {s.judge_model_id for s in summaries}
     if len(judges) > 1:

@@ -8,15 +8,15 @@ Seven models, three official runs each (21 runs). Monday Score is the mean of th
 
 | # | Model | Monday Score | Runs | Min | Max | Range | Stddev |
 |---:|---|---:|---|---:|---:|---:|---:|
-| 1 | GLM 5.2 | **91.2** | 90.5 / 87.5 / 95.5 | 87.5 | 95.5 | 8.0 | 4.04 |
-| 2 | DeepSeek V4 Flash | **89.3** | 97.5 / 86.5 / 84.0 | 84.0 | 97.5 | 13.5 | 7.18 |
-| 3 | GLM 5.3 Flash | **87.3** | 85.0 / 85.5 / 91.5 | 85.0 | 91.5 | 6.5 | 3.62 |
-| 4 | Qwen 3.8 Flash | **86.5** | 93.0 / 66.5 / 100.0 | 66.5 | 100.0 | 33.5 | 17.67 |
+| 1 | Qwen 3.8 Flash | **94.8** | 93.0 / 100.0 / 91.5 | 91.5 | 100.0 | 8.5 | 4.54 |
+| 2 | GLM 5.2 | **91.2** | 90.5 / 87.5 / 95.5 | 87.5 | 95.5 | 8.0 | 4.04 |
+| 3 | DeepSeek V4 Flash | **89.3** | 97.5 / 86.5 / 84.0 | 84.0 | 97.5 | 13.5 | 7.18 |
+| 4 | GLM 5.3 Flash | **87.3** | 85.0 / 85.5 / 91.5 | 85.0 | 91.5 | 6.5 | 3.62 |
 | 5 | MIMO v2.5 | **81.2** | 64.5 / 81.5 / 97.5 | 64.5 | 97.5 | 33.0 | 16.50 |
 | 6 | Qwen 3.6 | **70.2** | 75.5 / 83.0 / 52.0 | 52.0 | 83.0 | 31.0 | 16.17 |
 | 7 | Gemma 4 | **54.2** | 58.0 / 45.5 / 59.0 | 45.5 | 59.0 | 13.5 | 7.52 |
 
-Spread 54.2 – 91.2 = **37.0 points**.
+Spread 54.2 – 94.8 = **40.7 points**.
 
 ## Consistency
 
@@ -24,34 +24,34 @@ Spread 54.2 – 91.2 = **37.0 points**.
 |---|---:|---:|
 | GLM 5.3 Flash | 6.5 | 3.62 |
 | GLM 5.2 | 8.0 | 4.04 |
+| Qwen 3.8 Flash | 8.5 | 4.54 |
 | DeepSeek V4 Flash | 13.5 | 7.18 |
 | Gemma 4 | 13.5 | 7.52 |
 | Qwen 3.6 | 31.0 | 16.17 |
 | MIMO v2.5 | 33.0 | 16.50 |
-| Qwen 3.8 Flash | 33.5 | 17.67 |
 
-Most consistent: **GLM 5.3 Flash** (range 6.5). Least: **Qwen 3.8 Flash** (range 33.5).
+Most consistent: **GLM 5.3 Flash** (range 6.5). Least: **MIMO v2.5** (range 33.0).
 
 ## Constant criteria
 
-**4 of 20 criteria return the same label in all 21 runs, worth 21.0 of 100 points.** 79.0 points discriminate.
+**5 of 20 criteria return the same label in all 21 runs, worth 26.0 of 100 points.** 74.0 points discriminate.
 
 | Reference | Constant point mass |
 |---|---:|
 | v0.1 calibration (4 models, 21 criteria) | 75.5 |
 | v0.2 calibration (4 models, 20 criteria) | 37.0 |
-| **v0.2 official (7 models, 20 criteria)** | **21.0** |
+| **v0.2 official (7 models, 20 criteria)** | **26.0** |
 
 Constant across every run:
 
 - `stale_external_actions` (5 pts) — always PASS
 - `current_owners` (5 pts) — always PASS
+- `pricing_authority` (5 pts) — always PASS
 - `immediate_release_decision` (6 pts) — always PASS
 - `orion_missing_evidence` (5 pts) — always PASS
 
 Same modal label for every model, but not identical in every run (these move with run-to-run variance rather than with capability):
 
-- `pricing_authority` (5 pts)
 - `choose_option_b` (8 pts)
 - `parallelize_work` (4 pts)
 - `avoid_acme_false_positive` (4 pts)
@@ -65,9 +65,9 @@ Gap between the best and worst model's mean earned points on that criterion.
 | Criterion | Points | Spread | Dimension |
 |---|---:|---:|---|
 | `launch_state` | 5 | 5.00 | state_reconstruction |
+| `schedule_feasibility` | 6 | 4.00 | planning_dependencies |
 | `option_b_sequence` | 7 | 3.50 | planning_dependencies |
 | `executive_gate_superseded` | 5 | 3.33 | temporal_supersession |
-| `schedule_feasibility` | 6 | 3.00 | planning_dependencies |
 | `expansion_fully_reconciled` | 6 | 3.00 | cross_source_data_reasoning |
 | `customer_signal_integration` | 6 | 3.00 | cross_source_data_reasoning |
 | `ownership_supersession` | 5 | 2.50 | temporal_supersession |
@@ -77,11 +77,11 @@ Gap between the best and worst model's mean earned points on that criterion.
 
 | Dimension | Max | Leader | Score |
 |---|---:|---|---:|
-| cross_source_data_reasoning | 15 | GLM 5.2, DeepSeek V4 Flash, GLM 5.3 Flash | 15.0 |
-| decision_prioritization | 20 | GLM 5.2, DeepSeek V4 Flash, GLM 5.3 Flash | 20.0 |
-| planning_dependencies | 25 | Qwen 3.8 Flash | 19.3 |
-| state_reconstruction | 15 | GLM 5.2, DeepSeek V4 Flash, GLM 5.3 Flash | 15.0 |
-| temporal_supersession | 15 | GLM 5.3 Flash | 15.0 |
+| cross_source_data_reasoning | 15 | Qwen 3.8 Flash, GLM 5.2, DeepSeek V4 Flash, GLM 5.3 Flash | 15.0 |
+| decision_prioritization | 20 | Qwen 3.8 Flash, GLM 5.2, DeepSeek V4 Flash, GLM 5.3 Flash | 20.0 |
+| planning_dependencies | 25 | Qwen 3.8 Flash | 20.3 |
+| state_reconstruction | 15 | Qwen 3.8 Flash, GLM 5.2, DeepSeek V4 Flash, GLM 5.3 Flash | 15.0 |
+| temporal_supersession | 15 | Qwen 3.8 Flash, GLM 5.3 Flash | 15.0 |
 | uncertainty_epistemic | 10 | GLM 5.2, DeepSeek V4 Flash | 10.0 |
 
 ## Failure stories
@@ -92,24 +92,24 @@ Each entry is a rubric criterion a model missed, quoted from the recorded evalua
 
 `choose_option_b` (8 pts) — 17 miss(es).
 
+- **Qwen 3.8 Flash run 1** (PARTIAL): chooses viable A and schedules it correctly; B is set aside because 'there is no evidence the 2.9.5 diff is already submitted', which the response itself files as a thing to verify rather than a settled constraint
+- **Qwen 3.8 Flash run 3** (PARTIAL): chooses A, which is viable and correctly scheduled; B is set aside because a diff submitted before 09:15 'is not evidenced', which names the right unlocking condition but treats submitting it as outside the user's control
 - **GLM 5.2 run 1** (PARTIAL): chooses A, which is viable and correctly scheduled; B is set aside because 'the 2.9.5 diff is already submitted' is 'not confirmed' - a defensible reading, but submitting it is an action the user could take at 09:07
 - **GLM 5.2 run 2** (PARTIAL): chooses viable A and schedules it correctly, but the stated reason is false
 - **DeepSeek V4 Flash run 2** (PARTIAL): chooses viable A and schedules it correctly, on a false claim about B
 - **DeepSeek V4 Flash run 3** (PARTIAL): chooses viable A and schedules it correctly; no false global claim is made about B, but no risk comparison is offered either
-- **GLM 5.3 Flash run 1** (PARTIAL): chooses viable A and schedules it correctly, but 'B is not viable today' overstates: the review runs in Priya's 09:00-09:35 window and the deploy ends 10:17
-- **GLM 5.3 Flash run 2** (PARTIAL): chooses viable A and schedules it correctly, but rests it on 'zero slack anywhere' for B, which is not what the windows say
 - …and 11 more; see `criterion-matrix.md`.
 
 ### Lost the asynchronous delta review
 
 `schedule_feasibility` (6 pts) — 17 miss(es).
 
+- **Qwen 3.8 Flash run 1** (PARTIAL): every constraint is named and the A sequence is exact, but no B schedule is committed - it is deferred to MUST VERIFY
+- **Qwen 3.8 Flash run 3** (PARTIAL): the B arithmetic is right for the anchor it picks - 'if Marcus submits the diff at his 09:15 start, review ends 09:40, then a 45-minute deploy would end 10:25' - and it identifies the crux ('B could only work if a diff is submitted before 09:15'), but no viable B schedule is committed
 - **GLM 5.2 run 1** (PARTIAL): every constraint is identified, including the right review window ('Priya's 09:00-09:25 review'), but no B schedule is committed to
 - **GLM 5.2 run 2** (FAIL): 'Option B cannot fit Marcus's 09:15-10:20 window after a required 25-min delta review (review + 45-min deploy > 65 min available)' - the review runs before Marcus arrives, so the deploy has 09:32-10:17
 - **DeepSeek V4 Flash run 2** (FAIL): 'Priya's 09:35-10:25 gap plus Marcus leaving at 10:20 prevents completion before noon' - with the review in her 09:00-09:35 window the deploy runs 09:32-10:17 and rollout opens by 11:00
 - **DeepSeek V4 Flash run 3** (FAIL): no B schedule is produced; 'B cannot meet the 12:00 Atlas window if started after 09:35' is true as stated but the 09:07 start is never considered
-- **GLM 5.3 Flash run 1** (FAIL): no B schedule is produced; 'delta review + 45-min deploy leaves zero slack against Marcus's 10:20 exit' understates the real 3-minute margin and concludes infeasibility
-- **GLM 5.3 Flash run 2** (FAIL): 'Option B needs the delta review done by ~09:35 and a 45-min deploy finished before Marcus leaves at 10:20 - zero slack anywhere'; the review can start at 09:07 and the deploy ends 10:17
 - …and 11 more; see `criterion-matrix.md`.
 
 ### Broke the release dependency chain
@@ -156,9 +156,9 @@ Each entry is a rubric criterion a model missed, quoted from the recorded evalua
 
 `conditional_launch_timing` (3 pts) — 9 miss(es).
 
+- **Qwen 3.8 Flash run 3** (PARTIAL): 'Do not confirm Atlas launch at 10:30' is right, but '09:40-09:45 ... confirm to Atlas that rollout is scheduled to begin at 11:00' still goes out before Priya's verification, with the conditionality only implied by the preceding step
 - **GLM 5.3 Flash run 1** (PARTIAL): kills the 10:30 task, but 'By 09:45 - Confirm to Atlas: launch proceeds today, rollout opens ~11:00' goes out before the deploy has been verified
 - **GLM 5.3 Flash run 3** (PARTIAL): rejects the 10:30 task, but '~09:45: Confirm to Atlas that migration is on this morning with rollout opening ~11:00' precedes any verification
-- **Qwen 3.8 Flash run 2** (FAIL): 'Migration confirmed for today. Rollout begins shortly' is sent to the customer at 09:45 as a statement of fact, when the response's own timeline opens rollout at 10:45-11:00
 - **MIMO v2.5 run 1** (FAIL): '09:45 | Confirm to Atlas: Enterprise Controls launch is on for today; admins should be standing by. Migration target ~11:00' - an unconditional external commitment made before the deploy is verified
 - **Qwen 3.6 run 1** (PARTIAL): no external promise is made, but the ~10:10 rollout figure is passed to Sam and Daniel with no conditionality, and the stale 10:30 Atlas task is never addressed
 - **Qwen 3.6 run 3** (FAIL): '#leadership: "Maya, selecting Option A... Will confirm rollout open by 10:30"' - a commitment to a time the response's own impossible schedule produced
@@ -168,7 +168,6 @@ Each entry is a rubric criterion a model missed, quoted from the recorded evalua
 
 | Model | Run | Type | Points | Evidence |
 |---|---:|---|---:|---|
-| Qwen 3.8 Flash | 2 | MATERIAL_HALLUCINATION | -5 | 'Internal scenario planning values are obsolete/incorrect. The pinned workbook (enterprise-pricing-v4-final.xlsx) is authoritative internally' |
 | MIMO v2.5 | 1 | MAJOR_CONTRADICTION | -5 | '09:35 \| Deploy complete. No post-deploy verification needed (no code change from staging-verified build).' against '10:25-10:45 \| Priya runs post-deploy verification (~20 min)' |
 | Qwen 3.6 | 1 | MAJOR_PLANNING_ERROR | -7 | 'Monitor Post-Deploy Verify: Priya performs 20-minute verification (09:35-09:55)' and 'If verify finishes at 09:55, rollout opens ~10:10' |
 | Qwen 3.6 | 3 | MAJOR_PLANNING_ERROR | -7 | 'Priya verifies 09:35-09:55 (after her break). Sam checks 09:55-10:10. Rollout opens ~10:15. Feasible.' |
@@ -184,10 +183,10 @@ Reported separately from quality. No combined efficiency score exists, by design
 
 | Model | TTFA median | Total latency median | Output tokens median | Cost median |
 |---|---:|---:|---:|---:|
+| Qwen 3.8 Flash | 258.9s | 285.0s | 33714 | - |
 | GLM 5.2 | 67.0s | 85.4s | 6777 | $0.0165 |
 | DeepSeek V4 Flash | 162.6s | 178.8s | 14863 | $0.0056 |
 | GLM 5.3 Flash | 238.5s | 316.6s | 12394 | - |
-| Qwen 3.8 Flash | 258.9s | 285.0s | 33714 | - |
 | MIMO v2.5 | 163.3s | 195.4s | 9510 | - |
 | Qwen 3.6 | 0.9s | 18.2s | 2644 | - |
 | Gemma 4 | 0.3s | 8.7s | 921 | - |

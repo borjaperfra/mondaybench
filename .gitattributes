@@ -1,0 +1,39 @@
+# Line endings are an integrity concern here, not a style one.
+#
+# This repository's claim is byte-level auditability: a scenario is frozen by
+# SHA-256, runs record the hash of the exact prompt they were generated
+# against, and `mondaybench freeze --check` fails if a single byte moves. On a
+# machine with `core.autocrlf=true` - the Windows default - a plain
+# `git checkout` rewrites every LF as CRLF and changes those bytes. That
+# happened during the monday-002 reasoning audit: reverting one evaluator file
+# silently changed its hash, and it had to be restored with
+# `git -c core.autocrlf=false checkout`.
+#
+# Pinning eol=lf makes the working tree match the index everywhere, so a
+# checkout can no longer alter a hash regardless of anyone's global config.
+* text=auto eol=lf
+
+# Explicit for the artefact types the integrity checks cover, so intent survives
+# even if the catch-all above is ever narrowed.
+*.md    text eol=lf
+*.yaml  text eol=lf
+*.yml   text eol=lf
+*.json  text eol=lf
+*.jsonl text eol=lf
+*.csv   text eol=lf
+*.py    text eol=lf
+*.txt   text eol=lf
+*.toml  text eol=lf
+*.cfg   text eol=lf
+.env.example text eol=lf
+
+# Nothing binary ships today. These are here so that adding a fixture later
+# cannot be corrupted by the rules above.
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.pdf  binary
+*.zip  binary
+*.woff binary
+*.woff2 binary

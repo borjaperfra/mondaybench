@@ -320,7 +320,7 @@ def cmd_results(scenario: str, evaluator: str) -> None:
         entry["benchmark_version"] = loaded.benchmark_version
         target = directory / f"{summary.model_slug}.json"
         target.write_text(
-            json.dumps(entry, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
+            json.dumps(entry, indent=2, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n"
         )
         console.print(f"wrote {target.relative_to(repo_root())}")
 

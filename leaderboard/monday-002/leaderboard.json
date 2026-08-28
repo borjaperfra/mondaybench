@@ -2,11 +2,119 @@
   "benchmark_version": "0.2",
   "scenario": "monday-002",
   "evaluator": "evaluator-opus5-v0.2",
-  "generated_at": "2026-08-28T15:01:43Z",
+  "generated_at": "2026-08-28T15:37:45Z",
   "integrity_warning": null,
   "models": [
     {
       "rank": 1,
+      "model_slug": "qwen3.8-flash",
+      "display_name": "Qwen 3.8 Flash",
+      "score": {
+        "mean": 94.83,
+        "min": 91.5,
+        "max": 100.0,
+        "range": 8.5,
+        "stddev": 4.54,
+        "runs": 3
+      },
+      "run_scores": [
+        93.0,
+        100.0,
+        91.5
+      ],
+      "dimensions": {
+        "cross_source_data_reasoning": 15.0,
+        "decision_prioritization": 20.0,
+        "planning_dependencies": 20.33,
+        "state_reconstruction": 15.0,
+        "temporal_supersession": 15.0,
+        "uncertainty_epistemic": 9.5
+      },
+      "excluded_runs": [
+        {
+          "run_id": "monday-002__qwen3.8-flash__002",
+          "score": 66.5,
+          "reasons": [
+            "REASONING_NOT_DELIVERED: reasoning was requested but the provider returned 0 reasoning tokens, so this run is not in the same regime as the model's other runs"
+          ]
+        }
+      ],
+      "performance": {
+        "median_ttfa_ms": 258914.4,
+        "median_ttft_ms": 2026.2,
+        "median_total_latency_ms": 284965.9,
+        "median_output_tokens": 33714.0
+      },
+      "economics": {
+        "median_cost_usd": null
+      },
+      "provenance": {
+        "scenario_prompt_sha256": "740e627cbc7413c321ede0d54000504de54821d34ff4677f82731b89600423a8",
+        "rubric_version": "0.2",
+        "judge_model_id": "claude-opus-5",
+        "runs": [
+          "runs/monday-002/qwen3.8-flash/run-001.json",
+          "runs/monday-002/qwen3.8-flash/run-003.json",
+          "runs/monday-002/qwen3.8-flash/run-004.json"
+        ],
+        "evaluations": [
+          "evaluations/evaluator-opus5-v0.2/monday-002/qwen3.8-flash/run-001.json",
+          "evaluations/evaluator-opus5-v0.2/monday-002/qwen3.8-flash/run-003.json",
+          "evaluations/evaluator-opus5-v0.2/monday-002/qwen3.8-flash/run-004.json"
+        ]
+      },
+      "missed": [
+        {
+          "run_id": "monday-002__qwen3.8-flash__001",
+          "criterion": "choose_option_b",
+          "result": "PARTIAL",
+          "points_awarded": 4.0,
+          "points_possible": 8.0,
+          "reason": "chooses viable A and schedules it correctly; B is set aside because 'there is no evidence the 2.9.5 diff is already submitted', which the response itself files as a thing to verify rather than a settled constraint",
+          "evidence": "chooses viable A and schedules it correctly; B is set aside because 'there is no evidence the 2.9.5 diff is already submitted', which the response itself files as a thing to verify rather than a settled constraint"
+        },
+        {
+          "run_id": "monday-002__qwen3.8-flash__001",
+          "criterion": "schedule_feasibility",
+          "result": "PARTIAL",
+          "points_awarded": 3.0,
+          "points_possible": 6.0,
+          "reason": "every constraint is named and the A sequence is exact, but no B schedule is committed - it is deferred to MUST VERIFY",
+          "evidence": "every constraint is named and the A sequence is exact, but no B schedule is committed - it is deferred to MUST VERIFY"
+        },
+        {
+          "run_id": "monday-002__qwen3.8-flash__004",
+          "criterion": "choose_option_b",
+          "result": "PARTIAL",
+          "points_awarded": 4.0,
+          "points_possible": 8.0,
+          "reason": "chooses A, which is viable and correctly scheduled; B is set aside because a diff submitted before 09:15 'is not evidenced', which names the right unlocking condition but treats submitting it as outside the user's control",
+          "evidence": "chooses A, which is viable and correctly scheduled; B is set aside because a diff submitted before 09:15 'is not evidenced', which names the right unlocking condition but treats submitting it as outside the user's control"
+        },
+        {
+          "run_id": "monday-002__qwen3.8-flash__004",
+          "criterion": "schedule_feasibility",
+          "result": "PARTIAL",
+          "points_awarded": 3.0,
+          "points_possible": 6.0,
+          "reason": "the B arithmetic is right for the anchor it picks - 'if Marcus submits the diff at his 09:15 start, review ends 09:40, then a 45-minute deploy would end 10:25' - and it identifies the crux ('B could only work if a diff is submitted before 09:15'), but no viable B schedule is committed",
+          "evidence": "the B arithmetic is right for the anchor it picks - 'if Marcus submits the diff at his 09:15 start, review ends 09:40, then a 45-minute deploy would end 10:25' - and it identifies the crux ('B could only work if a diff is submitted before 09:15'), but no viable B schedule is committed"
+        },
+        {
+          "run_id": "monday-002__qwen3.8-flash__004",
+          "criterion": "conditional_launch_timing",
+          "result": "PARTIAL",
+          "points_awarded": 1.5,
+          "points_possible": 3.0,
+          "reason": "'Do not confirm Atlas launch at 10:30' is right, but '09:40-09:45 ... confirm to Atlas that rollout is scheduled to begin at 11:00' still goes out before Priya's verification, with the conditionality only implied by the preceding step",
+          "evidence": "'Do not confirm Atlas launch at 10:30' is right, but '09:40-09:45 ... confirm to Atlas that rollout is scheduled to begin at 11:00' still goes out before Priya's verification, with the conditionality only implied by the preceding step"
+        }
+      ],
+      "got_wrong": [],
+      "warnings": []
+    },
+    {
+      "rank": 2,
       "model_slug": "glm5.2",
       "display_name": "GLM 5.2",
       "score": {
@@ -30,6 +138,7 @@
         "temporal_supersession": 12.5,
         "uncertainty_epistemic": 10.0
       },
+      "excluded_runs": [],
       "performance": {
         "median_ttfa_ms": 67020.3,
         "median_ttft_ms": 1006.2,
@@ -132,7 +241,7 @@
       "warnings": []
     },
     {
-      "rank": 2,
+      "rank": 3,
       "model_slug": "deepseek-v4-flash",
       "display_name": "DeepSeek V4 Flash",
       "score": {
@@ -156,6 +265,7 @@
         "temporal_supersession": 13.33,
         "uncertainty_epistemic": 10.0
       },
+      "excluded_runs": [],
       "performance": {
         "median_ttfa_ms": 162576.6,
         "median_ttft_ms": 2754.6,
@@ -258,7 +368,7 @@
       "warnings": []
     },
     {
-      "rank": 3,
+      "rank": 4,
       "model_slug": "glm5.3-flash",
       "display_name": "GLM 5.3 Flash",
       "score": {
@@ -282,6 +392,7 @@
         "temporal_supersession": 15.0,
         "uncertainty_epistemic": 8.67
       },
+      "excluded_runs": [],
       "performance": {
         "median_ttfa_ms": 238547.1,
         "median_ttft_ms": 1860.9,
@@ -411,159 +522,6 @@
       "warnings": []
     },
     {
-      "rank": 4,
-      "model_slug": "qwen3.8-flash",
-      "display_name": "Qwen 3.8 Flash",
-      "score": {
-        "mean": 86.5,
-        "min": 66.5,
-        "max": 100.0,
-        "range": 33.5,
-        "stddev": 17.67,
-        "runs": 3
-      },
-      "run_scores": [
-        93.0,
-        66.5,
-        100.0
-      ],
-      "dimensions": {
-        "cross_source_data_reasoning": 14.0,
-        "decision_prioritization": 19.17,
-        "planning_dependencies": 19.33,
-        "state_reconstruction": 14.17,
-        "temporal_supersession": 12.5,
-        "uncertainty_epistemic": 9.0
-      },
-      "performance": {
-        "median_ttfa_ms": 258914.4,
-        "median_ttft_ms": 1599.6,
-        "median_total_latency_ms": 284965.9,
-        "median_output_tokens": 33714.0
-      },
-      "economics": {
-        "median_cost_usd": null
-      },
-      "provenance": {
-        "scenario_prompt_sha256": "740e627cbc7413c321ede0d54000504de54821d34ff4677f82731b89600423a8",
-        "rubric_version": "0.2",
-        "judge_model_id": "claude-opus-5",
-        "runs": [
-          "runs/monday-002/qwen3.8-flash/run-001.json",
-          "runs/monday-002/qwen3.8-flash/run-002.json",
-          "runs/monday-002/qwen3.8-flash/run-003.json"
-        ],
-        "evaluations": [
-          "evaluations/evaluator-opus5-v0.2/monday-002/qwen3.8-flash/run-001.json",
-          "evaluations/evaluator-opus5-v0.2/monday-002/qwen3.8-flash/run-002.json",
-          "evaluations/evaluator-opus5-v0.2/monday-002/qwen3.8-flash/run-003.json"
-        ]
-      },
-      "missed": [
-        {
-          "run_id": "monday-002__qwen3.8-flash__001",
-          "criterion": "choose_option_b",
-          "result": "PARTIAL",
-          "points_awarded": 4.0,
-          "points_possible": 8.0,
-          "reason": "chooses viable A and schedules it correctly; B is set aside because 'there is no evidence the 2.9.5 diff is already submitted', which the response itself files as a thing to verify rather than a settled constraint",
-          "evidence": "chooses viable A and schedules it correctly; B is set aside because 'there is no evidence the 2.9.5 diff is already submitted', which the response itself files as a thing to verify rather than a settled constraint"
-        },
-        {
-          "run_id": "monday-002__qwen3.8-flash__001",
-          "criterion": "schedule_feasibility",
-          "result": "PARTIAL",
-          "points_awarded": 3.0,
-          "points_possible": 6.0,
-          "reason": "every constraint is named and the A sequence is exact, but no B schedule is committed - it is deferred to MUST VERIFY",
-          "evidence": "every constraint is named and the A sequence is exact, but no B schedule is committed - it is deferred to MUST VERIFY"
-        },
-        {
-          "run_id": "monday-002__qwen3.8-flash__002",
-          "criterion": "launch_state",
-          "result": "PARTIAL",
-          "points_awarded": 2.5,
-          "points_possible": 5.0,
-          "reason": "the recovery state and Maya's removed gate are right, but '09:45 Atlas Confirmation: \"Migration confirmed for today. Rollout begins shortly\"' is sent 75 minutes before rollout can open",
-          "evidence": "the recovery state and Maya's removed gate are right, but '09:45 Atlas Confirmation: \"Migration confirmed for today. Rollout begins shortly\"' is sent 75 minutes before rollout can open"
-        },
-        {
-          "run_id": "monday-002__qwen3.8-flash__002",
-          "criterion": "pricing_authority",
-          "result": "FAIL",
-          "points_awarded": 0.0,
-          "points_possible": 5.0,
-          "reason": "the authority is inverted: 'Internal scenario planning values are obsolete/incorrect. The pinned workbook (enterprise-pricing-v4-final.xlsx) is authoritative internally'. Daniel's email says the opposite - the pinned workbook is not authoritative and his 09:07 values are the internal reference",
-          "evidence": "the authority is inverted: 'Internal scenario planning values are obsolete/incorrect. The pinned workbook (enterprise-pricing-v4-final.xlsx) is authoritative internally'. Daniel's email says the opposite - the pinned workbook is not authoritative and his 09:07 values are the internal reference"
-        },
-        {
-          "run_id": "monday-002__qwen3.8-flash__002",
-          "criterion": "ownership_supersession",
-          "result": "PARTIAL",
-          "points_awarded": 2.5,
-          "points_possible": 5.0,
-          "reason": "names Daniel as the current sender and gates it on Sam's confirmation, but Sarah's handoff is never traced and the stale 'You' task is not displaced",
-          "evidence": "names Daniel as the current sender and gates it on Sam's confirmation, but Sarah's handoff is never traced and the stale 'You' task is not displaced"
-        },
-        {
-          "run_id": "monday-002__qwen3.8-flash__002",
-          "criterion": "choose_option_b",
-          "result": "PARTIAL",
-          "points_awarded": 4.0,
-          "points_possible": 8.0,
-          "reason": "chooses A, which is viable, and reaches the correct A timeline after a visible self-correction; the B rejection rests on 'too tight' rather than on the windows",
-          "evidence": "chooses A, which is viable, and reaches the correct A timeline after a visible self-correction; the B rejection rests on 'too tight' rather than on the windows"
-        },
-        {
-          "run_id": "monday-002__qwen3.8-flash__002",
-          "criterion": "schedule_feasibility",
-          "result": "FAIL",
-          "points_awarded": 0.0,
-          "points_possible": 6.0,
-          "reason": "'25m delta review + 45m deploy + 20m verification = 90m... If started at 09:15, completion is ~10:45' - the review can start at 09:07, and the response never commits a B schedule",
-          "evidence": "'25m delta review + 45m deploy + 20m verification = 90m... If started at 09:15, completion is ~10:45' - the review can start at 09:07, and the response never commits a B schedule"
-        },
-        {
-          "run_id": "monday-002__qwen3.8-flash__002",
-          "criterion": "globex_priority",
-          "result": "PARTIAL",
-          "points_awarded": 2.5,
-          "points_possible": 5.0,
-          "reason": "Globex is ranked fourth as 'Support Risk' with the action 'Monitor'; the 18-day renewal, usage -18% and admin logins -61% are all absent from the assessment",
-          "evidence": "Globex is ranked fourth as 'Support Risk' with the action 'Monitor'; the 18-day renewal, usage -18% and admin logins -61% are all absent from the assessment"
-        },
-        {
-          "run_id": "monday-002__qwen3.8-flash__002",
-          "criterion": "customer_signal_integration",
-          "result": "PARTIAL",
-          "points_awarded": 3.0,
-          "points_possible": 6.0,
-          "reason": "Acme is crossed against its contract and Soylent/Wonka against contracts and support, but Globex is handled on ticket severity alone and no counter-signal comparison is drawn",
-          "evidence": "Acme is crossed against its contract and Soylent/Wonka against contracts and support, but Globex is handled on ticket severity alone and no counter-signal comparison is drawn"
-        },
-        {
-          "run_id": "monday-002__qwen3.8-flash__002",
-          "criterion": "conditional_launch_timing",
-          "result": "FAIL",
-          "points_awarded": 0.0,
-          "points_possible": 3.0,
-          "reason": "'Migration confirmed for today. Rollout begins shortly' is sent to the customer at 09:45 as a statement of fact, when the response's own timeline opens rollout at 10:45-11:00",
-          "evidence": "'Migration confirmed for today. Rollout begins shortly' is sent to the customer at 09:45 as a statement of fact, when the response's own timeline opens rollout at 10:45-11:00"
-        }
-      ],
-      "got_wrong": [
-        {
-          "run_id": "monday-002__qwen3.8-flash__002",
-          "type": "MATERIAL_HALLUCINATION",
-          "id": "MATERIAL_HALLUCINATION",
-          "points": -5.0,
-          "reason": "The source authority is stated backwards. Daniel's Friday email says 'Pinned workbook is not authoritative. Use my 09:07 Slack values internally only.' Acting on this would put the obsolete numbers into internal planning and discard the current ones - the judge prompt names wrong source authority as material.",
-          "evidence": "'Internal scenario planning values are obsolete/incorrect. The pinned workbook (enterprise-pricing-v4-final.xlsx) is authoritative internally'"
-        }
-      ],
-      "warnings": []
-    },
-    {
       "rank": 5,
       "model_slug": "mimo-v2.5",
       "display_name": "MIMO v2.5",
@@ -588,6 +546,7 @@
         "temporal_supersession": 12.5,
         "uncertainty_epistemic": 9.0
       },
+      "excluded_runs": [],
       "performance": {
         "median_ttfa_ms": 163327.5,
         "median_ttft_ms": 1813.9,
@@ -777,6 +736,7 @@
         "temporal_supersession": 11.67,
         "uncertainty_epistemic": 7.83
       },
+      "excluded_runs": [],
       "performance": {
         "median_ttfa_ms": 893.5,
         "median_ttft_ms": 893.5,
@@ -1063,6 +1023,7 @@
         "temporal_supersession": 9.17,
         "uncertainty_epistemic": 6.83
       },
+      "excluded_runs": [],
       "performance": {
         "median_ttfa_ms": 250.6,
         "median_ttft_ms": 250.6,

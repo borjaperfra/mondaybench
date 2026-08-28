@@ -172,7 +172,7 @@ def write_evaluation(
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(
         json.dumps(evaluation.model_dump(), indent=2, ensure_ascii=False) + "\n",
-        encoding="utf-8",
+        encoding="utf-8", newline="\n",
     )
     return target
 
@@ -300,5 +300,5 @@ def write_review(
     )
     directory.mkdir(parents=True, exist_ok=True)
     target = directory / f"run-{run_number:03d}.review.md"
-    target.write_text(build_review(evaluation, response), encoding="utf-8")
+    target.write_text(build_review(evaluation, response), encoding="utf-8", newline="\n")
     return target

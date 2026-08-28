@@ -302,6 +302,12 @@ class FakeSummary:
         self.rubric_version = rubric
         self.judge_model_id = judge
         self.warnings: list[str] = []
+        # Added with the reasoning-delivery gates. Empty means "nothing
+        # recorded", which the gates treat as no evidence rather than a
+        # mismatch - the same way a pre-audit run is treated.
+        self.excluded_runs: list[dict] = []
+        self.config_fingerprints: list[str | None] = []
+        self.reasoning_statuses: list[str] = []
 
 
 def blockers(summaries, payload=None, **kwargs):

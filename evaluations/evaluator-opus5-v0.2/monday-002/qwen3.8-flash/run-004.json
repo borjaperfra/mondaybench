@@ -1,0 +1,237 @@
+{
+  "schema_version": "1",
+  "evaluator_id": "evaluator-opus5-v0.2",
+  "benchmark_version": "0.2",
+  "rubric_version": "0.2",
+  "scenario_id": "monday-002",
+  "run_id": "monday-002__qwen3.8-flash__004",
+  "model_slug": "qwen3.8-flash",
+  "scenario_prompt_sha256": "740e627cbc7413c321ede0d54000504de54821d34ff4677f82731b89600423a8",
+  "timestamp_utc": "2026-08-28T15:32:27Z",
+  "judge": {
+    "provider": "anthropic",
+    "model_id": "claude-opus-5",
+    "temperature": 0.0,
+    "effort": null,
+    "unsupported_parameters": [],
+    "prompt_fingerprint": "b10748f5636ba6a6",
+    "route": "recorded",
+    "verdict_source": "qwen3.8-flash.verdicts.jsonl"
+  },
+  "dimensions": {
+    "state_reconstruction": {
+      "score": 15.0,
+      "max_score": 15.0
+    },
+    "temporal_supersession": {
+      "score": 15.0,
+      "max_score": 15.0
+    },
+    "planning_dependencies": {
+      "score": 18.0,
+      "max_score": 25.0
+    },
+    "decision_prioritization": {
+      "score": 20.0,
+      "max_score": 20.0
+    },
+    "cross_source_data_reasoning": {
+      "score": 15.0,
+      "max_score": 15.0
+    },
+    "uncertainty_epistemic": {
+      "score": 8.5,
+      "max_score": 10.0
+    }
+  },
+  "criteria": {
+    "launch_state": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'A production attempt failed on shard eu-03 before rollout opened; no customer impact'; 'Maya approval is not required for launch'; 'The task to confirm a 10:30 launch to Atlas is stale/unsafe'",
+      "reason": "'A production attempt failed on shard eu-03 before rollout opened; no customer impact'; 'Maya approval is not required for launch'; 'The task to confirm a 10:30 launch to Atlas is stale/unsafe'"
+    },
+    "stale_external_actions": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'Do not call Zenith about renewal risk'; 'Do not send the customer announcement yourself. Daniel owns it'; 'Do not send Enterprise pricing to Initech or any procurement/customer'",
+      "reason": "'Do not call Zenith about renewal risk'; 'Do not send the customer announcement yourself. Daniel owns it'; 'Do not send Enterprise pricing to Initech or any procurement/customer'"
+    },
+    "current_owners": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'Product must choose the recovery path'; Marcus deploys, Priya verifies, 'Sam opens/sanity-checks rollout', 'Daniel owns sending the customer announcement'",
+      "reason": "'Product must choose the recovery path'; Marcus deploys, Priya verifies, 'Sam opens/sanity-checks rollout', 'Daniel owns sending the customer announcement'"
+    },
+    "executive_gate_superseded": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'Do not seek Maya approval for Enterprise Controls launch. Maya explicitly rejected another executive gate'",
+      "reason": "'Do not seek Maya approval for Enterprise Controls launch. Maya explicitly rejected another executive gate'"
+    },
+    "pricing_authority": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'The pinned enterprise-pricing-v4-final.xlsx is not authoritative. Daniel's 09:07 Slack values are internal scenario planning only'",
+      "reason": "'The pinned enterprise-pricing-v4-final.xlsx is not authoritative. Daniel's 09:07 Slack values are internal scenario planning only'"
+    },
+    "ownership_supersession": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'Sarah is out Monday. Daniel has Julia's final draft and the Atlas recipient list. Daniel owns sending the customer announcement after Sam confirms rollout is open' - the handoff is traced",
+      "reason": "'Sarah is out Monday. Daniel has Julia's final draft and the Atlas recipient list. Daniel owns sending the customer announcement after Sam confirms rollout is open' - the handoff is traced"
+    },
+    "choose_option_b": {
+      "result": "PARTIAL",
+      "points_awarded": 4.0,
+      "points_possible": 8.0,
+      "evidence": "chooses A, which is viable and correctly scheduled; B is set aside because a diff submitted before 09:15 'is not evidenced', which names the right unlocking condition but treats submitting it as outside the user's control",
+      "reason": "chooses A, which is viable and correctly scheduled; B is set aside because a diff submitted before 09:15 'is not evidenced', which names the right unlocking condition but treats submitting it as outside the user's control"
+    },
+    "option_b_sequence": {
+      "result": "PASS",
+      "points_awarded": 7.0,
+      "points_possible": 7.0,
+      "evidence": "'2.9.5-patch requires a 25-minute delta review before deploy'; 'Do not open rollout before Priya's required verification and Sam's sanity check'",
+      "reason": "'2.9.5-patch requires a 25-minute delta review before deploy'; 'Do not open rollout before Priya's required verification and Sam's sanity check'"
+    },
+    "schedule_feasibility": {
+      "result": "PARTIAL",
+      "points_awarded": 3.0,
+      "points_possible": 6.0,
+      "evidence": "the B arithmetic is right for the anchor it picks - 'if Marcus submits the diff at his 09:15 start, review ends 09:40, then a 45-minute deploy would end 10:25' - and it identifies the crux ('B could only work if a diff is submitted before 09:15'), but no viable B schedule is committed",
+      "reason": "the B arithmetic is right for the anchor it picks - 'if Marcus submits the diff at his 09:15 start, review ends 09:40, then a 45-minute deploy would end 10:25' - and it identifies the crux ('B could only work if a diff is submitted before 09:15'), but no viable B schedule is committed"
+    },
+    "parallelize_work": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'09:45-10:25 - Prepare and send Maya's expansion explanation' runs inside the wait for Priya's 10:25 return",
+      "reason": "'09:45-10:25 - Prepare and send Maya's expansion explanation' runs inside the wait for Priya's 10:25 return"
+    },
+    "immediate_release_decision": {
+      "result": "PASS",
+      "points_awarded": 6.0,
+      "points_possible": 6.0,
+      "evidence": "'09:07-09:10 - Choose Option A and notify owners' is the first action, with Marcus's window driving the sequence",
+      "reason": "'09:07-09:10 - Choose Option A and notify owners' is the first action, with Marcus's window driving the sequence"
+    },
+    "expansion_before_11": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'Send by 10:50, before the 11:00 deadline'",
+      "reason": "'Send by 10:50, before the 11:00 deadline'"
+    },
+    "globex_priority": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'Renewal in 18 days. September expansion is pending procurement. Admin logins down 61%, usage down 18%. Three open tickets, including high-severity SSO setup issue'",
+      "reason": "'Renewal in 18 days. September expansion is pending procurement. Admin logins down 61%, usage down 18%. Three open tickets, including high-severity SSO setup issue'"
+    },
+    "avoid_acme_false_positive": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'Renewal in 9 days... contract context explicitly says this is an approved shift to annual batch-processing... Do not treat the usage decline as churn risk by default'",
+      "reason": "'Renewal in 9 days... contract context explicitly says this is an approved shift to annual batch-processing... Do not treat the usage decline as churn risk by default'"
+    },
+    "expansion_fully_reconciled": {
+      "result": "PASS",
+      "points_awarded": 6.0,
+      "points_possible": 6.0,
+      "evidence": "'Gap EUR54k = Wayne -EUR18k + Globex -EUR12k + Soylent -EUR10k + Wonka -EUR14k'",
+      "reason": "'Gap EUR54k = Wayne -EUR18k + Globex -EUR12k + Soylent -EUR10k + Wonka -EUR14k'"
+    },
+    "causal_boundary": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "'Soylent/Wonka: no stated cause; investigation needed'; 'Do not invent causes for Soylent or Wonka expansion reductions'",
+      "reason": "'Soylent/Wonka: no stated cause; investigation needed'; 'Do not invent causes for Soylent or Wonka expansion reductions'"
+    },
+    "customer_signal_integration": {
+      "result": "PASS",
+      "points_awarded": 6.0,
+      "points_possible": 6.0,
+      "evidence": "eight accounts triaged across accounts, contracts and support, each with renewal window, expansion delta, usage/admin and ticket state; Acme is the explicit counter-case and both Soylent and Wonka are worked",
+      "reason": "eight accounts triaged across accounts, contracts and support, each with renewal window, expansion delta, usage/admin and ticket state; Acme is the explicit counter-case and both Soylent and Wonka are worked"
+    },
+    "orion_missing_evidence": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'Confirm which org ID is correct: org_71A vs org_17A. Read the live SCIM flag for the correct org. No customer status until verified'",
+      "reason": "'Confirm which org ID is correct: org_71A vs org_17A. Read the live SCIM flag for the correct org. No customer status until verified'"
+    },
+    "conditional_launch_timing": {
+      "result": "PARTIAL",
+      "points_awarded": 1.5,
+      "points_possible": 3.0,
+      "evidence": "'Do not confirm Atlas launch at 10:30' is right, but '09:40-09:45 ... confirm to Atlas that rollout is scheduled to begin at 11:00' still goes out before Priya's verification, with the conditionality only implied by the preceding step",
+      "reason": "'Do not confirm Atlas launch at 10:30' is right, but '09:40-09:45 ... confirm to Atlas that rollout is scheduled to begin at 11:00' still goes out before Priya's verification, with the conditionality only implied by the preceding step"
+    },
+    "no_unsupported_causality": {
+      "result": "PASS",
+      "points_awarded": 2.0,
+      "points_possible": 2.0,
+      "evidence": "'investigate whether onboarding performance is related to the decline, but treat the relationship as unconfirmed until verified'",
+      "reason": "'investigate whether onboarding performance is related to the decline, but treat the relationship as unconfirmed until verified'"
+    }
+  },
+  "false_actions": {},
+  "penalties": {
+    "items": [],
+    "dismissed": [],
+    "raw_total": 0.0,
+    "total": 0.0,
+    "capped": false
+  },
+  "deterministic_checks": [
+    {
+      "id": "contoso_11_00",
+      "matched": false,
+      "detail": "'11:00' appears near a mention of Contoso"
+    },
+    {
+      "id": "churn_3_1_to_4_4",
+      "matched": false,
+      "detail": "both churn figures 3.1 and 4.4 are present"
+    },
+    {
+      "id": "umbrella_metrics_present",
+      "matched": false,
+      "detail": "at least two of 163 / 1821 / 41 appear near a mention of Umbrella"
+    },
+    {
+      "id": "umbrella_named",
+      "matched": false,
+      "detail": "Umbrella is named in the response"
+    },
+    {
+      "id": "wednesday_present",
+      "matched": false,
+      "detail": "'Wednesday' appears in the response"
+    },
+    {
+      "id": "julia_present",
+      "matched": true,
+      "detail": "'Julia' appears in the response"
+    },
+    {
+      "id": "pied_piper_and_hooli",
+      "matched": false,
+      "detail": "both known cancellations are named"
+    }
+  ],
+  "disagreements": [],
+  "base_score": 91.5,
+  "final_score": 91.5
+}

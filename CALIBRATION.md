@@ -599,3 +599,66 @@ MAJOR_PLANNING_ERROR, four MATERIAL_HALLUCINATION, one MAJOR_CONTRADICTION.
 `criterion-matrix.md` (summary and full per-run) and `analysis.md`.
 `leaderboard/index.json` registers both published scenarios in a shape an
 aggregate could consume; no Overall Monday Score is computed or published.
+
+---
+
+# `monday-002` — corrected official result, 2026-08-28
+
+The first official #002 leaderboard counted a Qwen 3.8 Flash run that the
+provider served **without the reasoning phase** its two sibling runs used: zero
+reasoning tokens against 42,808 and 30,342, 19.6 s against 380 and 285, and a
+different input token count for a byte-identical prompt. Averaging the three
+reported a mixture of two systems as one model's variability.
+
+Nothing was rescored. The run's raw output, its evaluation and its 66.5 all
+stand. It stopped counting as official evidence, and a replacement was generated.
+
+## What changed in the harness
+
+`generation.reasoning_enabled` recorded a *declared capability* from
+`models.yaml` and was mistaken for an observation. Runs now separate the two:
+`reasoning_requested` comes from the configuration, `reasoning` (status, tokens)
+comes only from the response. `qualify_run` rejects a run whose reasoning was
+requested and observably absent, and the leaderboard drops it from every
+statistic while publishing it under `excluded_runs`.
+
+Four states, because zero tokens means nothing unless the provider reports them:
+DELIVERED, NOT_DELIVERED, NOT_REQUESTED, and UNOBSERVABLE — the last never
+disqualifies, since convicting a run on a provider's silence would invent the
+evidence this rule exists to demand.
+
+Runs also record `top_p`, `system_prompt_sha256`, `extra_body` and a
+`config_sha256` fingerprint of the effective configuration.
+
+## Corrected result
+
+| # | Model | Monday Score | Runs | Was |
+|---:|---|---:|---|---|
+| 1 | **Qwen 3.8 Flash** | **94.8** | 93.0 / 100.0 / 91.5 | #4, 86.5 |
+| 2 | GLM 5.2 | 91.2 | 90.5 / 87.5 / 95.5 | #1 |
+| 3 | DeepSeek V4 Flash | 89.3 | 97.5 / 86.5 / 84.0 | #2 |
+| 4 | GLM 5.3 Flash | 87.3 | 85.0 / 85.5 / 91.5 | #3 |
+| 5 | MIMO v2.5 | 81.2 | 64.5 / 81.5 / 97.5 | #5 |
+| 6 | Qwen 3.6 | 70.2 | 75.5 / 83.0 / 52.0 | #6 |
+| 7 | Gemma 4 | 54.2 | 58.0 / 45.5 / 59.0 | #7 |
+
+Qwen 3.8 Flash's range falls from 33.5 to 8.5 once the two regimes are not
+mixed. The other six models were not re-run and did not move relative to each
+other. The previous leaderboard is preserved whole in
+`archive/monday-002-leaderboard-pre-audit/`.
+
+**One official run in the repository was affected.** All 42 runs across both
+scenarios were re-checked under the new rule: 23 DELIVERED, 18 NOT_REQUESTED,
+1 NOT_DELIVERED, 0 UNOBSERVABLE.
+
+## A second defect, found while fixing the first
+
+`FROZEN.yaml` hashed the working tree, and `rubric.yaml` and `scenario.yaml` had
+picked up CRLF from Python's text mode when the freeze rewrote their version
+strings. Git stored them as LF, so **a Linux clone would have failed
+`freeze --check` on both** — the integrity manifest described one Windows
+machine rather than the content. The two files were normalised to the bytes git
+already held (no content change), the manifest was regenerated, every artefact
+writer now pins LF, and `.gitattributes` stops a checkout from reintroducing it.
+The rendered prompt hash was never affected: prompt assembly reads through
+universal newlines, so `740e627c…` is unchanged.

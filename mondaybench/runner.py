@@ -18,12 +18,14 @@ from .pricing import compute_economics
 from .prompt_builder import BuiltPrompt, build_prompt
 from .providers import ProviderError, build_model_provider
 from .scenarios import Scenario
+from . import reasoning
 from .schemas import (
     BenchmarkRun,
     RunGeneration,
     RunModel,
     RunPerformance,
     RunProviderMetadata,
+    RunReasoning,
     RunUsage,
 )
 
@@ -104,6 +106,11 @@ def execute_run(
         "max_output_tokens": model.max_output_tokens,
         "extra_body": model.extra_body,
     }
+    # Only sent when a model pins it, so adding the field changes nothing on the
+    # wire for existing configs and keeps a replacement run comparable with the
+    # runs it joins.
+    if model.top_p is not None:
+        generation_config["top_p"] = model.top_p
 
     result = None
     last_error: ProviderError | None = None
@@ -127,6 +134,25 @@ def execute_run(
     if result is None:  # pragma: no cover - loop either breaks or raises
         raise last_error or ProviderError("generation failed with no error recorded")
 
+    # Effective configuration, recorded so a later audit does not have to
+    # reconstruct it. `reasoning_requested` is the regime this run is supposed
+    # to belong to; whether the provider honoured it is decided from the
+    # response, further down.
+    reasoning_requested = reasoning.requested_from_config(model.capabilities, model.extra_body)
+    system_hash = reasoning.system_prompt_sha256(prompt.system_prompt)
+    config_hash = reasoning.generation_config_sha256(
+        provider=model.provider,
+        model_id=model.model_id,
+        temperature=model.temperature,
+        top_p=model.top_p,
+        max_output_tokens=model.max_output_tokens,
+        reasoning_requested=reasoning_requested,
+        reasoning_mode=None,
+        reasoning_effort=None,
+        extra_body=model.extra_body,
+        system_prompt_hash=system_hash,
+    )
+
     economics = compute_economics(
         model.pricing,
         input_tokens=result.input_tokens,
@@ -148,10 +174,17 @@ def execute_run(
         ),
         generation=RunGeneration(
             temperature=model.temperature,
+            top_p=model.top_p,
             max_output_tokens=model.max_output_tokens,
             reasoning_enabled=model.reasoning_enabled,
+            reasoning_requested=reasoning_requested,
+            reasoning_mode=None,
+            reasoning_effort=None,
             unsupported_parameters=result.unsupported_parameters,
             system_prompt_sent=result.system_prompt_sent,
+            system_prompt_sha256=system_hash,
+            extra_body=dict(model.extra_body),
+            config_sha256=config_hash,
         ),
         timestamp_utc=_now_utc(),
         usage=RunUsage(
@@ -174,6 +207,16 @@ def execute_run(
         ),
     )
 
+    # Observed, not configured: classify() reads only the response.
+    status, tokens = reasoning.classify(run)
+    run = run.model_copy(
+        update={
+            "reasoning": RunReasoning(
+                requested=reasoning_requested, status=status, tokens=tokens
+            )
+        }
+    )
+
     write_run(run, root=root)
     return run
 
@@ -182,7 +225,7 @@ def write_run(run: BenchmarkRun, root: Path | None = None) -> Path:
     target = run_path(run.scenario_id, run.model.slug, run.run_number, root)
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(
-        json.dumps(run.model_dump(), indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
+        json.dumps(run.model_dump(), indent=2, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n"
     )
     return target
 
@@ -212,7 +255,7 @@ def log_failed_attempt(
         "kind": kind,
         "error": error,
     }
-    with target.open("a", encoding="utf-8") as handle:
+    with target.open("a", encoding="utf-8", newline="\n") as handle:
         handle.write(json.dumps(entry, ensure_ascii=False) + "\n")
     return target
 

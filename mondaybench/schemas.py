@@ -41,11 +41,45 @@ class RunModel(Strict):
 class RunGeneration(Strict):
     temperature: float | None
     max_output_tokens: int
+    # Kept for the runs written before the reasoning audit. It held the model's
+    # *declared* capability and was mistaken for an observation; new runs carry
+    # `reasoning_requested` and `RunReasoning` instead. Never read this to
+    # decide whether reasoning happened - see mondaybench/reasoning.py.
     reasoning_enabled: bool
     # Recorded when the provider rejects a parameter the config asked for
     # (e.g. Anthropic Opus 5 rejects `temperature`), per IMPLEMENTATION.md s5.
     unsupported_parameters: list[str] = Field(default_factory=list)
     system_prompt_sent: bool = True
+
+    # --- effective configuration, added after the monday-002 audit ----------
+    # All default to None so every run written before this exists still loads.
+    top_p: float | None = None
+    # The regime this run was supposed to belong to, from the configuration.
+    # Not evidence that the provider honoured it.
+    reasoning_requested: bool | None = None
+    reasoning_mode: str | None = None
+    reasoning_effort: str | None = None
+    # Hash of the exact system prompt text; the empty string hashes to a real
+    # value, so "no system prompt" and "not recorded" stay distinguishable.
+    system_prompt_sha256: str | None = None
+    # Provider-specific body sent alongside the standard parameters.
+    extra_body: dict[str, Any] = Field(default_factory=dict)
+    # Fingerprint of everything above that shapes the generation. Two runs
+    # sharing it were asked for under the same effective configuration.
+    config_sha256: str | None = None
+
+
+class RunReasoning(Strict):
+    """What the provider actually did, as opposed to what was configured.
+
+    `status` is one of DELIVERED / NOT_DELIVERED / NOT_REQUESTED / UNOBSERVABLE.
+    `tokens` is None when the provider reported no reasoning signal at all,
+    which is materially different from reporting zero.
+    """
+
+    requested: bool
+    status: str
+    tokens: int | None = None
 
 
 class RunUsage(Strict):
@@ -83,6 +117,8 @@ class BenchmarkRun(Strict):
 
     model: RunModel
     generation: RunGeneration
+    # Optional so every pre-audit run still validates.
+    reasoning: RunReasoning | None = None
 
     timestamp_utc: str
 

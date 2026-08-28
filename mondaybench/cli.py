@@ -207,7 +207,7 @@ def worksheet(
         raw = load_run(path)
         target = directory / f"{path.stem}.verdicts.jsonl"
         target.write_text(
-            build_worksheet(loaded.rubric, raw.run_id, raw.response), encoding="utf-8"
+            build_worksheet(loaded.rubric, raw.run_id, raw.response), encoding="utf-8", newline="\n"
         )
         console.print(f"wrote {target}")
 
@@ -972,7 +972,7 @@ def prompt(
         console.print(built.sha256)
         return
     if out:
-        out.write_text(built.text, encoding="utf-8")
+        out.write_text(built.text, encoding="utf-8", newline="\n")
         console.print(f"wrote {out} (sha256 {built.sha256})")
         return
     print(built.text)

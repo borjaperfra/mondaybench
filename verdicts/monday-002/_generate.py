@@ -356,6 +356,33 @@ run("qwen3.8-flash", "003", [
     (P, "'Do not assume usage decline alone caused the expansion slip'; 'connect ticket context to expansion reduction only if evidence supports it'"),
 ])
 
+# run-004 replaces run-002, which the reasoning audit disqualified. run-002's
+# labels stay below, unchanged, because its evaluation is still on disk and
+# still auditable - it simply no longer counts as official evidence.
+run("qwen3.8-flash", "004", [
+    (P, "'A production attempt failed on shard eu-03 before rollout opened; no customer impact'; 'Maya approval is not required for launch'; 'The task to confirm a 10:30 launch to Atlas is stale/unsafe'"),
+    (P, "'Do not call Zenith about renewal risk'; 'Do not send the customer announcement yourself. Daniel owns it'; 'Do not send Enterprise pricing to Initech or any procurement/customer'"),
+    (P, "'Product must choose the recovery path'; Marcus deploys, Priya verifies, 'Sam opens/sanity-checks rollout', 'Daniel owns sending the customer announcement'"),
+    (P, "'Do not seek Maya approval for Enterprise Controls launch. Maya explicitly rejected another executive gate'"),
+    (P, "'The pinned enterprise-pricing-v4-final.xlsx is not authoritative. Daniel's 09:07 Slack values are internal scenario planning only'"),
+    (P, "'Sarah is out Monday. Daniel has Julia's final draft and the Atlas recipient list. Daniel owns sending the customer announcement after Sam confirms rollout is open' - the handoff is traced"),
+    (R, "chooses A, which is viable and correctly scheduled; B is set aside because a diff submitted before 09:15 'is not evidenced', which names the right unlocking condition but treats submitting it as outside the user's control"),
+    (P, "'2.9.5-patch requires a 25-minute delta review before deploy'; 'Do not open rollout before Priya's required verification and Sam's sanity check'"),
+    (R, "the B arithmetic is right for the anchor it picks - 'if Marcus submits the diff at his 09:15 start, review ends 09:40, then a 45-minute deploy would end 10:25' - and it identifies the crux ('B could only work if a diff is submitted before 09:15'), but no viable B schedule is committed"),
+    (P, "'09:45-10:25 - Prepare and send Maya's expansion explanation' runs inside the wait for Priya's 10:25 return"),
+    (P, "'09:07-09:10 - Choose Option A and notify owners' is the first action, with Marcus's window driving the sequence"),
+    (P, "'Send by 10:50, before the 11:00 deadline'"),
+    (P, "'Renewal in 18 days. September expansion is pending procurement. Admin logins down 61%, usage down 18%. Three open tickets, including high-severity SSO setup issue'"),
+    (P, "'Renewal in 9 days... contract context explicitly says this is an approved shift to annual batch-processing... Do not treat the usage decline as churn risk by default'"),
+    (P, "'Gap EUR54k = Wayne -EUR18k + Globex -EUR12k + Soylent -EUR10k + Wonka -EUR14k'"),
+    (P, "'Soylent/Wonka: no stated cause; investigation needed'; 'Do not invent causes for Soylent or Wonka expansion reductions'"),
+    (P, "eight accounts triaged across accounts, contracts and support, each with renewal window, expansion delta, usage/admin and ticket state; Acme is the explicit counter-case and both Soylent and Wonka are worked"),
+    (P, "'Confirm which org ID is correct: org_71A vs org_17A. Read the live SCIM flag for the correct org. No customer status until verified'"),
+    (R, "'Do not confirm Atlas launch at 10:30' is right, but '09:40-09:45 ... confirm to Atlas that rollout is scheduled to begin at 11:00' still goes out before Priya's verification, with the conditionality only implied by the preceding step"),
+    (P, "'investigate whether onboarding performance is related to the decline, but treat the relationship as unconfirmed until verified'"),
+])
+
+
 # --------------------------------------------------------------------------
 # mimo-v2.5 - the widest spread of quality within one model
 # --------------------------------------------------------------------------
@@ -642,7 +669,7 @@ def main() -> None:
                 )
             )
         path = out_dir / f"{model}.verdicts.jsonl"
-        path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+        path.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
         print(f"wrote {path.name} ({len(runs)} runs, {len(lines)} lines)")
 
 

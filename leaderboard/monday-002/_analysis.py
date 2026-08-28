@@ -51,16 +51,20 @@ def load():
     order = [r["model_slug"] for r in rows]
     names = {r["model_slug"]: r["display_name"] for r in rows}
 
+    # Follow the leaderboard's own provenance rather than globbing the
+    # directories. An evaluation can exist on disk for a run that no longer
+    # qualifies - monday-002/qwen3.8-flash/run-002 is exactly that - and it must
+    # not reach the matrices or the analysis any more than it reaches the mean.
     evals: dict[str, list[dict]] = {}
     runs: dict[str, list[dict]] = {}
-    for slug in order:
+    for row in rows:
+        slug = row["model_slug"]
+        prov = row["provenance"]
         evals[slug] = [
-            json.loads(p.read_text(encoding="utf-8"))
-            for p in sorted((EVAL_DIR / slug).glob("run-*.json"))
+            json.loads((ROOT / rel).read_text(encoding="utf-8")) for rel in prov["evaluations"]
         ]
         runs[slug] = [
-            json.loads(p.read_text(encoding="utf-8"))
-            for p in sorted((RUN_DIR / slug).glob("run-*.json"))
+            json.loads((ROOT / rel).read_text(encoding="utf-8")) for rel in prov["runs"]
         ]
     return payload, rows, order, names, evals, runs
 
@@ -124,7 +128,7 @@ def write_matrix(order, names, evals, cids, pts):
         cells = " | ".join(SYM[L[s][cid][n]] for s in order for n in range(3))
         lines.append(f"| {i} | `{cid}` | {pts[cid]:g} | {cells} |")
 
-    (OUT / "criterion-matrix.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    (OUT / "criterion-matrix.md").write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
     return L
 
 
@@ -330,7 +334,7 @@ def write_analysis(payload, rows, order, names, evals, runs, cids, pts, L):
         "that can be aggregated later; no aggregate is published now.",
         "",
     ]
-    (OUT / "analysis.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    (OUT / "analysis.md").write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
 
 
 def main() -> None:

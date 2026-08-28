@@ -13,6 +13,7 @@ from pathlib import Path
 
 from .config import ModelConfig
 from .runner import find_runs, load_run
+from . import reasoning as reasoning_check
 from .schemas import BenchmarkRun
 
 OFFICIAL_RUNS = 3
@@ -92,7 +93,30 @@ def qualify_run(
                 f"provider {run.model.provider!r} != configured {model.provider!r}"
             )
 
+    # A reasoning model that came back without reasoning did not run under the
+    # regime the other runs of that model used, so its score is not comparable
+    # with theirs. This is the same class of defect as a gateway cache hit, and
+    # it is rejected the same way: the file stays, the score stays readable, the
+    # run just stops counting. Discovered on monday-002/qwen3.8-flash/run-002,
+    # which scored 66.5 against 93.0 and 100.0 on zero reasoning tokens.
+    #
+    # Only a positively observed absence disqualifies. A provider that reports
+    # no reasoning signal at all leaves the run qualified and is surfaced
+    # separately - refusing it would be inventing evidence.
+    status, tokens = reasoning_check.classify(run)
+    if reasoning_check.disqualifies(status):
+        reasons.append(
+            f"{reasoning_check.REASONING_NOT_DELIVERED}: reasoning was requested but the "
+            f"provider returned {tokens} reasoning tokens, so this run is not in the same "
+            f"regime as the model's other runs"
+        )
+
     return RunVerdict(path=path, run=run, reasons=reasons)
+
+
+def reasoning_status(run: BenchmarkRun) -> str:
+    """DELIVERED / NOT_DELIVERED / NOT_REQUESTED / UNOBSERVABLE for one run."""
+    return reasoning_check.classify(run)[0]
 
 
 @dataclass

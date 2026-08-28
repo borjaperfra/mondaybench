@@ -97,7 +97,14 @@ class ModelConfig:
     temperature: float | None
     max_output_tokens: int
     reasoning_enabled: bool
-    pricing: Pricing
+    # Not sent unless a model pins it. None means "not sent, provider default
+    # applied" - recorded as such so an audit can tell that apart from a value
+    # we chose. Pin it in models.yaml under `generation.top_p`.
+    top_p: float | None = None
+    # The raw capability block, so reasoning intent can be derived without this
+    # module having to know every provider's spelling of "thinking".
+    capabilities: dict[str, Any] = field(default_factory=dict)
+    pricing: Pricing = field(default_factory=Pricing)
     extra_body: dict[str, Any] = field(default_factory=dict)
     notes: str | None = None
 
@@ -151,8 +158,10 @@ def load_models(path: Path | None = None) -> dict[str, ModelConfig]:
             base_url_env=cfg.get("base_url_env"),
             api_key_env=cfg.get("api_key_env"),
             temperature=generation.get("temperature"),
+            top_p=generation.get("top_p"),
             max_output_tokens=int(generation["max_output_tokens"]),
             reasoning_enabled=bool(capabilities.get("reasoning", False)),
+            capabilities=dict(capabilities),
             pricing=_parse_pricing(cfg.get("pricing")),
             extra_body=cfg.get("extra_body") or {},
             notes=cfg.get("notes"),
