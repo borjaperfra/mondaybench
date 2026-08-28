@@ -4,9 +4,9 @@
 **Rubric:** 0.2  
 **Judge:** `claude-opus-5`  
 **Prompt SHA-256:** `740e627cbc7413c321ede0d54000504de54821d34ff4677f82731b89600423a8`  
-**Generated:** 2026-08-28T14:13:01Z
+**Generated:** 2026-08-28T15:01:43Z
 
-**Status:** official v0.1 result. Every publication gate passed.
+**Status:** official v0.2 result. Every publication gate passed.
 
 The Monday Score is the mean of each model's official runs and measures task quality only. TTFA, latency and cost sit beside it and are never folded into it.
 
@@ -28,12 +28,12 @@ The Monday Score is the mean of each model's official runs and measures task qua
 
 | Dimension | Score | Max |
 |---|---:|---:|
-| Action detection | 0.0 | 25 |
-| State reconstruction | 15.0 | 25 |
-| Prioritization | 0.0 | 15 |
-| Data reasoning | 0.0 | 15 |
-| Uncertainty | 0.0 | 10 |
-| Noise resistance | 0.0 | 10 |
+| State reconstruction | 15.0 | 15 |
+| Temporal supersession | 12.5 | 15 |
+| Planning dependencies | 18.7 | 25 |
+| Decision prioritization | 20.0 | 20 |
+| Cross source data reasoning | 15.0 | 15 |
+| Uncertainty epistemic | 10.0 | 10 |
 | **Monday Score** | **91.2** | **100** |
 
 **Runs:** 90.5, 87.5, 95.5  (min 87.5, max 95.5, run_range 8.0, sigma 4.04)
@@ -72,12 +72,12 @@ No penalties and no false actions in any run.
 
 | Dimension | Score | Max |
 |---|---:|---:|
-| Action detection | 0.0 | 25 |
-| State reconstruction | 15.0 | 25 |
-| Prioritization | 0.0 | 15 |
-| Data reasoning | 0.0 | 15 |
-| Uncertainty | 0.0 | 10 |
-| Noise resistance | 0.0 | 10 |
+| State reconstruction | 15.0 | 15 |
+| Temporal supersession | 13.3 | 15 |
+| Planning dependencies | 16.0 | 25 |
+| Decision prioritization | 20.0 | 20 |
+| Cross source data reasoning | 15.0 | 15 |
+| Uncertainty epistemic | 10.0 | 10 |
 | **Monday Score** | **89.3** | **100** |
 
 **Runs:** 97.5, 86.5, 84.0  (min 84.0, max 97.5, run_range 13.5, sigma 7.18)
@@ -116,12 +116,12 @@ No penalties and no false actions in any run.
 
 | Dimension | Score | Max |
 |---|---:|---:|
-| Action detection | 0.0 | 25 |
-| State reconstruction | 15.0 | 25 |
-| Prioritization | 0.0 | 15 |
-| Data reasoning | 0.0 | 15 |
-| Uncertainty | 0.0 | 10 |
-| Noise resistance | 0.0 | 10 |
+| State reconstruction | 15.0 | 15 |
+| Temporal supersession | 15.0 | 15 |
+| Planning dependencies | 13.7 | 25 |
+| Decision prioritization | 20.0 | 20 |
+| Cross source data reasoning | 15.0 | 15 |
+| Uncertainty epistemic | 8.7 | 10 |
 | **Monday Score** | **87.3** | **100** |
 
 **Runs:** 85.0, 85.5, 91.5  (min 85.0, max 91.5, run_range 6.5, sigma 3.62)
@@ -162,12 +162,12 @@ No penalties and no false actions in any run.
 
 | Dimension | Score | Max |
 |---|---:|---:|
-| Action detection | 0.0 | 25 |
-| State reconstruction | 14.2 | 25 |
-| Prioritization | 0.0 | 15 |
-| Data reasoning | 0.0 | 15 |
-| Uncertainty | 0.0 | 10 |
-| Noise resistance | 0.0 | 10 |
+| State reconstruction | 14.2 | 15 |
+| Temporal supersession | 12.5 | 15 |
+| Planning dependencies | 19.3 | 25 |
+| Decision prioritization | 19.2 | 20 |
+| Cross source data reasoning | 14.0 | 15 |
+| Uncertainty epistemic | 9.0 | 10 |
 | **Monday Score** | **86.5** | **100** |
 
 **Runs:** 93.0, 66.5, 100.0  (min 66.5, max 100.0, run_range 33.5, sigma 17.67)
@@ -216,12 +216,12 @@ No penalties and no false actions in any run.
 
 | Dimension | Score | Max |
 |---|---:|---:|
-| Action detection | 0.0 | 25 |
-| State reconstruction | 14.2 | 25 |
-| Prioritization | 0.0 | 15 |
-| Data reasoning | 0.0 | 15 |
-| Uncertainty | 0.0 | 10 |
-| Noise resistance | 0.0 | 10 |
+| State reconstruction | 14.2 | 15 |
+| Temporal supersession | 12.5 | 15 |
+| Planning dependencies | 14.8 | 25 |
+| Decision prioritization | 18.3 | 20 |
+| Cross source data reasoning | 14.0 | 15 |
+| Uncertainty epistemic | 9.0 | 10 |
 | **Monday Score** | **81.2** | **100** |
 
 **Runs:** 64.5, 81.5, 97.5  (min 64.5, max 97.5, run_range 33.0, sigma 16.50)
@@ -270,12 +270,12 @@ No penalties and no false actions in any run.
 
 | Dimension | Score | Max |
 |---|---:|---:|
-| Action detection | 0.0 | 25 |
-| State reconstruction | 12.5 | 25 |
-| Prioritization | 0.0 | 15 |
-| Data reasoning | 0.0 | 15 |
-| Uncertainty | 0.0 | 10 |
-| Noise resistance | 0.0 | 10 |
+| State reconstruction | 12.5 | 15 |
+| Temporal supersession | 11.7 | 15 |
+| Planning dependencies | 14.2 | 25 |
+| Decision prioritization | 16.8 | 20 |
+| Cross source data reasoning | 13.5 | 15 |
+| Uncertainty epistemic | 7.8 | 10 |
 | **Monday Score** | **70.2** | **100** |
 
 **Runs:** 75.5, 83.0, 52.0  (min 52.0, max 83.0, run_range 31.0, sigma 16.17)
@@ -340,12 +340,12 @@ No penalties and no false actions in any run.
 
 | Dimension | Score | Max |
 |---|---:|---:|
-| Action detection | 0.0 | 25 |
-| State reconstruction | 10.0 | 25 |
-| Prioritization | 0.0 | 15 |
-| Data reasoning | 0.0 | 15 |
-| Uncertainty | 0.0 | 10 |
-| Noise resistance | 0.0 | 10 |
+| State reconstruction | 10.0 | 15 |
+| Temporal supersession | 9.2 | 15 |
+| Planning dependencies | 12.0 | 25 |
+| Decision prioritization | 15.8 | 20 |
+| Cross source data reasoning | 9.0 | 15 |
+| Uncertainty epistemic | 6.8 | 10 |
 | **Monday Score** | **54.2** | **100** |
 
 **Runs:** 58.0, 45.5, 59.0  (min 45.5, max 59.0, run_range 13.5, sigma 7.52)

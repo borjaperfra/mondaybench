@@ -31,6 +31,9 @@ class ModelSummary:
     maximum: float
     stddev: float
     dimensions: dict[str, float]
+    # Rubric declaration order for those dimensions. Deliberately not
+    # serialized: it is a rendering concern, and adding a key to the payload
+    # would rewrite leaderboards that are already published.
     # Medians, not means: with three runs a single slow or expensive outlier
     # drags a mean somewhere no run actually was.
     median_ttfa_ms: float | None
@@ -39,6 +42,14 @@ class ModelSummary:
     median_ttft_ms: float | None
     median_output_tokens: float | None
     prompt_sha256: str
+    # Per-dimension maximum, read from the rubric via the evaluations, so a
+    # renderer never has to look a scenario's rubric up. Defaulted because
+    # callers that only exercise the gates do not need it.
+    dimension_max: dict[str, float] = field(default_factory=dict)
+    # Rubric declaration order for the dimensions above. Deliberately not
+    # serialized: it is a rendering concern, and adding a key to the payload
+    # would rewrite leaderboards that are already published.
+    dimension_order: list[str] = field(default_factory=list)
     run_scores: list[float] = field(default_factory=list)
     rubric_version: str | None = None
     judge_model_id: str | None = None
@@ -207,6 +218,16 @@ def summarize_model(
         )
         for name in dimension_names
     }
+    # The maxima come from the evaluations, which got them from the scenario's
+    # own rubric. Nothing downstream should carry a list of dimension names: a
+    # renderer that knows monday-001's six dimensions will print them for every
+    # scenario forever, silently scoring the real ones as absent.
+    dimension_max = {
+        name: max(
+            e.dimensions[name].max_score for e in evaluations if name in e.dimensions
+        )
+        for name in dimension_names
+    }
 
     return ModelSummary(
         model_slug=model_slug,
@@ -217,6 +238,7 @@ def summarize_model(
         maximum=round(max(scores), 2),
         stddev=round(statistics.stdev(scores), 2) if len(scores) > 1 else 0.0,
         dimensions=dimensions,
+        dimension_max=dimension_max,
         median_ttfa_ms=_median_or_none(ttfas),
         median_total_latency_ms=_median_or_none(latencies),
         median_cost_usd=median_cost,
@@ -253,8 +275,10 @@ def build_leaderboard(
             summaries.append(summary)
 
     summaries.sort(key=lambda s: (-s.mean, s.model_slug))
+    order = rubric_dimension_order(scenario_id, evaluator_id)
     for index, summary in enumerate(summaries, start=1):
         summary.rank = index
+        summary.dimension_order = order
 
     # A ranking that blends judge prompt versions across models is not a ranking.
     # Detected here, across models, because a single model can be internally
@@ -324,14 +348,39 @@ def build_leaderboard(
     return payload, summaries
 
 
-CSV_DIMENSIONS = (
-    "action_detection",
-    "state_reconstruction",
-    "prioritization",
-    "data_reasoning",
-    "uncertainty",
-    "noise_resistance",
-)
+def dimension_columns(summaries: "list[ModelSummary]") -> list[str]:
+    """The dimension names this scenario scores, in the rubric's own order.
+
+    Derived per scenario rather than declared here, so a new scenario with new
+    dimensions publishes correctly without touching this module. The rubric's
+    declaration order wins where it is known; otherwise the fallback is heaviest
+    first, then alphabetically, which at least is stable.
+    """
+    names: dict[str, float] = {}
+    for s in summaries:
+        for name, maximum in s.dimension_max.items():
+            names[name] = max(names.get(name, 0.0), maximum)
+    declared = [n for n in (summaries[0].dimension_order if summaries else []) if n in names]
+    rest = sorted((n for n in names if n not in declared), key=lambda n: (-names[n], n))
+    return declared + rest
+
+
+def rubric_dimension_order(scenario_id: str, evaluator_id: str) -> list[str]:
+    """Dimension names in the order the scenario's rubric declares them.
+
+    Returns an empty list when the scenario cannot be loaded - tests build
+    summaries from fixtures with no scenario on disk, and a missing order is a
+    rendering nicety, not a correctness problem.
+    """
+    try:
+        from .config import ConfigError, load_evaluator
+        from .scenarios import ScenarioError, load_scenario
+
+        evaluator = load_evaluator(evaluator_id)
+        scenario = load_scenario(scenario_id, rubric_file=evaluator.rubric_file)
+        return list(scenario.rubric.dimension_max)
+    except (ConfigError, ScenarioError, OSError, KeyError):
+        return []
 
 
 def leaderboard_dir(scenario_id: str | None, root: Path | None = None) -> Path:
@@ -361,6 +410,7 @@ def write_leaderboard(
     )
 
     csv_path = directory / "leaderboard.csv"
+    csv_dimensions = dimension_columns(summaries)
     columns = [
         "rank",
         "model_slug",
@@ -371,7 +421,7 @@ def write_leaderboard(
         "run_range",
         "score_stddev",
         "runs",
-        *CSV_DIMENSIONS,
+        *csv_dimensions,
         "median_ttfa_ms",
         "median_ttft_ms",
         "median_total_latency_ms",
@@ -404,7 +454,7 @@ def write_leaderboard(
                 "judge_model_id": s.judge_model_id,
                 "scenario_prompt_sha256": s.prompt_sha256,
             }
-            for name in CSV_DIMENSIONS:
+            for name in csv_dimensions:
                 row[name] = s.dimensions.get(name)
             writer.writerow(row)
 
@@ -418,14 +468,12 @@ def write_leaderboard(
 # Public markdown
 # --------------------------------------------------------------------------
 
-DIMENSION_LABELS = (
-    ("action_detection", "Action detection", 25),
-    ("state_reconstruction", "State reconstruction", 25),
-    ("prioritization", "Prioritization", 15),
-    ("data_reasoning", "Data reasoning", 15),
-    ("uncertainty", "Uncertainty", 10),
-    ("noise_resistance", "Noise resistance", 10),
-)
+def dimension_label(name: str) -> str:
+    """`some_long_dimension` -> `Some long dimension`.
+
+    No scenario's dimension names appear anywhere in this module, by design.
+    """
+    return name.replace("_", " ").capitalize()
 
 
 def _ms(value: float | None) -> str:
@@ -452,14 +500,22 @@ def render_markdown(payload: dict[str, Any], summaries: list[ModelSummary]) -> s
         lines.append(f"**Prompt SHA-256:** `{summaries[0].prompt_sha256}`  ")
     lines.append(f"**Generated:** {payload.get('generated_at', '')}")
     lines.append("")
+    # The version comes from the scenario, not from a literal. monday-001
+    # declares 0.1 and monday-002 declares 0.2; hardcoding either one mislabels
+    # the other.
+    version = payload.get("benchmark_version", "")
     if payload.get("official"):
-        lines.append("**Status:** official v0.1 result. Every publication gate passed.")
+        lines.append(
+            f"**Status:** official v{version} result. Every publication gate passed."
+            if version
+            else "**Status:** official. Every publication gate passed."
+        )
     else:
         lines.append(
             "> **NOT AN OFFICIAL RESULT.** This leaderboard was built without "
             "`--official`, so the publication gates were not enforced: run counts, "
             "prompt/rubric/judge consistency and scoring arithmetic are unverified. "
-            "Do not cite these numbers as MondayBench v0.1 results."
+            f"Do not cite these numbers as MondayBench v{version} results."
         )
     lines.append("")
     if payload.get("integrity_warning"):
@@ -490,8 +546,11 @@ def render_markdown(payload: dict[str, Any], summaries: list[ModelSummary]) -> s
         lines.append("")
         lines.append("| Dimension | Score | Max |")
         lines.append("|---|---:|---:|")
-        for key, label, maximum in DIMENSION_LABELS:
-            lines.append(f"| {label} | {s.dimensions.get(key, 0):.1f} | {maximum} |")
+        for key in dimension_columns([s]):
+            lines.append(
+                f"| {dimension_label(key)} | {s.dimensions[key]:.1f} "
+                f"| {s.dimension_max[key]:g} |"
+            )
         lines.append(f"| **Monday Score** | **{s.mean:.1f}** | **100** |")
         lines.append("")
         run_list = ", ".join(f"{score:.1f}" for score in s.run_scores)

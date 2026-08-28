@@ -136,12 +136,21 @@ def write_analysis(payload, rows, order, names, evals, runs, cids, pts, L):
     constant = [cid for cid in cids if len({x for s in order for x in L[s][cid]}) == 1]
     const_pts = sum(pts[c] for c in constant)
 
-    # Modal-constant: same pattern per model but not necessarily every run.
+    # Modal-constant: every model lands on the same *majority* label, without
+    # every run agreeing. A criterion where a model's three runs are all
+    # different has no majority and therefore no mode - picking one would be
+    # arbitrary, and `max(set(...), key=count)` picked a different one on every
+    # process because set iteration order is not stable.
+    def majority(labels: list[str]) -> str | None:
+        best = max(set(labels), key=lambda x: (labels.count(x), x))
+        return best if labels.count(best) * 2 > len(labels) else None
+
     modal_constant = [
         cid
         for cid in cids
         if cid not in constant
-        and len({max(set(L[s][cid]), key=L[s][cid].count) for s in order}) == 1
+        and None not in (modes := {majority(L[s][cid]) for s in order})
+        and len(modes) == 1
     ]
 
     # Dispersion: spread of earned points across models, on a criterion.
