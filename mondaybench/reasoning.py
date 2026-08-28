@@ -28,6 +28,35 @@ Inventing a verdict from a missing field would be exactly the error this module
 exists to prevent, so an unreported signal is `UNOBSERVABLE` and never
 `NOT_DELIVERED`. A run in that state is not silently dropped either: it is
 surfaced so a human decides.
+
+## Why one counter is not enough
+
+**`usage.reasoning_tokens == 0` does not universally mean "no reasoning".**
+MIMO v2.5 streams a thinking phase - 139 to 162 seconds of it on monday-002 -
+and then reports zero reasoning tokens. Trusting the counter alone would have
+recorded six official runs as non-reasoning while the model was demonstrably
+thinking, and would have left the model outside the very guard this module
+provides.
+
+So delivery is established by whichever of three signals is available, in
+descending order of directness:
+
+1. `explicit_reasoning_tokens` - the provider counted them.
+2. `explicit_reasoning_stream` - the adapter saw `reasoning_content` /
+   `reasoning` deltas and recorded how many. Structural only; no content is
+   ever stored.
+3. `derived_pre_answer_stream` - reconstructed from a run's own timings, for
+   runs written before the adapter counted stream events.
+
+Signal 3 is *not* "the response was slow". In this codebase `ttft_ms` is set by
+the first non-empty `reasoning_content`/`reasoning` delta **or** the first
+non-empty `content` delta, and by nothing else - role-only deltas, `usage`
+events and `id` events never touch it. `ttfa_ms` is set only by the first
+`content` delta. A gap between the two is therefore structural evidence that
+reasoning deltas arrived first, not an inference from latency. A conservative
+threshold still applies, because the value is a reconstruction rather than
+something the adapter asserted at the time, and because a future adapter could
+define these fields differently.
 """
 
 from __future__ import annotations
@@ -96,14 +125,87 @@ def was_requested(run: Any) -> bool:
     return bool(getattr(generation, "reasoning_enabled", False))
 
 
+#: Smallest TTFT->TTFA gap accepted as evidence of a pre-answer reasoning
+#: stream. Across all 43 official runs the gap is bimodal: exactly 0.0 ms when
+#: the first delta was the answer, and 16,500 ms or more when it was not. The
+#: threshold sits in an empty band more than four orders of magnitude wide, so
+#: it is not a tuned parameter - it is there to absorb rounding and to refuse
+#: anything that could plausibly be buffering rather than generation.
+PRE_ANSWER_STREAM_MIN_MS = 1000.0
+
+
+def _stream_events(run: Any) -> tuple[bool | None, int | None]:
+    """Whether the adapter saw reasoning deltas, and how many. None = unrecorded."""
+    block = getattr(run, "reasoning", None)
+    if block is None:
+        return None, None
+    return getattr(block, "stream_observed", None), getattr(block, "stream_event_count", None)
+
+
+def _pre_answer_gap_ms(run: Any) -> float | None:
+    """Milliseconds of non-content stream before the first answer token.
+
+    None when either timing is missing, so a run that cannot be measured is
+    never scored as if it had been.
+    """
+    performance = getattr(run, "performance", None)
+    if performance is None:
+        return None
+    ttft, ttfa = getattr(performance, "ttft_ms", None), getattr(performance, "ttfa_ms", None)
+    if ttft is None or ttfa is None:
+        return None
+    return ttfa - ttft
+
+
+def delivery_evidence(run: Any) -> tuple[str | None, int | None]:
+    """Which signal, if any, shows this run generated a reasoning phase.
+
+    Ordered most direct first. Returns (evidence_kind, reported_tokens); the
+    kind is None when nothing establishes delivery, which is *not* the same as
+    establishing that no reasoning happened.
+    """
+    tokens = _reported_reasoning_tokens(run)
+    if tokens is not None and tokens > 0:
+        return "explicit_reasoning_tokens", tokens
+
+    observed, count = _stream_events(run)
+    if observed:
+        return "explicit_reasoning_stream", tokens
+
+    gap = _pre_answer_gap_ms(run)
+    if gap is not None and gap >= PRE_ANSWER_STREAM_MIN_MS:
+        return "derived_pre_answer_stream", tokens
+
+    return None, tokens
+
+
 def classify(run: Any) -> tuple[ReasoningStatus, int | None]:
     """Return the reasoning status of a run and the token count behind it."""
-    tokens = _reported_reasoning_tokens(run)
+    return classify_detailed(run)[:2]
+
+
+def classify_detailed(run: Any) -> tuple[ReasoningStatus, int | None, str | None]:
+    """Status, reported token count, and the evidence the status rests on.
+
+    Delivery is an observation, so it is settled before the request side is
+    consulted: a model that demonstrably thought is DELIVERED whether or not
+    the configuration expected it. That is how MIMO v2.5 - which streams a
+    thinking phase and then reports zero tokens - is classified correctly
+    without rewriting the six historical runs that recorded it.
+    """
+    evidence, tokens = delivery_evidence(run)
+    if evidence is not None:
+        return "DELIVERED", tokens, evidence
+
     if not was_requested(run):
-        return "NOT_REQUESTED", tokens
-    if tokens is None:
-        return "UNOBSERVABLE", None
-    return ("DELIVERED" if tokens > 0 else "NOT_DELIVERED"), tokens
+        return "NOT_REQUESTED", tokens, None
+
+    # Requested, and nothing shows it happened. Only a provider that positively
+    # reported zero counts as an observed absence; silence stays UNOBSERVABLE.
+    observed, _ = _stream_events(run)
+    if tokens == 0 or observed is False:
+        return "NOT_DELIVERED", tokens, None
+    return "UNOBSERVABLE", tokens, None
 
 
 def disqualifies(status: ReasoningStatus) -> bool:

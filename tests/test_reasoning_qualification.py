@@ -416,3 +416,150 @@ def test_artefacts_written_after_the_fix_are_lf():
     ]
     offenders = [t.name for t in targets if b"\r\n" in t.read_bytes()]
     assert offenders == [], f"CRLF in freshly written artefacts: {offenders}"
+
+
+# --------------------------------------------------------------------------
+# Multi-signal delivery: a counter of zero is not proof of no reasoning
+# --------------------------------------------------------------------------
+
+
+def make_timed_run(*, requested, tokens, ttft_ms, ttfa_ms, stream=None, events=None):
+    """A run whose delivery has to be settled from timings or stream events."""
+    from mondaybench.schemas import RunReasoning
+
+    run = make_run(reasoning_requested=requested, reasoning_tokens=tokens)
+    block = None
+    if stream is not None or events is not None:
+        block = RunReasoning(
+            requested=bool(requested), status="UNOBSERVABLE", tokens=tokens,
+            stream_observed=stream, stream_event_count=events,
+        )
+    return run.model_copy(
+        update={
+            "performance": RunPerformance(ttft_ms=ttft_ms, ttfa_ms=ttfa_ms),
+            "reasoning": block,
+        }
+    )
+
+
+def test_explicit_tokens_win_and_are_labelled_as_such():
+    run = make_timed_run(requested=True, tokens=900, ttft_ms=10.0, ttfa_ms=10.0)
+    assert reasoning.classify_detailed(run) == ("DELIVERED", 900, "explicit_reasoning_tokens")
+
+
+def test_a_stream_event_proves_delivery_even_when_usage_says_zero():
+    """The MIMO case, as the adapter will record it from now on."""
+    run = make_timed_run(
+        requested=True, tokens=0, ttft_ms=10.0, ttfa_ms=10.0, stream=True, events=812
+    )
+    status, tokens, evidence = reasoning.classify_detailed(run)
+    assert (status, tokens, evidence) == ("DELIVERED", 0, "explicit_reasoning_stream")
+
+
+def test_a_long_pre_answer_stream_proves_delivery_for_historical_runs():
+    """No stream field recorded, so the verdict is reconstructed and labelled."""
+    run = make_timed_run(requested=False, tokens=0, ttft_ms=1_300.0, ttfa_ms=163_300.0)
+    status, _, evidence = reasoning.classify_detailed(run)
+    assert (status, evidence) == ("DELIVERED", "derived_pre_answer_stream")
+
+
+def test_a_tiny_timing_difference_is_not_reasoning():
+    """Buffering and rounding must never be promoted to evidence."""
+    for gap in (0.0, 0.4, 12.5, 300.0, 999.9):
+        run = make_timed_run(requested=True, tokens=0, ttft_ms=100.0, ttfa_ms=100.0 + gap)
+        status, _, evidence = reasoning.classify_detailed(run)
+        assert (status, evidence) == ("NOT_DELIVERED", None), f"gap {gap} was accepted"
+
+
+def test_metadata_before_the_answer_does_not_count_as_reasoning():
+    """Role-only and usage deltas never set ttft, so they cannot open a gap.
+
+    Guarded at the adapter level: only a non-empty reasoning or content delta
+    moves the clock. A run whose two timings are equal has no pre-answer
+    stream, whatever else the provider sent.
+    """
+    run = make_timed_run(requested=True, tokens=0, ttft_ms=2_000.0, ttfa_ms=2_000.0)
+    assert reasoning.classify_detailed(run)[0] == "NOT_DELIVERED"
+
+
+def test_an_explicitly_empty_stream_is_a_positive_absence():
+    run = make_timed_run(
+        requested=True, tokens=None, ttft_ms=5.0, ttfa_ms=5.0, stream=False, events=0
+    )
+    assert reasoning.classify_detailed(run)[0] == "NOT_DELIVERED"
+
+
+def test_no_signal_at_all_is_still_unobservable():
+    run = make_timed_run(requested=True, tokens=None, ttft_ms=None, ttfa_ms=None)
+    assert reasoning.classify_detailed(run)[0] == "UNOBSERVABLE"
+
+
+def test_missing_timings_are_never_scored_as_if_measured():
+    run = make_timed_run(requested=True, tokens=None, ttft_ms=10.0, ttfa_ms=None)
+    assert reasoning.classify_detailed(run)[0] == "UNOBSERVABLE"
+
+
+def test_delivery_outranks_the_request_flag():
+    """A model that demonstrably thought is DELIVERED, declared or not."""
+    run = make_timed_run(requested=False, tokens=4_000, ttft_ms=1.0, ttfa_ms=1.0)
+    assert reasoning.classify_detailed(run)[0] == "DELIVERED"
+
+
+# --------------------------------------------------------------------------
+# The historical runs this was built for
+# --------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize("scenario", ["monday-001", "monday-002"])
+def test_every_mimo_run_is_delivered_on_stream_evidence(scenario):
+    paths = sorted((REPO_ROOT / "runs" / scenario / "mimo-v2.5").glob("run-*.json"))
+    assert len(paths) == 3
+    for path in paths:
+        status, _, evidence = reasoning.classify_detailed(load_run(path))
+        assert (status, evidence) == ("DELIVERED", "derived_pre_answer_stream"), path
+
+
+def test_mimo_is_now_declared_reasoning_capable():
+    model = load_models()["mimo-v2.5"]
+    assert reasoning.requested_from_config(model.capabilities, model.extra_body) is True
+
+
+def test_the_qwen_invalid_run_is_still_not_delivered():
+    status, tokens, evidence = reasoning.classify_detailed(load_run(QWEN / "run-002.json"))
+    assert (status, tokens, evidence) == ("NOT_DELIVERED", 0, None)
+
+
+@pytest.mark.parametrize("number", ["001", "003", "004"])
+def test_the_qwen_valid_runs_are_delivered_on_explicit_tokens(number):
+    status, _, evidence = reasoning.classify_detailed(load_run(QWEN / f"run-{number}.json"))
+    assert (status, evidence) == ("DELIVERED", "explicit_reasoning_tokens")
+
+
+@pytest.mark.parametrize("slug", ["gemma4", "qwen3.6"])
+def test_the_genuinely_non_reasoning_models_stay_not_requested(slug):
+    for scenario in ("monday-001", "monday-002"):
+        for path in sorted((REPO_ROOT / "runs" / scenario / slug).glob("run-*.json")):
+            assert reasoning.classify_detailed(load_run(path))[0] == "NOT_REQUESTED", path
+
+
+def test_exactly_one_official_run_remains_disqualified():
+    offenders = [
+        p.relative_to(REPO_ROOT).as_posix()
+        for p in sorted(REPO_ROOT.glob("runs/monday-00*/*/run-*.json"))
+        if reasoning.classify(load_run(p))[0] == "NOT_DELIVERED"
+    ]
+    assert offenders == ["runs/monday-002/qwen3.8-flash/run-002.json"]
+
+
+def test_no_official_score_moved():
+    payload = json.loads(
+        (REPO_ROOT / "leaderboard/monday-002/leaderboard.json").read_text(encoding="utf-8")
+    )
+    scores = {m["display_name"]: m["run_scores"] for m in payload["models"]}
+    assert scores["MIMO v2.5"] == [64.5, 81.5, 97.5]
+    assert scores["Qwen 3.8 Flash"] == [93.0, 100.0, 91.5]
+    means = {m["display_name"]: round(m["score"]["mean"], 1) for m in payload["models"]}
+    assert means == {
+        "Qwen 3.8 Flash": 94.8, "GLM 5.2": 91.2, "DeepSeek V4 Flash": 89.3,
+        "GLM 5.3 Flash": 87.3, "MIMO v2.5": 81.2, "Qwen 3.6": 70.2, "Gemma 4": 54.2,
+    }

@@ -207,12 +207,22 @@ def execute_run(
         ),
     )
 
-    # Observed, not configured: classify() reads only the response.
-    status, tokens = reasoning.classify(run)
+    # Observed, not configured. The stream evidence is attached first so
+    # classify() can use it, then the verdict is written back alongside.
+    observed = RunReasoning(
+        requested=reasoning_requested,
+        status="UNOBSERVABLE",
+        tokens=result.reasoning_tokens,
+        stream_observed=result.reasoning_stream_observed,
+        stream_event_count=result.reasoning_stream_event_count,
+    )
+    status, tokens, evidence = reasoning.classify_detailed(
+        run.model_copy(update={"reasoning": observed})
+    )
     run = run.model_copy(
         update={
-            "reasoning": RunReasoning(
-                requested=reasoning_requested, status=status, tokens=tokens
+            "reasoning": observed.model_copy(
+                update={"status": status, "tokens": tokens, "evidence": evidence}
             )
         }
     )

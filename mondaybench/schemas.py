@@ -80,6 +80,15 @@ class RunReasoning(Strict):
     requested: bool
     status: str
     tokens: int | None = None
+    # Which signal established delivery. `explicit_*` came from the provider;
+    # `derived_pre_answer_stream` was reconstructed from a run's own timings
+    # and is labelled so it is never mistaken for something the adapter
+    # recorded at the time. See mondaybench/reasoning.py.
+    evidence: str | None = None
+    # Structural, not content: how many reasoning deltas the adapter saw. None
+    # on every run written before the adapter counted them.
+    stream_observed: bool | None = None
+    stream_event_count: int | None = None
 
 
 class RunUsage(Strict):

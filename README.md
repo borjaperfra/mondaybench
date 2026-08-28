@@ -197,6 +197,66 @@ mondaybench endpoints
 
 This queries `GET /v1/models` on every configured endpoint, marks the ids `models.yaml` declares, and exits non-zero if a declared id is not actually served. A wrong id fails the call rather than quietly scoring badly, but finding out before the run is cheaper.
 
+
+## Reasoning: requested is not delivered
+
+MondayBench keeps two separate facts about every run, and never lets one stand
+in for the other:
+
+- **`reasoning_requested`** - the regime the run was *supposed* to belong to,
+  taken from the model's effective configuration. A statement of intent.
+- **reasoning delivery evidence** - whether the model *actually* generated a
+  thinking phase, taken only from the response.
+
+Conflating them cost a published result. `monday-002/qwen3.8-flash/run-002`
+scored 66.5 against 93.0 and 100.0 for the same model on the same prompt,
+because the provider served a non-thinking path; the run record said
+`reasoning_enabled: true` regardless, because that field was copied out of
+`models.yaml`.
+
+### Three signals, most direct first
+
+| Evidence | Source |
+|---|---|
+| `explicit_reasoning_tokens` | the provider counted them in `usage` |
+| `explicit_reasoning_stream` | the adapter saw `reasoning_content` / `reasoning` deltas and recorded how many. Structural only - no reasoning content is ever stored |
+| `derived_pre_answer_stream` | reconstructed from a run's own TTFT/TTFA, for runs written before the adapter counted stream events |
+
+The evidence kind travels with the verdict, so a reconstructed classification is
+never mistaken for something the adapter asserted at the time.
+
+### `reasoning_tokens == 0` does not mean "no reasoning"
+
+**Some providers stream a thinking phase and then report zero reasoning tokens.**
+MIMO v2.5 does exactly that: 16-24 seconds of pre-answer stream on monday-001
+and 139-162 seconds on monday-002, with `usage.reasoning_tokens: 0` every time.
+Trusting the counter alone had it recorded as a non-reasoning model through two
+official batteries.
+
+The derived signal is not "the response was slow". `ttft_ms` is set by the first
+non-empty reasoning delta **or** the first non-empty content delta and by
+nothing else - role-only deltas, `usage` events and `id` events never touch it -
+while `ttfa_ms` is set only by the first content delta. A gap between them is
+structural proof that reasoning deltas arrived first. A conservative 1-second
+threshold still applies: across all 43 official runs the gap is either exactly
+0.0 ms or at least 16,500 ms, so the threshold sits in an empty band four orders
+of magnitude wide and absorbs rounding rather than tuning a result.
+
+### The four states
+
+| State | Meaning |
+|---|---|
+| `DELIVERED` | any of the three signals establishes a thinking phase |
+| `NOT_DELIVERED` | reasoning was requested and its absence was *positively observed* - a reported zero, or an explicitly empty stream |
+| `NOT_REQUESTED` | the configuration does not expect reasoning, and none was seen |
+| `UNOBSERVABLE` | reasoning was requested and the provider exposes no reliable signal either way |
+
+Only `NOT_DELIVERED` disqualifies a run. `UNOBSERVABLE` never does: refusing a
+run because a provider is quiet about its telemetry would invent the evidence
+this rule exists to demand. Delivery is settled before the request flag is
+consulted, so a model that demonstrably thought is `DELIVERED` whether or not
+the configuration expected it.
+
 ## Limitations
 
 MondayBench v0.1:

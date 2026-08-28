@@ -254,9 +254,20 @@ models:
       # See the cache note in the header. Not part of the prompt.
       caching: false
     capabilities:
-      reasoning: false
+      # Corrected 2026-08-28. This was `false`, and the provider reports
+      # `usage.reasoning_tokens: 0`, so nothing in the numbers said otherwise.
+      # But all six official runs stream a thinking phase before their first
+      # answer token - 16-24s on monday-001, 139-162s on monday-002 - which the
+      # harness times as the gap between TTFT and TTFA. The model thinks; the
+      # provider just does not count it. Declaring it here brings MIMO inside
+      # the reasoning-delivery guard, so a future run served without thinking
+      # is rejected instead of averaged in. No existing run is affected: they
+      # classify DELIVERED on the stream evidence.
+      reasoning: true
     pricing:
       input_per_million_usd: null
       output_per_million_usd: null
       source: "NaN is quota-based; no per-token cost reported"
-    notes: "1M context. Not on Helmcode. NaN quota 1.0B tokens/month."
+    notes: "1M context. Not on Helmcode. NaN quota 1.0B tokens/month. Streams a
+      thinking phase but reports reasoning_tokens=0; delivery is established
+      from the pre-answer stream instead of the counter."

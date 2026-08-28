@@ -167,6 +167,7 @@ class OpenAICompatibleProvider(ModelProvider):
         # a model can spend its whole output budget reasoning and emit no
         # answer at all, and that is a truncation, not a transport failure.
         reasoning_chars = 0
+        reasoning_events = 0
         usage: dict[str, Any] = {}
         finish_reason: str | None = None
         request_id: str | None = None
@@ -195,6 +196,7 @@ class OpenAICompatibleProvider(ModelProvider):
                             thought = delta.get("reasoning_content") or delta.get("reasoning")
                             if isinstance(thought, str) and thought:
                                 reasoning_chars += len(thought)
+                                reasoning_events += 1
                                 if first_token_at is None:
                                     first_token_at = time.perf_counter()
                                     ttft_ms = round((first_token_at - started) * 1000, 1)
@@ -257,6 +259,8 @@ class OpenAICompatibleProvider(ModelProvider):
             provider_request_id=request_id,
             finish_reason=finish_reason,
             raw_usage=usage,
+            reasoning_stream_observed=reasoning_events > 0,
+            reasoning_stream_event_count=reasoning_events,
         )
 
     @staticmethod

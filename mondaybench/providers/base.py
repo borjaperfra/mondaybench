@@ -54,6 +54,13 @@ class GenerationResult:
     # Parameters the config asked for that this API rejects or does not accept.
     unsupported_parameters: list[str] = field(default_factory=list)
     system_prompt_sent: bool = True
+    # Structural evidence that the model streamed a thinking phase, recorded
+    # because some providers stream reasoning and then report
+    # `usage.reasoning_tokens: 0` - MIMO v2.5 does exactly that. Only the count
+    # of events is kept; the reasoning content itself is never stored.
+    # None means the adapter cannot observe this at all (non-streaming calls).
+    reasoning_stream_observed: bool | None = None
+    reasoning_stream_event_count: int | None = None
 
     def tokens_per_second(self) -> float | None:
         """Output throughput over the window in which the tokens were produced.
