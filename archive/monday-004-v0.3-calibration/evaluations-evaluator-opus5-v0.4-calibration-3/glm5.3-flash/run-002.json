@@ -1,0 +1,286 @@
+{
+  "schema_version": "1",
+  "evaluator_id": "evaluator-opus5-v0.4-calibration-3",
+  "benchmark_version": "0.4",
+  "rubric_version": "0.3",
+  "scenario_id": "monday-004",
+  "run_id": "monday-004__glm5.3-flash__002",
+  "model_slug": "glm5.3-flash",
+  "scenario_prompt_sha256": "3a0cbb569ca4f711b8907177af9204cec267d26f35f732829df56b03ed23ef99",
+  "timestamp_utc": "2026-08-29T11:17:40Z",
+  "judge": {
+    "provider": "anthropic",
+    "model_id": "claude-opus-5",
+    "temperature": 0.0,
+    "effort": null,
+    "unsupported_parameters": [],
+    "prompt_fingerprint": "26067608db5f7a2d",
+    "route": "recorded",
+    "verdict_source": "calibration-v0.3.jsonl"
+  },
+  "dimensions": {
+    "revenue_reasoning": {
+      "score": 20.0,
+      "max_score": 20.0
+    },
+    "customer_health": {
+      "score": 15.0,
+      "max_score": 15.0
+    },
+    "acquisition_reasoning": {
+      "score": 19.0,
+      "max_score": 19.0
+    },
+    "plan_economics": {
+      "score": 19.0,
+      "max_score": 19.0
+    },
+    "cross_table_data_quality": {
+      "score": 16.5,
+      "max_score": 18.0
+    },
+    "decision_quality": {
+      "score": 9.0,
+      "max_score": 9.0
+    }
+  },
+  "criteria": {
+    "duplicate_detected": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'INV-2026-10-0209 (soylent, EUR 19,500) appears twice - stripe 1 Oct and billing_sync 2 Oct, same transaction ID. October revenue overstated EUR 19.5k (+2.2%) unless deduped'",
+      "reason": "Identified, quantified as a share, and removed from the bridge."
+    },
+    "annual_prepayment_normalized": {
+      "result": "PASS",
+      "points_awarded": 6.0,
+      "points_possible": 6.0,
+      "evidence": "'Gringotts annual (12 mo, prepaid) ... EUR 120,000 ... EUR 10,000/mo equivalent'",
+      "reason": "Named in the revenue bridge and used at its monthly value throughout."
+    },
+    "headline_vs_recurring_growth": {
+      "result": "PASS",
+      "points_awarded": 6.0,
+      "points_possible": 6.0,
+      "evidence": "'Invoiced revenue looks up ~12% MoM (EUR 797.1k -> EUR 892.9k) ... Underlying monthly-equivalent recurring revenue grew just +1.6% (EUR 746.1k -> EUR 757.7k)'",
+      "reason": "Both figures, both bases named, and the +1.6% decomposed exactly into hooli +3,000, soylent -2,500 and five new logos +11,100."
+    },
+    "revenue_conclusion": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'October's headline revenue growth is an accounting artifact, not growth' as the opening line",
+      "reason": "First thing leadership reads, with the figures behind it."
+    },
+    "segment_retention_quantified": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'SMB: 4 of 18 logos churned (22%); 20.5% of SMB ARR gone in one month. Mid-market: 1 of 10 (nakatomi, 10.5% of MM ARR). Enterprise: zero.'",
+      "reason": "Logo churn and ARR churn for all three segments, correctly labelled and correctly ranked."
+    },
+    "sample_size_arr_context": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'SMB is the candidate on paper (5.4% of ARR, 22% logo churn in Oct) - but it produced 8 of 9 new logos and was net ARR-positive (+EUR 247.2k new vs -EUR 123.6k churned)'",
+      "reason": "Denominator, ARR and the offset, all exact; 8 of 9 new logos being SMB is correct."
+    },
+    "acme_false_positive_avoided": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'-45% requests sits inside the 40-50% estimate ... tokens -12% only; tickets de-escalated. Note tokens/request rose 1.1 -> 1.76 - batch calls are heavier, confirming the workload moved rather than shrank'",
+      "reason": "Three signals plus a derived ratio that proves the point rather than asserting it."
+    },
+    "no_churn_overreach": {
+      "result": "PASS",
+      "points_awarded": 2.0,
+      "points_possible": 2.0,
+      "evidence": "'Unrecorded causes: churn reasons are not captured; soylent's downgrade is inferred from tickets/usage, not confirmed'",
+      "reason": "States the limit of its own inference explicitly."
+    },
+    "raw_attribution_not_equivalent_new_business": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'Paid_search's EUR 210k is entirely expansion (hooli, stark, umbrella, globex) - i.e., the marketing platform is crediting multi-year enterprise accounts' growth to ad clicks'",
+      "reason": "Quantified, named, and the causal objection stated."
+    },
+    "existing_customer_expansion_removed": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'New-logo ARR by channel (2 months): partner EUR 166.8k, content EUR 91.2k, paid_search EUR 64.8k, outbound EUR 56.4k'",
+      "reason": "Exact and ranked, with the caveat that one logo is 79% of partner's total."
+    },
+    "conversion_rate_vs_absolute_volume": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'paid_search's efficiency declined as volume scaled (+73% leads, -2.1pts conversion) - a diminishing-returns signal'",
+      "reason": "Both movements stated together."
+    },
+    "no_unsupported_channel_scale_decision": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "'Acquisition decision - no spend increase yet. Do not scale paid_search on attributed revenue' with three named prerequisites",
+      "reason": "Refused and specified."
+    },
+    "cac_payback_unavailable": {
+      "result": "PASS",
+      "points_awarded": 2.0,
+      "points_possible": 2.0,
+      "evidence": "'CAC payback by channel (CFO ask): not computable. The pack contains no channel spend' followed by the framework it would use once spend exists",
+      "reason": "Refuses the number and offers the method, which is the right shape of answer."
+    },
+    "contribution_calculated": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "'enterprise EUR 194,700 (29.5%), pro EUR 41,500 (62.7%), starter EUR 10,300 (32.2%)' with September beside it",
+      "reason": "All six exact."
+    },
+    "margin_calculated_or_correctly_compared": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "the same table plus 'Total gross margin fell EUR 16.4k MoM (35.2% -> 32.5%)'",
+      "reason": "All margins correct, including the blended movement."
+    },
+    "absolute_vs_scalable_economics": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'Pro plan: the strongest unit economics (EUR 4,611 margin/customer/mo vs EUR 13,907 enterprise, EUR 792 starter - but at 63-68% margin %)' and 'Enterprise ... is a protect problem: reliability + cost-to-serve, not new features'",
+      "reason": "Holds both halves and assigns each to the decision it answers."
+    },
+    "plan_trajectory_evidence": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "'wonka 1.02M requests vs 600k included (170%, renewal 17 Mar), aperture 705k vs 600k (118%, renewal 14 Apr)' and wayne 3.41M vs 3M",
+      "reason": "Reads the accounts across two plans and ties each to its renewal date."
+    },
+    "product_focus_supported": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'the pro plan deserves next quarter's product focus - best margins, healthy demand, and unmet demand at plan limits' with rate-limit tickets and the over-limit accounts",
+      "reason": "Multiple signals, and it runs the enterprise workstream in parallel rather than confusing size with priority."
+    },
+    "customer_id_alias_resolved": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'wayne-enterprises, EUR 1.008M ARR (11.5% of total), renews 30 Nov ... It also ran 3.41M requests vs 3M included'",
+      "reason": "Wayne's usage reported correctly and tied to its billing record."
+    },
+    "support_normalized": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'support cost is EUR 12,000/customer/month (25.5% of revenue) and rose EUR 9k in a month with essentially flat revenue' against starter's 32% of revenue",
+      "reason": "Cost normalised against both customers and revenue, and Enterprise is treated as a cost-to-serve problem rather than the worst experience by raw count."
+    },
+    "cross_table_customer_signal": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'soylent ... usage -27%, a critical ticket, already downgraded EUR 264k -> EUR 234k ARR' and 'every churner had a visible usage decline in-month'",
+      "reason": "Accounts assembled from customers, usage, revenue and support with the figures stated."
+    },
+    "figures_carried_correctly": {
+      "result": "PARTIAL",
+      "points_awarded": 1.5,
+      "points_possible": 3.0,
+      "evidence": "'rate-limit tickets doubled (5 -> 12), 100% on pro' - the October count is 13; and 'starter +41% cost on +2 tickets' - starter tickets rose from 7 to 11, which is +4",
+      "reason": "Two off-by-small counts in supporting statistics, neither decision-changing. Everything else checkable is exact: 59 -> 74 tickets, unresolved 20 -> 24, api-error tickets 10 -> 12, blended margin 35.2% -> 32.5%, SMB new ARR EUR 247.2k, Mid-market -EUR 42k, duff-brewing EUR 162k renewing 5 Dec, wayne at 11.5% of ARR."
+    },
+    "causal_boundary": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "'soylent's downgrade is inferred from tickets/usage, not confirmed' with the three movements reported together",
+      "reason": "Pattern assembled, escalated, and the limit stated."
+    },
+    "segment_recommendation": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "'do not cut Enterprise or Mid-market ... SMB is the candidate on paper but it produced 8 of 9 new logos and was net ARR-positive. Redirect SMB acquisition spend into retention rather than cutting the segment'",
+      "reason": "Refuses the cut on quantified grounds and replaces it with an action, having also stated that segment-level cost is not derivable from the pack."
+    },
+    "acquisition_recommendation": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "'no spend increase yet ... run a bounded partner test ... Required first: channel spend data, expansion bookings excluded from channel attribution, and trial-to-paid tracking'",
+      "reason": "Names partner on the corrected basis and conditions the spend on three specific gaps."
+    },
+    "product_recommendation": {
+      "result": "PASS",
+      "points_awarded": 1.0,
+      "points_possible": 1.0,
+      "evidence": "'Product focus: pro plan - overage/upgrade mechanics and rate-limit experience'",
+      "reason": "Single, actionable, consistent with section 4."
+    },
+    "uncertainty_discipline": {
+      "result": "PASS",
+      "points_awarded": 2.0,
+      "points_possible": 2.0,
+      "evidence": "ten items including the CS allocation methodology, the snapshot semantics of arr_eur for churned customers, and the unquantified pricing implications of batch workloads",
+      "reason": "Every gap real, several beyond the answer key, nothing invented."
+    }
+  },
+  "false_actions": {},
+  "penalties": {
+    "items": [],
+    "dismissed": [],
+    "raw_total": 0.0,
+    "total": 0.0,
+    "capped": false
+  },
+  "deterministic_checks": [
+    {
+      "id": "contoso_11_00",
+      "matched": false,
+      "detail": "'11:00' appears near a mention of Contoso"
+    },
+    {
+      "id": "churn_3_1_to_4_4",
+      "matched": false,
+      "detail": "both churn figures 3.1 and 4.4 are present"
+    },
+    {
+      "id": "umbrella_metrics_present",
+      "matched": false,
+      "detail": "at least two of 163 / 1821 / 41 appear near a mention of Umbrella"
+    },
+    {
+      "id": "umbrella_named",
+      "matched": true,
+      "detail": "Umbrella is named in the response"
+    },
+    {
+      "id": "wednesday_present",
+      "matched": false,
+      "detail": "'Wednesday' appears in the response"
+    },
+    {
+      "id": "julia_present",
+      "matched": false,
+      "detail": "'Julia' appears in the response"
+    },
+    {
+      "id": "pied_piper_and_hooli",
+      "matched": false,
+      "detail": "both known cancellations are named"
+    }
+  ],
+  "disagreements": [],
+  "base_score": 98.5,
+  "final_score": 98.5
+}

@@ -1,0 +1,78 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.4",
+  "scenario_id": "monday-004",
+  "scenario_prompt_sha256": "3a0cbb569ca4f711b8907177af9204cec267d26f35f732829df56b03ed23ef99",
+  "run_id": "monday-004__glm5.3-flash__005",
+  "run_number": 5,
+  "model": {
+    "slug": "glm5.3-flash",
+    "display_name": "GLM 5.3 Flash",
+    "provider": "nan",
+    "model_id": "glm5.3-flash"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 96000,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+    "extra_body": {
+      "caching": false
+    },
+    "config_sha256": "57cbbf3fe4e07a0e2261b43dfa22acec1868ae2a33f71271265d8eb561bd5044",
+    "safety_ceiling_tokens": 96000,
+    "ceiling_semantics": "provider_specific"
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "DELIVERED",
+    "tokens": 77163,
+    "evidence": "explicit_reasoning_tokens",
+    "stream_observed": true,
+    "stream_event_count": 69752
+  },
+  "timestamp_utc": "2026-08-30T16:48:57Z",
+  "usage": {
+    "input_tokens": 9994,
+    "output_tokens": 80470,
+    "reasoning_tokens": 77163
+  },
+  "performance": {
+    "ttft_ms": 2454.0,
+    "ttfa_ms": 1126905.7,
+    "total_latency_ms": 1216789.6,
+    "tokens_per_second": 66.3
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "# Northstar — Monday Business Review\n**From: Product & Growth Lead | Re: What the data actually supports**\n\n---\n\n## 1. EXECUTIVE SUMMARY\n\n- **The headline October revenue growth is largely a billing illusion.** Invoiced revenue appears to grow +12.0% (€797.1k → €892.9k), but this includes a **duplicate invoice** (INV-2026-10-0209, soylent €19.5k, loaded twice from two sources), **gringotts' €120k annual prepayment** (covers 12 months; only €10k is October's service), and **€25.3k of MRR invoiced in advance to five customers who churned during October**. Recognized MRR (plans.csv) grew just **+1.6%** (€746.1k → €757.7k).\n- **The book is flat, not growing.** October: +€133.2k new-logo ARR vs −€303.6k churned ARR. Net growth is coming entirely from **expansion bookings (€216k ARR, effective November)** — all on existing enterprise/mid-market accounts. Zero enterprise logos in two months.\n- **Churn is an SMB/starter phenomenon**: 5 of 31 customers churned in October (16% logo churn; 3.3% ARR churn). All five showed −16% to −37% usage declines in the month they churned — usage drop is our most consistent churn precursor.\n- **Acme's −45% request drop is benign** — it matches the planned batch migration (40–50% interactive reduction). Tokens fell only −12%; active users −3%; tickets normalized.\n- **Verdicts:** (1) SMB acquisition spend — **reduce/redirect, don't eliminate**; (2) paid_search spend increase — **not supported by this data**; (3) product focus — **Pro plan** (usage limits/overage experience), with one urgent enterprise billing task (wayne renews 30 Nov having exceeded its included requests).\n- **The CFO's CAC payback by channel cannot be calculated from this pack** — there is no channel spend data anywhere in the pack, and trial-to-paid conversion is untracked.\n\n---\n\n## 2. REVENUE & CUSTOMER HEALTH\n\n**Reconciling the headline (reasoning shown):**\n\n| | Sept | Oct |\n|---|---|---|\n| Invoices as recorded | €797,100 (incl. €51k prof. services) | €892,900 |\n| Less duplicate soylent invoice | — | €873,400 |\n| Less gringotts annual prepay (€120k covers 12 mo) | — | €763,400 |\n| **Recognized MRR (plans.csv)** | **€746,100** | **€757,700** |\n\n**MRR bridge:** 746,100 + 11,100 (5 new logos) + 3,000 (hooli upgrade) − 2,500 (soylent downgrade) = **757,700 (+1.6%)**.\n\n**What's really inside the numbers:**\n- **Advance billing masks churn.** October includes €25.3k MRR from nakatomi, slate-rock, mega-lo-mart, dinoco and buy-n-large, all churned mid-month. November MRR starts at ~€750.4k (757.7 − 25.3 + 17.5 expansions) — a decline leadership should not misread as a demand problem.\n- **Gringotts' €120k annual invoice (12 months, Oct 1)** inflates October invoiced revenue by ~€110k vs. run-rate. November cash-basis revenue will fall sharply for timing reasons alone.\n- **Churn concentration:** Enterprise 0%, Mid-market 1 of 10 (nakatomi, €180k), SMB 4 of 13 (€123.6k = 31% logo churn). All 5 churners had usage declines of −16% to −37% in October.\n- **Soylent is the largest single-account risk** (€234k ARR, mid-market/enterprise plan): requests −27%, downgraded €22.0k→€19.5k/mo (−€30k ARR), 8 October tickets including one **critical** and an still-open high-severity API error.\n- **Acme is healthy despite the headline:** −45% requests sits inside the planned 40–50% interactive reduction; tokens only −12% (tokens/request rose 1,100→1,760 — batch runs are fewer but denser, so don't expect infra cost to fall proportionally); tickets 4→3, all resolved.\n- **Support load:** October tickets 74 vs 59 (+25%), driven by soylent (3→8, incl. critical) and SMB rate-limit friction. SMB = 26/74 tickets (35%) on 5.4% of ARR — **~14× enterprise's support intensity per €ARR**. Stark (largest customer, €1.14M) has an open high-severity API error two months running; wayne (€1.01M) renews 30 Nov with open/pending high-severity issues.\n\n---\n\n## 3. ACQUISITION\n\n**What can be concluded (lead → paid trial, same month):**\n\n| Channel | Sept leads/trials | Oct leads/trials | Trial rate | New logos (2 mo) | New-logo ARR | Expansion credited |\n|---|---|---|---|---|---|---|\n| paid_search | 520 / 44 (8.5%) | 900 / 58 (6.4%) | **falling** | 2 | €64.8k | €210k |\n| content | 260 / 31 (11.9%) | 330 / 34 (10.3%) | ~flat | 3 | €91.2k | €18k |\n| partner | 60 / 15 (25.0%) | 75 / 17 (22.7%) | highest | 2 | €166.8k | 0 |\n| outbound | 160 / 10 (6.3%) | 195 / 11 (5.6%) | lowest | 2 | €56.4k | €24k |\n\n- **Attributed revenue \"growth\" is not new business.** Total attributed revenue rose €282.0k → €349.2k, but new-logo ARR *fell* €246.0k → €133.2k (the September figure includes vandelay, €132k). 40% of all attributed revenue (€252k of €631.2k) is **expansion credit on existing customers** — e.g., stark (customer since 2023, €1.14M ARR) credited €84k to a paid_search campaign that started 28 Sept. This is last-touch credit on 2–3-year-old customers; **causality is unsupported**.\n- **paid_search specifically:** leads +73% (520→900) but same-month trial rate fell 8.5%→6.4%. Its only new logos are two small SMB accounts (€38.4k, €26.4k). The October lead surge came from campaigns starting 28 Sept — too recent for its customer output to be visible.\n- **What cannot be concluded:** lead→customer conversion (trial-to-paid \"is not tracked\"), CAC (no spend data exists in this pack), channel ROI, or whether October's paid_search lead surge is good or bad. With 9 new logos in two months, no channel comparison is statistically meaningful.\n\n**Conclusion: the data does not support increasing spend on any channel yet — and least of all paid_search on current evidence.**\n\n---\n\n## 4. PLAN ECONOMICS (contribution = revenue − infra − support)\n\n| Plan | Cust (Oct) | MRR | Infra | Support | Contribution | Margin (Sept → Oct) |\n|---|---|---|---|---|---|---|\n| Enterprise | 14 | €659,500 | €296,800 | €168,000 | €194,700 | 32.2% → **29.5%** |\n| Pro | 9 | €66,200 | €16,100 | €8,600 | €41,500 | 67.5% → **62.7%** |\n| Starter | 13 | €32,000 | €11,400 | €10,300 | €10,300 | 34.9% → **32.2%** |\n| **Total** | | **€757,700** | | | **€246,500** | 35.2% → 32.5% |\n\n- **Enterprise plan:** 87% of MRR and 79% of contribution (€13.9k/customer/month) — but margin eroded 2.7pp: support +5.7% and infra +3.1% on essentially flat revenue (+€500). Support per enterprise customer is now €12.0k/month.\n- **Pro is the strongest plan:** best margin (62.7%), €4.6k contribution/customer, customer count up 8→9, accelerating usage (vandelay +32.7%, planet-express +49.3%, aperture +21.6%), and 3 of 9 customers already **above** their 600k included requests (wonka 1.02M = 170%, aperture 705k, vandelay 690k) — overage bills at renewal, so this is embedded expansion. The friction is visible: rate-limit tickets rose 5 → 12; wonka alone filed 11 tickets in two months.\n- **Starter is the weakest:** 32.2% margin, €792 contribution/customer, and 4 of 13 September SMB customers churned in one month. Its average usage decline (114k → 84k) is **composition, not engagement** — the four heaviest users churned; survivors grew ~8–10%.\n- **Enterprise overage is a near-term revenue event:** stark used 4.29M and wayne 3.41M requests vs 3.0M included. **Wayne renews 30 Nov 2026** — overage metering/billing must be correct within ~5 weeks.\n\n**Product recommendation: Pro** — highest margin, accelerating usage, clearest product-led revenue lever (limits, metering visibility, overage forecasting, upgrade path). Enterprise gets a parallel billing-readiness task, not the quarter's focus. Starter gets no new investment until retention is fixed.\n\n---\n\n## 5. RECOMMENDATIONS\n\n1. **Segment investment (Finance): Yes — reduce *acquisition* investment in SMB, redirect rather than cut.** SMB is 5.4% of ARR but 35% of October tickets (~14× support intensity per €ARR) with 31% monthly logo churn. However, SMB supplied 8 of 9 new logos, so: pause incremental paid SMB acquisition, redirect budget to SMB **retention/onboarding** and to the mid-market/partner motion, and keep enterprise untouched (zero churn, all expansion). Revisit once CAC-by-segment exists.\n2. **Channel spend (Growth): Hold paid_search flat.** Falling trial rate at +73% volume, 76% of its attributed value being expansion credit, and untracked trial-to-paid conversion = no basis to scale. Instrument first (lead→trial→paid by channel, capture spend), then run a controlled increment test. If budget must move now, **test partner capacity** (23–25% trial rate, €83.4k avg new logo) — acknowledging n=2.\n3. **Product: focus the quarter on Pro usage limits & overage experience** — metering transparency, overage forecasting, upgrade path. This converts our biggest ticket category (rate limits) into renewal revenue. Deadline-driven sub-task: overage billing correctness before **wayne's 30 Nov renewal** (and stark's June 2027).\n4. **Retention:** assign senior CS to **soylent** (€234k ARR: −27% usage, downgrade, critical ticket, open high-sev issue). Stand up a usage-decline alert (−20% MoM) — it preceded 5/5 October churns.\n5. **CFO CAC payback:** not calculable from this pack. Required: channel spend by month, cohort revenue by channel over time, and plan-level gross margin (we have: enterprise 29.5%, pro 62.7%, starter 32.2%). Payback = CAC ÷ (new-logo ARR × plan margin ÷ 12). Do not let anyone compute it from `attributed_revenue_eur` — it is annualized, last-touch, and expansion-inflated.\n\n---\n\n## 6. UNCERTAINTIES / DATA ISSUES\n\n1. **Duplicate invoice:** INV-2026-10-0209 (soylent, €19.5k) appears twice — stripe 1 Oct and billing_sync 2 Oct, same transaction_id. Any naive October total overstates revenue by €19.5k. Pipeline reconciliation needed.\n2. **Invoice data ≠ revenue:** subscriptions are billed in advance; gringotts' €120k covers 12 months; October contains €25.3k from since-churned customers. Only plans.csv MRR supports month-over-month comparisons.\n3. **Funnel \"conversions\" are paid-trial starts, not customers** (100 Sept \"conversions\" vs 4 actual September new logos). Trial-to-paid is untracked → channel conversion rates, CAC, and payback **cannot be calculated** from this pack.\n4. **No spend data anywhere** → CAC, payback, ROI, and \"increase spend\" decisions are unsupported without finance data.\n5. **Attribution is last-touch and mixes expansion with new business** (40% of attributed revenue is expansion on 2023–24 vintage customers). Channel causality claims are unsupported.\n6. **Join-key inconsistency:** `usage_account_id` ≠ `customer_id` for wayne-enterprises (`wayne_ent`) and prestige-worldwide (`prestige_ww`); naive joins silently drop them.\n7. **Small samples:** 9 new logos, 5 churns, 2 months, no seasonality baseline. Nothing here is statistically robust; treat channel and segment conclusions as directional.\n8. **Composition traps:** starter's falling average usage reflects churned heavy users, not disengagement; plan \"customers\" counts include mid-October churners; `usage_change_pct` is blank for new accounts and September (no August baseline).\n9. **Acme's 40–50% reduction is an implementation estimate, not a measurement** — the observed −45% is *consistent* with the migration but no counterfactual exists.\n10. **Cannot be computed from this pack:** CAC, LTV, CAC payback, channel-level ROI, per-customer profitability (support cost is allocated at plan level only), overage revenue amounts, and churn *causes* (the open high-severity tickets at nakatomi/soylent are suggestive, not proof).",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "chatcmpl-1788107322-v1cHvxEjz5zkP0mekFzc",
+    "raw_usage": {
+      "completion_tokens": 80470,
+      "prompt_tokens": 9994,
+      "total_tokens": 90464,
+      "completion_tokens_details": {
+        "audio_tokens": 0,
+        "reasoning_tokens": 77163,
+        "image_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 0,
+        "video_tokens": 0,
+        "cache_write_tokens": 0
+      }
+    }
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.4",
+  "scenario_id": "monday-004",
+  "scenario_prompt_sha256": "3a0cbb569ca4f711b8907177af9204cec267d26f35f732829df56b03ed23ef99",
+  "run_id": "monday-004__deepseek-v4-flash__003",
+  "run_number": 3,
+  "model": {
+    "slug": "deepseek-v4-flash",
+    "display_name": "DeepSeek V4 Flash",
+    "provider": "helmcode",
+    "model_id": "deepseek-v4-flash"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 96000,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+    "extra_body": {
+      "caching": false
+    },
+    "config_sha256": "4369225ce32e2470d5687bec6742596f02c1305f486b600a199685f5f2dd3682",
+    "safety_ceiling_tokens": 96000,
+    "ceiling_semantics": "provider_specific"
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "DELIVERED",
+    "tokens": 22422,
+    "evidence": "explicit_reasoning_tokens",
+    "stream_observed": true,
+    "stream_event_count": 6254
+  },
+  "timestamp_utc": "2026-08-29T10:40:09Z",
+  "usage": {
+    "input_tokens": 10381,
+    "output_tokens": 24579,
+    "reasoning_tokens": 22422
+  },
+  "performance": {
+    "ttft_ms": 2437.8,
+    "ttfa_ms": 109136.6,
+    "total_latency_ms": 117791.0,
+    "tokens_per_second": 213.1
+  },
+  "economics": {
+    "input_cost_usd": 0.001817,
+    "output_cost_usd": 0.008603,
+    "total_cost_usd": 0.010419
+  },
+  "response": "## 1. EXECUTIVE SUMMARY\n\n- **October headline revenue looks higher, but the underlying business did not grow.** October invoiced revenue was boosted by one annual invoice (Gringotts, €120k), professional services, and the fact that October invoices were issued before several customers churned.\n- **Underlying MRR declined.** Plans MRR was €746.1k in September and €757.7k in October, but October includes €25.3k MRR from customers who churned during the month. Exiting October, recurring MRR is roughly **€732.4k, down ~1.8%**.\n- **SMB is the weakest segment.** 4 of 5 October churns were SMB; SMB ARR churn was ~20.5% in one month. New SMB logos barely offset the churn.\n- **Paid search looks strong only because of expansion bookings, not new customer acquisition.** Its funnel conversion rate actually declined.\n- **The Pro plan is the most profitable by margin but is showing rate-limit stress.** Enterprise is the largest profit pool, but its contribution margin is eroding.\n\n---\n\n## 2. REVENUE & CUSTOMER HEALTH\n\n### Invoiced revenue vs recurring revenue\n\n| Metric | September | October |\n|---|---:|---:|\n| Subscription invoices | €746.1k | €867.7k |\n| Professional services | €51.0k | €5.7k |\n| **Total invoiced revenue** | **€797.1k** | **€873.4k** |\n\nOctober subscription revenue includes Gringotts’ annual invoice of €120k, which is really 12 months of €10k MRR. That alone inflates October cash revenue by ~€110k versus the monthly recurring view.\n\nPlans MRR:\n\n- September: €746.1k\n- October: €757.7k\n\nBut October MRR still includes customers who churned during October:\n\n- Nakatomi: €15.0k\n- Slate Rock: €2.0k\n- Mega-lo-Mart: €2.7k\n- Dinoco: €2.3k\n- Buy n Large: €3.3k\n\n**Total churned MRR: €25.3k**\n\nSo going-forward MRR is approximately:\n\n**€757.7k − €25.3k = €732.4k**\n\nThat is a **€13.7k / 1.8% decline** from September.\n\n### Churn by segment\n\n| Segment | Churned customers | Churned ARR | Approx. ARR churn rate |\n|---|---:|---:|---:|\n| Enterprise | 0 | €0 | 0% |\n| Mid-market | 1 | €180k | ~10.5% |\n| SMB | 4 | €123.6k | ~20.5% |\n\nSMB churn is the clearest problem. New SMB logos in October added €133.2k ARR, but SMB churn was €123.6k, so SMB is treading water at best.\n\n### Customer health signals\n\n- **Acme’s request volume fell 45%**, but the operational note says this was an expected move from interactive API calls to scheduled batch runs. Tokens only fell ~12%, so this is not a demand collapse.\n- **Soylent is at risk**: usage fell 27%, it downgraded from €22k to €19.5k MRR, and it had a critical API error ticket plus multiple high-severity tickets in October.\n- **Nakatomi churned** after high-severity API error and performance tickets in September and October. Reliability issues likely contributed, though we cannot prove causation from this pack.\n\n---\n\n## 3. ACQUISITION\n\n### Channel summary\n\n| Channel | Funnel conversion Sep | Funnel conversion Oct | Attributed revenue | New-logo ARR | Expansion ARR |\n|---|---:|---:|---:|---:|---:|\n| Paid search | 8.5% | 6.4% | €274.8k | €64.8k | €210.0k |\n| Content | 11.9% | 10.3% | €109.2k | €91.2k | €18.0k |\n| Partner | 25.0% | 22.7% | €166.8k | €166.8k | €0 |\n| Outbound | 6.3% | 5.6% | €80.4k | €56.4k | €24.0k |\n\n### What can be concluded\n\n- **Paid search is not proven as a new-customer channel.** Its October attributed revenue is dominated by expansions of existing customers — Stark Industries, Umbrella Health, Globex, and Hooli — not new logos. New-logo ARR from paid search was only €64.8k, and funnel conversion fell from 8.5% to 6.4% as volume increased.\n- **Content is the most consistent new-logo channel.** It produced new logos in both September and October, with €91.2k of new-logo ARR and stable conversion around 10–12%.\n- **Partner has the best conversion rate and highest-value new logos**, but volume is very small: only 2 new logos in September and none in October.\n- **Outbound has the lowest conversion rate** and modest attributed revenue.\n\n### What cannot be concluded\n\n**CAC payback cannot be calculated from this data.** We have no marketing spend by channel. Attributed revenue is not acquisition cost, and we do not have cohort-level contribution margin by channel. Any CAC payback number would require spend data that is not in this pack.\n\n---\n\n## 4. PLAN ECONOMICS\n\n### October contribution after direct costs\n\n| Plan | Revenue | Infra cost | Support cost | Contribution | Margin | Customers | Contribution per customer |\n|---|---:|---:|---:|---:|---:|---:|---:|\n| Enterprise | €659.5k | €296.8k | €168.0k | €194.7k | 29.5% | 14 | €13.9k |\n| Pro | €66.2k | €16.1k | €8.6k | €41.5k | 62.7% | 9 | €4.6k |\n| Starter | €32.0k | €11.4k | €10.3k | €10.3k | 32.2% | 13 | €0.8k |\n\nSeptember contribution was:\n\n- Enterprise: €212.0k / 32.2%\n- Pro: €42.5k / 67.5%\n- Starter: €8.4k / 34.9%\n\nTotal contribution fell from **€262.9k in September to €246.5k in October**, driven almost entirely by Enterprise: revenue was flat, but infrastructure and support costs rose by ~€17.8k.\n\n### Usage vs included requests\n\n- **Enterprise**: average usage is below the 3M included requests, but Stark (4.29M) and Wayne (3.41M) exceed it.\n- **Pro**: average usage is below 600k, but Aperture (705k), Vandelay (690k), and Wonka (1.02M) exceed it.\n- **Starter**: no customer exceeds the 200k included level.\n\n### Support stress by plan\n\n- Pro support tickets rose from **19 in September to 28 in October**.\n- Pro rate-limit tickets rose from **5 to 13**.\n- This is the clearest product stress signal in the data.\n\n---\n\n## 5. RECOMMENDATIONS\n\n### 1. Reduce incremental investment in SMB\n\nThe data supports reducing new SMB acquisition spend until retention improves. SMB had ~20.5% ARR churn in one month, and new SMB logos barely offset churn. Existing SMB customers should still be supported, but adding more SMB spend is not supported by the data.\n\n### 2. Increase spend on content, not paid search\n\nContent is the only channel with consistent new-logo output and stable conversion. Paid search looks strong only because of expansion bookings, and its new-logo conversion rate declined. Before scaling any channel, the Growth team should get channel spend data so CAC payback can actually be calculated.\n\n### 3. Give the Pro plan the next engineering focus\n\nPro is the highest-margin plan and is growing, but it is showing rate-limit and overage stress. Three of nine Pro customers exceed included request volume, and rate-limit tickets more than doubled. Fixing Pro usage limits and packaging protects the most profitable plan.\n\nEnterprise should be watched closely because its contribution margin is eroding, but the more urgent product signal is in Pro.\n\n---\n\n## 6. UNCERTAINTIES / DATA ISSUES\n\n- **Duplicate Soylent invoice**: `INV-2026-10-0209` appears twice — once from Stripe and once from billing_sync. If not deduplicated, October revenue is overstated by €19.5k.\n- **Gringotts annual invoice**: the €120k invoice is cash revenue, not MRR. The plans table correctly treats it as €10k/month.\n- **October invoices include churned customers**: invoices were issued October 1–3, before churn dates later in October. This overstates October recurring revenue.\n- **Acquisition attributed revenue includes expansions**: expansion bookings take effect in later billing cycles, so they are not yet in revenue.\n- **Funnel data only tracks leads to paid trial**, not trial-to-paid. We cannot calculate true channel ROI from funnel conversion alone.\n- **No marketing spend data**: CAC payback by channel cannot be calculated reliably.\n- **Support ticket counts are not cost-weighted**: support_cost_eur is an allocation, not a per-ticket cost.\n- **Usage averages hide overage distribution**: some individual customers exceed included request volumes even when plan averages look safe.\n- **Acme’s request decline is expected** due to the batch migration; it should not be read as churn risk.",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "gen-1787999890-dW8Op2iB0vQPkVv5tKln",
+    "raw_usage": {
+      "completion_tokens": 24579,
+      "prompt_tokens": 10381,
+      "total_tokens": 34960,
+      "completion_tokens_details": {
+        "audio_tokens": 0,
+        "reasoning_tokens": 22422,
+        "image_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 0,
+        "video_tokens": 0,
+        "cache_write_tokens": 0
+      }
+    }
+  }
+}

@@ -1,0 +1,61 @@
+id: monday-004
+title: "Numbers Don't Lie"
+benchmark_version: "0.4"
+scenario_version: "0.1"
+# Frozen for publication after two calibration batteries. The candidate-visible
+# content is byte-identical to what the first battery answered - the version
+# below stays 0.1 for that reason, and the prompt still hashes to
+# 3a0cbb569ca4f711b8907177af9204cec267d26f35f732829df56b03ed23ef99. What
+# iterated was the rubric, which carries its own version and is now 0.3.
+status: official
+
+# The review happens on the first Monday after October closes, so both months in
+# the pack are complete. A review dated inside October would make its own data
+# incoherent - a five-day month compared against a thirty-day one - and a model
+# that noticed would be right for a reason the rubric does not score.
+current_time: "2026-11-02T09:12:00+02:00"
+role: "Product & Growth Lead"
+company: "Northstar"
+
+# Tabular first, and no Slack, email or calendar anywhere. #001, #002 and #003
+# all hide their answers in prose; this one hides them in arithmetic. context.md
+# leads because it defines what the columns mean, and nothing else.
+source_order:
+  - context.md
+  - customers.csv
+  - revenue.csv
+  - usage.csv
+  - plans.csv
+  - acquisition.csv
+  - funnel.csv
+  - support.csv
+
+# Generation ceiling for this scenario, in tokens.
+#
+# A SAFETY CEILING, not a reasoning budget. The token-budget audit
+# (analysis/token-budget-audit.md) established that the same configured value is
+# applied as reasoning+answer by helmcode/deepseek-v4-flash and nan/mimo-v2.5,
+# is not applied at all by nan/qwen3.8-flash, and was never tested by the other
+# four. It therefore cannot equalise compute across models and MondayBench does
+# not try to make it.
+#
+# 96,000 is verified accepted by all seven endpoints (tools/probe_output_ceiling.py,
+# every one returning HTTP 200 and finish_reason=stop). It is 1.63x the largest
+# valid generation observed anywhere in the repository - qwen3.8-flash's 58,956
+# completion tokens on this scenario - so it should not bind a normal answer.
+# 131,072 was also accepted by all seven and is available if 96,000 ever proves
+# to bind.
+#
+# monday-001..003 declare no ceiling and keep the 32,000 they were generated
+# under, so their runs go on qualifying against models.yaml unchanged.
+generation:
+  safety_ceiling_tokens: 96000
+  ceiling_semantics: provider_specific
+
+prompt_file: prompt.md
+ground_truth_file: ground-truth.yaml
+# rubric.yaml (0.1) and rubric-0.2.yaml are kept as the calibration record;
+# rubric-0.3.yaml is the frozen one. monday-001 is frozen against a
+# version-numbered rubric for the same reason.
+rubric_file: rubric-0.3.yaml
+official_runs: 3

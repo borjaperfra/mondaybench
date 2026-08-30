@@ -1,0 +1,46 @@
+# MondayBench #004 "Numbers Don't Lie" - CALIBRATION evaluator. Not official.
+#
+# Bound to scenario 0.1 / rubric 0.1. The scenario is `status: calibration`, so
+# `leaderboard` refuses to publish anything scored under this evaluator and
+# `--calibration` writes drafts under analysis/leaderboards/ instead. When the
+# scenario freezes, this file is archived beside the version it was written for
+# and an official evaluator takes its place - the same way the three monday-003
+# calibration evaluators were handled.
+#
+# `provider: anthropic` / `model_id: claude-opus-5` record WHICH MODEL reasoned
+# about the responses, for provenance. They are not a routing instruction: this
+# project never calls the Anthropic API and never spends Anthropic API credits.
+# Labels are produced in a recorded Claude Code session and replayed with
+# `evaluate --verdicts`.
+#
+# One judge call per atomic criterion returning PASS/PARTIAL/FAIL with evidence,
+# a separate penalty judge, and deterministic scoring from those labels. The
+# judge never sees a total.
+id: evaluator-opus5-v0.4-calibration
+scenario: monday-004
+scenario_version: "0.1"
+rubric_version: "0.1"
+rubric_file: rubric.yaml
+status: calibration
+
+judge:
+  provider: anthropic
+  api_style: anthropic
+  model_id: claude-opus-5
+  prompt_file: judge-prompt.md
+  penalty_prompt_file: penalty-judge-prompt.md
+
+generation:
+  temperature: 0
+  max_output_tokens: 0
+
+behavior:
+  require_evidence: true
+
+# monday-004's answer key is one structured document whose sections map onto the
+# rubric's dimensions rather than onto individual criteria, and several criteria
+# are graded against figures that live in more than one section - the duplicate
+# matters to revenue and to data quality. Slicing it by dotted path would hide
+# exactly the cross-references the scenario is testing, so the judge is given
+# the whole key.
+ground_truth_map: {}

@@ -1,0 +1,223 @@
+rubric_version: "0.1"
+scenario_id: monday-004
+total_points: 100
+
+# monday-004 scores an analysis, not a plan. Two things follow from that and
+# shape every criterion below.
+#
+# 1. Numbers are graded with a stated tolerance, never against a string.
+#    Percentages pass within +/- 0.5 percentage points of the canonical value
+#    unless the difference changes the decision; currency within 1%, or exactly
+#    where the figure is a count or a single invoice. Arithmetic that reaches
+#    the same place by another route passes. A candidate that reasons correctly
+#    and rounds differently has not made a mistake.
+#
+# 2. No criterion is worth more than 6 points. The scenario has one long
+#    arithmetic chain (headline -> duplicate -> recurring) and one long
+#    judgement chain (attribution -> new logo -> spend), and a single slip in
+#    either must cost points without deciding the run.
+#
+# The answer key is ground-truth.yaml. Every figure in it is recomputed from the
+# candidate-visible CSVs by tests/monday_004_derivations.py, so the judge is
+# grading against the data rather than against a remembered number.
+
+dimensions:
+
+  revenue_reasoning:
+    max_points: 20
+    criteria:
+      - id: duplicate_detected
+        points: 4
+        partial_points: 2
+        pass: "Identifies that one October invoice is recorded twice under the same transaction_id (INV-2026-10-0209, Soylent, EUR 19,500, loaded from two sources) and excludes one copy before quoting an October total."
+        partial: "Flags a possible duplicate or a suspicious pair of rows without identifying the transaction, or identifies it but still quotes the inflated total as the October figure."
+        fail: "The duplicate is not mentioned, or its existence is denied."
+      - id: annual_prepayment_normalized
+        points: 6
+        partial_points: 3
+        pass: "Identifies the EUR 120,000 Gringotts invoice covering twelve months and converts it to its monthly equivalent of EUR 10,000 before comparing months. Any equivalent treatment - dividing by twelve, excluding it and noting the exclusion, or restating October on a recurring basis - counts."
+        partial: "Notices that October contains a large or annual invoice, or that the two months are not comparable, without normalising it or without stating the monthly equivalent."
+        fail: "Treats the EUR 120,000 as October revenue with no adjustment, or treats it as Gringotts' monthly value."
+      - id: headline_vs_recurring_growth
+        points: 6
+        partial_points: 3
+        pass: "States both figures: the headline of about +12% on the raw invoice sum, and a normalised figure that refutes it. Two normalisations are correct and they do not land in the same place - subscriptions only gives roughly +1.6%, and subscriptions plus one-off services gives roughly -4.2%, because September carried EUR 51,000 of professional services against October's EUR 5,700. Either passes (tolerance +/- 1.5 points, and 'roughly flat' or 'low single digits' passes for the first) provided the treatment is stated. The gap is attributed to the annual invoice, and to the duplicate where the candidate found it."
+        partial: "Establishes that the headline overstates underlying growth but gives only one of the two figures, or gives a normalised figure outside both tolerances while the reasoning is right, or gives a figure without saying which invoices are in it."
+        fail: "Reports the headline growth as the real growth rate, or offers no month-on-month comparison."
+      - id: revenue_conclusion
+        points: 4
+        partial_points: 2
+        pass: "The section's conclusion is that underlying recurring revenue is roughly flat and that the growth in the reported number is non-recurring, and the conclusion is carried into what leadership is told rather than left in the workings."
+        partial: "Reaches the right conclusion but hedges it against the headline, or states it without any figure behind it."
+        fail: "Concludes that revenue grew materially, or leaves the reader with the headline as the answer."
+
+  customer_health:
+    max_points: 15
+    criteria:
+      - id: segment_churn_math
+        points: 5
+        partial_points: 2.5
+        pass: "Computes logo churn by segment and gets it right within tolerance: SMB 4 of 18 (22.2%), Mid-market 1 of 10 (10.0%), Enterprise 0 of 8. Doing the same by plan - Starter 4 of 13, Pro 1 of 9, Enterprise plan 0 of 14 - is equally correct provided it is labelled as by plan."
+        partial: "Gets the ranking right but one rate or denominator wrong, or quotes churn counts without rates, or silently mixes the plan and segment framings."
+        fail: "No churn calculation, or a rate that misstates which segment is worst."
+      - id: sample_size_arr_context
+        points: 4
+        partial_points: 2
+        pass: "Puts the SMB rate in context with at least one of: the size of the denominator (18 customers, 4 events), the ARR lost (EUR 123,600, about 1.4% of the book), or the comparison that the single Mid-market churn cost EUR 180,000 - more than all four SMB churns together."
+        partial: "Notes that SMB is small or that the numbers are few, without quantifying it."
+        fail: "Treats 22.2% as directly comparable with the other segments' rates with no reference to size or value."
+      - id: acme_false_positive_avoided
+        points: 4
+        partial_points: 2
+        pass: "Identifies Acme's roughly -45% request decline, connects it to the stated batch migration, and shows the account is otherwise healthy using at least one further figure - tokens down only about 12%, active users about flat, MRR unchanged at EUR 78,000, or no rise in tickets."
+        partial: "Cites the migration and declines to call it churn risk, but supports it with no second signal; or flags the decline as a risk while acknowledging the migration."
+        fail: "Presents Acme as a churn or revenue risk on the request decline, or does not mention the decline at all."
+      - id: no_churn_overreach
+        points: 2
+        partial_points: 1
+        pass: "Does not claim a cause for the churn that has happened. Churn reasons are absent from the pack and the response says so, or simply refrains from asserting one."
+        partial: "Offers a speculative cause but labels it as a hypothesis to be tested."
+        fail: "States why customers churned as though the data showed it."
+
+  acquisition_reasoning:
+    max_points: 20
+    criteria:
+      - id: raw_attribution_not_equivalent_new_business
+        points: 5
+        partial_points: 2.5
+        pass: "States that Paid Search's leading attributed revenue (EUR 274,800) is not new business, and gives the split or its size: EUR 210,000 of it, about 76%, is expansion on existing accounts."
+        partial: "Observes that attribution includes expansion or existing customers without quantifying it, or quantifies it for the whole table without singling out Paid Search."
+        fail: "Ranks channels on attributed revenue with no adjustment."
+      - id: existing_customer_expansion_removed
+        points: 5
+        partial_points: 2.5
+        pass: "Recomputes the ranking on new-logo revenue and gets the reversal: Partner EUR 166,800 first, Content EUR 91,200 second, Paid Search EUR 64,800 third (tolerance 1%). Using new-logo counts, or first_customer_date preceding campaign_start, to reach the same ordering also passes."
+        partial: "Separates new logos from expansion but gets the resulting ranking or two of the three figures wrong, or does it for Paid Search alone."
+        fail: "No new-logo view of the channels."
+      - id: conversion_rate_vs_absolute_volume
+        points: 4
+        partial_points: 2
+        pass: "Reports both movements: conversion rate fell from 10.0% to 8.0% while absolute conversions rose from 100 to 120 (+20%) on 50% more leads. Channel-level equivalents pass if both directions are stated."
+        partial: "Reports one of the two, or reports both without noticing they point in opposite directions."
+        fail: "Declares October better or worse on one of the two figures alone."
+      - id: no_unsupported_channel_scale_decision
+        points: 3
+        partial_points: 1.5
+        pass: "Declines to recommend doubling or materially increasing Paid Search spend on this evidence, and says what would be needed - channel spend, cost per acquisition, or lead quality."
+        partial: "Hedges the recommendation, or recommends a limited test without naming what is missing."
+        fail: "Recommends increasing Paid Search spend on attributed revenue, or recommends cutting it with equally thin evidence."
+      - id: cac_payback_unavailable
+        points: 3
+        partial_points: 1.5
+        pass: "States that CAC and CAC payback cannot be calculated from the pack, and identifies what is absent: acquisition or marketing spend by channel. Infrastructure and support cost are correctly not treated as acquisition cost."
+        partial: "Says the metric is uncertain or hard to compute without naming the missing input, or computes a proxy while flagging it as not CAC payback."
+        fail: "Produces a CAC or payback figure, or assumes a spend number."
+
+  plan_economics:
+    max_points: 20
+    criteria:
+      - id: contribution_calculated
+        points: 6
+        partial_points: 3
+        pass: "Computes contribution per plan as revenue less infrastructure and support cost for at least October, within 1%: enterprise EUR 194,700, pro EUR 41,500, starter EUR 10,300."
+        partial: "Computes contribution for some plans, or subtracts only one of the two cost lines, or uses September without saying so."
+        fail: "No cost-adjusted figure; plans compared on revenue alone."
+      - id: margin_calculated_or_correctly_compared
+        points: 4
+        partial_points: 2
+        pass: "Expresses the result as a margin or an equivalent ranking and gets it right within 1 percentage point: enterprise 29.5%, pro 62.7%, starter 32.2%. A correct ordering with contribution per euro of revenue, stated numerically, also passes."
+        partial: "Gives margins for some plans, or an ordering with one figure materially wrong."
+        fail: "No margin or equivalent, or a margin ranking that puts Enterprise on top."
+      - id: enterprise_revenue_not_margin
+        points: 4
+        partial_points: 2
+        pass: "States explicitly that Enterprise leads on revenue and revenue per customer (about EUR 47,100) while being the weakest of the three on contribution margin, and does not let the revenue figure stand in for its economics."
+        partial: "Shows both figures but does not draw the contrast, or draws it without the ARPU or the margin."
+        fail: "Concludes Enterprise is the strongest plan on economics."
+      - id: product_focus_supported
+        points: 6
+        partial_points: 3
+        pass: "Recommends Pro for product attention and supports it with at least two signals beyond margin - usage growth of about 15% against a flat Enterprise book, three of nine customers already over the 600,000 included requests, the highest tickets per customer (3.11) and rising, or the new logo added in October. Recommending another plan passes only if it is argued on cost-adjusted economics and at least two independent signals, and does not rest on absolute revenue."
+        partial: "Recommends Pro on margin alone, or names Pro alongside another plan without choosing, or recommends a plan on one signal."
+        fail: "Recommends the plan with the largest revenue because it is the largest, or makes no recommendation."
+
+  cross_table_data_quality:
+    max_points: 15
+    criteria:
+      - id: customer_id_alias_resolved
+        points: 4
+        partial_points: 2
+        pass: "Uses usage_account_id to join billing to usage, so Wayne Enterprises' usage (3.10M requests in September, 3.41M in October) is present and attributed to it. Naming the alias, or reporting Wayne's usage correctly anywhere, both count."
+        partial: "Notices that some identifiers differ between files without resolving them, or resolves Wayne but reports another aliased account as missing."
+        fail: "Reports Wayne Enterprises as having no usage, or excludes it from a usage analysis without noticing."
+      - id: support_normalized
+        points: 4
+        partial_points: 2
+        pass: "Compares support load on a normalised basis rather than raw counts - per customer, per active user or per million requests - and reaches a conclusion in which Enterprise is not the worst despite raising the most tickets (35 of 74 in October). Pro at 3.11 tickets per customer against Enterprise's 2.50 is the canonical form."
+        partial: "Notes that Enterprise's raw count reflects its size without computing a rate, or computes a rate for one plan only."
+        fail: "Concludes Enterprise has the worst support experience from the raw ticket count."
+      - id: cross_table_customer_signal
+        points: 4
+        partial_points: 2
+        pass: "Builds at least one account-level finding from three or more tables - for example Soylent's usage, tickets and revenue read together, or an account's plan, usage and included volume - and states the figures it rests on."
+        partial: "Combines two tables, or asserts a cross-table pattern without the figures."
+        fail: "Every finding comes from a single table."
+      - id: causal_boundary
+        points: 3
+        partial_points: 1.5
+        pass: "Treats Soylent's three simultaneous movements - requests down 27%, tickets from 3 to 8, MRR down EUR 2,500 - as a pattern to investigate and states that the data does not establish what caused what."
+        partial: "Reports the pattern and implies a mechanism without asserting it, or asserts causation but marks it as a hypothesis."
+        fail: "States that one of the three caused another, or reports only one of them."
+
+  decision_quality:
+    max_points: 10
+    criteria:
+      - id: segment_recommendation
+        points: 3
+        partial_points: 1.5
+        pass: "Does not recommend cutting or exiting SMB. Recommends investigating it, with what is needed named: acquisition cost, lifetime value, retention drivers, or segment-level economics the pack does not contain."
+        partial: "Declines to cut SMB but gives no next step, or recommends a reduction hedged with conditions."
+        fail: "Recommends cutting, exiting or defunding SMB."
+      - id: acquisition_recommendation
+        points: 3
+        partial_points: 1.5
+        pass: "The channel recommendation follows the corrected view: Partner (or Partner and Content) is identified as the stronger new-logo performer, and any spend recommendation is conditioned on the missing cost data."
+        partial: "Corrects the attribution but leaves no recommendation, or names the right channel without conditioning the spend."
+        fail: "Recommends scaling on raw attributed revenue."
+      - id: product_recommendation
+        points: 2
+        partial_points: 1
+        pass: "A single, actionable plan recommendation is stated in the recommendations section, consistent with the plan economics section."
+        partial: "A recommendation that is stated but vague, or inconsistent with the analysis above it."
+        fail: "No plan recommendation, or one that contradicts its own analysis."
+      - id: uncertainty_discipline
+        points: 2
+        partial_points: 1
+        pass: "The uncertainties section names real gaps in this pack - missing channel spend, no segment-level economics, no churn reasons, trial-to-paid conversion not tracked - and invents no figures anywhere in the response."
+        partial: "Names one real gap, or names gaps that are not the material ones."
+        fail: "No uncertainties, or an uncertainties section that only restates findings."
+
+global_penalties:
+  max_penalty: 25
+  types:
+    # Asserting a figure or fact the pack does not contain: an invented spend
+    # number, an invented churn reason, or usage reported as zero for an account
+    # whose usage is in the file under its alias.
+    - {id: material_hallucination, points_each: 5}
+    # Recommending an action the data rules out: cutting SMB on the churn
+    # percentage alone, doubling Paid Search on raw attribution, or dropping a
+    # customer or plan on the strength of a data artifact.
+    - {id: prohibited_business_action, points_each: 7}
+    # A numeric or data mistake the analysis then rests on: double-counting the
+    # known duplicate in a headline figure, treating the EUR 120,000 annual
+    # invoice as monthly revenue, or joining usage wrongly and reporting the
+    # consequence as a finding. Not for arithmetic slips that change nothing -
+    # the criteria price those.
+    - {id: major_data_error, points_each: 7}
+    # A material causal claim the pack does not support, most often about
+    # Soylent or about why customers churned.
+    - {id: unsupported_causality, points_each: 5}
+
+scoring:
+  result_values: {PASS: 1.0, PARTIAL: 0.5, FAIL: 0.0}
+  final_score: "max(0, base_score - penalties)"

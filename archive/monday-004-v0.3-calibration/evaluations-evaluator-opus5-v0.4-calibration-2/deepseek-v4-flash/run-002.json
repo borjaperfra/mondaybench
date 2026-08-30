@@ -1,0 +1,279 @@
+{
+  "schema_version": "1",
+  "evaluator_id": "evaluator-opus5-v0.4-calibration-2",
+  "benchmark_version": "0.4",
+  "rubric_version": "0.2",
+  "scenario_id": "monday-004",
+  "run_id": "monday-004__deepseek-v4-flash__002",
+  "model_slug": "deepseek-v4-flash",
+  "scenario_prompt_sha256": "3a0cbb569ca4f711b8907177af9204cec267d26f35f732829df56b03ed23ef99",
+  "timestamp_utc": "2026-08-29T10:14:16Z",
+  "judge": {
+    "provider": "anthropic",
+    "model_id": "claude-opus-5",
+    "temperature": 0.0,
+    "effort": null,
+    "unsupported_parameters": [],
+    "prompt_fingerprint": "26067608db5f7a2d",
+    "route": "recorded",
+    "verdict_source": "shadow-v0.2.jsonl"
+  },
+  "dimensions": {
+    "revenue_reasoning": {
+      "score": 20.0,
+      "max_score": 20.0
+    },
+    "customer_health": {
+      "score": 12.5,
+      "max_score": 15.0
+    },
+    "acquisition_reasoning": {
+      "score": 15.5,
+      "max_score": 20.0
+    },
+    "plan_economics": {
+      "score": 12.0,
+      "max_score": 20.0
+    },
+    "cross_table_data_quality": {
+      "score": 5.5,
+      "max_score": 15.0
+    },
+    "decision_quality": {
+      "score": 8.5,
+      "max_score": 10.0
+    }
+  },
+  "criteria": {
+    "duplicate_detected": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'Duplicate Soylent invoice: INV-2026-10-0209 appears in both Stripe and billing_sync. I counted it once; if double-counted, October revenue is EUR 892,900.'",
+      "reason": "Identified by transaction id and both sources, excluded from the working total, and the inflated alternative stated so a reader can check."
+    },
+    "annual_prepayment_normalized": {
+      "result": "PASS",
+      "points_awarded": 6.0,
+      "points_possible": 6.0,
+      "evidence": "'Gringotts annual invoice added EUR 120k in October, but its monthly MRR equivalent is only EUR 10k. This inflates cash revenue, not recurring revenue.'",
+      "reason": "Invoice identified, monthly equivalent stated, and the distinction between cash and recurring drawn explicitly."
+    },
+    "headline_vs_recurring_growth": {
+      "result": "PASS",
+      "points_awarded": 6.0,
+      "points_possible": 6.0,
+      "evidence": "'Total invoiced revenue EUR 797,100 -> EUR 873,400 +9.6% ... Recurring MRR EUR 746,100 -> EUR 757,700 +1.6% ... Active MRR EUR 746,100 -> EUR 732,400 -1.8%'",
+      "reason": "Three bases, each labelled, with the raw EUR 892,900 also stated in the footnote. The gap is attributed to the annual invoice and professional services."
+    },
+    "revenue_conclusion": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'Headline revenue looks up ~9.6% ... but this is misleading: the increase is driven by one annual upfront invoice'",
+      "reason": "The conclusion opens the executive summary and carries its figures."
+    },
+    "segment_retention_quantified": {
+      "result": "PARTIAL",
+      "points_awarded": 2.5,
+      "points_possible": 5.0,
+      "evidence": "'SMB churn rate is high: 4 of 4 churned customers were SMB Starter, representing ~20.5% of SMB ARR' - against its own churn list, which places Nakatomi as a fifth, Mid-market, churn",
+      "reason": "The ARR-weighted rate is correct (123,600 / 602,400 = 20.5%) and is an accepted basis, but the sentence asserts all churn was SMB and is contradicted by the response's own table two paragraphs earlier. Ranking survives only because the table corrects it."
+    },
+    "sample_size_arr_context": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'representing ~20.5% of SMB ARR. However, SMB also added 5 new logos, so active SMB MRR was roughly flat.' with churned SMB MRR given as EUR 10.3k against Nakatomi's EUR 15k alone",
+      "reason": "Sizes the SMB churn in revenue, nets it against new business, and puts one Mid-market logo beside all four SMB ones."
+    },
+    "acme_false_positive_avoided": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'Acme's request volume dropped 45% but tokens only fell 12% - consistent with the planned move to scheduled batch runs. This is not a churn signal.'",
+      "reason": "The migration plus the token figure, which is the signal that shows the workload did not leave."
+    },
+    "no_churn_overreach": {
+      "result": "PASS",
+      "points_awarded": 2.0,
+      "points_possible": 2.0,
+      "evidence": "churn is reported with amounts, dates and segments and no reason is attached to any of it",
+      "reason": "Asserts no cause the pack does not record."
+    },
+    "raw_attribution_not_equivalent_new_business": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'Paid search generated the most attributed revenue in October, but EUR 174k of that came from expansions of existing customers, not new logos. Its trial conversion rate is the lowest.'",
+      "reason": "States the inflation and quantifies it against the October total of EUR 238.8k."
+    },
+    "existing_customer_expansion_removed": {
+      "result": "PARTIAL",
+      "points_awarded": 2.5,
+      "points_possible": 5.0,
+      "evidence": "the channel table gives combined attributed revenue per month with new and expansion split only in a Notes column - 'Content EUR 63.6k, Oct: 2 new + 1 expansion' - and no two-month new-logo ranking is produced",
+      "reason": "The split is done for Paid Search and Partner but never carried through to a channel ranking on new-logo revenue, so Content's EUR 91.2k never appears and the reversal is only half shown."
+    },
+    "conversion_rate_vs_absolute_volume": {
+      "result": "PARTIAL",
+      "points_awarded": 2.0,
+      "points_possible": 4.0,
+      "evidence": "the funnel table carries both months' leads and trial conversions, and the prose says only 'Its trial conversion rate is the lowest'",
+      "reason": "Both figures are on the page but they are never read against each other: the rise in absolute conversions against the falling rate is not stated anywhere."
+    },
+    "no_unsupported_channel_scale_decision": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "'Not supported: Increasing paid search spend based on October revenue, because most of that revenue is from expansions, not new logos, and its conversion rate is lowest.' with 'Cannot conclude: CAC payback - no cost data.'",
+      "reason": "Declines the scale-up on the right grounds and names the missing input."
+    },
+    "cac_payback_unavailable": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "'CAC payback cannot be calculated because no marketing spend or cost-per-lead data is provided.'",
+      "reason": "States it and names what is absent."
+    },
+    "contribution_calculated": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "the six-row plan table with contribution 212,000 / 194,700 / 42,500 / 41,500 / 8,400 / 10,300",
+      "reason": "All six exact."
+    },
+    "margin_calculated_or_correctly_compared": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "'32.2%, 29.5%, 67.5%, 62.7%, 34.9%, 32.2%'",
+      "reason": "All six margins correct and correctly ordered."
+    },
+    "absolute_vs_scalable_economics": {
+      "result": "PARTIAL",
+      "points_awarded": 2.5,
+      "points_possible": 5.0,
+      "evidence": "'Enterprise plan is 87% of revenue but has the lowest margin and is deteriorating' followed by 'Enterprise plan deserves the most attention. It generates the majority of revenue and contribution.'",
+      "reason": "The contrast is drawn and then the product-priority decision is argued from the absolute figure, which is the failure mode this criterion exists to separate. The margin erosion is offered as a second reason, so PARTIAL rather than FAIL."
+    },
+    "plan_trajectory_evidence": {
+      "result": "FAIL",
+      "points_awarded": 0.0,
+      "points_possible": 3.0,
+      "evidence": "'All plans are below included request volumes, so no overage revenue is being generated.'",
+      "reason": "The claim is true of the three plan averages and false of the customers: two Enterprise accounts and three Pro accounts are above their included volume. It is the aggregate error the scenario is built around, it is stated as fact, and it removes the upside half of the Pro case from the response's own reasoning."
+    },
+    "product_focus_supported": {
+      "result": "PARTIAL",
+      "points_awarded": 2.5,
+      "points_possible": 5.0,
+      "evidence": "'Enterprise plan deserves the most attention. It generates the majority of revenue and contribution. Its margin fell from 32.2% to 29.5% ...' and, earlier, 'All plans are below included request volumes, so no overage revenue is being generated.'",
+      "reason": "A plan other than Pro is allowed only when the case does not rest on absolute revenue; here the first reason given is that Enterprise is the majority of revenue. The margin erosion is a genuine second signal, which keeps this off FAIL. The overage claim is also wrong - two Enterprise and three Pro customers are above their included volume - because it reads the plan averages instead of the accounts, which is precisely the aggregate the scenario is built to catch."
+    },
+    "customer_id_alias_resolved": {
+      "result": "FAIL",
+      "points_awarded": 0.0,
+      "points_possible": 4.0,
+      "evidence": "Wayne Enterprises and the identifier mismatch appear nowhere; account-level usage is discussed only for Acme and Soylent",
+      "reason": "No join between billing and usage was attempted at account level, so the alias is neither resolved nor noticed."
+    },
+    "support_normalized": {
+      "result": "FAIL",
+      "points_awarded": 0.0,
+      "points_possible": 4.0,
+      "evidence": "support appears only as Soylent's '8 support tickets in October, including critical/high severity API errors'",
+      "reason": "No support comparison across plans or segments on any basis, normalised or raw."
+    },
+    "cross_table_customer_signal": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'Soylent is a risk: usage fell 27%, revenue was downgraded, and it generated 8 support tickets in October, including critical/high severity API errors.'",
+      "reason": "One account built from usage, revenue and support with the figures stated."
+    },
+    "causal_boundary": {
+      "result": "PARTIAL",
+      "points_awarded": 1.5,
+      "points_possible": 3.0,
+      "evidence": "the Soylent trio is reported together and escalated as a risk, with no statement anywhere that the data does not establish what caused what",
+      "reason": "Stops short of asserting a mechanism, which is why this is not a FAIL, but the epistemic limit is never stated."
+    },
+    "segment_recommendation": {
+      "result": "PARTIAL",
+      "points_awarded": 1.5,
+      "points_possible": 3.0,
+      "evidence": "'Reduce investment in SMB Starter acquisition, not the entire SMB segment ... SMB Pro customers are profitable and should be retained/upsold.'",
+      "reason": "Refuses the whole-segment cut and makes exactly the plan-versus-segment distinction the scenario tests, which is why it is not a FAIL. But it still recommends a reduction, and it never states that the segment economics needed to justify one are absent from the pack."
+    },
+    "acquisition_recommendation": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "'Increase spend on the partner channel, with caution ... Not supported: Increasing paid search spend based on October revenue ... Cannot conclude: CAC payback - no cost data.'",
+      "reason": "Names the strongest new-logo channel, refuses the raw-attribution answer, and conditions the recommendation on the missing cost data."
+    },
+    "product_recommendation": {
+      "result": "PASS",
+      "points_awarded": 2.0,
+      "points_possible": 2.0,
+      "evidence": "'Enterprise plan deserves the most attention' with 'Secondary focus: Pro plan retention'",
+      "reason": "A single actionable recommendation, consistent with its own plan economics section."
+    },
+    "uncertainty_discipline": {
+      "result": "PASS",
+      "points_awarded": 2.0,
+      "points_possible": 2.0,
+      "evidence": "seven items covering the duplicate, the annual timing, expansion booking lag, trial-versus-paid conversion, missing spend, churned customers inside the October plan counts, and the Acme migration",
+      "reason": "All real gaps in this pack, and nothing invented anywhere in the response."
+    }
+  },
+  "false_actions": {},
+  "penalties": {
+    "items": [],
+    "dismissed": [],
+    "raw_total": 0.0,
+    "total": 0.0,
+    "capped": false
+  },
+  "deterministic_checks": [
+    {
+      "id": "contoso_11_00",
+      "matched": false,
+      "detail": "'11:00' appears near a mention of Contoso"
+    },
+    {
+      "id": "churn_3_1_to_4_4",
+      "matched": false,
+      "detail": "both churn figures 3.1 and 4.4 are present"
+    },
+    {
+      "id": "umbrella_metrics_present",
+      "matched": false,
+      "detail": "at least two of 163 / 1821 / 41 appear near a mention of Umbrella"
+    },
+    {
+      "id": "umbrella_named",
+      "matched": true,
+      "detail": "Umbrella is named in the response"
+    },
+    {
+      "id": "wednesday_present",
+      "matched": false,
+      "detail": "'Wednesday' appears in the response"
+    },
+    {
+      "id": "julia_present",
+      "matched": false,
+      "detail": "'Julia' appears in the response"
+    },
+    {
+      "id": "pied_piper_and_hooli",
+      "matched": false,
+      "detail": "both known cancellations are named"
+    }
+  ],
+  "disagreements": [],
+  "base_score": 74.0,
+  "final_score": 74.0
+}

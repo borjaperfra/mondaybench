@@ -1,0 +1,78 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.4",
+  "scenario_id": "monday-004",
+  "scenario_prompt_sha256": "3a0cbb569ca4f711b8907177af9204cec267d26f35f732829df56b03ed23ef99",
+  "run_id": "monday-004__glm5.2__003",
+  "run_number": 3,
+  "model": {
+    "slug": "glm5.2",
+    "display_name": "GLM 5.2",
+    "provider": "helmcode",
+    "model_id": "glm5.2"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 96000,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+    "extra_body": {
+      "caching": false
+    },
+    "config_sha256": "8063be7fa049588d27b70535fe6f177cbdcc9f161e3b96691893f5d094a056a5",
+    "safety_ceiling_tokens": 96000,
+    "ceiling_semantics": "provider_specific"
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "DELIVERED",
+    "tokens": 2019,
+    "evidence": "explicit_reasoning_tokens",
+    "stream_observed": true,
+    "stream_event_count": 711
+  },
+  "timestamp_utc": "2026-08-29T12:12:55Z",
+  "usage": {
+    "input_tokens": 9994,
+    "output_tokens": 4931,
+    "reasoning_tokens": 2019
+  },
+  "performance": {
+    "ttft_ms": 1648.7,
+    "ttfa_ms": 23257.2,
+    "total_latency_ms": 60929.9,
+    "tokens_per_second": 83.2
+  },
+  "economics": {
+    "input_cost_usd": 0.006996,
+    "output_cost_usd": 0.010848,
+    "total_cost_usd": 0.017844
+  },
+  "response": "# Northstar — Monday Business Review\n\n## 1. EXECUTIVE SUMMARY\n\n- **SMB Starter is the weakest segment by every available lens**: 4 of ~14 Starter customers churned in October (≈29% of Starter logos, ≈26% of Starter ARR), support cost is ~32% of plan revenue, and absolute contribution margin is the lowest of any plan.\n- **October headline revenue is inflated by a one-off**: Gringotts moved from monthly to an annual invoice (€120k booked in October vs €10k/month). Underlying MRR growth is modest.\n- **Pro is the strongest plan on contribution margin (~63–67%)** and has near-zero churn; it deserves product attention despite being smaller than Enterprise.\n- **Paid search volume scaled sharply (leads +73%) but trial conversion rate fell from 8.5% to 6.4%**, even though paid search sourced three large Enterprise expansions (Stark, Umbrella, Globex = €174k ACV). The signal is mixed and CAC payback cannot be calculated from this pack.\n- **Acme's 45% request drop is explained** by the late-September batch migration; token volume only fell ~12%, so this is not a health problem.\n- **Soylent is a mid-market at-risk account**: usage −27%, a *critical* ticket in October, and a cluster of high-severity api_errors/performance tickets.\n\n---\n\n## 2. REVENUE & CUSTOMER HEALTH\n\n### Segment ARR (current customers, this morning)\n\n| Segment | Active ARR (€k) | Churned in Oct (€k) | Churn % of segment ARR |\n|---|---|---|---|\n| Enterprise | 6,780 | 0 | 0% |\n| Mid-market | 1,530 (ex-Nakatomi) | 180 (Nakatomi) | 10.5% |\n| SMB | 479 | 124 (4 logos) | **20.5%** |\n\nSMB churn is concentrated entirely in the **Starter** plan: slate-rock, mega-lo-mart, dinoco, buy-n-large — all Starter, all churned in October.\n\n### What is driving October headline revenue\n\n- September total invoiced ≈ €797k (subscriptions €746k + professional services €51k).\n- October invoiced is much higher, but the driver is **Gringotts' annual subscription (€120k)** booked on Oct 1. On a monthly-equivalent basis Gringotts is unchanged (€10k/mo).\n- Underlying monthly subscription revenue ex-Gringotts-annualisation is roughly flat to slightly up (new logos + expansions offset by churn).\n- **Data issue**: Soylent has a duplicate October subscription invoice (INV-2026-10-0209 appears in both `stripe` and `billing_sync`). One must be reversed; otherwise October subscription revenue is overstated by €19,500.\n\n### Usage signals worth flagging\n\n- **Acme**: requests −45%, but tokens −12% and active_users −3%. Consistent with the operational note (interactive → 2 batch runs/day). Not a churn signal.\n- **Soylent**: requests −27%, active_users −27% (56→41), plus a *critical* api_errors ticket and multiple high-severity tickets in October. This is a genuine health risk on a €234k ARR Mid-market account.\n- **Nakatomi**: requests −16% then churned Oct 19. The September high-severity api_errors/performance tickets were a leading indicator.\n- **Churned SMB Starter accounts** all had open support tickets in September (slate-rock high/api_errors open; mega-lo-mart low/billing resolved; dinoco low/how_to; buy-n-large low/billing pending). Ticket patterns preceded churn.\n\n---\n\n## 3. ACQUISITION\n\n### Funnel: leads → paid trials\n\n| Channel | Sep leads | Sep conv | Sep rate | Oct leads | Oct conv | Oct rate | Lead Δ | Conv Δ |\n|---|---|---|---|---|---|---|---|---|\n| paid_search | 520 | 44 | 8.5% | 900 | 58 | 6.4% | +73% | +32% |\n| content | 260 | 31 | 11.9% | 330 | 34 | 10.3% | +27% | +10% |\n| partner | 60 | 15 | 25.0% | 75 | 17 | 22.7% | +25% | +13% |\n| outbound | 160 | 10 | 6.3% | 195 | 11 | 5.6% | +22% | +10% |\n\n### What can be concluded\n\n- **Partner has the highest trial conversion rate by a wide margin (~23–25%)**, but the smallest top-of-funnel. Volume is the constraint, not conversion quality.\n- **Paid search scaled spend aggressively and conversion rate deteriorated** (8.5% → 6.4%). This is the classic diminishing-returns signal — but it is not, by itself, proof that paid search should be cut.\n- **Paid search also sourced three large Enterprise expansions in October** (Stark €84k, Umbrella €48k, Globex €42k = €174k ACV). These are high-value, so paid search's *value* per conversion may still be attractive even though *volume* conversion fell.\n\n### What cannot be concluded\n\n- **CAC payback by channel cannot be calculated.** The pack contains leads, trial conversions, and attributed revenue, but **no marketing spend by channel**. The CFO's request is not answerable from this data alone.\n- **Trial-to-paid conversion is explicitly not tracked here**, so we cannot close the loop from trial to booked customer.\n- **Attribution is single-touch** (one channel per lead). The three Enterprise expansions attributed to paid_search may have been influenced by other channels; we cannot verify.\n- We cannot tell whether the October paid-search conversion drop is **causal** (worse leads from more spend) or **seasonal/latency** (trials not yet converted). One month is insufficient.\n\n---\n\n## 4. PLAN ECONOMICS\n\n### Contribution margin (revenue − infra − support)\n\n| Plan / Month | Revenue (€k) | Infra (€k) | Support (€k) | Contribution (€k) | Margin |\n|---|---|---|---|---|---|\n| enterprise Sep | 659 | 288 | 159 | 212 | 32% |\n| enterprise Oct | 659.5 | 296.8 | 168 | 194.7 | 30% |\n| pro Sep | 63 | 13.6 | 6.9 | 42.5 | 67% |\n| pro Oct | 66.2 | 16.1 | 8.6 | 41.5 | 63% |\n| starter Sep | 24.1 | 8.4 | 7.3 | 8.4 | 35% |\n| starter Oct | 32.0 | 11.4 | 10.3 | 10.3 | 32% |\n\n### Interpretation\n\n- **Pro is the strongest plan**: ~63–67% contribution margin, zero churn in the period, and usage (avg ~440k requests) is well below the 600k included threshold — headroom to grow usage without infra step-costs.\n- **Starter is the weakest plan on economics *and* retention**: only ~32% margin, support cost is ~32% of revenue (almost as high as Enterprise's, but Enterprise revenue is 20× larger), and 4 of ~14 Starter logos churned in October. Support cost per Starter customer rose from €811 (Sep) to €792 (Oct) — flat per customer while revenue per customer fell.\n- **Enterprise margin is declining** (32% → 30%) driven by rising support cost (€159k → €168k, +5.7%) while revenue is essentially flat. Enterprise support cost per customer is ~€12k/month — the highest in the portfolio. Enterprise is still the revenue engine, but support efficiency is moving the wrong way.\n- **Utilisation is low across all plans**: Enterprise avg ~1.89M requests vs 3M included (63%); Pro ~0.44M vs 0.6M (73%); Starter ~0.08–0.11M vs 0.2M (40–55%). Customers are paying for capacity they don't use — a pricing/packaging opportunity, and a risk at renewal.\n\n---\n\n## 5. RECOMMENDATIONS\n\n### Decision 1 — Reduce investment in a customer segment: **Yes, reduce investment in SMB Starter.**\n- Highest churn (4 logos, ~20% of segment ARR in one month).\n- Weakest unit economics after support cost (~32% margin, support ≈ 32% of revenue).\n- Low utilisation (avg ~84k of 200k included requests) — customers are not extracting value.\n- All four October churns had preceding support tickets; the segment is consuming disproportionate support load for low return.\n- **Action**: stop actively acquiring Starter logos; migrate viable Starter customers up to Pro; tighten support SLA on Starter to reduce loaded cost; revisit pricing/packaging before re-investing.\n\n### Decision 2 — Increase spend on an acquisition channel: **Conditional — do not blanket-increase paid search yet.**\n- Paid search lead volume already grew 73% and trial conversion fell from 8.5% to 6.4% — diminishing returns are visible.\n- However, paid search sourced €174k of Enterprise expansion ACV in October, which is high-value.\n- **Action**: increase paid search spend *only on the Enterprise-expansion cohort* (lookalike/ABM-style), not the broad SMB funnel. Require channel spend data before any further increase. Partner's 23% trial conversion warrants a small, test-budget increase given its quality, but volume scalability is unproven.\n\n### Decision 3 — Product plan focus: **Pro.**\n- Best contribution margin (~63–67%), zero churn, low utilisation headroom (room to add features/usage without infra step-cost), and it sits between the churning Starter tier and the high-support Enterprise tier — a natural upgrade path for at-risk Starter customers and a lower-friction entry for Mid-market.\n- **Secondary**: investigate Enterprise support-cost inflation (api_errors/performance tickets are recurring across Stark, Wayne, Contoso, Cyberdyne, Nakatomi, Soylent). A reliability/observability investment would protect €6.8M of ARR and likely reduce the €168k/month support load.\n\n### Additional actions not on the agenda but warranted\n- **Soylent**: executive sponsor engagement immediately — critical ticket, −27% usage, cluster of high-severity issues. This is the next likely Mid-market churn.\n- **Duplicate invoice**: reverse the Soylent `billing_sync` duplicate before October books close.\n- **Nakatomi post-mortem**: the September high-severity api_errors/performance tickets were a leading indicator of the October churn. Build a churn-risk score from ticket severity patterns.\n\n---\n\n## 6. UNCERTAINTIES / DATA ISSUES\n\n1. **CAC payback by channel is not calculable.** No marketing spend by channel is provided. The CFO's request cannot be answered from this pack; Finance/Growth must supply spend data.\n2. **Duplicate invoice for Soylent** (INV-2026-10-0209 in both `stripe` and `billing_sync`). October subscription revenue is overstated by €19,500 until reversed.\n3. **Gringotts annual invoice distorts October headline revenue.** €120k booked in October vs €10k/month otherwise; any MoM revenue comparison must use monthly-equivalent MRR, not invoiced revenue.\n4. **Trial-to-paid conversion is not tracked** in this pack, so funnel conversion rates only cover leads → paid trials, not leads → customers. Channel ROI claims based on `attributed_revenue_eur` rely on marketing-platform attribution that cannot be validated here.\n5. **Single-touch attribution**: each converted lead has exactly one channel. Multi-touch influence is invisible; the three Enterprise expansions \"attributed\" to paid search may have been nurtured by other channels.\n6. **One month of churn data is not a trend.** Four Starter churns in October is alarming but could be coincidental (e.g., a cohort that started together reaching a renewal cliff). Need 2–3 more months before treating 20% as the steady-state Starter churn rate.\n7. **Support cost is fully loaded** (includes CS staff), but we cannot split reactive vs. proactive cost, so we cannot quantify how much Starter support is \"wasted\" vs. value-adding.\n8. **No cohort/tenure data on churned accounts beyond start_date.** The four churned Starter accounts started 2024-09 to 2025-10 — a wide range — so this is not obviously a single bad cohort.\n9. **`usage_change_pct` is missing for new October customers** (spacely, cogswell, bishop, gekko, paper-street) — expected, but it means we cannot assess new-logo activation quality yet.\n10. **Acme's request drop is explained but token drop (−12%) is not fully reconciled** with the \"40–50% interactive reduction\" estimate. Worth confirming the batch migration is performing as planned, but not a red flag.",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "gen-1788005512-JLqxs0z0wdpm08l9u7j7",
+    "raw_usage": {
+      "completion_tokens": 4931,
+      "prompt_tokens": 9994,
+      "total_tokens": 14925,
+      "completion_tokens_details": {
+        "audio_tokens": 0,
+        "reasoning_tokens": 2019,
+        "image_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 8794,
+        "video_tokens": 0,
+        "cache_write_tokens": 0
+      }
+    }
+  }
+}

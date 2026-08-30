@@ -1,0 +1,73 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.4",
+  "scenario_id": "monday-004",
+  "scenario_prompt_sha256": "3a0cbb569ca4f711b8907177af9204cec267d26f35f732829df56b03ed23ef99",
+  "run_id": "monday-004__qwen3.6__004",
+  "run_number": 4,
+  "model": {
+    "slug": "qwen3.6",
+    "display_name": "Qwen 3.6",
+    "provider": "nan",
+    "model_id": "qwen3.6"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 96000,
+    "reasoning_enabled": false,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": false,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+    "extra_body": {
+      "caching": false
+    },
+    "config_sha256": "df9b3f3e5a2c8faaab6ad223ca98319c16e95372ff369042902429e1e3aac9bb",
+    "safety_ceiling_tokens": 96000,
+    "ceiling_semantics": "provider_specific"
+  },
+  "reasoning": {
+    "requested": false,
+    "status": "DELIVERED",
+    "tokens": 5802,
+    "evidence": "explicit_reasoning_tokens",
+    "stream_observed": true,
+    "stream_event_count": 6350
+  },
+  "timestamp_utc": "2026-08-30T16:54:48Z",
+  "usage": {
+    "input_tokens": 12990,
+    "output_tokens": 8548,
+    "reasoning_tokens": 5802
+  },
+  "performance": {
+    "ttft_ms": 1421.1,
+    "ttfa_ms": 37062.3,
+    "total_latency_ms": 52710.8,
+    "tokens_per_second": 166.7
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "\n\n# 1. EXECUTIVE SUMMARY\n\n- **Segment Investment:** The **SMB segment (Starter plan)** is the weakest link. It carries a 32.2% support cost ratio, experienced a 30.8% gross churn rate in October (4 of 13 customers), and generates only €10.3k in gross margin against €21.7k in direct costs. Leadership should **reduce investment** here and reallocate resources to higher-margin segments.\n- **Acquisition Channel:** The **Partner channel** is the most efficient driver of growth. It delivers a 23.7% trial-to-paid conversion rate, €5.2k attributed revenue per conversion, and exclusively brings in high-value new logos. **Increase spend** on Partner-led acquisition.\n- **Product Plan Focus:** The **Pro plan** is the strongest economically (62.7% gross margin, growing customer base, low support burden). Engineering focus should shift to **scaling and protecting the Pro plan**, while treating Starter as a maintenance-only segment.\n- **CAC Payback:** Cannot be calculated with current data. Marketing spend figures are absent from the pack. Proxy efficiency metrics are provided, but payback periods require cost data.\n\n---\n\n# 2. REVENUE & CUSTOMER HEALTH\n\n**Headline Revenue Drivers**\n- Total monthly recurring revenue (MRV) is stable at ~€757k across both months, driven almost entirely by the Enterprise plan (€659k/mo).\n- October saw a shift in revenue composition: Gringotts moved to an annual contract (€120k upfront, €10k/mo MRV), and Soylent’s invoice dropped from €22k to €19.5k, reflecting usage or contract adjustments.\n- **Acme Corp’s usage dropped 45%** (4.2M → 2.31M requests) in October, aligning with the operational note about migrating to batch runs. This reduces infra load but does not impact their €78k/mo subscription revenue.\n\n**Churn & Retention**\n- **SMB (Starter):** 4 churns in October (slate-rock, mega-lo-mart, dinoco, buy-n-large). Churn rate = 4/13 = **30.8%**.\n- **Mid-market (Pro):** 1 churn (nakatomi). Churn rate = 1/9 = **11.1%**.\n- **Enterprise:** 0 churns. Retention = **100%**.\n- Churned SMB accounts show pre-churn usage declines in October (e.g., mega-lo-mart -37.1%, buy-n-large -37.0%), indicating usage drop is a leading indicator of churn in this segment.\n\n**Support Load**\n- Support tickets are heavily concentrated in Enterprise and SMB. High-severity `api_errors` and `performance` tickets dominate Enterprise, while SMB tickets are mostly `how_to` and `rate_limits`, indicating onboarding friction and plan mismatch rather than platform instability.\n\n---\n\n# 3. ACQUISITION\n\n**Channel Efficiency (Sept + Oct Combined)**\n\n| Channel | Leads | Conversions | Conv. Rate | Attributed Rev (€k) | Rev/Conv (€k) | Rev/Lead (€) |\n|---------|-------|-------------|------------|---------------------|---------------|--------------|\n| Partner | 135   | 32          | **23.7%**  | 166.8               | **5.21**      | **1,236**    |\n| Content | 590   | 65          | 11.0%      | 109.2               | 1.68          | 185          |\n| Paid Search | 1,420 | 102       | 7.2%       | 274.8               | 2.69          | 194          |\n| Outbound| 355   | 21          | 5.9%       | 80.4                | 3.83          | 226          |\n\n**Key Observations:**\n- **Partner** outperforms on every efficiency metric. It converts at 4x the rate of Paid Search and delivers 3x the revenue per conversion. All 32 Partner conversions are new logos (avg ARR €5.2k), with two enterprise-adjacent mid-market wins (vandelay €132k, clampett €34.8k).\n- **Paid Search** drives volume but is diluted by expansion bookings (4 of 6 conversions are expansions). It is effective for upsell but inefficient for net-new logo acquisition.\n- **Content & Outbound** show moderate efficiency but lower absolute impact.\n\n**CAC Payback Request**\n- The pack does not contain marketing spend, CAC, or channel cost data. Therefore, **CAC payback periods cannot be calculated**. I recommend Finance provide channel spend data to complete this analysis. Until then, Partner is the clear efficiency leader based on revenue yield per conversion.\n\n---\n\n# 4. PLAN ECONOMICS\n\nUsing `plans.csv` direct costs (infra + support) vs. monthly recurring revenue:\n\n| Plan | Customers | Revenue (€k) | Infra (€k) | Support (€k) | Total Cost (€k) | Gross Margin (€k) | Margin % |\n|------|-----------|--------------|------------|--------------|-----------------|-------------------|----------|\n| Enterprise | 14 | 659.5 | 296.8 | 168.0 | 464.8 | 194.7 | 29.5% |\n| Pro | 9 | 66.2 | 16.1 | 8.6 | 24.7 | 41.5 | **62.7%** |\n| Starter | 13 | 32.0 | 11.4 | 10.3 | 21.7 | 10.3 | 32.2% |\n\n**Plan-Level Insights:**\n- **Pro:** Highest margin percentage (62.7%), growing customer count (8→9), and support costs remain well below revenue. Included requests (600k) vs actual usage (442k) show healthy headroom without over-provisioning.\n- **Starter:** Lowest absolute margin (€10.3k) and highest support cost ratio (32.2%). Support costs nearly equal infra costs, indicating high-touch onboarding and low self-serve maturity. Combined with 30.8% churn, this plan is structurally unprofitable at current scale.\n- **Enterprise:** Generates the most absolute margin (€194.7k) but margin % declined from 32.2% to 29.5% as support costs rose 5.7k MoM. Acme’s usage drop reduces infra load, but high-severity support tickets (api_errors, performance) suggest architectural or SLA pressure.\n\n---\n\n# 5. RECOMMENDATIONS\n\n1. **Reduce Investment in SMB (Starter Segment):** Halt active growth spend here. Shift to a fully automated, self-serve onboarding flow. Consider raising minimum contract terms or bundling Starter with limited support to protect margins. Reallocate budget to Pro and Enterprise.\n2. **Increase Spend on Partner Channel:** Double down on Partner-led acquisition. The 23.7% conversion rate and €5.2k/conv yield indicate strong product-market fit and low friction. Negotiate volume-based partner incentives to scale this channel while maintaining margin.\n3. **Direct Engineering Focus to the Pro Plan:** Invest in features that increase stickiness and expand usage within the Pro tier (e.g., advanced rate-limiting controls, team collaboration, usage analytics). The 62.7% margin and low support load make it the highest-ROI target for product development.\n4. **Enterprise Support Triage:** While not cutting investment, assign a dedicated platform engineering pod to address recurring `api_errors` and `performance` tickets. Proactive monitoring and SDK improvements will protect the 100% retention rate and stabilize the 29.5% margin.\n5. **CAC Payback Analysis:** Finance must supply channel spend data to calculate true CAC and payback periods. Until then, use Partner channel as the benchmark for efficient acquisition.\n\n---\n\n# 6. UNCERTAINTIES / DATA ISSUES\n\n- **Missing Marketing Spend:** The acquisition pack lacks channel cost data. CAC and payback periods cannot be calculated. Any payback recommendation is currently speculative.\n- **Invoice vs. Churn Timing:** Churned customers (nakatomi, slate-rock, mega-lo-mart, dinoco, buy-n-large) still show October subscription invoices. These are likely final/prorated bills or data lag. Revenue recognition may be overstated for October if these are not credited back.\n- **Customer Count Mismatch:** `plans.csv` reports 13 Starter customers in October, but the raw `customers.csv` shows 14 active SMBs. One account may be in a grace period or data sync delay. This slightly skews per-customer averages.\n- **Usage Attribution Lag:** `usage_change_pct` is missing for several new October accounts (spacely, cogswell, bishop, gekko, paper-street). Without September baselines, we cannot assess early adoption velocity for these new logos.\n- **Expansion Booking Recognition:** The pack notes expansion bookings take effect from the next billing cycle, yet `acquisition.csv` credits `attributed_revenue_eur` at conversion. This creates a timing mismatch between marketing attribution and actual revenue recognition, which could distort channel ROI if not adjusted.\n- **Support Cost Allocation:** `support_cost_eur` in `plans.csv` is allocated by plan, not segment. While Pro/Enterprise/Starter map cleanly to Mid-market/Enterprise/SMB, any cross-plan support sharing is hidden, potentially understating SMB support burden.",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "chatcmpl-9c160d496caa3878",
+    "raw_usage": {
+      "completion_tokens": 8548,
+      "prompt_tokens": 12990,
+      "total_tokens": 21538,
+      "completion_tokens_details": {
+        "reasoning_tokens": 5802
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

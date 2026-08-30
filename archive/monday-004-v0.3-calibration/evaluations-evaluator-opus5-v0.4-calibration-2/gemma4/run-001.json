@@ -1,0 +1,279 @@
+{
+  "schema_version": "1",
+  "evaluator_id": "evaluator-opus5-v0.4-calibration-2",
+  "benchmark_version": "0.4",
+  "rubric_version": "0.2",
+  "scenario_id": "monday-004",
+  "run_id": "monday-004__gemma4__001",
+  "model_slug": "gemma4",
+  "scenario_prompt_sha256": "3a0cbb569ca4f711b8907177af9204cec267d26f35f732829df56b03ed23ef99",
+  "timestamp_utc": "2026-08-29T10:14:16Z",
+  "judge": {
+    "provider": "anthropic",
+    "model_id": "claude-opus-5",
+    "temperature": 0.0,
+    "effort": null,
+    "unsupported_parameters": [],
+    "prompt_fingerprint": "26067608db5f7a2d",
+    "route": "recorded",
+    "verdict_source": "shadow-v0.2.jsonl"
+  },
+  "dimensions": {
+    "revenue_reasoning": {
+      "score": 0.0,
+      "max_score": 20.0
+    },
+    "customer_health": {
+      "score": 4.0,
+      "max_score": 15.0
+    },
+    "acquisition_reasoning": {
+      "score": 9.0,
+      "max_score": 20.0
+    },
+    "plan_economics": {
+      "score": 18.5,
+      "max_score": 20.0
+    },
+    "cross_table_data_quality": {
+      "score": 3.5,
+      "max_score": 15.0
+    },
+    "decision_quality": {
+      "score": 5.5,
+      "max_score": 10.0
+    }
+  },
+  "criteria": {
+    "duplicate_detected": {
+      "result": "FAIL",
+      "points_awarded": 0.0,
+      "points_possible": 4.0,
+      "evidence": "no mention of a repeated transaction_id anywhere; the data-issues section raises only a 'slight mismatch between revenue.csv and plans.csv' and then concludes 659,500 'is consistent'",
+      "reason": "The duplicate is not mentioned."
+    },
+    "annual_prepayment_normalized": {
+      "result": "FAIL",
+      "points_awarded": 0.0,
+      "points_possible": 6.0,
+      "evidence": "'September Total Revenue: EUR 673,100 ... October Total Revenue: EUR 754,400'. Neither figure is a raw, deduplicated or recurring total, and the EUR 120,000 twelve-month invoice is never mentioned",
+      "reason": "No adjustment for the annual invoice and no sign it was seen."
+    },
+    "headline_vs_recurring_growth": {
+      "result": "FAIL",
+      "points_awarded": 0.0,
+      "points_possible": 6.0,
+      "evidence": "'Growth: ~12% MoM revenue growth, largely supported by the Enterprise base and new Mid-market/SMB additions'",
+      "reason": "Reports the headline rate as the real one and attributes it to underlying business rather than to the annual invoice."
+    },
+    "revenue_conclusion": {
+      "result": "FAIL",
+      "points_awarded": 0.0,
+      "points_possible": 4.0,
+      "evidence": "'The business is experiencing high-growth revenue driven by a massive expansion in the Enterprise segment'",
+      "reason": "Leaves leadership with the headline as the answer."
+    },
+    "segment_retention_quantified": {
+      "result": "FAIL",
+      "points_awarded": 0.0,
+      "points_possible": 5.0,
+      "evidence": "'SMB Segment: Rapidly expanding in customer count (from 9 in Sept to 13 in Oct)' - the Starter plan's counts labelled as the SMB segment - and no churn or retention figure anywhere",
+      "reason": "No quantification on any basis, and the one count given is a plan count presented as a segment count with nothing else to correct it."
+    },
+    "sample_size_arr_context": {
+      "result": "FAIL",
+      "points_awarded": 0.0,
+      "points_possible": 4.0,
+      "evidence": "churn is described only as 'the Mid-market segment is showing signs of distress (churn and declining usage)'",
+      "reason": "No denominator, no ARR, no comparison of what the churn cost."
+    },
+    "acme_false_positive_avoided": {
+      "result": "PARTIAL",
+      "points_awarded": 2.0,
+      "points_possible": 4.0,
+      "evidence": "'Acme Corp saw a 45% drop in requests in October. Per operational notes, this is due to a shift to batch processing, not a loss of interest.'",
+      "reason": "Right conclusion from the stated migration, but no second figure - tokens, seats, MRR or tickets - is brought to support it."
+    },
+    "no_churn_overreach": {
+      "result": "PASS",
+      "points_awarded": 2.0,
+      "points_possible": 2.0,
+      "evidence": "churn is reported as a fact about Nakatomi and the Mid-market segment with no reason attached",
+      "reason": "Claims no cause for churn the pack does not record."
+    },
+    "raw_attribution_not_equivalent_new_business": {
+      "result": "PARTIAL",
+      "points_awarded": 2.5,
+      "points_possible": 5.0,
+      "evidence": "'Paid Search is currently the primary driver of Expansion bookings (e.g., Stark Industries, Umbrella Health, Globex)'",
+      "reason": "Sees that Paid Search's attribution is expansion and names the accounts, but never states the EUR 274,800 total or what share of it is not new business."
+    },
+    "existing_customer_expansion_removed": {
+      "result": "FAIL",
+      "points_awarded": 0.0,
+      "points_possible": 5.0,
+      "evidence": "the channel table carries conversion rates only; no attributed revenue is split or ranked",
+      "reason": "No new-logo view of the channels."
+    },
+    "conversion_rate_vs_absolute_volume": {
+      "result": "PARTIAL",
+      "points_awarded": 2.0,
+      "points_possible": 4.0,
+      "evidence": "the table gives September and October conversion rates per channel - 'Paid Search 8.46% -> 6.44% Declining Efficiency' - and no absolute conversion counts or lead volumes",
+      "reason": "Reports the rate movement and not the volume movement, so the two are never seen to point opposite ways."
+    },
+    "no_unsupported_channel_scale_decision": {
+      "result": "PARTIAL",
+      "points_awarded": 1.5,
+      "points_possible": 3.0,
+      "evidence": "'Increase spend on the Content channel. It provides the highest conversion rate from lead to trial'",
+      "reason": "Correctly declines to scale Paid Search, but the recommendation it does make is not conditioned on the missing channel cost, which it acknowledges only in a separate section."
+    },
+    "cac_payback_unavailable": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "'CAC Payback: Cannot be calculated. We have Attributed Revenue and Leads, but we lack the Total Marketing Spend per channel.'",
+      "reason": "States the metric is unavailable and names the missing input."
+    },
+    "contribution_calculated": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "table gives Enterprise EUR 194,700, Pro EUR 41,500, Starter EUR 10,300 under 'Revenue - Infra - Support'",
+      "reason": "All three contributions correct to the euro."
+    },
+    "margin_calculated_or_correctly_compared": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "'29.5%', '62.7%', '32.2%'",
+      "reason": "All three margins correct and correctly ordered."
+    },
+    "absolute_vs_scalable_economics": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'Enterprise generates the most absolute cash (194.7k), but it is expensive to maintain (low 29.5% margin)' and 'While Enterprise brings the most revenue, the Pro plan has superior unit economics'",
+      "reason": "States both figures and says explicitly which one the product question takes. That it reaches this on a revenue picture that is otherwise wrong is priced in the revenue dimension, not here."
+    },
+    "plan_trajectory_evidence": {
+      "result": "PARTIAL",
+      "points_awarded": 1.5,
+      "points_possible": 3.0,
+      "evidence": "'Engineering should focus on features that drive Pro users toward Enterprise tiers or increasing the included requests ceiling to capture more value'",
+      "reason": "Identifies the ceiling as the lever without a single figure behind it, and no usage trajectory for any plan."
+    },
+    "product_focus_supported": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'Focus on the Pro Plan ... superior unit economics ... increasing the included requests ceiling to capture more value'",
+      "reason": "Recommends Pro on margin plus the included-volume ceiling, and explicitly not on revenue size."
+    },
+    "customer_id_alias_resolved": {
+      "result": "FAIL",
+      "points_awarded": 0.0,
+      "points_possible": 4.0,
+      "evidence": "Wayne Enterprises appears nowhere in the response; the usage discussion covers only Acme and Soylent",
+      "reason": "The third largest account is absent from a usage analysis and its absence is not noticed."
+    },
+    "support_normalized": {
+      "result": "FAIL",
+      "points_awarded": 0.0,
+      "points_possible": 4.0,
+      "evidence": "'high support ticket volumes for API/Performance issues suggest scaling pains' for Enterprise, and 'Starter is barely breaking even ... considering the high support cost relative to its low revenue'",
+      "reason": "No ticket rate is computed against any denominator; the Enterprise claim rests on raw volume."
+    },
+    "cross_table_customer_signal": {
+      "result": "PARTIAL",
+      "points_awarded": 2.0,
+      "points_possible": 4.0,
+      "evidence": "'Soylent (Mid-market) saw a 27% drop in requests and a spike in Critical and High severity support tickets'",
+      "reason": "Two tables joined at account level - usage and support - but not the revenue movement that completes the pattern."
+    },
+    "causal_boundary": {
+      "result": "PARTIAL",
+      "points_awarded": 1.5,
+      "points_possible": 3.0,
+      "evidence": "'a spike in ... support tickets (API errors/Performance), indicating a high risk of churn'",
+      "reason": "Implies a mechanism without asserting one, and never states that the data does not establish what caused what."
+    },
+    "segment_recommendation": {
+      "result": "FAIL",
+      "points_awarded": 0.0,
+      "points_possible": 3.0,
+      "evidence": "'Finance (Investment): Reduce investment in the Mid-market segment. The data shows declining usage (Soylent), churn (Nakatomi), and a lack of the high-margin efficiency seen in the Pro plan.'",
+      "reason": "Recommends defunding a segment on one churn and one account's usage decline, with no segment economics and no acknowledgement that they are absent."
+    },
+    "acquisition_recommendation": {
+      "result": "PARTIAL",
+      "points_awarded": 1.5,
+      "points_possible": 3.0,
+      "evidence": "'Increase spend on the Content channel' on the strength of conversion rate",
+      "reason": "Names a defensible channel but reaches it through conversion rate rather than the new-logo correction, and does not condition the spend on the missing cost data."
+    },
+    "product_recommendation": {
+      "result": "PASS",
+      "points_awarded": 2.0,
+      "points_possible": 2.0,
+      "evidence": "'Product (Engineering Focus): Focus on the Pro Plan'",
+      "reason": "One actionable recommendation, consistent with its own plan economics section."
+    },
+    "uncertainty_discipline": {
+      "result": "PASS",
+      "points_awarded": 2.0,
+      "points_possible": 2.0,
+      "evidence": "names missing marketing spend, the limits of the Acme causal claim, and the expansion-booking timing",
+      "reason": "Real gaps in this pack, and no invented figures anywhere in the response."
+    }
+  },
+  "false_actions": {},
+  "penalties": {
+    "items": [],
+    "dismissed": [],
+    "raw_total": 0.0,
+    "total": 0.0,
+    "capped": false
+  },
+  "deterministic_checks": [
+    {
+      "id": "contoso_11_00",
+      "matched": false,
+      "detail": "'11:00' appears near a mention of Contoso"
+    },
+    {
+      "id": "churn_3_1_to_4_4",
+      "matched": false,
+      "detail": "both churn figures 3.1 and 4.4 are present"
+    },
+    {
+      "id": "umbrella_metrics_present",
+      "matched": false,
+      "detail": "at least two of 163 / 1821 / 41 appear near a mention of Umbrella"
+    },
+    {
+      "id": "umbrella_named",
+      "matched": true,
+      "detail": "Umbrella is named in the response"
+    },
+    {
+      "id": "wednesday_present",
+      "matched": false,
+      "detail": "'Wednesday' appears in the response"
+    },
+    {
+      "id": "julia_present",
+      "matched": false,
+      "detail": "'Julia' appears in the response"
+    },
+    {
+      "id": "pied_piper_and_hooli",
+      "matched": false,
+      "detail": "both known cancellations are named"
+    }
+  ],
+  "disagreements": [],
+  "base_score": 40.5,
+  "final_score": 40.5
+}

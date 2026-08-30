@@ -1,0 +1,294 @@
+# Ground truth - monday-004 "Numbers Don't Lie", scenario version 0.1
+#
+# EVALUATOR AND AUDIT ONLY. `source_order` in scenario.yaml lists the eight
+# files the candidate sees and this is not one of them.
+#
+# Every number below is recomputed from the candidate-visible CSVs by
+# tests/monday_004_derivations.py, and tests/test_monday_004.py fails if this
+# file and that computation ever disagree. Nothing here is hand-typed arithmetic
+# that only agrees with the data by memory.
+#
+# The design rule for this scenario: every FACT is in a column somewhere, and no
+# CONCLUSION is in any file. The model is told what an invoice covers and which
+# identifier links usage to billing; it is never told that October is distorted,
+# that an invoice is duplicated, or which plan earns its keep.
+#
+# Currency is EUR throughout. Percentages are rounded to two decimals here; the
+# rubric grades them with a stated tolerance.
+
+# ---------------------------------------------------------------------------
+# Revenue
+# ---------------------------------------------------------------------------
+revenue:
+  # D8. One transaction id appears twice: Soylent's October subscription, once
+  # from `stripe` dated 2026-10-01 and once from `billing_sync` dated
+  # 2026-10-02. Same id, same amount, different source and date.
+  duplicate_transaction_ids: ["INV-2026-10-0209"]
+  duplicate_amount_eur: 19500.0
+
+  # Every row summed as it stands. This is the headline leadership arrives with.
+  raw_totals:
+    september_eur: 797100.0
+    october_eur: 892900.0
+
+  # Each transaction id counted once.
+  adjusted_totals:
+    october_deduplicated_eur: 873400.0
+
+  # D1. Subscriptions at their monthly value: an invoice covering
+  # `billing_period_months` months contributes amount / months, and invoices
+  # covering no period (one-off professional services) contribute nothing.
+  normalized_recurring:
+    september_eur: 746100.0
+    october_eur: 757700.0
+    annual_invoice:
+      transaction_customer: gringotts
+      amount_eur: 120000.0
+      billing_period_months: 12
+      monthly_equivalent_eur: 10000.0
+      excess_in_october_eur: 110000.0
+
+  one_off_totals:
+    september_eur: 51000.0
+    october_eur: 5700.0
+
+  # The other defensible normalisation: keep the one-off services and put the
+  # annual invoice at its monthly value. It answers "what did we invoice for
+  # this month's activity" rather than "what recurs", and lands in a different
+  # place because September's professional services were nine times October's.
+  normalized_all_invoices:
+    september_eur: 797100.0
+    october_eur: 763400.0
+
+  headline_growth_pct: 12.02
+  deduplicated_growth_pct: 9.57
+  recurring_growth_pct: 1.55
+  normalized_all_invoices_growth_pct: -4.23
+
+  conclusion: >
+    The +12% headline is almost entirely non-recurring. Two adjustments account
+    for it: EUR 110,000 of the October total is the eleven months of Gringotts'
+    annual contract that have not happened yet, and EUR 19,500 is one invoice
+    counted twice. Recurring revenue grew about 1.6%, not 12%.
+  accepted_variants: >
+    Two treatments of the one-off professional services are defensible and they
+    do NOT agree: excluding them gives +1.55%, keeping them gives -4.23%. Both
+    refute the headline and both pass, provided the annual invoice is normalised
+    and the candidate says which invoices are in its figure. A recurring figure
+    described as roughly flat, or as low single digit growth, is correct; so is
+    "underlying revenue fell about 4% once the annual invoice is spread and the
+    September services are accounted for". What fails is reporting +12% as the
+    real rate. Excluding gringotts entirely rather than normalising it gives
+    +0.21% and also passes: same conclusion, one fewer step.
+  also_true_not_required: >
+    October's recurring total still includes EUR 25,300 of monthly value from
+    five customers who churned during October, so the November recurring figure
+    falls by about 3.3% before any new business.
+
+# ---------------------------------------------------------------------------
+# Customer health
+# ---------------------------------------------------------------------------
+customer_health:
+  # D2. Both framings are correct and they are different numbers, because plan
+  # and segment do not align. Quoting one as the other is not.
+  segment_churn:
+    SMB: {customers: 18, churned: 4, logo_churn_pct: 22.22, arr_lost_eur: 123600.0, arr_total_eur: 602400.0}
+    Mid-market: {customers: 10, churned: 1, logo_churn_pct: 10.0, arr_lost_eur: 180000.0, arr_total_eur: 1710000.0}
+    Enterprise: {customers: 8, churned: 0, logo_churn_pct: 0.0, arr_lost_eur: 0.0, arr_total_eur: 6780000.0}
+  plan_churn:
+    starter: {customers: 13, churned: 4, logo_churn_pct: 30.77}
+    pro: {customers: 9, churned: 1, logo_churn_pct: 11.11}
+    enterprise: {customers: 14, churned: 0, logo_churn_pct: 0.0}
+  total_arr_eur: 9092400.0
+  active_arr_eur: 8788800.0
+  churned_arr_eur: 303600.0
+
+  sample_size_note: >
+    SMB's rate is the worst in the company and it is four events out of
+    eighteen. Those four churns cost EUR 123,600 of ARR - 1.36% of the book, and
+    less than the EUR 180,000 lost with Nakatomi, one Mid-market logo. SMB is
+    6.63% of total ARR.
+
+  # D3. Not a churn signal. The workload changed shape; it did not leave.
+  acme_usage_interpretation:
+    requests_change_pct: -45.0
+    tokens_change_pct: -11.99
+    active_users_change_pct: -3.33
+    mrr_eur: {september: 78000.0, october: 78000.0}
+    support_tickets: {september: 4, october: 3}
+    verdict: >
+      Consistent with the batch migration context.md describes, which estimated
+      a 40-50% reduction in interactive requests. Tokens fell an eighth against
+      requests falling nearly half, seats are flat and revenue is unchanged.
+      Acme is not a churn risk on this evidence.
+
+  # D11. Three facts in one month and no mechanism anywhere in the pack.
+  causal_unknowns:
+    soylent:
+      requests_change_pct: -27.0
+      support_tickets: {september: 3, october: 8}
+      mrr_eur: {september: 22000.0, october: 19500.0}
+      verdict: >
+        A pattern worth investigating. Nothing in the pack establishes that the
+        support tickets caused the contraction, that the contraction caused the
+        usage decline, or that any of the three caused another.
+    churn_reasons: >
+      No file records why any customer churned. A stated reason is invented.
+
+# ---------------------------------------------------------------------------
+# Acquisition
+# ---------------------------------------------------------------------------
+acquisition:
+  # D4. Paid Search leads raw attribution by 65% and is third on new business.
+  raw_attributed_revenue_eur:
+    paid_search: 274800.0
+    partner: 166800.0
+    content: 109200.0
+    outbound: 80400.0
+  new_logo_revenue_eur:
+    partner: 166800.0
+    content: 91200.0
+    paid_search: 64800.0
+    outbound: 56400.0
+  expansion_revenue_eur:
+    paid_search: 210000.0
+    outbound: 24000.0
+    content: 18000.0
+    partner: 0.0
+  paid_search_expansion_share_pct: 76.42
+
+  # D5. Both movements are real and they point opposite ways.
+  conversion_rates:
+    september: {leads: 1000, conversions: 100, rate_pct: 10.0}
+    october: {leads: 1500, conversions: 120, rate_pct: 8.0}
+    by_channel_pct:
+      paid_search: {september: 8.46, october: 6.44}
+      content: {september: 11.92, october: 10.3}
+      partner: {september: 25.0, october: 22.67}
+      outbound: {september: 6.25, october: 5.64}
+    verdict: >
+      The rate fell 2.0 points while absolute conversions rose 20% on 50% more
+      leads. Neither figure alone settles whether October was a better month;
+      that needs cost per lead or lead quality, and the pack has neither.
+
+  # D12. Not computable, and no assumption rescues it.
+  unsupported_metrics:
+    - metric: CAC by channel
+      missing: acquisition or marketing spend by channel, which appears in no file
+    - metric: CAC payback period
+      missing: channel spend and gross margin by channel over time
+    - metric: lead-to-customer conversion
+      missing: trial-to-paid outcomes, which context.md states are not tracked here
+    - metric: SMB segment contribution margin
+      missing: cost by segment; plans.csv reports cost by plan, and plan and segment do not align
+  note: >
+    infra_cost_eur and support_cost_eur are cost of service, not cost of
+    acquisition. Using them as CAC is wrong, not conservative.
+
+# ---------------------------------------------------------------------------
+# Plan economics
+# ---------------------------------------------------------------------------
+plans:
+  # D6. contribution = revenue_eur - infra_cost_eur - support_cost_eur.
+  # There is no margin column and no contribution column in plans.csv.
+  contribution_eur:
+    september: {enterprise: 212000.0, pro: 42500.0, starter: 8400.0}
+    october: {enterprise: 194700.0, pro: 41500.0, starter: 10300.0}
+  contribution_margin_pct:
+    september: {enterprise: 32.17, pro: 67.46, starter: 34.85}
+    october: {enterprise: 29.52, pro: 62.69, starter: 32.19}
+  arpu_eur:
+    october: {enterprise: 47107.14, pro: 7355.56, starter: 2461.54}
+  contribution_per_customer_eur:
+    october: {enterprise: 13907.14, pro: 4611.11, starter: 792.31}
+
+  support_load_october:
+    tickets_by_plan: {enterprise: 35, pro: 28, starter: 11}
+    tickets_per_customer: {enterprise: 2.5, pro: 3.11, starter: 0.85}
+    verdict: >
+      Enterprise raises the most tickets and has the second best rate. Any
+      defensible denominator - customers, active users, requests - moves it off
+      the top. Pro is the worst per customer, and rose from 2.38 in September.
+
+  usage_signals:
+    total_requests:
+      september: {enterprise: 26540000, pro: 3465000, starter: 1030000}
+      october: {enterprise: 26436400, pro: 3977000, starter: 1097000}
+    growth_pct: {enterprise: -0.39, pro: 14.78, starter: 6.5}
+    customers_over_included_october: {enterprise: 2, pro: 3, starter: 0}
+    included_requests_per_customer: {enterprise: 3000000, pro: 600000, starter: 200000}
+
+  # D7. Not the biggest plan; the one whose economics and trajectory justify the
+  # engineering.
+  recommended_product_focus:
+    plan: pro
+    supporting_signals:
+      - contribution margin 62.69% against Enterprise's 29.52% and Starter's 32.19%
+      - request volume up 14.78% month on month while Enterprise's is flat
+      - three of nine customers already above the 600,000 included requests
+      - highest tickets per customer in the company, 3.11, up from 2.38
+      - one new logo added in October, the only plan to add paying customers other than Starter
+    not_because: >
+      Pro is 8.7% of revenue and EUR 41,500 of contribution against Enterprise's
+      EUR 194,700. The case is margin, trajectory and a ceiling customers are
+      hitting, not size.
+    enterprise_counterpoint: >
+      Enterprise is 87% of revenue and the highest ARPU at EUR 47,107, and the
+      weakest of the three on margin. It is where the revenue is; it is not
+      where a quarter of engineering pays back best.
+
+# ---------------------------------------------------------------------------
+# Data quality
+# ---------------------------------------------------------------------------
+data_quality:
+  # D9. customers.csv carries both identifiers and context.md names
+  # usage_account_id as the authoritative link.
+  customer_id_aliases:
+    wayne-enterprises: wayne_ent
+    prestige-worldwide: prestige_ww
+  wayne_usage_requests: {september: 3100000, october: 3410000}
+  alias_failure_mode: >
+    A join on customer_id alone silently drops Wayne Enterprises, the second
+    largest account at EUR 1,008,000 ARR, and Prestige Worldwide. Reporting
+    either as having no usage is an invented fact.
+  duplicate_rows:
+    transaction_id: INV-2026-10-0209
+    rows: 2
+    detail: >
+      Soylent, EUR 19,500, subscription, billing_period_months 1. One row dated
+      2026-10-01 source stripe, one dated 2026-10-02 source billing_sync.
+  no_other_duplicates: >
+    Every other transaction_id in revenue.csv is unique. A candidate that
+    reports further duplicates is wrong.
+
+# ---------------------------------------------------------------------------
+# The three decisions
+# ---------------------------------------------------------------------------
+decisions:
+  segment:
+    supported: >
+      Flag SMB churn, quantify it - 4 of 18 logos, EUR 123,600, 1.36% of ARR -
+      and ask for what the pack does not contain before deciding: acquisition
+      cost, lifetime value and retention drivers by segment.
+    not_supported: >
+      Cutting, exiting or defunding SMB. The rate is real, the sample is four
+      events, the value at stake is smaller than a single Mid-market churn, and
+      no segment-level economics exist in the pack.
+  acquisition:
+    supported: >
+      Correct the attribution before ranking channels. Partner is the strongest
+      new-logo channel at EUR 166,800, Content second at EUR 91,200, Paid Search
+      third at EUR 64,800 despite leading the raw table. Any spend decision is
+      conditional on channel cost, which is missing.
+    not_supported: >
+      Doubling Paid Search on EUR 274,800 of attributed revenue, 76% of which is
+      expansion on accounts that were already customers. Equally: declaring
+      Partner the best channel on CAC, which cannot be computed.
+  product:
+    supported: >
+      Pro, on contribution margin, usage growth, the included-volume ceiling and
+      rising support load - with the support friction treated as part of the
+      work, not as an argument against it.
+    not_supported: >
+      Enterprise because it is 87% of revenue, or Starter because it grew
+      customer count fastest.

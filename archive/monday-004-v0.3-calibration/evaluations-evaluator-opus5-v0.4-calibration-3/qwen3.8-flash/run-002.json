@@ -1,0 +1,286 @@
+{
+  "schema_version": "1",
+  "evaluator_id": "evaluator-opus5-v0.4-calibration-3",
+  "benchmark_version": "0.4",
+  "rubric_version": "0.3",
+  "scenario_id": "monday-004",
+  "run_id": "monday-004__qwen3.8-flash__002",
+  "model_slug": "qwen3.8-flash",
+  "scenario_prompt_sha256": "3a0cbb569ca4f711b8907177af9204cec267d26f35f732829df56b03ed23ef99",
+  "timestamp_utc": "2026-08-29T11:17:40Z",
+  "judge": {
+    "provider": "anthropic",
+    "model_id": "claude-opus-5",
+    "temperature": 0.0,
+    "effort": null,
+    "unsupported_parameters": [],
+    "prompt_fingerprint": "26067608db5f7a2d",
+    "route": "recorded",
+    "verdict_source": "calibration-v0.3.jsonl"
+  },
+  "dimensions": {
+    "revenue_reasoning": {
+      "score": 20.0,
+      "max_score": 20.0
+    },
+    "customer_health": {
+      "score": 15.0,
+      "max_score": 15.0
+    },
+    "acquisition_reasoning": {
+      "score": 19.0,
+      "max_score": 19.0
+    },
+    "plan_economics": {
+      "score": 19.0,
+      "max_score": 19.0
+    },
+    "cross_table_data_quality": {
+      "score": 16.5,
+      "max_score": 18.0
+    },
+    "decision_quality": {
+      "score": 9.0,
+      "max_score": 9.0
+    }
+  },
+  "criteria": {
+    "duplicate_detected": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "both rows quoted verbatim, the stripe row of 2026-10-01 and the billing_sync twin of 2026-10-02",
+      "reason": "Identified and excluded; the deduped October total of EUR 873.4k is the one it works from."
+    },
+    "annual_prepayment_normalized": {
+      "result": "PASS",
+      "points_awarded": 6.0,
+      "points_possible": 6.0,
+      "evidence": "'October invoice: EUR 120,000 for 12 months. Monthly equivalent: EUR 10,000 ... overstates October economic revenue by EUR 110,000'",
+      "reason": "Invoice, monthly equivalent and timing effect all stated."
+    },
+    "headline_vs_recurring_growth": {
+      "result": "PASS",
+      "points_awarded": 6.0,
+      "points_possible": 6.0,
+      "evidence": "the four-row table: raw deduped +9.6%, raw with duplicate +12.0%, normalized MRR +1.6%, forward active MRR -1.8%",
+      "reason": "Every basis labelled with what is in it, and the gap attributed to the annual invoice, the duplicate, the advance invoices and the services drop."
+    },
+    "revenue_conclusion": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'October's raw revenue spike is not real growth' as the first line of the bottom line",
+      "reason": "Carried to leadership with figures behind it."
+    },
+    "segment_retention_quantified": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "logo churn by segment (0%, 10%, 30.8%) and ARR churn (0%, 10.6%, 26.3%) side by side, plus NRR excluding new logos of 100% / 89.8% / 73.7%",
+      "reason": "Three correct bases, all labelled as segment, populations ranked, and the interpretation follows from them."
+    },
+    "sample_size_arr_context": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'Four SMB Starter churns removed EUR 123.6k ARR. But five October new logos added EUR 133.2k ARR, all SMB. SMB forward MRR is slightly up EUR 0.8k' against Mid-market's -EUR 14.5k on two accounts",
+      "reason": "Sizes the churn, nets it, and puts the Mid-market loss beside it."
+    },
+    "acme_false_positive_avoided": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'Requests: 4.200m -> 2.310m = -45.0% / Tokens: 4,620m -> 4,066m = -12.0% / Tokens per request: 1,100 -> 1,760'",
+      "reason": "Three figures against the stated migration, and it generalises the lesson to the metric rather than only to the account."
+    },
+    "no_churn_overreach": {
+      "result": "PASS",
+      "points_awarded": 2.0,
+      "points_possible": 2.0,
+      "evidence": "'This suggests low engagement before churn, but the sample is small' and 'No channel-to-churn linkage'",
+      "reason": "Names the pattern, refuses the cause, and flags that the channel of churned accounts is not even recorded."
+    },
+    "raw_attribution_not_equivalent_new_business": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'EUR 210k expansion ARR attributed, including Hooli, Stark, Umbrella, and Globex' against its new-logo ARR of EUR 64.8k",
+      "reason": "The split is stated and the accounts named."
+    },
+    "existing_customer_expansion_removed": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "new-logo ARR table: Partner EUR 166.8k, Content EUR 91.2k, Paid search EUR 64.8k, Outbound EUR 56.4k, total EUR 379.2k",
+      "reason": "Every figure exact and the ranking reversed against the raw table."
+    },
+    "conversion_rate_vs_absolute_volume": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "the two-month funnel table plus 'paid-search trial rate fell from 8.5% to 6.4%' on lead volume 520 -> 900",
+      "reason": "Both movements present and read against each other."
+    },
+    "no_unsupported_channel_scale_decision": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "'Do not increase spend on any acquisition channel based on this pack' with five numbered prerequisites",
+      "reason": "Refuses the increase and names exactly what would change the answer."
+    },
+    "cac_payback_unavailable": {
+      "result": "PASS",
+      "points_awarded": 2.0,
+      "points_possible": 2.0,
+      "evidence": "the payback formula written out, then each input checked against the pack and found missing",
+      "reason": "'Until then, any CAC payback by channel number would be fabricated.'"
+    },
+    "contribution_calculated": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "all six month-plan combinations: 212.0, 194.7, 42.5, 41.5, 8.4, 10.3",
+      "reason": "Formula stated, every figure exact."
+    },
+    "margin_calculated_or_correctly_compared": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "32.2% / 29.5% / 67.5% / 62.7% / 34.9% / 32.2%, plus blended 35.2% -> 32.5%",
+      "reason": "All correct including the blended figure."
+    },
+    "absolute_vs_scalable_economics": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'Enterprise is 87% of October reported MRR ... But its margin is the lowest' with contribution per customer EUR 13.9k against Pro's EUR 4.61k, and the product decision routed to Pro while Enterprise gets cost work",
+      "reason": "Holds both halves and says which question each answers."
+    },
+    "plan_trajectory_evidence": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "'requests 3.465m to 3.977m, +14.8%' and the three named accounts over the 600k allowance - Wonka 1.020m, Aperture 705k, Vandelay 690k",
+      "reason": "Growth and distribution both quantified; the accounts are read, not the average."
+    },
+    "product_focus_supported": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'Give the Pro plan the next quarter's primary product/engineering focus' on margin, contribution per customer, +14.8% usage, rate-limit tickets 5 -> 13 and the over-limit accounts",
+      "reason": "Five signals, and Enterprise explicitly routed to cost work instead."
+    },
+    "customer_id_alias_resolved": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'Enterprise requests excluding Acme: Sep 26.54m - 4.20m = 22.34m'. The 26.54m enterprise-plan total is only reachable with wayne_ent's 3.10m joined; without it the figure is 23.44m",
+      "reason": "The join was done. The alias is not described, but the arithmetic cannot be produced without it."
+    },
+    "support_normalized": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'Oct tickets per active customer' per segment: Enterprise 25/8 = 3.13, Mid-market 23/9 = 2.56, SMB 26/14 = 1.86",
+      "reason": "Normalises on a stated denominator, on active customers, and never reasons from a raw count. All six ticket totals are exact."
+    },
+    "cross_table_customer_signal": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "Soylent across usage, revenue and support; Acme across usage, tokens, revenue and contract end",
+      "reason": "Several account-level findings from three or more tables, each with its figures."
+    },
+    "figures_carried_correctly": {
+      "result": "PARTIAL",
+      "points_awarded": 1.5,
+      "points_possible": 3.0,
+      "evidence": "'Total tokens grew from 32.435m to 33.937m, +4.6%'. October is exact; September is 32.1345m, so the growth is +5.6%",
+      "reason": "One aggregate wrong by 0.9% and the derived rate by a full point, outside the stated tolerance. Everything else checkable is exact - the ARR bridge, GRR/NRR, all six contribution figures, the attribution split, all six ticket totals, the utilisation percentages and 'Enterprise requests excluding Acme +8.0%'. No decision rests on the token line."
+    },
+    "causal_boundary": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "'This is enough for diagnosis, but not enough for strong causal claims' with the Soylent trio reported together as a risk signal",
+      "reason": "Assembles the pattern and refuses the mechanism."
+    },
+    "segment_recommendation": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "'Do not reduce investment in any customer segment this week ... Cutting SMB acquisition would likely remove the only segment adding customers'",
+      "reason": "Refuses the cut, quantifies why, and gives a next step per segment."
+    },
+    "acquisition_recommendation": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "'Do not increase spend on any acquisition channel based on this pack' with Partner named as the best observed ARR per lead and five prerequisites listed",
+      "reason": "Follows the corrected view and conditions everything on the missing cost data."
+    },
+    "product_recommendation": {
+      "result": "PASS",
+      "points_awarded": 1.0,
+      "points_possible": 1.0,
+      "evidence": "'Give the Pro plan the next quarter's primary product/engineering focus'",
+      "reason": "Single, actionable, consistent with section 4."
+    },
+    "uncertainty_discipline": {
+      "result": "PASS",
+      "points_awarded": 2.0,
+      "points_possible": 2.0,
+      "evidence": "twelve items including no overage pricing, no channel-to-churn linkage and plan counts not being active-only",
+      "reason": "All material, several beyond the answer key, nothing invented."
+    }
+  },
+  "false_actions": {},
+  "penalties": {
+    "items": [],
+    "dismissed": [],
+    "raw_total": 0.0,
+    "total": 0.0,
+    "capped": false
+  },
+  "deterministic_checks": [
+    {
+      "id": "contoso_11_00",
+      "matched": false,
+      "detail": "'11:00' appears near a mention of Contoso"
+    },
+    {
+      "id": "churn_3_1_to_4_4",
+      "matched": true,
+      "detail": "both churn figures 3.1 and 4.4 are present"
+    },
+    {
+      "id": "umbrella_metrics_present",
+      "matched": false,
+      "detail": "at least two of 163 / 1821 / 41 appear near a mention of Umbrella"
+    },
+    {
+      "id": "umbrella_named",
+      "matched": true,
+      "detail": "Umbrella is named in the response"
+    },
+    {
+      "id": "wednesday_present",
+      "matched": false,
+      "detail": "'Wednesday' appears in the response"
+    },
+    {
+      "id": "julia_present",
+      "matched": false,
+      "detail": "'Julia' appears in the response"
+    },
+    {
+      "id": "pied_piper_and_hooli",
+      "matched": false,
+      "detail": "both known cancellations are named"
+    }
+  ],
+  "disagreements": [],
+  "base_score": 98.5,
+  "final_score": 98.5
+}

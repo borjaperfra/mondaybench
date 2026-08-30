@@ -1,0 +1,49 @@
+# MondayBench #004 "Numbers Don't Lie" - PROPOSED rubric 0.3.
+#
+# Rubric 0.3 = 0.2 plus `figures_carried_correctly` and three repricings. Used
+# for the second shadow rescore of the v0.1 responses and for the fresh
+# calibration battery. Still not official and still not publishable: the
+# scenario is status=calibration.
+#
+# Same scenario, same candidate prompt, different scoring. The scenario content
+# is byte-identical to what evaluator-opus5-v0.4-calibration was run against, so
+# the rendered prompt still hashes to
+# 3a0cbb569ca4f711b8907177af9204cec267d26f35f732829df56b03ed23ef99 and the six
+# qualifying v0.1 responses can be rescored without regenerating anything.
+#
+# It carries two batteries, and they must not be confused. The six v0.1
+# responses rescored under it are a SHADOW: no model was regenerated, and their
+# purpose is to show what the reprice moves. The seven runs generated under the
+# 96,000-token safety ceiling are the FRESH CALIBRATION, and only those build a
+# leaderboard - a draft one, under analysis/leaderboards/, because the scenario
+# is status=calibration. Output for both lives under
+# evaluations/evaluator-opus5-v0.4-calibration-3/ beside the v0.1 evaluation,
+# and neither replaces the other.
+#
+# `provider: anthropic` / `model_id: claude-opus-5` record WHICH MODEL reasoned
+# about the responses, for provenance. They are not a routing instruction: this
+# project never calls the Anthropic API and never spends Anthropic API credits.
+# Labels are produced in a recorded Claude Code session and replayed with
+# `evaluate --verdicts`.
+id: evaluator-opus5-v0.4-calibration-3
+scenario: monday-004
+scenario_version: "0.1"
+rubric_version: "0.3"
+rubric_file: rubric-0.3.yaml
+status: calibration
+
+judge:
+  provider: anthropic
+  api_style: anthropic
+  model_id: claude-opus-5
+  prompt_file: judge-prompt.md
+  penalty_prompt_file: penalty-judge-prompt.md
+
+generation:
+  temperature: 0
+  max_output_tokens: 0
+
+behavior:
+  require_evidence: true
+
+ground_truth_map: {}

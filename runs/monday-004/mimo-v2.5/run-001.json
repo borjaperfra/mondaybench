@@ -1,0 +1,71 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.4",
+  "scenario_id": "monday-004",
+  "scenario_prompt_sha256": "3a0cbb569ca4f711b8907177af9204cec267d26f35f732829df56b03ed23ef99",
+  "run_id": "monday-004__mimo-v2.5__001",
+  "run_number": 1,
+  "model": {
+    "slug": "mimo-v2.5",
+    "display_name": "MIMO v2.5",
+    "provider": "nan",
+    "model_id": "mimo-v2.5"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 32000,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+    "extra_body": {
+      "caching": false
+    },
+    "config_sha256": "3ad2b0cfaea8e33030da7dd5840c37bdea327c767fbe7f524bfdb331dd85d753"
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "DELIVERED",
+    "tokens": 0,
+    "evidence": "explicit_reasoning_stream",
+    "stream_observed": true,
+    "stream_event_count": 7822
+  },
+  "timestamp_utc": "2026-08-29T08:05:02Z",
+  "usage": {
+    "input_tokens": 12935,
+    "output_tokens": 32000,
+    "reasoning_tokens": 0
+  },
+  "performance": {
+    "ttft_ms": 2601.1,
+    "ttfa_ms": 388732.4,
+    "total_latency_ms": 434023.6,
+    "tokens_per_second": 74.2
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "# Northstar — Monday Business Review Analysis\n\n---\n\n## 1. EXECUTIVE SUMMARY\n\n**Total ARR has declined.** Northstar entered October with approximately €8.96M in ARR across 35 active customers. Five customers churned during October (1 Mid-market, 4 SMB), taking €303,600 in ARR with them. New logos and expansions have not yet fully offset this loss at the current-run-rate level.\n\n**The plans data overstates October performance.** The plans.csv counts all customers invoiced during October, including those that churned mid-month. On an end-of-month basis, effective MRR declined from ~€746K to ~€732K — a loss of ~€14K, or -1.8%.\n\n**Enterprise plan margins are compressing.** Revenue is flat at ~€660K MRR but infrastructure and support costs are both climbing, pushing gross margin from 32.2% to 29.5% in one month.\n\n**Soylent (€234K ARR) is an urgent retention risk.** Usage fell 27%, support ticket volume nearly tripled (including a critical-severity ticket), and billing was recently reduced. If lost, this would be the largest single customer churn since the data period began.\n\n**We cannot answer the CFO's CAC payback question.** No channel spend data is available, and trial-to-paid conversion is not tracked. This is a hard blocker, not an analytical gap.\n\n**Recommendation:** Do not cut the SMB segment wholesale — cut selectively by plan. Do not increase paid_search spend without cost data. Prioritise engineering investment in the **Pro plan** where rate-limit friction is driving support load and may have contributed to Nakatomi's churn.\n\n---\n\n## 2. REVENUE & CUSTOMER HEALTH\n\n### 2a. MRR Bridge — What Actually Happened in October\n\n| Item | MRR impact |\n|---|---|\n| September ending MRR (all active customers) | ~€746,100 |\n| Nakatomi churn (Pro, Oct 19) | −€15,000 |\n| 4× Starter churns (slate-rock, mega-lo, dinoco, buy-n-large) | −€10,300 |\n| Soylent rate adjustment | −€2,500 |\n| Hooli expansion (booked Sep, effective Oct) | +€3,000 |\n| 5× new logos (spacely, cogswell, bishop, gekko, paper-street) | +€11,100 |\n| **October ending MRR** | **~€732,400** |\n| **Net MRR change** | **−€13,700 (−1.8%)** |\n\n> Note: the plans.csv reports October MRR as €757,700. That figure includes five customers who churned during October but were still invoiced. It does not represent the true run-rate entering November.\n\n### 2b. ARR Summary\n\n| | Start of Oct | End of Oct | Change |\n|---|---|---|---|\n| Enterprise segment (8 customers) | €6,780,000 | €6,780,000 | — |\n| Mid-market (10 → 9 active) | €1,710,000 | €1,530,000 | −€180,000 |\n| SMB (18 → 14 active) | €602,400 | €478,800 | −€123,600 |\n| **Total** | **€9,092,400** | **€8,788,800** | **−€303,600 (−3.3%)** |\n\nPending expansion bookings (stark +€84K, umbrella +€48K, globex +€42K, massive-dynamic +€18K, cyberdyne +€24K = **+€216K**) will take effect in November's billing cycle. Once booked, total ARR would recover to ~€9,004,800 — modestly above the October start. However, this depends on those expansions actually billing, and the churned ARR is permanently lost.\n\n### 2c. Churn Detail\n\nAll five October churns were customers with **declining usage and unresolved support issues**:\n\n| Customer | Segment | Plan | ARR lost | Usage Δ (Sep→Oct) | Support pattern |\n|---|---|---|---|---|---|\n| Nakatomi | Mid-market | Pro | €180,000 | −16.1% | High-severity api_errors ticket was **open** at churn |\n| Slate-rock | SMB | Starter | €24,000 | −34.7% | High api_errors ticket was open going into Oct |\n| Mega-lo-mart | SMB | Starter | €32,400 | −37.1% | Low billing ticket pending |\n| Dinoco | SMB | Starter | €27,600 | −35.5% | Escalated from low billing (Sep) to high api_errors (Oct) |\n| Buy-n-large | SMB | Starter | €39,600 | −37.0% | Low billing ticket pending |\n\nThe Starter churns share two traits: sharp usage declines (34–37%) and billing-related support tickets. This suggests price sensitivity or value dissatisfaction. The Nakatomi churn is more concerning — it is a mid-market Pro customer lost with a high-severity ticket unresolved.\n\n### 2d. Soylent — Retention Risk Alert\n\nSoylent is the clearest near-term churn risk in the portfolio:\n\n- **Usage:** dropped 27% (980K → 715K requests; 56 → 41 active users)\n- **Support:** 3 tickets in September → 8 in October, including 1 critical-severity and 3 high-severity (one still open)\n- **Billing:** September invoice was €22,000 but current ARR implies €19,500/mo; October invoice matched the lower rate — suggesting a recent concession\n- **Duplicate invoice:** INV-2026-10-0209 appears twice (stripe + billing_sync, each €19,500). If both settle, Soylent is overbilled by €19,500, which would further damage the relationship.\n\nSoylent represents €234,000 ARR. Losing it would be the single largest churn event in this dataset.\n\n### 2e. Near-Term Renewal Exposure\n\nWayne Enterprises (€1,008,000 ARR, 2nd-largest customer) renews **30 November 2026** — less than two months away. Usage is healthy (+10%) but the customer has 4 high-severity support tickets across Sep–Oct (api_errors and performance), with 2 currently open/pending. This renewal must be actively managed.\n\n---\n\n## 3. ACQUISITION\n\n### 3a. New Logos by Channel\n\n| Channel | Sep new logos | Sep attributed ARR | Oct new logos | Oct attributed ARR | Total |\n|---|---|---|---|---|---|\n| Partner | 2 | €166,800 | 0 | €0 | €166,800 |\n| Content | 1 | €45,600 | 2 | €45,600 | €91,200 |\n| Outbound | 1 | €33,600 | 1 | €22,800 | €56,400 |\n| Paid search | 0 | €0 | 2 | €64,800 | €64,800 |\n| **Total** | **4** | **€246,000** | **5** | **€133,200** | **€379,200** |\n\nPartner drove the highest-value new logos in September (vandelay at €132K) but had zero new logos in October. Paid search was the only channel to generate expansion bookings (stark +€84K, umbrella +€48K, globex +€42K in October alone).\n\n### 3b. Expansion Bookings by Channel\n\n| Channel | Sep expansions | Oct expansions | Total attributed |\n|---|---|---|---|\n| Paid search | €36,000 (hooli) | €174,000 (stark, umbrella, globex) | €210,000 |\n| Content | — | €18,000 (massive-dynamic) | €18,000 |\n| Outbound | — | €24,000 (cyberdyne) | €24,000 |\n| **Total** | **€36,000** | **€216,000** | **€252,000** |\n\n> Important caveat: expansion attribution is typically last-touch. We cannot conclude that paid_search *caused* these expansions — they may reflect organic account growth that happened to be attributed to the most recent paid touch. This is an attribution limitation, not evidence of channel effectiveness.\n\n### 3c. Funnel: Lead → Trial (Not Lead → Paid)\n\n| Channel | Sep leads | Sep trials | Sep trial rate | Oct leads | Oct trials | Oct trial rate |\n|---|---|---|---|---|---|---|\n| Paid search | 520 | 44 | 8.5% | 900 | 58 | 6.4% |\n| Content | 260 | 31 | 11.9% | 330 | 34 | 10.3% |\n| Partner | 60 | 15 | 25.0% | 75 | 17 | 22.7% |\n| Outbound | 160 | 10 | 6.3% | 195 | 11 | 5.6% |\n\nPaid search lead volume nearly doubled (520 → 900) but trial conversion deteriorated (8.5% → 6.4%), suggesting lead quality is falling as spend scales. Partner has the best trial rate by far but very low volume.\n\n### 3d. What Cannot Be Concluded\n\n1. **CAC and CAC payback are impossible to calculate.** The data pack contains no channel spend data (ad spend, sales costs, agency fees). Without cost, there is no CAC. The CFO's request cannot be fulfilled with this data.\n\n2. **Trial-to-paid conversion is not tracked.** The funnel stops at trial. We cannot close the loop from trial to revenue.\n\n3. **Channel ROI cannot be determined.** We see attributed revenue but not cost. A channel with high attributed revenue might also have high cost, making it the least efficient.\n\n4. **The apparent paid_search expansion \"success\" may be an attribution artefact.** Three large enterprise customers (stark, umbrella, globex) expanded in October with paid_search as the attributed channel. These are mature accounts (customer since 2023–2024). Their expansion likely reflects organic growth, not a paid campaign response.\n\n---\n\n## 4. PLAN ECONOMICS\n\n### 4a. Plan-Level P&L (from plans.csv)\n\n| Metric | Enterprise Sep | Enterprise Oct | Pro Sep | Pro Oct | Starter Sep | Starter Oct |\n|---|---|---|---|---|---|---|\n| Customers (invoiced) | 14 | 14 | 8 | 9 | 9 | 13 |\n| MRR | €659,000 | €659,500 | €63,000 | €66,200 | €24,100 | €32,000 |\n| Infra cost | €288,000 | €296,800 | €13,600 | €16,100 | €8,400 | €11,400 |\n| Support cost | €159,000 | €168,000 | €6,900 | €8,600 | €7,300 | €10,300 |\n| **Gross margin** | **€212,000** | **€194,700** | **€42,500** | **€41,500** | **€8,400** | **€10,300** |\n| **Margin %** | **32.2%** | **29.5%** | **67.5%** | **62.7%** | **34.9%** | **32.2%** |\n\nAll three plans show **declining margins month-over-month**. Costs are growing faster than revenue across the board.\n\n### 4b. Per-Customer Economics\n\n| Metric | Enterprise Sep | Enterprise Oct | Pro Sep | Pro Oct | Starter Sep | Starter Oct |\n|---|---|---|---|---|---|---|\n| MRR / customer | €47,071 | €47,107 | €7,875 | €7,356 | €2,678 | €2,462 |\n| Infra / customer | €20,571 | €21,200 | €1,700 | €1,789 | €933 | €877 |\n| Support / customer | €11,357 | €12,000 | €863 | €956 | €811 | €792 |\n| **Margin / customer** | **€15,143** | **€13,907** | **€5,313** | **€4,611** | **€93",
+  "finish_reason": "length",
+  "provider_metadata": {
+    "request_id": "chatcmpl-86c4ee93-1349-432f-99ea-41b6bd74eeec_5ed4bcc47b3146cb9c106192fd4d3683",
+    "raw_usage": {
+      "completion_tokens": 32000,
+      "prompt_tokens": 12935,
+      "total_tokens": 44935,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.4",
+  "scenario_id": "monday-004",
+  "scenario_prompt_sha256": "3a0cbb569ca4f711b8907177af9204cec267d26f35f732829df56b03ed23ef99",
+  "run_id": "monday-004__qwen3.8-flash__005",
+  "run_number": 5,
+  "model": {
+    "slug": "qwen3.8-flash",
+    "display_name": "Qwen 3.8 Flash",
+    "provider": "nan",
+    "model_id": "qwen3.8-flash"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 96000,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+    "extra_body": {
+      "caching": false
+    },
+    "config_sha256": "0334e859af6fd77df52b464fb67919293969500d9ac2fa53251071091e15c65e",
+    "safety_ceiling_tokens": 96000,
+    "ceiling_semantics": "provider_specific"
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "NOT_DELIVERED",
+    "tokens": 0,
+    "evidence": null,
+    "stream_observed": false,
+    "stream_event_count": 0
+  },
+  "timestamp_utc": "2026-08-30T17:04:58Z",
+  "usage": {
+    "input_tokens": 12992,
+    "output_tokens": 3511,
+    "reasoning_tokens": 0
+  },
+  "performance": {
+    "ttft_ms": 3338.3,
+    "ttfa_ms": 3338.3,
+    "total_latency_ms": 36332.5,
+    "tokens_per_second": 106.4
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "# Northstar Business Review: Monday Analysis\n\n## 1. EXECUTIVE SUMMARY\n\n**The headline revenue growth is an accounting artifact, not a performance improvement.** October’s apparent revenue surge is driven by the timing of annual contract renewals (specifically Gringotts) and professional services invoices, masking underlying stagnation in core subscription revenue.\n\n**Three critical risks require immediate attention:**\n1.  **SMB Churn & Support Load:** The SMB segment is experiencing high churn (4 customers lost in Oct) and a spike in support tickets, yet it generates negligible margin. Finance’s proposal to reduce investment here is supported by data, but only if we stop subsidizing their support costs.\n2.  **Enterprise Usage Shift:** Acme Corp’s 45% drop in interactive requests is due to a known migration to batch processing, not disengagement. However, this signals a potential future reduction in \"included request\" value for other Enterprise clients if they follow suit.\n3.  **Pro Plan Margin Erosion:** The Pro plan is showing signs of stress. While revenue grew slightly, infrastructure and support costs rose disproportionately, driven by rate-limit issues and integration failures among mid-market users.\n\n**Recommendation:** Do **not** increase spend on Paid Search based on current CAC payback data (which is incomplete). Instead, focus engineering resources on **Pro Plan stability** (rate limits/integrations) and **Enterprise Batch Processing features** to retain high-value accounts like Acme. Reduce SMB marketing spend immediately; shift those funds to Customer Success for Mid-Market retention.\n\n---\n\n## 2. REVENUE & CUSTOMER HEALTH\n\n### Headline vs. Reality\n*   **September Subscription Revenue:** €659,000 (Enterprise) + €63,000 (Pro) + €24,100 (Starter) = **€746,100**.\n    *   *Note:* This excludes Professional Services (€51,000 total in Sept).\n*   **October Subscription Revenue:** €659,500 (Enterprise) + €66,200 (Pro) + €32,000 (Starter) = **€757,700**.\n    *   *Note:* This includes Gringotts' annual renewal (€120,000 invoiced in Oct, covering 12 months). To compare apples-to-apples monthly recurring revenue (MRR), we must normalize this.\n\n**Normalized MRR Calculation:**\n*   **Sept MRR:** €746,100.\n*   **Oct MRR (Adjusted):**\n    *   Base Subscriptions: €757,700 - €120,000 (Gringotts Annual) = €637,700?\n    *   *Wait, let's look at the `plans.csv` which already normalizes annual contracts.*\n    *   According to `plans.csv`:\n        *   Sept Total MRR: €659k + €63k + €24.1k = **€746.1k**\n        *   Oct Total MRR: €659.5k + €66.2k + €32.0k = **€757.7k**\n    *   **Growth:** +€11.6k (+1.5%).\n\n**What is actually driving this?**\n1.  **New Logos:** Vandelay (Pro, €11k/mo), Planet Express (Pro, €3.8k/mo), Spacely Sprockets (Pro, €3.2k/mo), Monsters Inc (Starter, €2.8k/mo), Clampett Oil (Starter, €2.9k/mo), Cogswell Cogs (Starter, €2.1k/mo), Bishop Co (Starter, €1.7k/mo), Gekko Co (Starter, €2.2k/mo), Paper Street Soap (Starter, €1.9k/mo).\n    *   *Total New MRR added:* ~€31.6k.\n2.  **Churn:** Nakatomi (Pro, €15k/mo), Slate Rock (Starter, €2k/mo), Mega Lo Mart (Starter, €2.7k/mo), Dinoco (Starter, €2.3k/mo), Buy-N-Large (Starter, €3.3k/mo).\n    *   *Total Churned MRR:* ~€25.3k.\n3.  **Net New MRR:** €31.6k - €25.3k = **+€6.3k**.\n4.  **Expansion/Contraction:**\n    *   Soylent (Mid-Market): Dropped from €22k to €19.5k (-€2.5k).\n    *   Hooli (Mid-Market): Increased from €18k to €21k (+€3k).\n    *   Net Expansion: +€0.5k.\n5.  **Reconciliation:** €6.3k (Net New) + €0.5k (Net Exp) = €6.8k. The remaining difference (~€4.8k) likely comes from rounding or minor adjustments in the `plans.csv` aggregation vs raw invoice sums.\n\n**Customer Health Flags:**\n*   **Acme Corp:** Usage dropped 45%. **Context:** Operational note confirms this is a planned migration to batch runs. **Risk:** If Acme realizes they are paying for \"interactive\" capacity they no longer use, they may demand a price reduction at renewal (Feb 2027).\n*   **Soylent:** Usage dropped 27%, Revenue dropped 11%. High support volume (8 tickets in Oct, including Critical/High API errors). **Status:** At Risk.\n*   **Nakatomi:** Churned. Had high usage decline (-16%) and open high-severity tickets before churning.\n\n---\n\n## 3. ACQUISITION\n\n### Channel Performance & CAC Payback\nThe CFO asked for CAC payback. **We cannot calculate reliable CAC payback for any channel** because:\n1.  We have `attributed_revenue_eur` (ARR) per lead.\n2.  We do **not** have the cost of acquisition (ad spend, sales salaries, partner fees) per channel.\n3.  Without cost data, ROI/Payback is impossible.\n\nHowever, we can analyze **Volume and Quality**:\n\n| Channel | Leads (Oct) | Trials (Oct) | Conv Rate (Lead->Trial) | New Logos (Oct) | ARR Added (New) | Avg Deal Size (New) |\n| :--- | :--- | :--- | :--- | :--- | :--- | :--- |\n| Paid Search | 900 | 58 | 6.4% | 2 (Spacely, Gekko) | €64,800 | €32,400 |\n| Content | 330 | 34 | 10.3% | 2 (Cogswell, Bishop) | €45,600 | €22,800 |\n| Outbound | 195 | 11 | 5.6% | 1 (Paper St) | €22,800 | €22,800 |\n| Partner | 75 | 17 | 22.7% | 0 | €0 | N/A |\n\n**Key Findings:**\n*   **Paid Search Volume Spike:** Leads increased from 520 to 900 (+73%), but trials only increased from 44 to 58 (+32%). Conversion efficiency dropped.\n*   **Partner Channel Efficiency:** Highest trial conversion rate (22.7%), but zero new logos closed in October. It generated 17 trials but no paid conversions. This suggests a long sales cycle or poor qualification.\n*   **Content Marketing:** Best balance of volume and quality. 10.3% lead-to-trial rate. Generated two Starter-tier logos.\n*   **Outbound:** Low volume, low conversion. Only one small logo.\n\n**Decision Check:** Growth wants to increase spend on one channel.\n*   **Paid Search:** Increasing spend here is risky. The marginal lead quality appears to be dropping (conversion rate fell from 8.5% in Sept to 6.4% in Oct).\n*   **Content:** Shows stable, higher-quality intent.\n*   **Conclusion:** There is insufficient data to justify increasing Paid Search spend. In fact, the drop in conversion efficiency suggests we should pause scaling until we understand why more leads aren't converting to trials.\n\n---\n\n## 4. PLAN ECONOMICS\n\nWe must look at **Contribution Margin**, not just Revenue.\n*Formula:* `Revenue - Infra Cost - Support Cost`\n\n### September\n*   **Enterprise:** €659,000 - €288,000 - €159,000 = **€212,000** (Margin: 32%)\n*   **Pro:** €63,000 - €13,600 - €6,900 = **€42,500** (Margin: 67%)\n*   **Starter:** €24,100 - €8,400 - €7,300 = **€8,400** (Margin: 35%)\n\n### October\n*   **Enterprise:** €659,500 - €296,800 - €168,000 = **€194,700** (Margin: 29%)\n    *   *Analysis:* Costs rose while revenue stayed flat. Why? Support costs jumped €9k. Likely due to Acme's transition issues or general enterprise complexity.\n*   **Pro:** €66,200 - €16,100 - €8,600 = **€41,500** (Margin: 63%)\n    *   *Analysis:* Revenue up €3.2k, but Costs up €4.2k. **Margin declined.**\n    *   *Driver:* Support costs rose 25% (€6.9k -> €8.6k). Infrastructure costs rose 18% (€13.6k -> €16.1k).\n    *   *Root Cause:* Look at `support.csv`. Pro/Mid-market customers (Vandelay, Aperture, Prestige, Wonka) had significant ticket volume, particularly around `rate_limits` and `integration`.\n*   **Starter:** €32,000 - €11,400 - €10,300 = **€10,300** (Margin: 32%)\n    *   *Analysis:* Revenue up €7.9k (due to new logos), but Costs up €6.0k.\n    *   *Driver:* Support costs nearly doubled (€7.3k -> €10.3k).\n    *   *Root Cause:* High churn in Starter segment (4 customers) often correlates with high support effort during onboarding/churn. Also, new Starter customers (Monsters, Clampett, etc.) are generating tickets.\n\n**Verdict:**\n*   **Enterprise:** Still the largest absolute profit contributor, but margins are compressing.\n*   **Pro:** **Most concerning.** Margins are eroding rapidly due to support/infra costs associated with technical instability (rate limits).\n*   **Starter:** Lowest absolute profit, highest relative support burden per euro earned.\n\n---\n\n## 5. RECOMMENDATIONS\n\n### Decision 1: Reduce investment in one customer segment?\n**YES. Reduce investment in SMB (Starter Plan).**\n*   **Reasoning:**\n    *   SMB/Starter contributes only €10.3k in contribution margin (Oct).\n    *   It consumed €10.3k in support costs alone (nearly 100% of its margin).\n    *   Churn was concentrated here (4 out of 5 total churns were Starter/SMB).\n    *   Acquisition cost for these small deals is likely high relative to LTV.\n*   **Action:** Stop outbound/content targeting for Starter tier. Allow organic signups only. Move existing SMB support to self-serve documentation/chatbots. Reallocate CS staff to Mid-Market (Pro).\n\n### Decision 2: Increase spend on one acquisition channel?\n**NO. Do not increase Paid Search spend yet.**\n*   **Reasoning:**\n    *   Lead-to-Trial conversion dropped from 8.5% to 6.4%.\n    *   We lack cost data to prove positive ROI.\n    *   The \"efficiency\" of the funnel is degrading as volume increases.\n*   **Action:** Maintain current spend levels. Investigate *why* Paid Search leads are failing to convert to trials (landing page mismatch? wrong keyword intent?). Consider shifting budget to **Content Marketing**, which showed better conversion rates (10.3%) and attracted more qualified Mid-Market leads (e.g., Vandelay via Partner/Content mix, though Vandelay was Partner, Content drove Cogswell/Bishop).\n\n### Decision 3: Which product plan deserves most attention?\n**PRO PLAN (Mid-Market).**\n*   **Reasoning:**\n    *   **Financials:** Contribution margin dropped from 67% to 63% despite revenue growth.\n    *   **Product Health:** High incidence of `rate_limits` and `integration` tickets (Aperture, Vandelay, Prestige, Wonka).\n    *   **Strategic Value:** Mid-Market is the bridge between SMB (low value) and Enterprise (high touch). Losing them hurts growth. Fixing the \"Rate Limit\" experience will reduce support costs and improve retention.\n*   **Action:** Engineering priority #1: Optimize rate-limiting logic and provide clearer error messages/documentation for API integrations. This directly reduces support load and prevents churn.\n\n---\n\n## 6. UNCERTAINTIES / DATA ISSUES\n\n1.  **Missing Acquisition Costs:** We cannot calculate CAC, LTV:CAC ratio, or Payback Period. Any decision to \"increase spend\" is currently blind regarding profitability.\n2.  **Trial-to-Paid Lag:** `funnel.csv` tracks Lead->Trial. `acquisition.csv` tracks Trial->Paid. The time lag between these stages is unknown. A lead that converted to a trial in Sept might not become a paid customer until Nov. This makes month-over-month channel attribution noisy.\n3.  **Duplicate Invoice Record:** `INV-2026-10-0209` (Soylent) appears twice in `revenue.csv`. Once dated 2026-10-01 (source: stripe) and once 2026-10-02 (source: billing_sync). Both are €19,500.\n    *   *Impact:* If summed naively, October revenue is overstated by €19,500. My analysis above used `plans.csv` which likely deduplicates, but leadership must verify if the actual bank deposit reflects one or two payments.\n4.  **Usage Account ID Mismatch:** `customers.csv` uses `usage_account_id` (e.g., `wayne_ent`) while `revenue.csv` uses `customer_id` (e.g., `wayne-enterprises`). Linking requires careful mapping. I assumed `wayne_ent` maps to `wayne-enterprises` based on context, but automated pipelines may fail here.\n5.  **Professional Services Attribution:** PS revenue (Globex, Hooli, Aperture) is included in `revenue.csv` but excluded from `plans.csv` MRR. Leadership must decide if PS is treated as \"margin filler\" or \"strategic loss leader.\" Currently, it distorts the \"Revenue\" headline without affecting \"Plan Economics.\"",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "chatcmpl-2634be9e-360b-9ebf-a791-b675ffea948e",
+    "raw_usage": {
+      "completion_tokens": 3511,
+      "prompt_tokens": 12992,
+      "total_tokens": 16503,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "text_tokens": 12992
+      }
+    }
+  }
+}

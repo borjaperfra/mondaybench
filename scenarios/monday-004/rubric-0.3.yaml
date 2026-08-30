@@ -1,0 +1,341 @@
+rubric_version: "0.3"
+scenario_id: monday-004
+total_points: 100
+
+# PROPOSED. Scoring only. Not yet used for any published result.
+#
+# v0.3 = v0.2 plus ONE criterion and three repricings, nothing else. The
+# candidate-visible scenario is still byte-identical to v0.1, so the rendered
+# prompt still hashes to
+# 3a0cbb569ca4f711b8907177af9204cec267d26f35f732829df56b03ed23ef99.
+#
+# Why: the v0.2 shadow rescore gave Qwen 3.8 Flash 100.0 while its answer cites
+# three figures that are not in the data - Pro September tokens as 2,725.5M
+# against 2,425.5M, and Pro active users as 338 and 364 against 288 and 331 -
+# and reports a Pro token trajectory of +2.1% that its own correct +14.8%
+# request trajectory contradicts. No criterion in v0.1 or v0.2 asks whether the
+# figures a response quotes are the figures in the pack. In a benchmark whose
+# subject is quantitative business analysis, that is a hole.
+#
+# monday-003 met the same hole and closed it the same way, with
+# `factual_plan_accuracy` in rubric 0.3. This is that criterion for this
+# scenario.
+#
+#   + figures_carried_correctly           3   (new, cross_table_data_quality)
+#   - cac_payback_unavailable         3 -> 2   (6/6 PASS in v0.1 and in v0.2)
+#   - contribution_calculated         4 -> 3   (6/6 PASS in v0.1 and in v0.2)
+#   - product_recommendation          2 -> 1   (6/6 PASS in v0.1 and in v0.2)
+#
+# All three funders have zero variance in the v0.2 shadow rescore; the full
+# variance table is in analysis/monday-004-rubric-v0.3.md. Dimension totals move
+# to 20 / 15 / 19 / 19 / 18 / 9 and still sum to 100.
+#
+# Everything below this line is v0.2 unchanged except where marked.
+#
+# The candidate-visible scenario is BYTE-IDENTICAL to v0.1. Nothing in
+# source_order changed, so the rendered prompt still hashes to
+# 3a0cbb569ca4f711b8907177af9204cec267d26f35f732829df56b03ed23ef99 and every v0.1
+# response can be rescored against this file without regenerating anything.
+# rubric.yaml (v0.1) stays on disk exactly as the calibration scores were
+# derived from it.
+#
+# v0.2 changes two things and clarifies two more. Every change is justified
+# against the measured v0.1 variance across the six qualifying runs, which is
+# recorded in analysis/monday-004-rubric-v0.2.md.
+#
+# 1. `segment_churn_math` is replaced by `segment_retention_quantified`.
+#    v0.1 asked for logo churn by segment. All six runs scored PARTIAL or FAIL
+#    and none passed, because the four strong models computed ARR-weighted
+#    churn or net revenue retention instead - better metrics for the decision
+#    actually on the table. The criterion demanded a particular representation
+#    of an idea rather than the idea. Same 5 points, rewritten semantically.
+#
+# 2. Plan economics is rebalanced away from arithmetic that nobody got wrong.
+#    `contribution_calculated` (6, sd 0.00, 6/6 PASS),
+#    `margin_calculated_or_correctly_compared` (4, sd 0.00, 6/6 PASS) and
+#    `enterprise_revenue_not_margin` (4, sd 0.00, 6/6 PASS) were 14 of the
+#    dimension's 20 points and separated nothing: subtracting two adjacent
+#    columns in plans.csv is a floor, not a skill. The arithmetic is NOT made
+#    harder - the data is untouched. The first two are repriced as the floor
+#    they are, the third is replaced by a criterion that asks what follows from
+#    the contrast rather than whether it was noticed, and one new criterion
+#    scores the usage trajectory evidence that v0.1 only bundled inside
+#    `product_focus_supported`.
+#
+# 3. `support_normalized` now names the denominators that count. Two v0.1 runs
+#    normalised support cost against revenue, which is defensible and was not
+#    in the criterion's list. Wording only; no points move.
+#
+# 4. `customer_id_alias_resolved` now states what happens when a response never
+#    attempts an account-level join at all. Three v0.1 runs sat in that gap and
+#    the text did not cover it. Wording only; no points move.
+#
+# Everything else - all of revenue_reasoning, acquisition_reasoning,
+# cross_table_data_quality and decision_quality - is unchanged from v0.1,
+# including the tolerances below.
+#
+# Numbers are graded with a stated tolerance, never against a string.
+# Percentages pass within +/- 0.5 percentage points of the canonical value
+# unless the difference changes the decision; currency within 1%, or exactly
+# where the figure is a count or a single invoice. Arithmetic that reaches the
+# same place by another route passes. No criterion is worth more than 6 points.
+
+dimensions:
+
+  revenue_reasoning:
+    max_points: 20
+    criteria:
+      - id: duplicate_detected
+        points: 4
+        partial_points: 2
+        pass: "Identifies that one October invoice is recorded twice under the same transaction_id (INV-2026-10-0209, Soylent, EUR 19,500, loaded from two sources) and excludes one copy before quoting an October total."
+        partial: "Flags a possible duplicate or a suspicious pair of rows without identifying the transaction, or identifies it but still quotes the inflated total as the October figure."
+        fail: "The duplicate is not mentioned, or its existence is denied."
+      - id: annual_prepayment_normalized
+        points: 6
+        partial_points: 3
+        pass: "Identifies the EUR 120,000 Gringotts invoice covering twelve months and converts it to its monthly equivalent of EUR 10,000 before comparing months. Any equivalent treatment - dividing by twelve, excluding it and noting the exclusion, or restating October on a recurring basis - counts."
+        partial: "Notices that October contains a large or annual invoice, or that the two months are not comparable, without normalising it or without stating the monthly equivalent."
+        fail: "Treats the EUR 120,000 as October revenue with no adjustment, or treats it as Gringotts' monthly value."
+      - id: headline_vs_recurring_growth
+        points: 6
+        partial_points: 3
+        pass: "States both figures: the headline of about +12% on the raw invoice sum, and a normalised figure that refutes it. Two normalisations are correct and they do not land in the same place - subscriptions only gives roughly +1.6%, and subscriptions plus one-off services gives roughly -4.2%, because September carried EUR 51,000 of professional services against October's EUR 5,700. Either passes (tolerance +/- 1.5 points, and 'roughly flat' or 'low single digits' passes for the first) provided the treatment is stated. The gap is attributed to the annual invoice, and to the duplicate where the candidate found it."
+        partial: "Establishes that the headline overstates underlying growth but gives only one of the two figures, or gives a normalised figure outside both tolerances while the reasoning is right, or gives a figure without saying which invoices are in it."
+        fail: "Reports the headline growth as the real growth rate, or offers no month-on-month comparison."
+      - id: revenue_conclusion
+        points: 4
+        partial_points: 2
+        pass: "The section's conclusion is that underlying recurring revenue is roughly flat and that the growth in the reported number is non-recurring, and the conclusion is carried into what leadership is told rather than left in the workings."
+        partial: "Reaches the right conclusion but hedges it against the headline, or states it without any figure behind it."
+        fail: "Concludes that revenue grew materially, or leaves the reader with the headline as the answer."
+
+  customer_health:
+    max_points: 15
+    criteria:
+      # REWRITTEN IN 0.2. Was `segment_churn_math`, which required logo churn
+      # specifically and was passed by nobody. What matters for the decision on
+      # the table is that the retention problem is quantified correctly and
+      # ranked correctly, not which of the three standard metrics was used.
+      #
+      # Deliberately scoped to the QUANTIFICATION only. The disproportion
+      # between logo share and ARR impact belongs to `sample_size_arr_context`
+      # and the decision belongs to `segment_recommendation`; neither is charged
+      # here, so the same idea is never paid for twice.
+      - id: segment_retention_quantified
+        points: 5
+        partial_points: 2.5
+        pass: "Quantifies retention or churn across the customer populations on any correct and clearly labelled basis, and gets the ranking right. Any of these counts, and no particular one is required: logo churn (SMB 4 of 18 = 22.2%, Mid-market 1 of 10 = 10.0%, Enterprise 0 of 8); ARR-weighted churn (SMB EUR 123,600 against an SMB base of about EUR 602,400, roughly 20-26% depending on whether the base is opening or closing); or gross/net revenue retention by segment. Plan-level figures - Starter 4 of 13, Pro 1 of 9, Enterprise plan 0 of 14 - are equally correct provided they are labelled as plan rather than segment. The framing must be stated and used consistently, and the figures must support the interpretation the response then draws."
+        partial: "Quantifies retention for some populations but not enough to rank them; or one denominator or base is wrong in a way that does not change which population is worst; or the segment and plan framings are mixed without saying so."
+        fail: "No quantification of churn or retention on any basis, or a figure that misstates which population is worst, or plan counts presented as segment counts with no other figures to correct them."
+      - id: sample_size_arr_context
+        points: 4
+        partial_points: 2
+        pass: "Puts the SMB rate in context with at least one of: the size of the denominator (18 customers, 4 events), the ARR lost (EUR 123,600, about 1.4% of the book), or the comparison that the single Mid-market churn cost EUR 180,000 - more than all four SMB churns together."
+        partial: "Notes that SMB is small or that the numbers are few, without quantifying it."
+        fail: "Treats the SMB rate as directly comparable with the other segments' rates with no reference to size or value."
+      - id: acme_false_positive_avoided
+        points: 4
+        partial_points: 2
+        pass: "Identifies Acme's roughly -45% request decline, connects it to the stated batch migration, and shows the account is otherwise healthy using at least one further figure - tokens down only about 12%, active users about flat, MRR unchanged at EUR 78,000, or no rise in tickets."
+        partial: "Cites the migration and declines to call it churn risk, but supports it with no second signal; or flags the decline as a risk while acknowledging the migration."
+        fail: "Presents Acme as a churn or revenue risk on the request decline, or does not mention the decline at all."
+      - id: no_churn_overreach
+        points: 2
+        partial_points: 1
+        pass: "Does not claim a cause for the churn that has happened. Churn reasons are absent from the pack and the response says so, or simply refrains from asserting one."
+        partial: "Offers a speculative cause but labels it as a hypothesis to be tested."
+        fail: "States why customers churned as though the data showed it."
+
+  acquisition_reasoning:
+    max_points: 19
+    criteria:
+      - id: raw_attribution_not_equivalent_new_business
+        points: 5
+        partial_points: 2.5
+        pass: "States that Paid Search's leading attributed revenue (EUR 274,800) is not new business, and gives the split or its size: EUR 210,000 of it, about 76%, is expansion on existing accounts."
+        partial: "Observes that attribution includes expansion or existing customers without quantifying it, or quantifies it for the whole table without singling out Paid Search."
+        fail: "Ranks channels on attributed revenue with no adjustment."
+      - id: existing_customer_expansion_removed
+        points: 5
+        partial_points: 2.5
+        pass: "Recomputes the ranking on new-logo revenue and gets the reversal: Partner EUR 166,800 first, Content EUR 91,200 second, Paid Search EUR 64,800 third (tolerance 1%). Using new-logo counts, or first_customer_date preceding campaign_start, to reach the same ordering also passes."
+        partial: "Separates new logos from expansion but gets the resulting ranking or two of the three figures wrong, or does it for Paid Search alone."
+        fail: "No new-logo view of the channels."
+      - id: conversion_rate_vs_absolute_volume
+        points: 4
+        partial_points: 2
+        pass: "Reports both movements: conversion rate fell from 10.0% to 8.0% while absolute conversions rose from 100 to 120 (+20%) on 50% more leads. Channel-level equivalents pass if both directions are stated."
+        partial: "Reports one of the two, or reports both without noticing they point in opposite directions."
+        fail: "Declares October better or worse on one of the two figures alone."
+      - id: no_unsupported_channel_scale_decision
+        points: 3
+        partial_points: 1.5
+        pass: "Declines to recommend doubling or materially increasing Paid Search spend on this evidence, and says what would be needed - channel spend, cost per acquisition, or lead quality."
+        partial: "Hedges the recommendation, or recommends a limited test without naming what is missing."
+        fail: "Recommends increasing Paid Search spend on attributed revenue, or recommends cutting it with equally thin evidence."
+      # 3 -> 2 in 0.3. v0.1 and v0.2 variance: sd 0.00, 6/6 PASS. Still the
+      # scenario's epistemic centrepiece, and a bar this cohort clears without
+      # exception; priced for what it now separates, which is nothing.
+      - id: cac_payback_unavailable
+        points: 2
+        partial_points: 1
+        pass: "States that CAC and CAC payback cannot be calculated from the pack, and identifies what is absent: acquisition or marketing spend by channel. Infrastructure and support cost are correctly not treated as acquisition cost."
+        partial: "Says the metric is uncertain or hard to compute without naming the missing input, or computes a proxy while flagging it as not CAC payback."
+        fail: "Produces a CAC or payback figure, or assumes a spend number."
+
+  plan_economics:
+    max_points: 19
+    criteria:
+      # 6 -> 4 in 0.2, 4 -> 3 in 0.3. Variance in both rescorings: sd 0.00,
+      # 6/6 PASS, awarded [6,6,6,6,6,6] then [4,4,4,4,4,4].
+      # It is a prerequisite, not a discriminator: plans.csv puts revenue, infra
+      # cost and support cost in one row and the answer is one subtraction. Kept
+      # at 4 because a response that cannot do it has to lose something real -
+      # everything else in this dimension depends on it.
+      - id: contribution_calculated
+        points: 3
+        partial_points: 1.5
+        pass: "Computes contribution per plan as revenue less infrastructure and support cost for at least October, within 1%: enterprise EUR 194,700, pro EUR 41,500, starter EUR 10,300."
+        partial: "Computes contribution for some plans, or subtracts only one of the two cost lines, or uses September without saying so."
+        fail: "No cost-adjusted figure; plans compared on revenue alone."
+      # 4 -> 3 in 0.2. v0.1 variance: sd 0.00, 6/6 PASS, awarded [4,4,4,4,4,4].
+      # One division on top of the previous subtraction. Same reasoning.
+      - id: margin_calculated_or_correctly_compared
+        points: 3
+        partial_points: 1.5
+        pass: "Expresses the result as a margin or an equivalent ranking and gets it right within 1 percentage point: enterprise 29.5%, pro 62.7%, starter 32.2%. A correct ordering with contribution per euro of revenue, stated numerically, also passes."
+        partial: "Gives margins for some plans, or an ordering with one figure materially wrong."
+        fail: "No margin or equivalent, or a margin ranking that puts Enterprise on top."
+      # NEW IN 0.2, 5 points, replacing `enterprise_revenue_not_margin` (4).
+      # v0.1 variance of the criterion it replaces: sd 0.00, 6/6 PASS, awarded
+      # [4,4,4,4,4,4] - every model noticed the contrast once it had the two
+      # numbers, so noticing measured nothing. What separated the field in v0.1
+      # was what each response did with the contrast afterwards: two of the six
+      # went on to justify a product decision with absolute size anyway. This
+      # criterion scores that step. The extra point comes from the two freed
+      # above.
+      - id: absolute_vs_scalable_economics
+        points: 5
+        partial_points: 2.5
+        pass: "Holds both halves of the plan comparison at once and says which question each answers. Enterprise leads on absolute contribution (EUR 194,700 against Pro's EUR 41,500) and on revenue per customer (about EUR 47,100 against about EUR 7,400), and is the weakest of the three on contribution margin (29.5% against 62.7%). The response states that a question about where the revenue is takes the first figure and a question about which economics scale takes the second, and does not then argue a product-priority decision from the absolute figure."
+        partial: "Presents both figures and draws the contrast, but does not distinguish what each is good for; or draws the distinction and then leans on absolute size anyway when it matters."
+        fail: "Treats absolute contribution and margin as the same signal, or concludes Enterprise is the strongest plan on economics."
+      # NEW IN 0.2, 3 points. In v0.1 the usage and ceiling evidence was bundled
+      # inside `product_focus_supported` as "at least two signals", which meant a
+      # response could earn that criterion without ever quantifying a
+      # trajectory. Scoring it separately also prices the one aggregate error
+      # v0.1 charged nowhere: DeepSeek's "All plans are below included request
+      # volumes", read off the plan averages when five customers are above.
+      - id: plan_trajectory_evidence
+        points: 3
+        partial_points: 1.5
+        pass: "Quantifies at least one forward-looking usage signal per plan and gets it right: Pro requests up about 14.8% month on month against an Enterprise book that is flat (-0.4%), or the customers already above their included request volume (three of nine on Pro - Wonka 1.02M, Aperture 705k, Vandelay 690k - against a 600,000 allowance, and two of fourteen on Enterprise). Reading the distribution rather than the plan average is the point."
+        partial: "Refers to adoption, growth or the included-volume ceiling without a figure, or quantifies it for one plan only."
+        fail: "No usage trajectory anywhere, or a claim about utilisation that is contradicted by the accounts - for example that no plan has customers above its included volume, which is true of the averages and false of the customers."
+      # 6 -> 5 in 0.2. v0.1 variance: sd 1.41, 4/6 PASS, awarded [3,6,6,3,6,6].
+      # It discriminated and is kept as the dimension's heaviest criterion. One
+      # point moves out because the trajectory evidence it used to absorb is now
+      # scored in its own right, and paying for it twice would double-count.
+      - id: product_focus_supported
+        points: 5
+        partial_points: 2.5
+        pass: "Recommends Pro for product attention and supports it with at least two signals beyond margin - usage growth against a flat Enterprise book, three of nine customers already over the 600,000 included requests, the highest tickets per customer (3.11) and rising, or the new logo added in October. Recommending another plan passes only if it is argued on cost-adjusted economics and at least two independent signals, and does not rest on absolute revenue."
+        partial: "Recommends Pro on margin alone, or names Pro alongside another plan without choosing, or recommends a plan on one signal."
+        fail: "Recommends the plan with the largest revenue because it is the largest, or makes no recommendation."
+
+  cross_table_data_quality:
+    max_points: 18
+    criteria:
+      # Clarified in 0.2: the never-attempted case is named. No points move.
+      - id: customer_id_alias_resolved
+        points: 4
+        partial_points: 2
+        pass: "Uses usage_account_id to join billing to usage, so Wayne Enterprises' usage (3.10M requests in September, 3.41M in October) is present and attributed to it. Naming the alias, or reporting Wayne's usage correctly anywhere, both count; so does an aggregate that is only arithmetically reachable with Wayne included."
+        partial: "Notices that some identifiers differ between files without resolving them, or resolves Wayne but reports another aliased account as missing."
+        fail: "Reports Wayne Enterprises as having no usage; excludes it from a usage analysis without noticing; or never attempts an account-level join between billing and usage at all, in which case there is no evidence the alias was handled and no credit is due."
+      # Clarified in 0.2: the acceptable denominators are named, including cost
+      # against revenue, which two v0.1 runs used and the v0.1 text did not
+      # list. No points move.
+      - id: support_normalized
+        points: 4
+        partial_points: 2
+        pass: "Compares support load on a normalised basis rather than raw counts, and reaches a conclusion in which Enterprise is not the worst despite raising the most tickets (35 of 74 in October). Any consistent denominator counts: tickets per customer (Pro 3.11 against Enterprise 2.50 is the canonical form), per active user, per million requests, or support cost as a share of plan revenue."
+        partial: "Notes that Enterprise's raw count reflects its size without computing a rate, or computes a rate for one plan only."
+        fail: "Concludes Enterprise has the worst support experience from the raw ticket count."
+      - id: cross_table_customer_signal
+        points: 4
+        partial_points: 2
+        pass: "Builds at least one account-level finding from three or more tables - for example Soylent's usage, tickets and revenue read together, or an account's plan, usage and included volume - and states the figures it rests on."
+        partial: "Combines two tables, or asserts a cross-table pattern without the figures."
+        fail: "Every finding comes from a single table."
+      # NEW IN 0.3. Scores whether the figures a response actually relies on are
+      # the figures in the pack. Deliberately narrow:
+      #
+      #   * only figures the candidate USES are scored - an omitted figure is
+      #     not an error and this is not a requirement to reproduce the answer
+      #     key;
+      #   * reasonable rounding passes;
+      #   * an error another criterion already prices is NOT charged again here.
+      #     A wrong join belongs to `customer_id_alias_resolved`, a missed
+      #     duplicate to `duplicate_detected`, an unnormalised annual invoice to
+      #     `annual_prepayment_normalized`, a wrong churn denominator to
+      #     `segment_retention_quantified`, and a misread plan average to
+      #     `plan_trajectory_evidence`. This criterion covers what is left:
+      #     figures carried, cited or derived wrongly where nothing else looks.
+      - id: figures_carried_correctly
+        points: 3
+        partial_points: 1.5
+        pass: "Every figure the response relies on that can be checked against the pack is correct within tolerance, and no quantitative claim it makes is left contradicting another. Rounding, approximation and a stated basis that differs from the answer key's all pass; so does omitting a figure entirely."
+        partial: "One or more quantitative slips that change no decision: the recommendations still stand on correct figures, and the analysis reads the same with the errors corrected. A single wrong figure that produces a misleading secondary rate belongs here."
+        fail: "Repeated incorrect figures across different parts of the analysis, or a figure that is materially wrong, or an incorrect value that a recommendation actually rests on."
+      - id: causal_boundary
+        points: 3
+        partial_points: 1.5
+        pass: "Treats Soylent's three simultaneous movements - requests down 27%, tickets from 3 to 8, MRR down EUR 2,500 - as a pattern to investigate and states that the data does not establish what caused what."
+        partial: "Reports the pattern and implies a mechanism without asserting it, or asserts causation but marks it as a hypothesis."
+        fail: "States that one of the three caused another, or reports only one of them."
+
+  decision_quality:
+    max_points: 9
+    criteria:
+      - id: segment_recommendation
+        points: 3
+        partial_points: 1.5
+        pass: "Does not recommend cutting or exiting SMB. Recommends investigating it, with what is needed named: acquisition cost, lifetime value, retention drivers, or segment-level economics the pack does not contain."
+        partial: "Declines to cut SMB but gives no next step, or recommends a reduction hedged with conditions."
+        fail: "Recommends cutting, exiting or defunding SMB."
+      - id: acquisition_recommendation
+        points: 3
+        partial_points: 1.5
+        pass: "The channel recommendation follows the corrected view: Partner (or Partner and Content) is identified as the stronger new-logo performer, and any spend recommendation is conditioned on the missing cost data."
+        partial: "Corrects the attribution but leaves no recommendation, or names the right channel without conditioning the spend."
+        fail: "Recommends scaling on raw attributed revenue."
+      # 2 -> 1 in 0.3. v0.1 and v0.2 variance: sd 0.00, 6/6 PASS. It asks only
+      # that a recommendation is stated and consistent with the section above
+      # it, which `product_focus_supported` (5) has already established by the
+      # time this is scored.
+      - id: product_recommendation
+        points: 1
+        partial_points: 0.5
+        pass: "A single, actionable plan recommendation is stated in the recommendations section, consistent with the plan economics section."
+        partial: "A recommendation that is stated but vague, or inconsistent with the analysis above it."
+        fail: "No plan recommendation, or one that contradicts its own analysis."
+      - id: uncertainty_discipline
+        points: 2
+        partial_points: 1
+        pass: "The uncertainties section names real gaps in this pack - missing channel spend, no segment-level economics, no churn reasons, trial-to-paid conversion not tracked - and invents no figures anywhere in the response."
+        partial: "Names one real gap, or names gaps that are not the material ones."
+        fail: "No uncertainties, or an uncertainties section that only restates findings."
+
+global_penalties:
+  max_penalty: 25
+  types:
+    - {id: material_hallucination, points_each: 5}
+    - {id: prohibited_business_action, points_each: 7}
+    - {id: major_data_error, points_each: 7}
+    - {id: unsupported_causality, points_each: 5}
+
+scoring:
+  result_values: {PASS: 1.0, PARTIAL: 0.5, FAIL: 0.0}
+  final_score: "max(0, base_score - penalties)"

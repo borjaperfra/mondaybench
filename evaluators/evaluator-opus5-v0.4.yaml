@@ -1,0 +1,69 @@
+# MondayBench #004 "Numbers Don't Lie" - OFFICIAL evaluator. Frozen.
+#
+# Bound to scenario 0.1 / rubric 0.3. Nothing in the rubric or the answer key
+# changed between the final calibration and this file; only the id and the
+# status did.
+#
+# The scenario version stays at 0.1 on purpose. The candidate-visible content -
+# prompt.md, context.md and the seven CSVs - has not changed a byte since the
+# first battery, and the prompt still hashes to
+# 3a0cbb569ca4f711b8907177af9204cec267d26f35f732829df56b03ed23ef99. What
+# iterated three times was the rubric, and the rubric carries its own version.
+# Bumping the scenario to 0.3 would claim three revisions that never happened.
+#
+# The three calibration evaluators stay on disk, each bound to the rubric it was
+# written for:
+#
+#   evaluator-opus5-v0.4-calibration     -> rubric.yaml      (0.1)
+#   evaluator-opus5-v0.4-calibration-2   -> rubric-0.2.yaml  (shadow only)
+#   evaluator-opus5-v0.4-calibration-3   -> rubric-0.3.yaml  (fresh calibration)
+#
+# Rubric 0.3 is shared with the last of those, so its verdict file would replay
+# against these runs without error and score the wrong text: verdicts are keyed
+# by run id, and the official battery reuses none of the calibration run
+# numbers. Official runs are served only from `verdicts/monday-004/official.jsonl`.
+#
+# The frozen rubric is `rubric-0.3.yaml` rather than `rubric.yaml`, following
+# monday-001, which is frozen against `rubric-0.2.yaml`. Overwriting
+# `rubric.yaml` would have destroyed the 0.1 artifact that
+# `analysis/monday-004-calibration-v0.1.md` is scored against and that
+# tests/test_monday_004.py verifies is untouched.
+#
+# Same architecture as the other official evaluators: one judge call per atomic
+# criterion returning PASS/PARTIAL/FAIL with evidence, a separate penalty judge,
+# and deterministic scoring from those labels. The judge never sees a total.
+#
+# `provider: anthropic` / `model_id: claude-opus-5` record WHICH MODEL reasoned
+# about the responses, for provenance. They are not a routing instruction: this
+# project never calls the Anthropic API and never spends Anthropic API credits.
+# Labels are produced in a recorded Claude Code session and replayed with
+# `evaluate --verdicts`.
+#
+# Scenario-bound: `validate` refuses to pair this with anything but monday-004,
+# and refuses to run if the rubric on disk moves off 0.3.
+id: evaluator-opus5-v0.4
+scenario: monday-004
+scenario_version: "0.1"
+rubric_version: "0.3"
+rubric_file: rubric-0.3.yaml
+status: official
+
+judge:
+  provider: anthropic
+  api_style: anthropic
+  model_id: claude-opus-5
+  prompt_file: judge-prompt.md
+  penalty_prompt_file: penalty-judge-prompt.md
+
+generation:
+  temperature: 0
+  max_output_tokens: 0
+
+behavior:
+  require_evidence: true
+
+# monday-004 ships a structured answer key (ground-truth.yaml) carrying every
+# canonical figure, the alias map, the traps and the two accepted revenue
+# normalisations. There are no per-criterion dotted paths to slice, so the judge
+# is given the whole key.
+ground_truth_map: {}
