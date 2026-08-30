@@ -1,0 +1,75 @@
+# MondayBench Overall releases.
+#
+# An Overall release is a claim about a fixed set of scenarios. It names them
+# explicitly so that adding a scenario later cannot move a number that was
+# already published: Overall v1 and Overall v2 are different claims, and both
+# stay reproducible from this file plus the per-scenario leaderboards.
+#
+# Monday Score = arithmetic mean of the model's official score on each scenario
+# listed. Equal weight per scenario, no weighting infrastructure, and nothing
+# else folded in - not latency, TTFA, reasoning or completion tokens, cost, run
+# stability, serving qualification or attempt count. Those are published beside
+# the score, never inside it.
+#
+# A model is ranked only if it has an official score on EVERY scenario in the
+# release. Averaging over whichever scenarios a model happens to have finished
+# would reward not competing. Incomplete models are published separately with
+# the missing scenario ids named.
+#
+# `prompt_sha256` and `rubric_version` pin what each scenario's published result
+# must still hash to. If a scenario is re-frozen or re-scored, the build fails
+# loudly rather than silently rewriting a published Overall score.
+#
+# `status: draft` means the release names a scenario that is not official yet.
+# A draft can be built as a clearly-labelled PREVIEW into analysis/overall/;
+# it cannot be written to leaderboard/overall/.
+
+releases:
+  - overall_version: 0
+    label: "Overall v0 — the three published scenarios"
+    status: released
+    aggregation: arithmetic_mean
+    note: >
+      The first Overall result. It covers the three scenarios that were
+      published before monday-004 existed, so it is a complete and permanent
+      claim about those three - not a partial view of a four-scenario
+      benchmark. When monday-004 becomes official it enters as Overall v1,
+      alongside this one rather than replacing it.
+    scenarios:
+      - id: monday-001
+        prompt_sha256: ed4d7beb1d7d1029c36eb8533e449027e0dc1a1047f8a38951a91781a0a5e398
+        rubric_version: "0.2"
+      - id: monday-002
+        prompt_sha256: 740e627cbc7413c321ede0d54000504de54821d34ff4677f82731b89600423a8
+        rubric_version: "0.2"
+      - id: monday-003
+        prompt_sha256: aaf788f309d955d2b427c86fe7d95d2bbf88575fde7306adcfd74b0ec4a4103f
+        rubric_version: "0.3"
+
+  - overall_version: 1
+    label: "Overall v1 — through Numbers Don't Lie"
+    # DRAFT until monday-004 is official. The builder refuses to write this to
+    # leaderboard/overall/ while the status says draft, and refuses to include
+    # monday-004 at all until its own leaderboard is marked official. Flipping
+    # this to `released` is deliberately a second, separate act from publishing
+    # monday-004.
+    status: draft
+    aggregation: arithmetic_mean
+    note: >
+      Adds monday-004 "Numbers Don't Lie". Its prompt hash is pinned below and
+      already known - the scenario is frozen - but its official battery is not
+      complete, so this release is not buildable yet. The rubric version is
+      pinned to 0.3, the rubric the freeze covers.
+    scenarios:
+      - id: monday-001
+        prompt_sha256: ed4d7beb1d7d1029c36eb8533e449027e0dc1a1047f8a38951a91781a0a5e398
+        rubric_version: "0.2"
+      - id: monday-002
+        prompt_sha256: 740e627cbc7413c321ede0d54000504de54821d34ff4677f82731b89600423a8
+        rubric_version: "0.2"
+      - id: monday-003
+        prompt_sha256: aaf788f309d955d2b427c86fe7d95d2bbf88575fde7306adcfd74b0ec4a4103f
+        rubric_version: "0.3"
+      - id: monday-004
+        prompt_sha256: 3a0cbb569ca4f711b8907177af9204cec267d26f35f732829df56b03ed23ef99
+        rubric_version: "0.3"
