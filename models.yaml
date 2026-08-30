@@ -129,32 +129,43 @@
 # weights, different serving stack - latency and TTFA especially are properties
 # of the endpoint, not the model. Any cross-scenario view must say so.
 #
-# CURRENTLY EMPTY, and that is the finding rather than an omission.
+# IN USE for monday-004/qwen3.6, and the caveat below must travel with the
+# result wherever it is published.
 #
-# On 2026-08-30 Helmcode was unreachable (DNS resolved, TCP timed out) during
-# the monday-004 official battery, so qwen3.6 was generated on NaN instead -
-# three runs, on disk as run-003..005. They are not official runs: with no
-# override declared they fail qualification with "provider 'nan' != configured
-# 'helmcode'", which is exactly right.
+# Helmcode was unreachable through 2026-08-30 and 2026-08-31 (DNS resolved, TCP
+# timed out) while the monday-004 official battery was being generated. NaN
+# serves the same model id, so qwen3.6's three official monday-004 runs come
+# from NaN.
 #
-# They were abandoned because they proved the endpoints are not interchangeable
-# for this model. NaN serves qwen3.6 as a REASONING model and Helmcode does not:
+# THE ENDPOINTS ARE NOT INTERCHANGEABLE FOR THIS MODEL. NaN serves qwen3.6 as a
+# REASONING model and Helmcode does not, on a byte-identical request that sets
+# `reasoning_requested: false`:
 #
 #   Helmcode  3,659 output tokens,     0 reasoning tokens
 #   NaN       8,102-9,079 output,  5,228-6,308 reasoning
 #
-# ...on an identical request that sets `reasoning_requested: false`, with
-# `explicit_reasoning_tokens` and ~6,800 observed stream deltas. That is a
-# different inference regime, not a different data centre, and `capabilities:
-# reasoning: false` below is therefore true of Helmcode only.
+# NaN reports `explicit_reasoning_tokens` and the adapter observes ~6,800
+# reasoning stream deltas. That is a different inference regime, not a different
+# data centre, and `capabilities.reasoning: false` below is true of Helmcode
+# only.
 #
-# A monday-004 score for qwen3.6 on NaN would not be comparable with its
-# monday-001..003 scores, and would very likely be higher for a reason that has
-# nothing to do with the model. So monday-004 waits for Helmcode.
+# What follows, and what must be said wherever the number appears:
 #
-# The mechanism stays because the outage may not be over. If it is used, the
-# scenario's results must carry the caveat above, prominently.
-scenario_endpoint_overrides: {}
+#   * qwen3.6's monday-004 score is NOT comparable with its monday-001..003
+#     scores. It will very likely be higher for a reason that has nothing to do
+#     with the model.
+#   * Its latency and TTFA on monday-004 are properties of NaN, not of qwen3.6.
+#   * Overall v1 will average a monday-004 score obtained under a different
+#     serving configuration from the three that precede it. The release note
+#     has to carry this.
+#
+# It is scoped to monday-004 alone. monday-001..003 declare no override, so
+# qwen3.6's nine published runs there keep their Helmcode provider and go on
+# qualifying - which is the entire reason this mechanism exists instead of an
+# edit to the `provider:` line above.
+scenario_endpoint_overrides:
+  monday-004:
+    qwen3.6: nan
 
 models:
 

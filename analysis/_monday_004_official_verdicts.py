@@ -33,6 +33,7 @@ RUNS: dict[str, list[int]] = {
     "glm5.2": [3, 4],
     "mimo-v2.5": [4, 5, 6],
     "qwen3.8-flash": [3, 4, 6],
+    "qwen3.6": [3, 4, 5],
 }
 
 P, T, F = "PASS", "PARTIAL", "FAIL"
@@ -2610,6 +2611,519 @@ add("qwen3.8-flash", 6, "uncertainty_discipline", P,
     "the missing channel spend, the absence of trial-to-paid tracking, cohort retention and "
     "expansion attribution, all named as instrumentation gaps rather than as excuses",
     "Every gap real and nothing invented.")
+
+
+# =========================================================================
+# Qwen 3.6   (served by NaN, not Helmcode - see models.yaml)
+# =========================================================================
+# The endpoint matters for this model and the caveat travels with the score:
+# NaN serves qwen3.6 as a reasoning model and Helmcode does not, on a
+# byte-identical request. These three runs carry 5,228-6,308 reasoning tokens
+# each; the same model on Helmcode returns none. Its monday-004 result is not
+# comparable with its monday-001..003 results.
+#
+# All three recommend reducing SMB investment, which is the action the pack
+# rules out, and all three are penalised for it. They differ on arithmetic:
+# run-004 and run-005 are largely exact, run-003 double-counts the annual
+# invoice and then reports a growth rate built on the error.
+
+# --- run-003 -------------------------------------------------------------
+add("qwen3.6", 3, "duplicate_detected", P,
+    "'Soylent has two identical EUR 19,500 subscription invoices in October (one from stripe, one "
+    "from billing_sync). This inflates October revenue by EUR 19.5k and should be reconciled.'",
+    "Identified with both sources named, and its own October figure comes from plans.csv, which "
+    "does not carry the duplicate.")
+add("qwen3.6", 3, "annual_prepayment_normalized", T,
+    "'Gringotts annual contract (EUR 120k) inflates October cash collection. Normalized to MRR "
+    "(EUR 10k/mo), October MRR = EUR 767,700.'",
+    "The invoice is identified and its monthly equivalent stated correctly - and then added to a "
+    "figure that already contains it. EUR 757,700 is the plans.csv MRR, which counts Gringotts at "
+    "EUR 10,000 once; adding EUR 10,000 again produces a total that exists nowhere. The "
+    "normalisation is named and misapplied.")
+add("qwen3.6", 3, "headline_vs_recurring_growth", T,
+    "'September subscription revenue: EUR 746,100. October: EUR 757,700 ... MoM growth: +2.9%. "
+    "Growth is flat when excluding the one-time annual contract.'",
+    "It reaches the right conclusion - that the growth is flat once the annual contract is set "
+    "aside - and the +2.9% falls inside the stated tolerance. But it is the wrong arithmetic "
+    "reaching a nearly-right number, and the raw invoiced comparison the headline would be built "
+    "on is never computed at all.")
+add("qwen3.6", 3, "revenue_conclusion", T,
+    "'Revenue grew modestly (~2.9% MoM on normalized MRR) ... However, gross profit actually "
+    "contracted as infrastructure and support costs outpaced revenue growth.'",
+    "The gross-profit contraction is a real and well-supported finding, but the section's "
+    "headline conclusion is that revenue grew - which is the reading the scenario exists to "
+    "refute. 'Growth is flat' appears in the workings and does not reach the summary.")
+add("qwen3.6", 3, "segment_retention_quantified", T,
+    "'SMB (9 -> 13 customers): 4/9 customers churned in October (44% monthly churn rate)' with "
+    "'Enterprise (14 customers): Zero churn' and 'Mid-market (8 -> 9 customers): One churn'",
+    "A rate is computed for the worst population and the three groups are ranked correctly. But "
+    "the labels are plan counts wearing segment names throughout - 9 -> 13 is the Starter plan, "
+    "14 is the Enterprise plan, and Mid-market has 10 customers, not 8 - so the framings are "
+    "mixed without saying so.")
+add("qwen3.6", 3, "sample_size_arr_context", T,
+    "'New SMB logos added in Oct (Spacely, Cogswell, Bishop, Gekko, Paper-street) have low "
+    "initial usage (33k-51k requests), dragging down the segment average from 114k to 84k'",
+    "It identifies that new logos replaced the churned ones and explains the average's movement "
+    "as composition, which is a real insight. But the churn is never sized in ARR and never set "
+    "against what it cost or what arrived, so the 44% rate is left to speak for itself.")
+add("qwen3.6", 3, "acme_false_positive_avoided", T,
+    "'Acme's 45% usage drop aligns with the operational note' in the uncertainties section",
+    "The migration is named and Acme is kept off every risk list, but no second signal - tokens, "
+    "revenue or tickets - is offered, and the point is made in the caveats rather than in the "
+    "customer-health section where the reader would look for it.")
+add("qwen3.6", 3, "no_churn_overreach", P,
+    "'SMB usage drops correlate with churn, not a known product change. We cannot attribute usage "
+    "declines to specific product features without telemetry.'",
+    "States the correlation and refuses the mechanism in the same sentence.")
+add("qwen3.6", 3, "raw_attribution_not_equivalent_new_business", T,
+    "'Paid Search ... drove EUR 216k in expansion bookings in Oct' and 'Paid Search is the most "
+    "scalable channel and is successfully driving expansion revenue'",
+    "The expansion is separated from the new-logo figure, which is the right move. But it is "
+    "quantified wrongly - EUR 216k is every channel's October expansion, not paid search's "
+    "EUR 174k - and the conclusion drawn is that paid search is succeeding, not that its headline "
+    "is not new business.")
+add("qwen3.6", 3, "existing_customer_expansion_removed", T,
+    "'Revenue Quality per New Logo: Partner EUR 83,400 avg ARR; Paid Search EUR 33,800; Content "
+    "EUR 22,800; Outbound EUR 23,400'",
+    "New-logo value is computed per channel and partner comes first, which is the reversal. Two "
+    "of the four averages are wrong - paid search's two October logos average EUR 32,400 and "
+    "outbound's figures match neither the October nor the two-month basis - and no channel total "
+    "is given.")
+add("qwen3.6", 3, "conversion_rate_vs_absolute_volume", T,
+    "the funnel table gives conversion rates for both months per channel, and 'conversion rates "
+    "are declining (8.5% -> 6.4%)'",
+    "The falling rate is stated for every channel and is exact. The other half - that absolute "
+    "conversions rose while the rate fell - is absent: the table carries no lead or conversion "
+    "counts.")
+add("qwen3.6", 3, "no_unsupported_channel_scale_decision", P,
+    "'optimize Paid Search landing pages to reverse the conversion rate decline' with no spend "
+    "increase proposed for it, and 'Finance must provide channel-level ad spend, agency fees, and "
+    "tool costs to compute CAC and payback periods'",
+    "Declines to scale paid search and names the missing inputs. Its partner recommendation is "
+    "charged under acquisition_recommendation.")
+add("qwen3.6", 3, "cac_payback_unavailable", P,
+    "'Cannot be calculated yet. Marketing spend data is missing from the pack.'",
+    "Refused, with the missing input named.")
+add("qwen3.6", 3, "contribution_calculated", P,
+    "the six-row plan table: EUR 212,000 / 194,700 / 42,500 / 41,500 / 8,400 / 10,300",
+    "All six exact, with the infra and support columns behind them.")
+add("qwen3.6", 3, "margin_calculated_or_correctly_compared", P,
+    "32.2% / 29.5% / 67.5% / 62.7% / 34.9% / 32.2%",
+    "All six correct.")
+add("qwen3.6", 3, "absolute_vs_scalable_economics", T,
+    "'Enterprise is the cash engine but margin compressed by EUR 2.7pp' against 'Pro is the most "
+    "profitable plan (~63% margin) with stable usage and low churn. It deserves growth investment "
+    "but is small.'",
+    "Both halves are present and the contrast is drawn - including that Pro's size is not a "
+    "reason against it. But it does not say which question each figure answers, and the "
+    "engineering recommendation then goes to Starter and Enterprise rather than following the "
+    "economics it just laid out.")
+add("qwen3.6", 3, "plan_trajectory_evidence", F,
+    "'Usage remains under the 3M included limit, so no overage revenue offsets costs' for "
+    "Enterprise",
+    "The FAIL clause as written: a claim about utilisation that the accounts contradict. Stark "
+    "used 4.29M and Wayne 3.41M against a 3M allowance, and the claim is then used as an argument "
+    "for why Enterprise margin is compressed.")
+add("qwen3.6", 3, "product_focus_supported", T,
+    "'Prioritize Starter retention and infra cost optimization for Enterprise' - two plans, and "
+    "neither is the Pro plan it had just called the most profitable",
+    "Names two plans without choosing between them, which is the PARTIAL band. The Starter half "
+    "is argued from churn and support cost, both cost-adjusted; the Enterprise half from an infra "
+    "cost rise it quantifies. Neither rests on absolute revenue, so it stays off FAIL.")
+add("qwen3.6", 3, "customer_id_alias_resolved", F,
+    "no account-level join between billing and usage is attempted anywhere; Wayne Enterprises "
+    "appears only in a list of accounts with support tickets, and usage is discussed as plan "
+    "averages",
+    "The FAIL clause applies: with no account-level join attempted there is no evidence the alias "
+    "was handled.")
+add("qwen3.6", 3, "support_normalized", T,
+    "'Support costs per customer (EUR 790) are high relative to revenue' for Starter",
+    "One plan normalised against customers and revenue, with no comparison across plans - and "
+    "Enterprise's support load is described as 'high but expected for large accounts', which is "
+    "the right instinct stated without a rate.")
+add("qwen3.6", 3, "figures_carried_correctly", F,
+    "'October MRR = EUR 767,700' double-counts Gringotts and produces the +2.9% the summary "
+    "leads with; 'Mid-market ... revenue grew (EUR 63k -> EUR 66.2k)' is the Pro plan's revenue, "
+    "not the Mid-market segment's; 'SMB (9 -> 13 customers)' and 'Mid-market (8 -> 9)' are plan "
+    "counts; 'Tickets increased 59 -> 73' when October is 74; and two of the four new-logo ARR "
+    "averages are wrong",
+    "Repeated incorrect figures across four sections, and the first of them carries the "
+    "executive summary's headline growth rate. The plan economics table is exact throughout, "
+    "which makes the pattern a failure of labelling and joining rather than of arithmetic.")
+add("qwen3.6", 3, "cross_table_customer_signal", T,
+    "'Soylent (Mid-market) raised a critical API error ticket in Oct' and the SMB churners read "
+    "across the churn list and the usage file",
+    "Two tables joined for several accounts with correct figures, but no account is built from "
+    "three or more: Soylent's usage decline and its invoice reduction are both absent.")
+add("qwen3.6", 3, "causal_boundary", F,
+    "Soylent appears once, as 'raised a critical API error ticket in Oct'. Its 27% usage decline "
+    "and its EUR 2,500 invoice reduction are not reported",
+    "One of the three simultaneous movements, which is the FAIL bar as written. The pattern is "
+    "never assembled, so there is nothing for the epistemic caution elsewhere in the response to "
+    "be cautious about.")
+add("qwen3.6", 3, "segment_recommendation", F,
+    "'Customer Segment: Reduce/redirect investment in SMB. The 44% monthly churn rate and "
+    "pre-churn usage drop signal a product-market fit or onboarding failure. Shift growth budget "
+    "to Mid-market and Enterprise'",
+    "Recommends the reduction on a churn rate, which is the action the pack rules out. It "
+    "attaches a retention programme, but the budget is explicitly moved out of the segment, and "
+    "the pack contains no segment-level economics with which to justify the move.")
+add("qwen3.6", 3, "acquisition_recommendation", T,
+    "'Increase spend on Partner channel. It delivers 3x the conversion rate and 2.5x the ARR per "
+    "new logo vs. Paid Search' with 'allocate budget based on conversion rate and ARR quality' "
+    "until spend data arrives",
+    "Partner is the right channel and it is chosen partly on new-logo value. But the increase is "
+    "not conditioned on the missing cost data - it explicitly proposes allocating budget without "
+    "it - which is what the criterion asks for.")
+add("qwen3.6", 3, "product_recommendation", T,
+    "'Prioritize Starter retention and infra cost optimization for Enterprise'",
+    "Actionable, but two recommendations rather than one, and neither is the plan its own section "
+    "4 identifies as the healthiest.")
+add("qwen3.6", 3, "uncertainty_discipline", P,
+    "six items including the funnel counting trial starts against five actual September "
+    "conversions, the support-cost allocation being unbroken down by ticket type, and the "
+    "expansion-booking timing mismatch",
+    "Every gap real, and the funnel observation - 100 funnel conversions against 5 actual paid "
+    "conversions - is one no other run in the battery makes this sharply.")
+
+PENALTIES[("qwen3.6", 3)] = [{
+    "type": "PROHIBITED_ACTION",
+    "evidence": "'Customer Segment: Reduce/redirect investment in SMB. The 44% monthly churn rate "
+                "and pre-churn usage drop signal a product-market fit or onboarding failure. "
+                "Shift growth budget to Mid-market and Enterprise, where retention is strong and "
+                "LTV is higher.'",
+    "reason": "Defunding SMB on a logo churn rate is the first action the pack rules out. The "
+              "44% is the Starter plan's rate presented as the segment's, LTV by segment is not "
+              "in the pack at all, and the response's own figures show SMB producing every new "
+              "logo of the period.",
+}]
+
+# --- run-004 -------------------------------------------------------------
+add("qwen3.6", 4, "duplicate_detected", F,
+    "no repeated transaction id anywhere; the uncertainties section raises six other issues and "
+    "not this one",
+    "The duplicate is not mentioned.")
+add("qwen3.6", 4, "annual_prepayment_normalized", P,
+    "'Gringotts moved to an annual contract (EUR 120k upfront, EUR 10k/mo MRV)'",
+    "Invoice and monthly equivalent both stated, and the MRV figures it uses throughout carry "
+    "Gringotts at the monthly value.")
+add("qwen3.6", 4, "headline_vs_recurring_growth", F,
+    "'Total monthly recurring revenue (MRV) is stable at ~EUR 757k across both months'",
+    "No month-on-month comparison is offered on any basis: September is not given, the raw "
+    "invoiced totals are absent, and 'stable at ~757k across both months' is wrong for September, "
+    "which was EUR 746,100.")
+add("qwen3.6", 4, "revenue_conclusion", T,
+    "'Total monthly recurring revenue is stable ... October saw a shift in revenue composition'",
+    "Lands on stability rather than growth, which is the right direction, but with no figure "
+    "behind it and no confrontation of the number a dashboard would report.")
+add("qwen3.6", 4, "segment_retention_quantified", P,
+    "'SMB (Starter): 4 churns ... Churn rate = 4/13 = 30.8%. Mid-market (Pro): 1 churn "
+    "(nakatomi). Churn rate = 1/9 = 11.1%. Enterprise: 0 churns. Retention = 100%.'",
+    "A rate for every population, correctly ranked, with the arithmetic shown and the plan "
+    "labelled beside the segment in each row. 4/13 and 1/9 are the plan denominators, and by "
+    "naming both framings in the same line it does not mix them silently.")
+add("qwen3.6", 4, "sample_size_arr_context", F,
+    "'32.2% support cost ratio ... 30.8% gross churn rate ... generates only EUR 10.3k in gross "
+    "margin against EUR 21.7k in direct costs'",
+    "The churn is never sized in ARR, never set against what SMB added, and never compared with "
+    "the single Mid-market loss that cost more than all four together. The context offered is "
+    "plan economics, which is a different argument.")
+add("qwen3.6", 4, "acme_false_positive_avoided", P,
+    "'Acme Corp's usage dropped 45% (4.2M -> 2.31M requests) in October, aligning with the "
+    "operational note about migrating to batch runs. This reduces infra load but does not impact "
+    "their EUR 78k/mo subscription revenue.'",
+    "The migration plus unchanged revenue, both exact, stated in the revenue section rather than "
+    "buried in caveats.")
+add("qwen3.6", 4, "no_churn_overreach", P,
+    "'Churned SMB accounts show pre-churn usage declines in October ... indicating usage drop is "
+    "a leading indicator of churn in this segment'",
+    "Frames the decline as a predictor, not a cause.")
+add("qwen3.6", 4, "raw_attribution_not_equivalent_new_business", T,
+    "'Paid Search drives volume but is diluted by expansion bookings (4 of 6 conversions are "
+    "expansions). It is effective for upsell but inefficient for net-new logo acquisition.'",
+    "The contamination is identified and the right conclusion drawn, but by conversion count "
+    "rather than by value: neither the EUR 274,800 total nor the EUR 210,000 of expansion is "
+    "given, so the size of the distortion never appears.")
+add("qwen3.6", 4, "existing_customer_expansion_removed", F,
+    "the channel table reports attributed revenue and revenue per conversion over both months "
+    "combined - partner EUR 166.8k, paid search EUR 274.8k - with no new-logo column",
+    "No new-logo ranking is computed. Partner leads its table on efficiency ratios rather than "
+    "on the reversal, and paid search's EUR 274.8k is still carried as its revenue.")
+add("qwen3.6", 4, "conversion_rate_vs_absolute_volume", F,
+    "the funnel table is 'Sept + Oct Combined' - Partner 135 leads / 32 conversions / 23.7%, "
+    "Paid Search 1,420 / 102 / 7.2%",
+    "Combining the months erases the movement entirely. Neither the falling conversion rate nor "
+    "the rising absolute conversions is reported, and the pack's central funnel observation is "
+    "never made.")
+add("qwen3.6", 4, "no_unsupported_channel_scale_decision", P,
+    "'The pack does not contain marketing spend, CAC, or channel cost data. Therefore, CAC "
+    "payback periods cannot be calculated' with no paid-search increase proposed",
+    "Declines to scale paid search - it is explicitly called inefficient for new logos - and "
+    "names the missing input.")
+add("qwen3.6", 4, "cac_payback_unavailable", P,
+    "'CAC payback periods cannot be calculated. I recommend Finance provide channel spend data to "
+    "complete this analysis.'",
+    "Refused, with the missing input named.")
+add("qwen3.6", 4, "contribution_calculated", P,
+    "the October plan table: EUR 194.7k / 41.5k / 10.3k against total costs of 464.8 / 24.7 / 21.7",
+    "All exact.")
+add("qwen3.6", 4, "margin_calculated_or_correctly_compared", P,
+    "29.5% / 62.7% / 32.2%, with 'margin % declined from 32.2% to 29.5%' for Enterprise",
+    "All correct.")
+add("qwen3.6", 4, "absolute_vs_scalable_economics", P,
+    "'Pro: Highest margin percentage (62.7%), growing customer count' against 'Enterprise: "
+    "Generates the most absolute margin (EUR 194.7k) but margin % declined from 32.2% to 29.5%'",
+    "Both halves held and correctly labelled, and the engineering recommendation then follows "
+    "the margin rather than the size, with Enterprise given a support workstream instead.")
+add("qwen3.6", 4, "plan_trajectory_evidence", T,
+    "'Included requests (600k) vs actual usage (442k) show healthy headroom without "
+    "over-provisioning' for Pro",
+    "Utilisation is quantified for one plan and hedged as headroom rather than asserted as "
+    "nobody exceeding the allowance, which keeps it off the FAIL clause. But it reads the average "
+    "only: none of the five accounts above their included volume is identified, and no usage "
+    "growth rate is computed for any plan.")
+add("qwen3.6", 4, "product_focus_supported", P,
+    "'Direct Engineering Focus to the Pro Plan ... The 62.7% margin and low support load make it "
+    "the highest-ROI target' with 'growing customer count (8 -> 9)'",
+    "Pro, with the support load and the customer growth as two signals beyond margin, and "
+    "Enterprise given a separate triage pod rather than the quarter's focus.")
+add("qwen3.6", 4, "customer_id_alias_resolved", F,
+    "no account-level join between billing and usage is attempted; Wayne Enterprises appears "
+    "nowhere and usage is discussed as plan averages",
+    "The FAIL clause applies: with no account-level join attempted there is no evidence the alias "
+    "was handled.")
+add("qwen3.6", 4, "support_normalized", T,
+    "'Starter ... highest support cost ratio (32.2%)' and 'Support tickets are heavily "
+    "concentrated in Enterprise and SMB ... SMB tickets are mostly how_to and rate_limits, "
+    "indicating onboarding friction rather than platform instability'",
+    "Support cost is normalised against revenue for one plan, and the ticket discussion is by "
+    "category rather than by raw volume - so Enterprise is not called the worst on count. But no "
+    "rate is computed across plans.")
+add("qwen3.6", 4, "figures_carried_correctly", T,
+    "'Total monthly recurring revenue is stable at ~EUR 757k across both months' when September "
+    "was EUR 746,100; and 'All 32 Partner conversions are new logos (avg ARR EUR 5.2k)' treats "
+    "32 paid-trial starts as customers, when partner has two new logos at an average of "
+    "EUR 83,400",
+    "Two errors, and the second is load-bearing: EUR 5.2k per conversion is the figure the "
+    "partner recommendation is argued from, and it comes from dividing ARR by trials rather than "
+    "by logos. Everything else checkable is exact - the plan tables, the churn rates with their "
+    "arithmetic, Acme's figures, the funnel totals and the two partner logos by name.")
+add("qwen3.6", 4, "cross_table_customer_signal", T,
+    "'Churned SMB accounts show pre-churn usage declines in October (e.g., mega-lo-mart -37.1%, "
+    "buy-n-large -37.0%)' joining the churn list to the usage file",
+    "Two tables joined across several accounts with exact figures, but no account is assembled "
+    "from three, and Soylent is not mentioned anywhere.")
+add("qwen3.6", 4, "causal_boundary", F,
+    "Soylent appears once, in the revenue section: 'Soylent's invoice dropped from EUR 22k to "
+    "EUR 19.5k, reflecting usage or contract adjustments'. Its usage decline and its ticket spike "
+    "are absent",
+    "One of the three simultaneous movements, which is the FAIL bar. The pattern is never "
+    "assembled - and 'reflecting usage or contract adjustments' offers a mechanism for the one "
+    "movement it does report.")
+add("qwen3.6", 4, "segment_recommendation", F,
+    "'Reduce Investment in SMB (Starter Segment): Halt active growth spend here ... Reallocate "
+    "budget to Pro and Enterprise.'",
+    "An unhedged instruction to halt growth spend, on a churn rate and plan economics. The pack "
+    "has no segment-level acquisition cost against which to justify it, and the response does not "
+    "say so.")
+add("qwen3.6", 4, "acquisition_recommendation", T,
+    "'Increase Spend on Partner Channel: Double down on Partner-led acquisition. The 23.7% "
+    "conversion rate and EUR 5.2k/conv yield indicate strong product-market fit'",
+    "Partner is the channel the corrected view favours, and it names the two logos. But the "
+    "increase is not conditioned on the missing cost data, and the yield figure it rests on "
+    "divides ARR by trial starts rather than by customers.")
+add("qwen3.6", 4, "product_recommendation", P,
+    "'Direct Engineering Focus to the Pro Plan'",
+    "Single, actionable, consistent with its own section 4.")
+add("qwen3.6", 4, "uncertainty_discipline", P,
+    "six items including churned customers still carrying October invoices, the plans.csv Starter "
+    "count disagreeing with the active SMB count, the expansion-recognition timing mismatch, and "
+    "support cost being allocated by plan rather than segment",
+    "Every gap real, and two of them - the invoice-versus-churn timing and the plan-versus-segment "
+    "allocation - are the ones that would most distort its own conclusions.")
+
+PENALTIES[("qwen3.6", 4)] = [{
+    "type": "PROHIBITED_ACTION",
+    "evidence": "'Reduce Investment in SMB (Starter Segment): Halt active growth spend here. "
+                "Shift to a fully automated, self-serve onboarding flow ... Reallocate budget to "
+                "Pro and Enterprise.'",
+    "reason": "Halting growth spend in SMB on a churn rate is the first action the pack rules "
+              "out, and this is unhedged. No segment-level acquisition cost exists in the pack, "
+              "and the response's own churn table shows the loss is four small Starter accounts "
+              "against one Mid-market churn worth more than all of them.",
+}]
+
+# --- run-005 -------------------------------------------------------------
+add("qwen3.6", 5, "duplicate_detected", P,
+    "'Soylent has two identical subscription invoices in October (INV-2026-10-0209 from stripe "
+    "and billing_sync). If not deduplicated, October revenue is overstated by EUR 19,500.'",
+    "Identified by id and both sources, quantified, and its own revenue figures come from the "
+    "plan file rather than a naive invoice sum.")
+add("qwen3.6", 5, "annual_prepayment_normalized", T,
+    "'Gringotts converted to an annual contract in Oct (EUR 120k upfront), boosting October cash "
+    "flow but not monthly recurring revenue.'",
+    "The invoice is identified and correctly kept out of the recurring line, with the cash effect "
+    "named. The EUR 10,000 monthly equivalent is never stated, which is what the PASS bar asks "
+    "for beyond noticing.")
+add("qwen3.6", 5, "headline_vs_recurring_growth", F,
+    "'Monthly subscription revenue is stable: EUR 659k (Sept) -> EUR 659.5k (Oct) for Enterprise; "
+    "EUR 63k -> EUR 66.2k for Pro; EUR 24.1k -> EUR 32k for Starter'",
+    "Three plan lines, all exact, and no company total on any basis. Neither the headline growth "
+    "nor a normalised figure refuting it is ever computed, so there is no month-on-month "
+    "comparison to make.")
+add("qwen3.6", 5, "revenue_conclusion", T,
+    "'Monthly subscription revenue is stable' with the professional-services drop and the "
+    "Gringotts cash effect both separated out",
+    "The right direction - stability rather than growth - reached by keeping the one-off items "
+    "apart, but never stated as the section's conclusion and never set against the number a "
+    "dashboard would report.")
+add("qwen3.6", 5, "segment_retention_quantified", T,
+    "'5 customers churned in October: Nakatomi (Mid-market/Pro), and four SMB/Starters ... SMB "
+    "churn is acute' and, in the summary, '44% monthly churn rate (4 of 9 starters churned)'",
+    "The rate is correct and correctly labelled as the Starter plan on its September base, and "
+    "the churn is placed by segment. But no rate is given for Mid-market or Enterprise, so the "
+    "three populations are never ranked on retention.")
+add("qwen3.6", 5, "sample_size_arr_context", F,
+    "'support costs that are disproportionately high relative to ARR' and 'low usage relative to "
+    "included limits' as the context for the 44%",
+    "The churn is never sized in ARR, never netted against the new logos, and never compared "
+    "with the Mid-market loss. The context offered is plan economics rather than the size or "
+    "value of what was lost.")
+add("qwen3.6", 5, "acme_false_positive_avoided", P,
+    "'Acme Corp dropped 45% in requests, aligning with the operational note about migrating to "
+    "batch runs. This is expected and non-alarming.' with Acme absent from every risk list",
+    "The migration named, the conclusion stated in terms, and 'All other active customers grew "
+    "usage 5-10%' supplied as the contrast.")
+add("qwen3.6", 5, "no_churn_overreach", P,
+    "'Soylent's drop is unexplained and correlates with high-severity tickets' in the "
+    "uncertainties",
+    "Reports the correlation and calls the cause unexplained rather than supplying one.")
+add("qwen3.6", 5, "raw_attribution_not_equivalent_new_business", T,
+    "'Paid Search: Highest volume but lowest conversion. Drove significant expansion bookings "
+    "(Stark EUR 84k, Umbrella EUR 48k, Globex EUR 42k) alongside new logos.'",
+    "All three expanding accounts named with their exact amounts, and they are separated from the "
+    "new logos. But paid search's EUR 274,800 attributed total never appears, so the expansion is "
+    "never expressed as a share of it and the channel is not disqualified on that basis.")
+add("qwen3.6", 5, "existing_customer_expansion_removed", T,
+    "'Partner: Brought in Vandelay (EUR 132k ARR) and Clampett Oil (EUR 34.8k ARR)' and "
+    "'Content: Planet Express, Cogswell Cogs, Bishop Co (all new logos), and Massive Dynamic "
+    "(expansion)'",
+    "New logos are separated from expansions channel by channel, with the accounts named and "
+    "partner's two figures exact. But no new-logo ARR total is computed for any channel and no "
+    "ranking is produced, so the reversal against the attributed table is left implicit.")
+add("qwen3.6", 5, "conversion_rate_vs_absolute_volume", T,
+    "the funnel table gives Sept and Oct conversion rates for all four channels - Partner 25.0% "
+    "-> 22.7%, Paid Search 8.5% -> 6.4% - and 'Paid Search: Highest volume but lowest conversion'",
+    "The falling rate is exact for every channel and volume is characterised, but no lead or "
+    "conversion count appears, so the rise in absolute conversions alongside the falling rate is "
+    "never shown.")
+add("qwen3.6", 5, "no_unsupported_channel_scale_decision", P,
+    "'Paid Search ... needs creative/landing page optimization to lift conversion' with no spend "
+    "increase for it, and 'Finance must supply channel-level ad/ops budgets to compute CAC and "
+    "payback periods'",
+    "Declines to scale paid search and names the missing input.")
+add("qwen3.6", 5, "cac_payback_unavailable", P,
+    "'The pack does not contain marketing spend, CAC, or channel budget data. CAC and payback "
+    "periods cannot be calculated.' with both formulas written out",
+    "Refused, the missing input named, and the method specified for when it arrives.")
+add("qwen3.6", 5, "contribution_calculated", P,
+    "the six-row table: EUR 212,000 / 194,700 / 42,500 / 41,500 / 8,400 / 10,300, with profit per "
+    "customer beside each",
+    "All exact, and the per-customer figures - EUR 15,143 / 13,907 / 5,313 / 4,611 / 933 / 792 - "
+    "all check out.")
+add("qwen3.6", 5, "margin_calculated_or_correctly_compared", P,
+    "profit per customer for both months and all three plans, with 'Support cost per customer "
+    "(~EUR 792) is ~32% of ARR (~EUR 2,462)'",
+    "A correct ordering expressed numerically as contribution per customer, which the criterion "
+    "accepts, and the Starter ratio is exact.")
+add("qwen3.6", 5, "absolute_vs_scalable_economics", T,
+    "'Enterprise remains the profit engine (~EUR 14k/cust), but infra costs are high (~45% of "
+    "revenue)' against 'Pro is stable and healthy (~EUR 4.6-5.3k/cust)'",
+    "Both figures are present and the per-customer contrast is drawn, but it never says which "
+    "question each answers - and the engineering recommendation then goes to Starter, the weakest "
+    "on both measures, on grounds of fixing it rather than of where the economics are.")
+add("qwen3.6", 5, "plan_trajectory_evidence", T,
+    "the plan table's utilisation column - Enterprise 1.89M/3.0M (63%), Pro 442k/600k (74%), "
+    "Starter 84k/200k (42%) - with 'Pro ... usage is high relative to limits, creating natural "
+    "overage revenue at renewal'",
+    "Utilisation is quantified for every plan across both months and the Starter fall from 57% to "
+    "42% is tracked. But it reads the averages only: no account above its included volume is "
+    "named, and 'Usage is only 42% of included limits, meaning no overage revenue is generated' "
+    "is true of Starter and is the same reasoning that is false one row up.")
+add("qwen3.6", 5, "product_focus_supported", T,
+    "'Direct next quarter's engineering focus to the Starter plan' on onboarding automation, "
+    "usage-growth triggers and a pricing review",
+    "A plan other than Pro, argued from support load, churn and utilisation - all cost-adjusted, "
+    "and absolute revenue is never invoked, so it clears the FAIL bar. But the case is 'fix the "
+    "weakest' rather than an economic argument for where investment returns most, and its own "
+    "section 4 calls Pro the healthiest.")
+add("qwen3.6", 5, "customer_id_alias_resolved", F,
+    "no account-level join between billing and usage is attempted; Wayne appears only in a list "
+    "of accounts with high-severity tickets, which comes from support.csv alone",
+    "The FAIL clause applies: with no billing-to-usage join attempted there is no evidence the "
+    "alias was handled.")
+add("qwen3.6", 5, "support_normalized", T,
+    "'Support cost per customer (~EUR 792) is ~32% of ARR (~EUR 2,462), indicating heavy CS "
+    "overhead for low-value accounts' and 'Support costs are rising but justified by ARR' for "
+    "Enterprise",
+    "Starter is normalised on two denominators and Enterprise's load is explicitly weighed "
+    "against its ARR rather than counted raw. But no rate is computed for Enterprise or Pro, so "
+    "the comparison across plans is asserted rather than shown.")
+add("qwen3.6", 5, "figures_carried_correctly", T,
+    "'Soylent ... generated 6 high/critical support tickets in October (mostly api_errors)' - "
+    "Soylent filed 8 tickets in October, of which one is critical and three are high",
+    "One wrong count, repeated once in the recommendations, and it changes nothing: Soylent is "
+    "escalated for immediate intervention either way. Everything else checkable is exact - all "
+    "twelve plan figures, both months of profit per customer, the utilisation percentages, the "
+    "professional services split by account, all eight funnel rates, the four churned accounts' "
+    "usage declines to the decimal, and the Starter support ratio.")
+add("qwen3.6", 5, "cross_table_customer_signal", T,
+    "'Soylent dropped 27% in requests and generated 6 high/critical support tickets in October. "
+    "This is a churn risk signal.'",
+    "Usage and support joined on one account with the right conclusion drawn, but the third table "
+    "is missing: Soylent's invoice reduction from EUR 22,000 to EUR 19,500 is never brought in, "
+    "and no other account is built from three sources.")
+add("qwen3.6", 5, "causal_boundary", T,
+    "'Soylent's drop is unexplained and correlates with high-severity tickets' in the "
+    "uncertainties, and 'Soylent's unexplained 27% usage drop and critical tickets warrant "
+    "immediate CS intervention' in the summary",
+    "Two of the three movements reported together, treated as a pattern to investigate, and the "
+    "cause explicitly called unexplained. The revenue contraction - the third movement, and the "
+    "one that makes it a pattern rather than a support problem - is absent.")
+add("qwen3.6", 5, "segment_recommendation", F,
+    "'Reduce investment in the SMB/Starters segment: Reallocate CS and marketing resources away "
+    "from cold outreach to Starter-tier prospects.'",
+    "Recommends the reduction on churn and support cost. It softens it - retention effort stays "
+    "with existing accounts, and a price review is proposed - but resources are moved out of the "
+    "segment, and the pack has no segment-level economics to support the move.")
+add("qwen3.6", 5, "acquisition_recommendation", T,
+    "'Increase spend on the Partner channel. It delivers the highest trial conversion rate (~23%) "
+    "and consistently sources higher-ARR new logos.'",
+    "Partner on a new-logo basis, with a lead-quality condition attached. But the spend increase "
+    "is not conditioned on the missing cost data, which its own section 5 says is required before "
+    "channel decisions can be made.")
+add("qwen3.6", 5, "product_recommendation", P,
+    "'Direct next quarter's engineering focus to the Starter plan' with three named workstreams",
+    "Single, actionable, and consistent with its own section 4's identification of Starter as the "
+    "weakest plan. Whether it is the right plan is priced under product_focus_supported.")
+add("qwen3.6", 5, "uncertainty_discipline", P,
+    "six items including the funnel measuring paid-trial starts rather than closed deals, the "
+    "support cost being fixed rather than marginal, and whether batch traffic is even counted in "
+    "usage.csv",
+    "Every gap real, and the last is an observation no other run in the battery makes: if Acme's "
+    "batch traffic is not in the usage file, platform utilisation is understated everywhere.")
+
+PENALTIES[("qwen3.6", 5)] = [{
+    "type": "PROHIBITED_ACTION",
+    "evidence": "'Reduce investment in the SMB/Starters segment: Reallocate CS and marketing "
+                "resources away from cold outreach to Starter-tier prospects.' - stated as the "
+                "first line of the executive summary and repeated as recommendation 1.",
+    "reason": "Moving marketing and CS resources out of SMB on a churn rate is the action the "
+              "pack rules out. It is the most carefully bounded of qwen3.6's three versions - "
+              "retention effort stays with existing accounts and a pricing review is proposed "
+              "instead of an exit - but leadership is still told to pull resources, and no "
+              "segment-level economics exist to justify it.",
+}]
 
 
 def main() -> None:

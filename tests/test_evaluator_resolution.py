@@ -289,26 +289,18 @@ def test_endpoint_overrides_live_outside_the_frozen_scenario():
         )
         generation = raw.get("generation") or {}
         assert "endpoint_overrides" not in generation, scenario_id
-    # The map is read from models.yaml, and is currently empty for every
-    # scenario - see the note there about qwen3.6.
-    assert endpoint_overrides_for("monday-004") == {}
+    # monday-004 declares one, and declaring it changed no scenario file.
+    assert endpoint_overrides_for("monday-004") == {"qwen3.6": "nan"}
 
 
-def test_published_scenarios_declare_no_override():
-    """A frozen battery's endpoints must never move under it."""
-    from mondaybench.config import endpoint_overrides_for
+def test_the_qwen36_nan_runs_are_official_and_the_helmcode_ones_are_not():
+    """The override is in use, and it cuts exactly one way.
 
-    for scenario_id in ("monday-001", "monday-002", "monday-003"):
-        assert endpoint_overrides_for(scenario_id) == {}
-
-
-def test_the_abandoned_qwen36_nan_runs_do_not_qualify():
-    """Kept as evidence of the endpoint finding; never counted as official.
-
-    NaN serves qwen3.6 as a reasoning model and Helmcode does not, so a
-    monday-004 score from NaN would not be comparable with the same model's
-    monday-001..003 scores. With no override declared these fail on provider,
-    which is the outcome we want and did not have to hand-maintain.
+    Helmcode was unreachable across two days of the monday-004 battery, so
+    qwen3.6's three official runs come from NaN. With the override declared they
+    qualify; the earlier Helmcode attempt does not, because the configured
+    provider for this scenario is now NaN. Both halves matter: the override must
+    admit the runs it was declared for and must not quietly admit others.
     """
     from mondaybench.config import apply_endpoint_overrides, endpoint_overrides_for, load_models
     from mondaybench.official import plan_model
@@ -317,6 +309,8 @@ def test_the_abandoned_qwen36_nan_runs_do_not_qualify():
 
     scenario = load_scenario("monday-004")
     models = apply_endpoint_overrides(load_models(), endpoint_overrides_for("monday-004"))
+    assert models["qwen3.6"].provider == "nan"
+
     plan = plan_model(
         scenario_id="monday-004",
         model_slug="qwen3.6",
@@ -324,10 +318,41 @@ def test_the_abandoned_qwen36_nan_runs_do_not_qualify():
         expected_prompt_sha256=build_prompt(scenario).sha256,
         expected_max_output_tokens=scenario.safety_ceiling_tokens,
     )
+    assert sorted(v.run_number for v in plan.official) == [3, 4, 5]
+    for verdict in plan.official:
+        assert verdict.run.model.provider == "nan"
+    # The pre-policy Helmcode attempt stays rejected, on the provider among
+    # other reasons.
     rejected = {v.run_number: v.reasons for v in plan.rejected}
-    for number in (3, 4, 5):
-        assert number in rejected, number
-        assert any("provider 'nan'" in r for r in rejected[number]), rejected[number]
+    assert 1 in rejected
+    assert any("provider 'helmcode'" in r for r in rejected[1]), rejected[1]
+
+
+def test_the_endpoint_caveat_travels_with_the_result():
+    """A number obtained under a different serving configuration has to say so.
+
+    This is the whole cost of the override, and a comment in a config file is
+    where such things go to be forgotten. The test does not check prose quality
+    - it checks that the three facts a reader needs are written down next to the
+    switch that caused them.
+    """
+    text = (REPO_ROOT / "models.yaml").read_text(encoding="utf-8")
+    head = text[: text.index("scenario_endpoint_overrides:")]
+    for required in (
+        "NOT comparable",          # what the score cannot be compared with
+        "reasoning",               # why: a different inference regime
+        "monday-001..003",         # which results it must not be read against
+        "Overall v1",              # where else the caveat has to appear
+    ):
+        assert required in head, required
+
+
+def test_only_monday_004_is_overridden():
+    """The blast radius. Nine published qwen3.6 runs depend on this."""
+    from mondaybench.config import endpoint_overrides_for
+
+    for scenario_id in ("monday-001", "monday-002", "monday-003"):
+        assert endpoint_overrides_for(scenario_id) == {}
 
 
 def test_qwen36_reasons_on_nan_and_not_on_helmcode():
