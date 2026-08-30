@@ -13,6 +13,7 @@ wrong rubric without a word.
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 import pytest
@@ -345,6 +346,47 @@ def test_the_endpoint_caveat_travels_with_the_result():
         "Overall v1",              # where else the caveat has to appear
     ):
         assert required in head, required
+
+
+def test_the_endpoint_note_records_the_measurement_not_the_prediction():
+    """The switch was flipped expecting the score to rise. It did not.
+
+    The base score is 54.5 on Helmcode against a mean of 53.0 on NaN - a net
+    criterion-level difference of -1.8 points out of 100, in both directions.
+    The prediction is kept in the file precisely so it is not made again, and
+    the caveat now rests on the serving configuration rather than on a claim
+    about the level of the score that turned out to be false.
+    """
+    import statistics
+
+    text = (REPO_ROOT / "models.yaml").read_text(encoding="utf-8")
+    head = text[: text.index("scenario_endpoint_overrides:")]
+    assert "not what was predicted" in head
+    assert "Do not repeat the original claim" in head
+
+    # And the measurement it cites has to still be true of what is on disk.
+    calibration = json.loads(
+        (
+            REPO_ROOT / "archive" / "monday-004-v0.3-calibration"
+            / "evaluations-evaluator-opus5-v0.4-calibration-3" / "qwen3.6" / "run-002.json"
+        ).read_text(encoding="utf-8")
+    )
+    official = [
+        json.loads(p.read_text(encoding="utf-8"))
+        for p in sorted(
+            (REPO_ROOT / "evaluations" / "evaluator-opus5-v0.4" / "monday-004" / "qwen3.6").glob("run-*.json")
+        )
+    ]
+    assert calibration["base_score"] == 54.5
+    assert len(official) == 3
+    nan_mean = statistics.fmean(e["base_score"] for e in official)
+    assert abs(nan_mean - calibration["base_score"]) < 2.0, (
+        "the endpoints produce materially different base scores; the note in "
+        "models.yaml says they do not and would need rewriting"
+    )
+    # The whole published gap is the penalty, not the analysis.
+    assert all(e["penalties"]["total"] == -7.0 for e in official)
+    assert calibration["penalties"]["total"] == 0.0
 
 
 def test_only_monday_004_is_overridden():

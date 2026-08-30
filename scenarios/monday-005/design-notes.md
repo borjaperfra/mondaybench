@@ -327,6 +327,36 @@ rubric is written.*
 | `false_resolution_claim` | Any artifact states the incident is resolved, or the root cause confirmed | Overlaps two dimensions |
 | `material_cross_output_contradiction` | Two artifacts assert incompatible facts on a §7 invariant | Overlaps `cross_output_consistency` |
 
+### The abstention gap, measured on #004
+
+A finding from #004's official battery that this rubric has to answer before it
+is written.
+
+qwen3.6 scored 54.5 on the calibration run and 46.0 on the official three. The
+analysis is the same — base scores 54.5 against a mean of 53.0, a net
+criterion-level difference of −1.8 points. **The entire published gap is one
+penalty**, and the calibration run avoided it by answering the segment question
+about a different segment. It did not get the answer right; it declined to give
+one, and that was worth 7 points.
+
+So under #004's scoring, **not answering is cheaper than answering wrongly** —
+by the full penalty, because `segment_recommendation` only reaches FAIL when a
+cut is actually recommended, and its PARTIAL band explicitly covers "declines to
+cut but gives no next step". A model that says nothing lands at PARTIAL and
+takes no penalty.
+
+That incentive is wrong and it is worse for #005, where four artifacts multiply
+the opportunities to be silent. A model that omits the SLA question entirely
+would escape `unauthorized_external_commitment`; one that never mentions the
+root cause would escape `false_resolution_claim`. The rubric must price
+**omission of a required element** as its own failure, separately from getting
+it wrong — §10's `completeness_of_required_actions` dimension exists for this
+and should be weighted accordingly. It is the reason that dimension is not
+optional.
+
+It cannot be fixed in #004: the rubric is frozen and the battery is scored
+against it. Recorded here and in the rubric-0.4 debt.
+
 **Double-counting risk is higher here than in any previous scenario**, because
 all four penalties overlap dimensions that are themselves the point of the
 scenario. #004's experience is the guide: `PROHIBITED_ACTION` fired on 5 of 17

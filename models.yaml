@@ -149,15 +149,33 @@
 # data centre, and `capabilities.reasoning: false` below is true of Helmcode
 # only.
 #
-# What follows, and what must be said wherever the number appears:
+# MEASURED AFTERWARDS, and it is not what was predicted. The expectation when
+# this override was switched on was that the reasoning regime would inflate the
+# score. It did not. The same model on the same scenario under the same rubric:
+#
+#   Helmcode, no reasoning      base 54.5
+#   NaN, ~6,000 reasoning tok   base 51.5 / 54.0 / 53.5   (mean 53.0)
+#
+# The net criterion-level difference is -1.8 points out of 100, and it runs both
+# ways: the NaN runs find the duplicated invoice and normalise the annual
+# prepayment, which the Helmcode run missed, and lose the funnel and growth
+# comparisons in exchange. Six thousand reasoning tokens moved nothing.
+#
+# So the caveat stands, but not for the reason first written down. What is not
+# comparable is the serving configuration, not the score's level:
 #
 #   * qwen3.6's monday-004 score is NOT comparable with its monday-001..003
-#     scores. It will very likely be higher for a reason that has nothing to do
-#     with the model.
-#   * Its latency and TTFA on monday-004 are properties of NaN, not of qwen3.6.
+#     scores, because it was produced under a different inference regime. The
+#     measurement above says the regime did not change the quality; it does not
+#     say the two are the same product.
+#   * Its latency, TTFA and token counts on monday-004 are properties of NaN.
+#     These DO differ materially - 8,102-9,079 output tokens against 3,659.
 #   * Overall v1 will average a monday-004 score obtained under a different
 #     serving configuration from the three that precede it. The release note
 #     has to carry this.
+#   * Do not repeat the original claim that the NaN score would be higher. It
+#     was a reasonable guess and it was wrong, and it is recorded here so it is
+#     not made again.
 #
 # It is scoped to monday-004 alone. monday-001..003 declare no override, so
 # qwen3.6's nine published runs there keep their Helmcode provider and go on
