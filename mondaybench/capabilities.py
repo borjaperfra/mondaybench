@@ -273,3 +273,81 @@ def build_profiles(
                 bucket.criteria += 1
         profiles[model] = {cid: b for cid, b in buckets.items() if b.possible}
     return profiles, sorted(set(warnings))
+
+
+# --------------------------------------------------------------------------
+# Publication
+# --------------------------------------------------------------------------
+#
+# The calculator above only reads. Writing lives here, in one function, so the
+# "this cannot modify anything" property of the calculator stays checkable.
+
+
+def profiles_payload(
+    taxonomy: Taxonomy,
+    results_by_scenario: dict[str, dict[str, dict[str, tuple[float, float]]]],
+    points: dict[str, float],
+    display_names: dict[str, str] | None = None,
+) -> dict[str, Any]:
+    """Everything a reader needs to check a capability profile, as JSON.
+
+    Carries the coverage beside the scores on purpose. A capability measured by
+    one criterion in one scenario is a different kind of claim from one measured
+    by fifteen across three, and a profile that hides which is which invites
+    exactly the over-reading it should prevent.
+    """
+    profiles, warnings = build_profiles(taxonomy, results_by_scenario)
+    display_names = display_names or {}
+    scenarios = sorted(results_by_scenario)
+    covered = sorted({c for p in profiles.values() for c in p})
+
+    # Coverage restricted to the scenarios that actually contributed, which is
+    # not the same as the taxonomy's full coverage: monday-004 is mapped but not
+    # yet official.
+    official_points = {
+        key: value
+        for key, value in points.items()
+        if key.split(".", 1)[0] in results_by_scenario
+    }
+    scoped = [c for c in coverage(taxonomy, official_points) if c.capability in covered]
+
+    return {
+        "taxonomy_version": taxonomy.version,
+        "scenarios": scenarios,
+        "note": (
+            "Capability scores are points earned divided by points available on the "
+            "criteria mapped to that capability, with each criterion averaged across the "
+            "model's official runs first - the same aggregation the scenario score uses. "
+            "Scoring uses primary mappings only, so no criterion's points are counted "
+            "twice. Scores are comparable across models, not across capabilities: the "
+            "weighting is the rubrics' own point mass, not a claim about importance."
+        ),
+        "capabilities": [
+            {
+                "id": entry.capability,
+                "group": taxonomy.capabilities[entry.capability].group,
+                "description": taxonomy.capabilities[entry.capability].description,
+                "criteria": entry.criterion_count,
+                "points": entry.points,
+                "scenarios": entry.scenarios,
+                "sparse": entry.sparse,
+            }
+            for entry in scoped
+        ],
+        "models": [
+            {
+                "model_slug": slug,
+                "display_name": display_names.get(slug, slug),
+                "capabilities": {
+                    cid: {
+                        "percent": score.percent,
+                        "earned": round(score.earned, 2),
+                        "possible": score.possible,
+                    }
+                    for cid, score in sorted(profile.items())
+                },
+            }
+            for slug, profile in sorted(profiles.items())
+        ],
+        "warnings": warnings,
+    }

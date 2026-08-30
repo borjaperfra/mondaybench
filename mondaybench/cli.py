@@ -1040,6 +1040,193 @@ def overall(
         console.print(f"wrote {path.relative_to(repo_root())}")
 
 
+@app.command()
+def capabilities(
+    taxonomy_version: str = typer.Option("0.1", "--taxonomy", help="Taxonomy version"),
+) -> None:
+    """Publish capability profiles from the official scenario results.
+
+    Not a second score. It decomposes the results that already exist into what
+    kind of work each model is good at, and writes the coverage beside the
+    numbers so a one-criterion capability cannot be read like a fifteen-criterion
+    one.
+    """
+    import json as _json
+
+    from .capabilities import (
+        TaxonomyError,
+        load_taxonomy,
+        official_criterion_results,
+        profiles_payload,
+        rubric_points,
+    )
+    from .config import evaluators_for_scenario
+    from .overall import load_scenario_leaderboard
+    from .scenarios import ScenarioError, load_scenario, scenarios_dir
+
+    try:
+        taxonomy = load_taxonomy(taxonomy_version)
+    except TaxonomyError as exc:
+        _fail(str(exc))
+        return
+
+    # Only scenarios with a published official leaderboard contribute. A
+    # calibration result would be a profile of the runs its rubric was tuned on.
+    results: dict[str, dict] = {}
+    rubrics: dict[str, object] = {}
+    display: dict[str, str] = {}
+    skipped: list[str] = []
+    for scenario_id in taxonomy.scenarios:
+        payload = load_scenario_leaderboard(scenario_id)
+        if payload is None or not payload.get("official"):
+            skipped.append(scenario_id)
+            continue
+        evaluator_id = payload["evaluator"]
+        try:
+            cfg = load_evaluator(evaluator_id)
+            rubrics[scenario_id] = load_scenario(scenario_id, rubric_file=cfg.rubric_file).rubric
+        except (ConfigError, ScenarioError) as exc:
+            _fail(str(exc))
+            return
+        results[scenario_id] = official_criterion_results(evaluator_id, scenario_id)
+        for row in payload.get("models") or []:
+            display[row["model_slug"]] = row.get("display_name") or row["model_slug"]
+
+    if not results:
+        _fail("no official scenario results to profile")
+        return
+
+    payload = profiles_payload(taxonomy, results, rubric_points(rubrics), display)
+    target = repo_root() / "analysis" / f"capability-profiles-v{taxonomy.version}.json"
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(
+        _json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n"
+    )
+
+    ids = [c["id"] for c in payload["capabilities"]]
+    table = Table(title=f"Capability profiles (taxonomy {payload['taxonomy_version']})", box=None)
+    table.add_column("model")
+    for cid in ids:
+        table.add_column(_dimension_heading(cid), justify="right")
+    for row in payload["models"]:
+        table.add_row(
+            row["display_name"],
+            *(
+                f"{row['capabilities'][cid]['percent']:.0f}" if cid in row["capabilities"] else "-"
+                for cid in ids
+            ),
+        )
+    console.print(table)
+    sparse = [c["id"] for c in payload["capabilities"] if c["sparse"]]
+    if sparse:
+        console.print(
+            f"\n[yellow]sparse[/yellow] one criterion or one scenario: {', '.join(sparse)}"
+        )
+    for scenario_id in skipped:
+        console.print(f"[yellow]not yet official[/yellow] {scenario_id} contributes nothing")
+    for warning in payload["warnings"]:
+        console.print(f"[yellow]warning[/yellow] {warning}")
+    console.print(f"\nwrote {target.relative_to(repo_root())}")
+
+
+@app.command(name="serving")
+def serving_qualification() -> None:
+    """Publish how many attempts each model needed to produce three valid runs.
+
+    This is invisible everywhere else. A leaderboard can only exclude a run it
+    has an evaluation for, and a run rejected before scoring never gets one - so
+    monday-003 shows zero exclusions while qwen3.8-flash actually took seven
+    attempts to yield three qualifying runs, four of them returning no reasoning
+    at all. That is a real property of the model-and-endpoint pair, it is
+    already on disk, and nothing published says it.
+
+    Deliberately a separate artefact rather than a field on the leaderboards:
+    adding it there would rewrite published result files to carry metadata that
+    changes no score.
+    """
+    import json as _json
+
+    from .config import apply_endpoint_overrides, endpoint_overrides_for
+    from .official import plan_model
+    from .overall import load_scenario_leaderboard
+    from .prompt_builder import build_prompt
+    from .scenarios import ScenarioError, load_scenario, scenarios_dir
+
+    out: dict[str, Any] = {"scenarios": {}}
+    for directory in sorted(p for p in scenarios_dir().iterdir() if p.is_dir()):
+        scenario_id = directory.name
+        payload = load_scenario_leaderboard(scenario_id)
+        if payload is None or not payload.get("official"):
+            continue
+        try:
+            loaded = load_scenario(scenario_id)
+        except ScenarioError as exc:
+            _fail(str(exc))
+            return
+        prompt = build_prompt(loaded)
+        models = apply_endpoint_overrides(
+            load_models(), endpoint_overrides_for(scenario_id)
+        )
+        rows = []
+        for row in payload.get("models") or []:
+            slug = row["model_slug"]
+            plan = plan_model(
+                scenario_id=scenario_id,
+                model_slug=slug,
+                model=models.get(slug),
+                expected_prompt_sha256=prompt.sha256,
+                expected_max_output_tokens=loaded.safety_ceiling_tokens,
+            )
+            attempts = len(plan.official) + len(plan.rejected)
+            rows.append(
+                {
+                    "model_slug": slug,
+                    "display_name": row.get("display_name") or slug,
+                    "official": len(plan.official),
+                    "attempts": attempts,
+                    "rejected": [
+                        {
+                            "run": v.run_number,
+                            "reasons": list(v.reasons),
+                        }
+                        for v in sorted(plan.rejected, key=lambda v: v.run_number or 0)
+                    ],
+                }
+            )
+        out["scenarios"][scenario_id] = rows
+
+    out["note"] = (
+        "Attempts counts every generation stored for the model on this scenario; "
+        "official counts those that qualify as evidence. A run can be rejected before "
+        "it is ever scored - for a truncated answer, a provider that returned no "
+        "reasoning when reasoning was requested, a cached duplicate, or a "
+        "configuration that does not match the published one - and such a run appears "
+        "in no leaderboard, because a leaderboard can only exclude what it evaluated. "
+        "This is a property of the model and endpoint, not of the answer, and it is "
+        "reported apart from the score."
+    )
+    target = repo_root() / "analysis" / "serving-qualification.json"
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(
+        _json.dumps(out, indent=2, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n"
+    )
+
+    table = Table(title="Serving qualification", box=None)
+    table.add_column("scenario")
+    table.add_column("model")
+    table.add_column("official", justify="right")
+    table.add_column("attempts", justify="right")
+    for scenario_id, rows in out["scenarios"].items():
+        for row in rows:
+            if row["attempts"] == row["official"]:
+                continue
+            table.add_row(
+                scenario_id, row["display_name"], str(row["official"]), str(row["attempts"])
+            )
+    console.print(table)
+    console.print(f"\nwrote {target.relative_to(repo_root())}")
+
+
 # --------------------------------------------------------------------------
 # benchmark (full pipeline)
 # --------------------------------------------------------------------------
