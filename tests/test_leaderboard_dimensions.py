@@ -243,3 +243,74 @@ def test_published_status_lines_are_right(scenario_id, expected):
     _, _, out_dir = SCENARIOS[scenario_id]
     text = (REPO_ROOT / out_dir / "leaderboard.md").read_text(encoding="utf-8")
     assert f"**Status:** {expected}. Every publication gate passed." in text
+
+
+# --------------------------------------------------------------------------
+# The same bug, one layer up: the terminal table
+# --------------------------------------------------------------------------
+#
+# `leaderboard.py` was fixed for monday-002 but `cli.py` was not, so the table
+# printed to the terminal went on showing monday-001's six dimension names.
+# monday-003 and monday-004 both rendered a row of zeros under headings from a
+# rubric they do not use. The columns are now derived from what was actually
+# scored, and these guard that.
+
+
+# `SCENARIOS` above holds only the two published scenarios and the rubric each
+# is *scored* against. These checks want every scenario that exists, including
+# the frozen third and the calibration draft, so they carry their own map.
+ALL_SCENARIO_RUBRICS = {
+    "monday-001": "rubric-0.2.yaml",
+    "monday-002": "rubric.yaml",
+    "monday-003": "rubric.yaml",
+    "monday-004": "rubric-0.3.yaml",
+}
+
+
+def any_rubric_dimensions(scenario_id: str) -> dict[str, float]:
+    raw = yaml.safe_load(
+        (
+            REPO_ROOT / "scenarios" / scenario_id / ALL_SCENARIO_RUBRICS[scenario_id]
+        ).read_text(encoding="utf-8")
+    )
+    return {name: float(body["max_points"]) for name, body in raw["dimensions"].items()}
+
+
+def test_the_terminal_table_hardcodes_no_dimension_name():
+    import inspect
+
+    from mondaybench import cli
+
+    # Scoped to the command that draws the table. The module elsewhere names
+    # `noise_resistance` legitimately - it is a rubric schema key, not a column.
+    source = inspect.getsource(cli.leaderboard)
+    every_name = set()
+    for scenario_id in ALL_SCENARIO_RUBRICS:
+        every_name |= set(any_rubric_dimensions(scenario_id))
+    baked_in = sorted(n for n in every_name if n in source)
+    assert baked_in == [], f"cli hardcodes dimension names: {baked_in}"
+
+
+@pytest.mark.parametrize(
+    "key,expected",
+    [
+        ("cross_table_data_quality", "cross:tdq"),
+        ("noise_resistance", "noise:r"),
+        ("uncertainty", "uncertai"),
+        ("state_reconstruction", "state:r"),
+    ],
+)
+def test_dimension_heading_is_short_and_derived(key, expected):
+    from mondaybench.cli import _dimension_heading
+
+    assert _dimension_heading(key) == expected
+
+
+def test_dimension_headings_stay_distinct_within_every_scenario():
+    """A column heading that collides with another is worse than a long one."""
+    from mondaybench.cli import _dimension_heading
+
+    for scenario_id in ALL_SCENARIO_RUBRICS:
+        names = list(any_rubric_dimensions(scenario_id))
+        headings = [_dimension_heading(n) for n in names]
+        assert len(set(headings)) == len(headings), (scenario_id, headings)

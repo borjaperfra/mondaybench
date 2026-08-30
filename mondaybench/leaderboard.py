@@ -16,7 +16,7 @@ from pathlib import Path
 from typing import Any
 
 from .config import repo_root
-from .config import ConfigError, load_models
+from .config import ConfigError, apply_endpoint_overrides, load_models
 from .evaluator import find_evaluations, load_evaluation, models_with_evaluations
 from .official import qualify_run, reasoning_status
 from .runner import find_runs, load_run
@@ -101,6 +101,8 @@ def summarize_model(
     evaluator_id: str,
     model_slug: str,
     root: Path | None = None,
+    expected_max_output_tokens: int | None = None,
+    endpoint_overrides: dict[str, str] | None = None,
 ) -> ModelSummary | None:
     """Collect one model's evaluations plus the run metadata they point at."""
     evaluation_paths = find_evaluations(evaluator_id, scenario_id, model_slug, root)
@@ -125,7 +127,9 @@ def summarize_model(
     # sibling runs used.
     excluded: list[dict[str, Any]] = []
     try:
-        model_cfg = load_models().get(model_slug)
+        model_cfg = apply_endpoint_overrides(
+            load_models(), endpoint_overrides or {}
+        ).get(model_slug)
     except ConfigError:
         model_cfg = None
     if model_cfg is not None:
@@ -143,6 +147,7 @@ def summarize_model(
                 expected_prompt_sha256=run.scenario_prompt_sha256,
                 model=model_cfg,
                 scenario_id=scenario_id,
+                expected_max_output_tokens=expected_max_output_tokens,
             )
             if verdict.official:
                 kept.append(evaluation)
@@ -331,14 +336,18 @@ def build_leaderboard(
     benchmark_version: str,
     scenario_status: str | None = None,
     root: Path | None = None,
+    expected_max_output_tokens: int | None = None,
+    endpoint_overrides: dict[str, str] | None = None,
 ) -> tuple[dict[str, Any], list[ModelSummary]]:
     summaries: list[ModelSummary] = []
     for model_slug in models_with_evaluations(evaluator_id, scenario_id, root):
         summary = summarize_model(
+            endpoint_overrides=endpoint_overrides,
             scenario_id=scenario_id,
             evaluator_id=evaluator_id,
             model_slug=model_slug,
             root=root,
+            expected_max_output_tokens=expected_max_output_tokens,
         )
         if summary is not None:
             summaries.append(summary)
@@ -496,6 +505,17 @@ def write_leaderboard(
         raise ValueError(
             f"{scenario_id} is status=calibration: its ranking cannot be written under "
             "leaderboard/. Pass calibration=True to write it under analysis/leaderboards/."
+        )
+    # An official leaderboard with nothing in it still renders the "Every
+    # publication gate passed" banner, which is a claim, not a placeholder.
+    # `official_blockers` would never let one through - it reports every expected
+    # model as missing - but this function is what actually writes the file, and
+    # it trusted the flag. Found when a test called it directly against a
+    # scenario that had just been promoted to official.
+    if payload.get("official") and not summaries:
+        raise ValueError(
+            f"refusing to publish an official leaderboard for {scenario_id} with no "
+            "models: an empty ranking still asserts that every gate passed"
         )
     if calibration:
         directory = calibration_leaderboard_dir(scenario_id, root)
@@ -895,4 +915,51 @@ def check_scoring_arithmetic(
                         f"{evaluation.run_id}: {criterion_id} awarded "
                         f"{result.points_awarded} of {result.points_possible}"
                     )
+    return problems
+
+
+def check_calibration_overlap(
+    evaluator_id: str, scenario_id: str, root: Path | None = None
+) -> list[str]:
+    """Refuse to publish a run the rubric was tuned on.
+
+    A calibration battery is read while the rubric is being written: criteria get
+    added, repriced and reworded against those exact responses. If one of them
+    then becomes official evidence, the published score is partly a measurement
+    of the fitting. monday-003 states the rule in
+    `archive/monday-003-v0.3-calibration/README.md` - "Rubric 0.3 was designed
+    while reading those responses, so they cannot also be the evidence it
+    publishes" - and archives the whole battery before generating fresh runs.
+
+    Nothing enforced it. `run --reuse-valid-runs` counts a calibration run as
+    official, because qualification asks whether a run was generated under the
+    published conditions and a calibration run was. The distinguishing fact is
+    not in the run at all: it is that some calibration evaluator also scored it.
+    That is what this checks.
+    """
+    from .config import evaluators_for_scenario
+
+    found = evaluators_for_scenario(scenario_id, root)
+    drafts = [name for status, names in found.items() if status != "official" for name in names]
+    if not drafts:
+        return []
+
+    tainted: dict[str, list[str]] = {}
+    for draft in drafts:
+        if draft == evaluator_id:
+            continue
+        for model_slug in models_with_evaluations(draft, scenario_id, root):
+            for path in find_evaluations(draft, scenario_id, model_slug, root):
+                tainted.setdefault(load_evaluation(path).run_id, []).append(draft)
+
+    problems: list[str] = []
+    for model_slug in models_with_evaluations(evaluator_id, scenario_id, root):
+        for path in find_evaluations(evaluator_id, scenario_id, model_slug, root):
+            run_id = load_evaluation(path).run_id
+            if run_id in tainted:
+                problems.append(
+                    f"{run_id} was also scored by {', '.join(sorted(set(tainted[run_id])))} - "
+                    f"a run the rubric was calibrated on cannot be official evidence for it; "
+                    f"archive the calibration battery and generate a fresh run"
+                )
     return problems

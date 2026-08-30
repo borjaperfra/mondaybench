@@ -25,7 +25,7 @@ from typing import Any
 from .config import EvaluatorConfig
 from .judge import Judge, JudgeCallStats, JudgeError
 from .scenarios import Criterion, FalseAction, Rubric
-from .schemas import CriterionVerdict, NoiseVerdict, PenaltyVerdict
+from .schemas import PENALTY_TYPE_VALUES, CriterionVerdict, NoiseVerdict, PenaltyVerdict
 
 VALID_LABELS = {"PASS", "PARTIAL", "FAIL"}
 
@@ -173,12 +173,7 @@ class RecordedJudge(Judge):
             if not isinstance(entry, dict):
                 continue
             vtype = str(entry.get("type", "")).strip().upper()
-            if vtype not in {
-                "MATERIAL_HALLUCINATION",
-                "PROHIBITED_ACTION",
-                "MAJOR_PLANNING_ERROR",
-                "MAJOR_CONTRADICTION",
-            }:
+            if vtype not in set(PENALTY_TYPE_VALUES):
                 raise JudgeError(f"recorded penalty for {run_id}: invalid type {vtype!r}")
             cleaned.append(
                 {

@@ -61,6 +61,27 @@ def _now_utc() -> str:
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
+# What the provider is actually sent as `max_tokens`, and what MondayBench calls
+# it internally from monday-004 onwards.
+#
+# A SAFETY CEILING, not a reasoning budget. The token-budget audit established
+# that the same configured value is honoured as reasoning+answer by some
+# provider/model pairs, ignored by another and never tested by the rest, so it
+# cannot equalise compute and is not meant to. It exists to stop a runaway
+# generation, and it is set high enough that a normal successful answer never
+# reaches it.
+CEILING_SEMANTICS = "provider_specific"
+
+
+def effective_ceiling(scenario: Scenario, model: ModelConfig) -> int:
+    """The scenario's own ceiling if it declares one, else the model default.
+
+    monday-001..003 declare none and keep the 32,000 they were generated under,
+    so their runs go on qualifying against `models.yaml` unchanged.
+    """
+    return scenario.safety_ceiling_tokens or model.max_output_tokens
+
+
 def dry_run_report(scenario: Scenario, model: ModelConfig, prompt: BuiltPrompt) -> dict[str, object]:
     """Everything a dry run should show. Makes no API call."""
     return {
@@ -76,7 +97,9 @@ def dry_run_report(scenario: Scenario, model: ModelConfig, prompt: BuiltPrompt) 
         "prompt_token_estimate": prompt.estimated_tokens(),
         "system_prompt": prompt.system_prompt,
         "temperature": model.temperature,
-        "max_output_tokens": model.max_output_tokens,
+        "max_output_tokens": effective_ceiling(scenario, model),
+        "safety_ceiling_tokens": effective_ceiling(scenario, model),
+        "ceiling_semantics": CEILING_SEMANTICS,
         "reasoning_enabled": model.reasoning_enabled,
         "pricing_known": model.pricing.input_per_million_usd is not None,
     }
@@ -101,9 +124,10 @@ def execute_run(
         )
 
     provider = build_model_provider(model)
+    ceiling = effective_ceiling(scenario, model)
     generation_config = {
         "temperature": model.temperature,
-        "max_output_tokens": model.max_output_tokens,
+        "max_output_tokens": ceiling,
         "extra_body": model.extra_body,
     }
     # Only sent when a model pins it, so adding the field changes nothing on the
@@ -145,7 +169,7 @@ def execute_run(
         model_id=model.model_id,
         temperature=model.temperature,
         top_p=model.top_p,
-        max_output_tokens=model.max_output_tokens,
+        max_output_tokens=ceiling,
         reasoning_requested=reasoning_requested,
         reasoning_mode=None,
         reasoning_effort=None,
@@ -175,7 +199,9 @@ def execute_run(
         generation=RunGeneration(
             temperature=model.temperature,
             top_p=model.top_p,
-            max_output_tokens=model.max_output_tokens,
+            max_output_tokens=ceiling,
+            safety_ceiling_tokens=ceiling,
+            ceiling_semantics=CEILING_SEMANTICS,
             reasoning_enabled=model.reasoning_enabled,
             reasoning_requested=reasoning_requested,
             reasoning_mode=None,
@@ -227,16 +253,39 @@ def execute_run(
         }
     )
 
-    write_run(run, root=root)
+    # Exclusive unless the caller explicitly asked to overwrite: reaching here
+    # otherwise means we intend to create a file that did not exist at the
+    # start of generation, and it must still not exist now.
+    write_run(run, root=root, exclusive=not overwrite)
     return run
 
 
-def write_run(run: BenchmarkRun, root: Path | None = None) -> Path:
+def write_run(run: BenchmarkRun, root: Path | None = None, *, exclusive: bool = False) -> Path:
+    """Persist a run. With `exclusive`, refuse to clobber an existing file.
+
+    `execute_run` checks for an existing file before calling the provider, and
+    generation then takes minutes. Two concurrent batteries covering the same
+    model both pass that check and both write, and the second silently replaces
+    the first - which happened once on monday-004/mimo-v2.5, and the second time
+    was caught only because the writes happened to land in a safe order.
+
+    The check belongs at the write, not at the start. Mode "x" is
+    O_CREAT|O_EXCL: the filesystem decides the race, not two Python processes.
+    """
     target = run_path(run.scenario_id, run.model.slug, run.run_number, root)
     target.parent.mkdir(parents=True, exist_ok=True)
-    target.write_text(
-        json.dumps(run.model_dump(), indent=2, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n"
-    )
+    payload = json.dumps(run.model_dump(), indent=2, ensure_ascii=False) + "\n"
+    if exclusive:
+        try:
+            with open(target, "x", encoding="utf-8", newline="\n") as handle:
+                handle.write(payload)
+        except FileExistsError as exc:
+            raise RunExistsError(
+                f"{target} appeared while this run was generating - another battery is "
+                f"covering the same model. Nothing was overwritten; re-plan and retry."
+            ) from exc
+        return target
+    target.write_text(payload, encoding="utf-8", newline="\n")
     return target
 
 
@@ -279,6 +328,30 @@ def find_runs(scenario_id: str, model_slug: str, root: Path | None = None) -> li
     if not directory.is_dir():
         return []
     return sorted(directory.glob("run-*.json"))
+
+
+def archived_run_numbers(
+    scenario_id: str, model_slug: str, root: Path | None = None
+) -> set[int]:
+    """Run numbers already used by archived batteries, which must never recur.
+
+    A run id is `<scenario>__<model>__<NNN>`, and recorded verdicts are keyed by
+    it. Archiving a calibration battery frees its numbers on disk, so the next
+    generation would reuse them - and then the archived verdict file would
+    replay against a different response without erroring, scoring the wrong
+    text. monday-003's archive README flags exactly this trap; nothing stopped
+    it from happening.
+    """
+    base = (root or repo_root()) / "archive"
+    if not base.is_dir():
+        return set()
+    taken: set[int] = set()
+    for path in base.glob(f"*/runs-{scenario_id}/{model_slug}/run-*.json"):
+        try:
+            taken.add(int(path.stem.split("-")[-1]))
+        except ValueError:
+            continue
+    return taken
 
 
 def models_with_runs(scenario_id: str, root: Path | None = None) -> list[str]:

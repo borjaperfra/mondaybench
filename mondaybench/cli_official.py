@@ -13,10 +13,18 @@ import typer
 from rich.console import Console
 from rich.table import Table
 
-from .config import ConfigError, load_evaluator, load_models, repo_root
+from .config import (
+    ConfigError,
+    apply_endpoint_overrides,
+    endpoint_overrides_for,
+    load_evaluator,
+    load_models,
+    repo_root,
+)
 from .freeze import build_manifest, check_drift, load_manifest, write_manifest
 from .leaderboard import (
     build_leaderboard,
+    check_calibration_overlap,
     check_scoring_arithmetic,
     leaderboard_dir,
     official_blockers,
@@ -136,7 +144,7 @@ def cmd_plan(scenario: str, models_csv: str | None, runs: int, evaluator: str) -
     try:
         evaluator_cfg = load_evaluator(evaluator)
         loaded = load_scenario(scenario, rubric_file=evaluator_cfg.rubric_file)
-        configured = load_models()
+        configured = apply_endpoint_overrides(load_models(), endpoint_overrides_for(loaded.id))
     except (ScenarioError, ConfigError) as exc:
         _fail(str(exc))
         return
@@ -153,6 +161,10 @@ def cmd_plan(scenario: str, models_csv: str | None, runs: int, evaluator: str) -
         models=configured,
         expected_prompt_sha256=prompt.sha256,
         target=runs,
+        # Without this the ceiling falls back to the model default and the
+        # comparison inverts: monday-004's 96,000-token runs get rejected as
+        # "!= configured 32000" and the pre-policy ones are counted as official.
+        expected_max_output_tokens=loaded.safety_ceiling_tokens,
     )
 
     table = Table(title=f"Official run plan - {loaded.id} (target {runs}/model)", box=None)
@@ -236,6 +248,8 @@ def cmd_publish(scenario: str, evaluator: str, models_csv: str | None, runs: int
         scenario_id=loaded.id,
         evaluator_id=evaluator,
         benchmark_version=loaded.benchmark_version,
+        expected_max_output_tokens=loaded.safety_ceiling_tokens,
+        endpoint_overrides=endpoint_overrides_for(loaded.id),
         root=None,
     )
     blockers.extend(
@@ -250,6 +264,7 @@ def cmd_publish(scenario: str, evaluator: str, models_csv: str | None, runs: int
         )
     )
     blockers.extend(check_scoring_arithmetic(evaluator, loaded.id))
+    blockers.extend(check_calibration_overlap(evaluator, loaded.id))
 
     if blockers:
         console.print(
@@ -306,6 +321,8 @@ def cmd_results(scenario: str, evaluator: str) -> None:
         scenario_id=loaded.id,
         evaluator_id=evaluator,
         benchmark_version=loaded.benchmark_version,
+        expected_max_output_tokens=loaded.safety_ceiling_tokens,
+        endpoint_overrides=endpoint_overrides_for(loaded.id),
     )
     if not summaries:
         _fail(f"no evaluations found for {evaluator}")

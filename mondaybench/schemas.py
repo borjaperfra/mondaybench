@@ -7,19 +7,36 @@ tell what they are looking at.
 
 from __future__ import annotations
 
-from typing import Any, Literal
+from typing import Any, Literal, get_args
 
 from pydantic import BaseModel, ConfigDict, Field
 
 Label = Literal["PASS", "PARTIAL", "FAIL"]
-# monday-002 v0.2 adds MAJOR_PLANNING_ERROR: a schedule or dependency order that
-# cannot actually happen. The other three are shared with monday-001's rubric.
+# The shared penalty vocabulary. A rubric may name a penalty in its own terms -
+# `scenarios.PENALTY_KEY_TO_TYPE` maps those names onto these - but the stored
+# type is always one of these, so a penalty means the same thing in every
+# scenario and on every leaderboard.
+#
+# monday-002 v0.2 added MAJOR_PLANNING_ERROR: a schedule or dependency order
+# that cannot actually happen. monday-004 adds the two an analysis scenario
+# needs and a planning scenario has no use for: a numeric or data mistake that
+# drives the analysis, and a causal claim the evidence does not support. Neither
+# is a planning error and neither is a hallucination - the figures and the
+# correlation are both really in the data; what is wrong is the handling.
 PenaltyType = Literal[
     "MATERIAL_HALLUCINATION",
     "PROHIBITED_ACTION",
     "MAJOR_PLANNING_ERROR",
     "MAJOR_CONTRADICTION",
+    "MAJOR_DATA_ERROR",
+    "UNSUPPORTED_CAUSALITY",
 ]
+
+# One source for the four places that used to carry their own copy of the list:
+# the judge's JSON schema, the judge's reply validation, the recorded judge's
+# reply validation, and the tests. Adding a type in one place and forgetting
+# another is how a verdict becomes unreadable by the code that has to score it.
+PENALTY_TYPE_VALUES: tuple[str, ...] = get_args(PenaltyType)
 
 
 class Strict(BaseModel):
@@ -67,6 +84,23 @@ class RunGeneration(Strict):
     # Fingerprint of everything above that shapes the generation. Two runs
     # sharing it were asked for under the same effective configuration.
     config_sha256: str | None = None
+
+    # --- generation ceiling, added after the monday-004 token-budget audit ---
+    # `max_output_tokens` above is the value that reaches the wire as the legacy
+    # Chat Completions `max_tokens`. The audit established that providers do not
+    # apply that field consistently to reasoning models: two of seven stop at it
+    # exactly, one exceeds it by up to 84%, and four never approached it. So it
+    # is NOT a shared compute budget and must not be described as one.
+    #
+    # `safety_ceiling_tokens` records the same number under the name that says
+    # what it is: a limit set high enough not to bind a normal generation, so a
+    # runaway is capped and a successful answer is not. `ceiling_semantics`
+    # records that what the provider does with it is provider-specific.
+    #
+    # Both default to None so every run written before monday-004 still loads
+    # and still means exactly what it meant.
+    safety_ceiling_tokens: int | None = None
+    ceiling_semantics: str | None = None
 
 
 class RunReasoning(Strict):

@@ -12,7 +12,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from .config import ModelConfig
-from .runner import find_runs, load_run
+from .runner import archived_run_numbers, find_runs, load_run
 from . import reasoning as reasoning_check
 from .schemas import BenchmarkRun
 
@@ -36,6 +36,47 @@ class RunVerdict:
         return self.run.run_number if self.run else None
 
 
+# Generation ceiling status, recorded as qualification evidence from
+# monday-004 onwards.
+#
+# The token-budget audit established that the configured ceiling is not a shared
+# compute budget: helmcode/deepseek-v4-flash and nan/mimo-v2.5 stop at it
+# exactly, nan/qwen3.8-flash exceeds it by up to 84%, and the other four never
+# approached it. So the question qualification asks is NOT "did the provider
+# respect the parameter" - it demonstrably does not, consistently - but "did our
+# ceiling stop this answer before it finished".
+CEILING_NON_BINDING = "NON_BINDING"
+CEILING_BOUND = "BOUND"
+CEILING_UNOBSERVABLE = "UNOBSERVABLE"
+
+
+def generation_ceiling_status(run: BenchmarkRun) -> str:
+    """Whether our safety ceiling bound this generation.
+
+    BOUND means the answer stopped because it ran out of ceiling: the provider
+    said so with `finish_reason=length`, or the completion landed exactly on the
+    configured value. Either way the response is not evidence of what the model
+    would have said.
+
+    Delivered usage ABOVE the ceiling is NOT bound. It means the provider did
+    not apply the parameter, which the audit documents for one endpoint and
+    which is not the candidate's doing. Rejecting it would fail a model for a
+    provider's implementation choice.
+    """
+    ceiling = run.generation.safety_ceiling_tokens or run.generation.max_output_tokens
+    delivered = run.usage.output_tokens if run.usage else None
+
+    if run.finish_reason == "length":
+        return CEILING_BOUND
+    if delivered is None or not ceiling:
+        return CEILING_UNOBSERVABLE
+    if delivered >= ceiling:
+        # Landed exactly on it without the provider saying `length`: the same
+        # defect, reported differently. Above it is a different thing entirely.
+        return CEILING_BOUND if delivered == ceiling else CEILING_NON_BINDING
+    return CEILING_NON_BINDING
+
+
 def qualify_run(
     run: BenchmarkRun,
     *,
@@ -43,6 +84,7 @@ def qualify_run(
     expected_prompt_sha256: str,
     model: ModelConfig | None,
     scenario_id: str,
+    expected_max_output_tokens: int | None = None,
 ) -> RunVerdict:
     """Check one run against the published conditions.
 
@@ -65,8 +107,18 @@ def qualify_run(
 
     # A truncated response is still evaluated as returned, but it is not evidence
     # of what the model would have said, so it cannot anchor an official score.
-    if run.finish_reason == "length":
-        reasons.append("finish_reason=length: output was truncated by the token budget")
+    #
+    # Stated as the ceiling status from monday-004 onwards. The rule is
+    # unchanged - a run our ceiling stopped does not qualify - but the reason now
+    # says which of the three states it is in, and a provider that simply
+    # ignored the parameter is explicitly not a rejection.
+    ceiling_status = generation_ceiling_status(run)
+    if ceiling_status == CEILING_BOUND:
+        reasons.append(
+            f"generation_ceiling_status={CEILING_BOUND}: output was truncated by the "
+            f"configured safety ceiling before the answer was complete "
+            f"(finish_reason={run.finish_reason})"
+        )
 
     if run.generation.unsupported_parameters:
         reasons.append(
@@ -83,10 +135,20 @@ def qualify_run(
             reasons.append(
                 f"temperature {run.generation.temperature} != configured {model.temperature}"
             )
-        if run.generation.max_output_tokens != model.max_output_tokens:
+        # The ceiling a run was generated under must match the one the scenario
+        # configures, so a battery cannot mix two of them. `expected` lets a
+        # caller supply a per-scenario ceiling; without one this is the model
+        # default, which is what monday-001..003 were generated under and why
+        # they go on qualifying unchanged.
+        expected_ceiling = (
+            expected_max_output_tokens
+            if expected_max_output_tokens is not None
+            else model.max_output_tokens
+        )
+        if run.generation.max_output_tokens != expected_ceiling:
             reasons.append(
-                f"max_output_tokens {run.generation.max_output_tokens} != configured "
-                f"{model.max_output_tokens}"
+                f"max_output_tokens (safety ceiling) {run.generation.max_output_tokens} "
+                f"!= configured {expected_ceiling}"
             )
         if run.model.provider != model.provider:
             reasons.append(
@@ -140,17 +202,23 @@ class ModelPlan:
     def complete(self) -> bool:
         return self.have >= self.target
 
+    # Numbers used by archived batteries for this model. Kept on the plan so
+    # `next_run_numbers` can avoid them: a reused number would give a new
+    # response an existing run id, and recorded verdicts are keyed by run id.
+    reserved: set[int] = field(default_factory=set)
+
     def next_run_numbers(self) -> list[int]:
-        """Run numbers to generate, skipping every number already on disk.
+        """Run numbers to generate, skipping every number already used.
 
         Never reuses a number, so an existing file is never at risk of being
-        overwritten even when it was rejected.
+        overwritten even when it was rejected - and never reuses a number an
+        archived battery already spent, which would collide on run id.
         """
         taken = {
             v.run_number
             for v in (*self.official, *self.rejected)
             if v.run_number is not None
-        }
+        } | self.reserved
         numbers: list[int] = []
         candidate = 1
         while len(numbers) < self.missing:
@@ -172,8 +240,13 @@ def plan_model(
     expected_prompt_sha256: str,
     target: int = OFFICIAL_RUNS,
     root: Path | None = None,
+    expected_max_output_tokens: int | None = None,
 ) -> ModelPlan:
-    plan = ModelPlan(model_slug=model_slug, target=target)
+    plan = ModelPlan(
+        model_slug=model_slug,
+        target=target,
+        reserved=archived_run_numbers(scenario_id, model_slug, root),
+    )
     candidates: list[RunVerdict] = []
 
     for path in find_runs(scenario_id, model_slug, root):
@@ -189,6 +262,7 @@ def plan_model(
                 expected_prompt_sha256=expected_prompt_sha256,
                 model=model,
                 scenario_id=scenario_id,
+                expected_max_output_tokens=expected_max_output_tokens,
             )
         )
 
@@ -227,10 +301,12 @@ def plan_battery(
     expected_prompt_sha256: str,
     target: int = OFFICIAL_RUNS,
     root: Path | None = None,
+    expected_max_output_tokens: int | None = None,
 ) -> dict[str, ModelPlan]:
     return {
         slug: plan_model(
             scenario_id=scenario_id,
+            expected_max_output_tokens=expected_max_output_tokens,
             model_slug=slug,
             model=models.get(slug),
             expected_prompt_sha256=expected_prompt_sha256,

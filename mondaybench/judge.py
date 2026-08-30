@@ -22,7 +22,7 @@ import yaml
 from .config import EvaluatorConfig
 from .providers import ModelProvider, ProviderError, build_judge_provider
 from .scenarios import Criterion, FalseAction
-from .schemas import CriterionVerdict, NoiseVerdict, PenaltyVerdict
+from .schemas import PENALTY_TYPE_VALUES, CriterionVerdict, NoiseVerdict, PenaltyVerdict
 
 JUDGE_SYSTEM_PROMPT = (
     "You are a careful, literal evaluator. You classify against fixed "
@@ -71,12 +71,7 @@ PENALTY_SCHEMA: dict[str, Any] = {
                 "properties": {
                     "type": {
                         "type": "string",
-                        "enum": [
-                            "MATERIAL_HALLUCINATION",
-                            "PROHIBITED_ACTION",
-                            "MAJOR_PLANNING_ERROR",
-                            "MAJOR_CONTRADICTION",
-                        ],
+                        "enum": list(PENALTY_TYPE_VALUES),
                     },
                     "evidence": {"type": "string"},
                     "reason": {"type": "string"},
@@ -466,12 +461,7 @@ class Judge:
             if not isinstance(entry, dict):
                 continue
             vtype = str(entry.get("type", "")).strip().upper()
-            if vtype not in {
-                "MATERIAL_HALLUCINATION",
-                "PROHIBITED_ACTION",
-                "MAJOR_PLANNING_ERROR",
-                "MAJOR_CONTRADICTION",
-            }:
+            if vtype not in set(PENALTY_TYPE_VALUES):
                 raise JudgeError(f"penalty judge returned invalid type {entry.get('type')!r}")
             cleaned.append(
                 {

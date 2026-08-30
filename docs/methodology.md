@@ -196,6 +196,67 @@ this rule exists to demand. Delivery is settled before the request flag is
 consulted, so a model that demonstrably thought is `DELIVERED` whether or not
 the configuration expected it.
 
+## Generation limits are safety ceilings, not reasoning budgets
+
+MondayBench does not equalise reasoning-token budgets across models. It
+evaluates each model under a documented standard serving configuration.
+Generation limits are safety ceilings, not scoring budgets, and are set high
+enough not to bind a normal successful generation. Actual reasoning tokens,
+completion tokens, latency, TTFA and cost are reported separately and are never
+folded into the Monday Score.
+
+This is a change of description as much as of practice, and it followed an
+audit. monday-001, monday-002 and monday-003 all requested the same
+`max_output_tokens` value from every model, which reaches the wire as the legacy
+Chat Completions `max_tokens` field. The audit — `analysis/token-budget-audit.md`,
+77 runs — found that providers apply that field differently to reasoning models:
+
+- `helmcode/deepseek-v4-flash` and `nan/mimo-v2.5` count the reasoning phase
+  against it and stop exactly on it;
+- `nan/qwen3.8-flash` does not apply it to the completion total, and has
+  returned up to 84% more;
+- the remaining four never approached it, so their behaviour is unknown.
+
+A single number applied that inconsistently cannot be a shared compute budget,
+and describing it as one was wrong.
+
+**No published #001–#003 competitor was truncated by the ceiling.** Not one run
+in those three scenarios has `finish_reason=length`, and the largest completion
+by any model other than Qwen 3.8 Flash was 24,321 tokens against a ceiling of
+32,000. The ceiling bound nobody, so **published scores are unchanged and are not
+recalculated.** Qwen 3.8 Flash reasoned for longer than the others; every model
+had that headroom available and the cost of using it appears honestly in the
+published TTFA and latency columns.
+
+From monday-004 onwards a scenario declares its own
+`generation.safety_ceiling_tokens`, verified against every endpoint before use,
+and each run records the ceiling it was generated under together with a
+`generation_ceiling_status` of `NON_BINDING`, `BOUND` or `UNOBSERVABLE`. A run
+our ceiling stopped before the answer was complete does not qualify as official.
+A run whose provider simply ignored the parameter is not rejected for it: that
+is the provider's implementation, not the candidate's doing.
+
+### The headroom has to be re-checked, not assumed
+
+monday-004's ceiling of 96,000 was justified as 1.63x the largest valid
+generation observed anywhere in the repository at the time - Qwen 3.8 Flash's
+58,956 completion tokens. Its own official battery then beat that: GLM 5.3 Flash
+spent **80,470 completion tokens** on one run and finished normally, which is 84%
+of the ceiling and leaves real headroom of 1.19x.
+
+Nothing was truncated, so the ceiling stayed and monday-004's runs stand. But
+the margin that made 96,000 defensible is largely gone, and it went in a single
+battery. Two things follow:
+
+- A ceiling cannot be raised mid-scenario. Every run already generated carries
+  the value it was generated under, and qualification rejects a run whose
+  ceiling differs from the configured one - so raising it would disqualify the
+  battery it was meant to protect. The choice is made once, before generation.
+- The next scenario starts at 131,072, which was also verified accepted by all
+  seven endpoints. Choosing the smallest ceiling that looks sufficient optimises
+  for nothing: the ceiling is not a budget and costs nothing when it does not
+  bind.
+
 ## Limitations of monday-001
 
 - **One scenario.** A single task, however realistic, is not a general measure.

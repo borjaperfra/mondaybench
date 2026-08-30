@@ -13,10 +13,13 @@ from rich.table import Table
 from . import BENCHMARK_VERSION
 from .config import (
     ConfigError,
+    apply_endpoint_overrides,
+    endpoint_overrides_for,
     find_literal_credentials,
     load_evaluator,
     load_models,
     repo_root,
+    resolve_evaluator,
 )
 from .cli_official import (
     OFFICIAL_EVALUATOR,
@@ -56,6 +59,35 @@ app = typer.Typer(
 console = Console()
 
 DEFAULT_EVALUATOR = "evaluator-v0.1"
+
+EVALUATOR_HELP = (
+    "Evaluator id. Defaults to the one that declares this scenario and is "
+    "marked `status: official`."
+)
+
+
+def _evaluator_for(scenario: str, explicit: str | None, *, fallback: str) -> str:
+    """Resolve `--evaluator`, failing loudly rather than silently guessing.
+
+    Every command used to default to a fixed id belonging to monday-001, so
+    running one against a later scenario reached for monday-001's rubric
+    filename inside that scenario's directory. See `config.resolve_evaluator`.
+    """
+    try:
+        return resolve_evaluator(scenario, explicit, fallback)
+    except ConfigError as exc:
+        _fail(str(exc))
+        raise
+
+
+# A terminal column has room for about six characters. Dimension ids are long
+# and snake_cased, so take the initial of every word after the first and hang it
+# off a truncated first word: `plan_economics` -> `plan:e`.
+def _dimension_heading(key: str) -> str:
+    head, *rest = key.split("_")
+    if not rest:
+        return head[:8]
+    return head[:5] + ":" + "".join(word[0] for word in rest)
 
 
 def _fail(message: str) -> None:
@@ -97,7 +129,7 @@ def scenarios() -> None:
 def models() -> None:
     """List configured models."""
     try:
-        configured = load_models()
+        configured = apply_endpoint_overrides(load_models(), endpoint_overrides_for(loaded.id))
     except ConfigError as exc:
         _fail(str(exc))
         return
@@ -134,7 +166,7 @@ def endpoints() -> None:
     that are served but not yet documented.
     """
     try:
-        configured = load_models()
+        configured = apply_endpoint_overrides(load_models(), endpoint_overrides_for(loaded.id))
     except ConfigError as exc:
         _fail(str(exc))
         return
@@ -231,9 +263,10 @@ def worksheet(
 @app.command()
 def validate(
     scenario: str = typer.Option(..., "--scenario", help="Scenario id, e.g. monday-001"),
-    evaluator: str = typer.Option(DEFAULT_EVALUATOR, "--evaluator"),
+    evaluator: str | None = typer.Option(None, "--evaluator", help=EVALUATOR_HELP),
 ) -> None:
     """Check a scenario, its rubric and the evaluator config for consistency."""
+    evaluator = _evaluator_for(scenario, evaluator, fallback=DEFAULT_EVALUATOR)
     problems: list[str] = []
     warnings: list[str] = []
 
@@ -483,7 +516,7 @@ def validate(
 
     # models config parses
     try:
-        configured = load_models()
+        configured = apply_endpoint_overrides(load_models(), endpoint_overrides_for(loaded.id))
         if len(configured) < 5:
             warnings.append(
                 f"only {len(configured)} models configured; v0.1 expects at least 5"
@@ -557,7 +590,7 @@ def run(
     """Generate raw model responses and store them as immutable evidence."""
     try:
         loaded = load_scenario(scenario)
-        configured = load_models()
+        configured = apply_endpoint_overrides(load_models(), endpoint_overrides_for(loaded.id))
     except (ScenarioError, ConfigError) as exc:
         _fail(str(exc))
         return
@@ -590,6 +623,7 @@ def run(
             models=configured,
             expected_prompt_sha256=prompt.sha256,
             target=total_runs,
+            expected_max_output_tokens=loaded.safety_ceiling_tokens,
         )
         for slug in slugs:
             plan = plans[slug]
@@ -673,7 +707,7 @@ def evaluate(
     model: str | None = typer.Option(None, "--model"),
     models_csv: str | None = typer.Option(None, "--models", help="Comma-separated slugs"),
     all_models: bool = typer.Option(False, "--all-models"),
-    evaluator: str = typer.Option(DEFAULT_EVALUATOR, "--evaluator"),
+    evaluator: str | None = typer.Option(None, "--evaluator", help=EVALUATOR_HELP),
     verdicts: Path | None = typer.Option(
         None,
         "--verdicts",
@@ -683,6 +717,7 @@ def evaluate(
     overwrite: bool = typer.Option(False, "--overwrite", help="Re-evaluate runs already evaluated"),
 ) -> None:
     """Classify every stored run against the rubric and score it deterministically."""
+    evaluator = _evaluator_for(scenario, evaluator, fallback=DEFAULT_EVALUATOR)
     try:
         evaluator_cfg = load_evaluator(evaluator)
         loaded = load_scenario(scenario, rubric_file=evaluator_cfg.rubric_file)
@@ -782,7 +817,7 @@ def evaluate(
 @app.command()
 def leaderboard(
     scenario: str = typer.Option(..., "--scenario"),
-    evaluator: str = typer.Option(DEFAULT_EVALUATOR, "--evaluator"),
+    evaluator: str | None = typer.Option(None, "--evaluator", help=EVALUATOR_HELP),
     official: bool = typer.Option(
         False, "--official", help="Enforce every publication gate; write nothing if any fails"
     ),
@@ -797,6 +832,7 @@ def leaderboard(
     ),
 ) -> None:
     """Aggregate evaluations into the published ranking."""
+    evaluator = _evaluator_for(scenario, evaluator, fallback=DEFAULT_EVALUATOR)
     if official:
         cmd_publish(scenario, evaluator, models_csv, runs)
         return
@@ -828,6 +864,8 @@ def leaderboard(
         evaluator_id=evaluator,
         benchmark_version=loaded.benchmark_version or BENCHMARK_VERSION,
         scenario_status=loaded.status,
+        expected_max_output_tokens=loaded.safety_ceiling_tokens,
+        endpoint_overrides=endpoint_overrides_for(loaded.id),
     )
     if not summaries:
         _fail(f"no evaluations found under evaluations/{evaluator}/{loaded.id}/")
@@ -838,12 +876,12 @@ def leaderboard(
     table.add_column("score", justify="right")
     table.add_column("range", justify="right")
     table.add_column("sigma", justify="right")
-    table.add_column("act", justify="right")
-    table.add_column("state", justify="right")
-    table.add_column("prio", justify="right")
-    table.add_column("data", justify="right")
-    table.add_column("unc", justify="right")
-    table.add_column("noise", justify="right")
+    # Dimension columns come from what was actually scored, not from a fixed
+    # list. They used to be hardcoded to monday-001's six names, so every later
+    # scenario printed a row of zeros under headings from a different rubric.
+    dimension_keys = sorted({k for s in summaries for k in s.dimensions})
+    for key in dimension_keys:
+        table.add_column(_dimension_heading(key), justify="right")
     table.add_column("cost/run", justify="right")
     table.add_column("TTFA med", justify="right")
     table.add_column("total med", justify="right")
@@ -855,12 +893,7 @@ def leaderboard(
             f"{s.mean:.1f}",
             f"{s.minimum:.0f}-{s.maximum:.0f}",
             f"{s.stddev:.2f}",
-            f"{s.dimensions.get('action_detection', 0):.1f}",
-            f"{s.dimensions.get('state_reconstruction', 0):.1f}",
-            f"{s.dimensions.get('prioritization', 0):.1f}",
-            f"{s.dimensions.get('data_reasoning', 0):.1f}",
-            f"{s.dimensions.get('uncertainty', 0):.1f}",
-            f"{s.dimensions.get('noise_resistance', 0):.1f}",
+            *(f"{s.dimensions.get(key, 0):.1f}" for key in dimension_keys),
             "-" if s.median_cost_usd is None else f"${s.median_cost_usd:.4f}",
             "-" if s.median_ttfa_ms is None else f"{s.median_ttfa_ms / 1000:.1f}s",
             "-"
@@ -896,11 +929,11 @@ def leaderboard(
 @app.command()
 def freeze(
     scenario: str = typer.Option(..., "--scenario"),
-    evaluator: str = typer.Option(OFFICIAL_EVALUATOR, "--evaluator"),
+    evaluator: str | None = typer.Option(None, "--evaluator", help=EVALUATOR_HELP),
     check: bool = typer.Option(False, "--check", help="Verify the manifest instead of writing it"),
 ) -> None:
     """Freeze a scenario's canonical content, or verify a frozen one is intact."""
-    cmd_freeze(scenario, evaluator, check)
+    cmd_freeze(scenario, _evaluator_for(scenario, evaluator, fallback=OFFICIAL_EVALUATOR), check)
 
 
 @app.command()
@@ -908,19 +941,103 @@ def plan(
     scenario: str = typer.Option(..., "--scenario"),
     models_csv: str | None = typer.Option(None, "--models"),
     runs: int = typer.Option(3, "--runs"),
-    evaluator: str = typer.Option(OFFICIAL_EVALUATOR, "--evaluator"),
+    evaluator: str | None = typer.Option(None, "--evaluator", help=EVALUATOR_HELP),
 ) -> None:
     """Show which stored runs are official and how many inferences are still needed."""
-    cmd_plan(scenario, models_csv, runs, evaluator)
+    cmd_plan(
+        scenario, models_csv, runs, _evaluator_for(scenario, evaluator, fallback=OFFICIAL_EVALUATOR)
+    )
 
 
 @app.command()
 def results(
     scenario: str = typer.Option(..., "--scenario"),
-    evaluator: str = typer.Option(OFFICIAL_EVALUATOR, "--evaluator"),
+    evaluator: str | None = typer.Option(None, "--evaluator", help=EVALUATOR_HELP),
 ) -> None:
     """Write one public JSON file per model under leaderboard/models/."""
-    cmd_results(scenario, evaluator)
+    cmd_results(scenario, _evaluator_for(scenario, evaluator, fallback=OFFICIAL_EVALUATOR))
+
+
+@app.command()
+def overall(
+    version: int = typer.Option(..., "--version", help="Overall release version from overall-releases.yaml"),
+    preview: bool = typer.Option(
+        False,
+        "--preview",
+        help="Write a clearly-labelled non-official preview to analysis/overall/ instead",
+    ),
+) -> None:
+    """Aggregate official scenario leaderboards into one Monday Score."""
+    from .overall import OverallError, build_overall, load_releases, write_overall
+
+    try:
+        releases = load_releases()
+    except OverallError as exc:
+        _fail(str(exc))
+        return
+    release = releases.get(version)
+    if release is None:
+        _fail(
+            f"no overall release v{version}; declared: "
+            + ", ".join(f"v{v}" for v in sorted(releases))
+        )
+        return
+
+    try:
+        payload, ranked, incomplete = build_overall(release, require_released=not preview)
+    except OverallError as exc:
+        console.print(f"[bold red]refusing to build[/bold red] {len(exc.blockers)} blocker(s):\n")
+        for blocker in exc.blockers:
+            console.print(f"  [red]-[/red] {blocker}")
+        console.print(
+            "\nNothing was written. An Overall score is a claim that these scenario results "
+            "are comparable and complete; each blocker above says they are not."
+        )
+        raise typer.Exit(code=1)
+
+    ids = release.scenario_ids
+    table = Table(
+        title=f"MondayBench Overall v{release.version}"
+        + ("  [PREVIEW - NOT OFFICIAL]" if preview else ""),
+        box=None,
+    )
+    table.add_column("#", justify="right")
+    table.add_column("model")
+    table.add_column("Monday Score", justify="right")
+    for scenario_id in ids:
+        table.add_column(scenario_id.replace("monday-", "#"), justify="right")
+    table.add_column("range", justify="right")
+    table.add_column("sigma", justify="right")
+    for entry in ranked:
+        table.add_row(
+            str(entry.rank),
+            entry.display_name,
+            f"{entry.monday_score:.2f}",
+            *(f"{entry.scenario_scores[s]:.1f}" for s in ids),
+            f"{entry.scenario_range:.1f}",
+            f"{entry.scenario_stddev:.2f}",
+        )
+    console.print(table)
+    console.print(
+        "\nrange/sigma above are variation ACROSS scenarios, not run-to-run stability."
+    )
+    for entry in incomplete:
+        console.print(
+            f"[yellow]not ranked[/yellow] {entry.display_name}: missing "
+            + ", ".join(entry.missing)
+        )
+
+    json_path, csv_path, md_path = write_overall(
+        payload, ranked, incomplete, release, preview=preview
+    )
+    console.print("")
+    if preview:
+        console.print(
+            "[yellow]preview[/yellow] - not an official result, not comparable with a "
+            "published Overall score"
+        )
+    for path in (json_path, csv_path, md_path):
+        console.print(f"wrote {path.relative_to(repo_root())}")
 
 
 # --------------------------------------------------------------------------
@@ -939,12 +1056,13 @@ def benchmark(
     reuse_valid_runs: bool = typer.Option(
         False, "--reuse-valid-runs", help="Reach --runs official runs, generating only the shortfall"
     ),
-    evaluator: str = typer.Option(DEFAULT_EVALUATOR, "--evaluator"),
+    evaluator: str | None = typer.Option(None, "--evaluator", help=EVALUATOR_HELP),
     review: bool = typer.Option(False, "--review"),
     official: bool = typer.Option(False, "--official", help="Enforce the publication gates"),
     overwrite: bool = typer.Option(False, "--overwrite"),
 ) -> None:
     """validate -> run -> evaluate -> leaderboard, in one command."""
+    evaluator = _evaluator_for(scenario, evaluator, fallback=DEFAULT_EVALUATOR)
     console.rule("[bold]validate")
     ctx.invoke(validate, scenario=scenario, evaluator=evaluator)
 

@@ -7,7 +7,7 @@ variable* that holds them, and this module resolves those names at call time.
 from __future__ import annotations
 
 import os
-from dataclasses import dataclass, field
+from dataclasses import dataclass, replace, field
 from pathlib import Path
 from typing import Any
 
@@ -280,6 +280,142 @@ def load_evaluator(evaluator_id: str, path: Path | None = None) -> EvaluatorConf
         prompt_file=judge.get("prompt_file"),
         penalty_prompt_file=judge.get("penalty_prompt_file"),
     )
+
+
+# --------------------------------------------------------------------------
+# Per-scenario endpoint overrides
+# --------------------------------------------------------------------------
+
+
+def endpoint_env_names(models: dict[str, ModelConfig]) -> dict[str, tuple[str | None, str | None]]:
+    """Endpoint name -> (base_url_env, api_key_env), learned from models.yaml.
+
+    Derived rather than declared, so there is no second list of endpoints to
+    keep in step with the first.
+    """
+    found: dict[str, tuple[str | None, str | None]] = {}
+    for cfg in models.values():
+        found.setdefault(cfg.provider, (cfg.base_url_env, cfg.api_key_env))
+    return found
+
+
+def endpoint_overrides_for(scenario_id: str, path: Path | None = None) -> dict[str, str]:
+    """Per-scenario endpoint overrides, read from models.yaml.
+
+    Deliberately NOT in scenario.yaml. That file is covered by FROZEN.yaml, so
+    putting a serving detail there would mean a published scenario's content
+    hash changed every time an endpoint moved - and the manifest exists to make
+    exactly that impossible. Which endpoint serves a model is configuration, and
+    configuration lives in models.yaml.
+    """
+    path = path or repo_root() / "models.yaml"
+    data = load_yaml(path) or {}
+    scoped = (data.get("scenario_endpoint_overrides") or {}).get(scenario_id) or {}
+    return {str(slug): str(endpoint) for slug, endpoint in scoped.items()}
+
+
+def apply_endpoint_overrides(
+    models: dict[str, ModelConfig], overrides: dict[str, str]
+) -> dict[str, ModelConfig]:
+    """Serve some models from a different endpoint, for one scenario only.
+
+    A model's endpoint is part of its serving configuration, and qualification
+    rejects a run whose provider differs from the configured one. So moving a
+    model in models.yaml does not just change future runs - it retroactively
+    disqualifies every run already published under the old endpoint. qwen3.6 has
+    three official runs in each of monday-001, 002 and 003, all served by
+    helmcode; editing that one line would have broken three frozen batteries.
+
+    This scopes the change to the scenario that needs it. monday-001..003
+    declare no overrides and are untouched.
+
+    The cost is real and must be reported, not buried: a model served from a
+    different endpoint is not strictly comparable with its own results on other
+    scenarios. Latency and TTFA especially are properties of the endpoint.
+    """
+    if not overrides:
+        return models
+    env = endpoint_env_names(models)
+    out = dict(models)
+    for slug, endpoint in overrides.items():
+        cfg = out.get(slug)
+        if cfg is None:
+            raise ConfigError(f"endpoint override names unknown model {slug!r}")
+        if endpoint not in env:
+            raise ConfigError(
+                f"endpoint override for {slug!r} names unknown endpoint {endpoint!r}; "
+                f"models.yaml knows {', '.join(sorted(env))}"
+            )
+        base_url_env, api_key_env = env[endpoint]
+        out[slug] = replace(
+            cfg, provider=endpoint, base_url_env=base_url_env, api_key_env=api_key_env
+        )
+    return out
+
+
+# --------------------------------------------------------------------------
+# Which evaluator belongs to which scenario
+# --------------------------------------------------------------------------
+
+
+def evaluators_for_scenario(scenario_id: str, root: Path | None = None) -> dict[str, list[str]]:
+    """Evaluator ids that declare `scenario: <scenario_id>`, grouped by status.
+
+    Returns {"official": [...], "calibration": [...], "other": [...]}, each
+    sorted. An evaluator that declares no scenario belongs to none of them:
+    monday-001's evaluators predate the field and are matched by neither.
+    """
+    directory = (root or repo_root()) / "evaluators"
+    found: dict[str, list[str]] = {"official": [], "calibration": [], "other": []}
+    if not directory.is_dir():
+        return found
+    for path in sorted(directory.glob("*.yaml")):
+        data = load_yaml(path) or {}
+        if data.get("scenario") != scenario_id:
+            continue
+        status = str(data.get("status") or "other")
+        found.setdefault(status, []).append(data.get("id") or path.stem)
+    return found
+
+
+def resolve_evaluator(scenario_id: str, explicit: str | None, fallback: str) -> str:
+    """The evaluator to use for a scenario when the caller named none.
+
+    The commands that publish used to default to a fixed evaluator id, which is
+    monday-001's. Running `freeze --scenario monday-002 --check` therefore tried
+    to hash monday-001's `rubric-0.2.yaml` inside monday-002's directory and
+    failed with "scenario is missing: rubric-0.2.yaml" - a confusing message for
+    a scenario that is perfectly intact. Worse, a scenario that *did* happen to
+    ship a file of that name would have been checked against the wrong rubric
+    without complaining at all.
+
+    So: an explicit `--evaluator` always wins, and otherwise the evaluator is
+    the one that declares this scenario and is marked official. Ambiguity is an
+    error rather than a guess. Scenarios whose evaluators predate the `scenario`
+    field keep the old fallback, which is what monday-001 relies on.
+    """
+    if explicit:
+        return explicit
+
+    found = evaluators_for_scenario(scenario_id)
+    official = found.get("official") or []
+    if len(official) == 1:
+        return official[0]
+    if len(official) > 1:
+        raise ConfigError(
+            f"{scenario_id} has {len(official)} official evaluators "
+            f"({', '.join(official)}); name one with --evaluator"
+        )
+
+    others = sorted(
+        name for status, names in found.items() if status != "official" for name in names
+    )
+    if others:
+        raise ConfigError(
+            f"{scenario_id} has no evaluator marked `status: official` - only "
+            f"{', '.join(others)}. Name one with --evaluator, or promote one."
+        )
+    return fallback
 
 
 # --------------------------------------------------------------------------

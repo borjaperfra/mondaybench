@@ -104,6 +104,13 @@ PENALTY_KEY_TO_TYPE = {
     # a recommended plan that cannot run under the stated dependencies.
     "critical_path_violation": "MAJOR_PLANNING_ERROR",
     "major_contradiction": "MAJOR_CONTRADICTION",
+    # monday-004 is an analysis scenario, not a planning one. Its rubric names
+    # three penalties of its own: a recommendation the data rules out (the same
+    # failure PROHIBITED_ACTION already covers), a numeric or data mistake the
+    # analysis then rests on, and a causal claim nothing in the data supports.
+    "prohibited_business_action": "PROHIBITED_ACTION",
+    "major_data_error": "MAJOR_DATA_ERROR",
+    "unsupported_causality": "UNSUPPORTED_CAUSALITY",
 }
 NOISE_DIMENSION = "noise_resistance"
 
@@ -303,6 +310,19 @@ class Scenario:
     # specific revision of the content.
     scenario_version: str = ""
     status: str = "frozen"
+    # Optional per-scenario generation ceiling, in tokens.
+    #
+    # Added for monday-004. `models.yaml` sets one `max_output_tokens` per model
+    # and monday-001..003 were generated under it; changing that value would
+    # make every run of those three fail `qualify_run` on
+    # `max_output_tokens != configured`, so the published batteries would stop
+    # verifying. A scenario therefore declares its own ceiling and the older
+    # ones inherit the model default unchanged.
+    #
+    # This is a SAFETY CEILING, not a reasoning budget. See the token-budget
+    # audit: the value does not equalise compute across models and is not
+    # intended to.
+    safety_ceiling_tokens: int | None = None
 
     @property
     def is_calibration(self) -> bool:
@@ -323,7 +343,7 @@ def list_scenario_ids() -> list[str]:
 def load_scenario(
     scenario_id: str,
     directory: Path | None = None,
-    rubric_file: str = "rubric.yaml",
+    rubric_file: str | None = None,
 ) -> Scenario:
     """Load a scenario, optionally with an alternative rubric.
 
@@ -345,8 +365,14 @@ def load_scenario(
     # A scenario names its own rubric and answer key. An evaluator may override
     # the rubric (that is what `rubric_file` is for); the answer key belongs to
     # the scenario and is never overridden.
+    # The sentinel is None, not "rubric.yaml". It used to be the filename, which
+    # made "no opinion" and "explicitly rubric.yaml" the same request: once
+    # monday-004 pointed its scenario at rubric-0.3.yaml, the evaluator that
+    # declares `rubric_file: rubric.yaml` - the one that reproduces the first
+    # calibration - silently started scoring against 0.3 instead. A caller that
+    # names a rubric now gets that rubric.
     scenario_rubric = meta.get("rubric_file", "rubric.yaml")
-    rubric_name = rubric_file if rubric_file != "rubric.yaml" else scenario_rubric
+    rubric_name = rubric_file or scenario_rubric
     gt_name = meta.get("ground_truth_file", "ground-truth.yaml")
 
     required = tuple(f for f in REQUIRED_FILES if f != "rubric.yaml") + (rubric_name, gt_name)
@@ -413,4 +439,7 @@ def load_scenario(
         prompt_file=prompt_file,
         scenario_version=str(meta.get("scenario_version", "")),
         status=str(meta.get("status", "frozen")),
+        safety_ceiling_tokens=(
+            int(ceiling) if (ceiling := (meta.get("generation") or {}).get("safety_ceiling_tokens")) else None
+        ),
     )
