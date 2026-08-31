@@ -962,4 +962,74 @@ def check_calibration_overlap(
                     f"a run the rubric was calibrated on cannot be official evidence for it; "
                     f"archive the calibration battery and generate a fresh run"
                 )
+
+    problems.extend(check_sample_provenance(scenario_id, root))
+    return problems
+
+
+def check_sample_provenance(scenario_id: str, root: Path | None = None) -> list[str]:
+    """Refuse to publish an official sample that a rubric was developed against.
+
+    THE CHECK ABOVE IS NOT ENOUGH, and monday-005 proved it. That one compares
+    `run_id` between the official evaluator's evaluations and a calibration
+    evaluator's evaluations, both read from the LIVE tree. Archive the
+    calibration battery - which is exactly what the rule tells you to do - and
+    its evaluations leave `evaluations/`, so there is nothing left to compare
+    against and the check returns clean. It would return clean even if a
+    calibration response had been promoted verbatim.
+
+    Worse, archiving frees the run numbers, so the next battery restarts at
+    run-001 and the ids collide. `run_id` is a location, not a provenance fact.
+
+    This check uses the sample's own immutable identity instead - see
+    `runner.sample_identity` - and compares live official runs against every
+    archived run for the scenario, wherever it now lives. It therefore survives
+    archiving, renumbering, directory moves and evaluation changes.
+
+    It also reports duplicates INSIDE the official battery. Two official runs
+    with identical bytes are a cache hit or a double-write, not two samples, and
+    a mean over them is not a mean over three observations.
+    """
+    from .runner import archived_run_paths, read_run_record, sample_identity
+
+    base = root or repo_root()
+    development: dict[str, str] = {}
+    development_requests: dict[str, str] = {}
+    for path in archived_run_paths(scenario_id, base):
+        try:
+            content, request_id = sample_identity(read_run_record(path))
+        except (ValueError, KeyError, json.JSONDecodeError):
+            continue
+        development.setdefault(content, str(path))
+        if request_id:
+            development_requests.setdefault(request_id, str(path))
+
+    problems: list[str] = []
+    seen: dict[str, str] = {}
+    live = base / "runs" / scenario_id
+    for path in sorted(live.glob("*/run-*.json")) if live.is_dir() else []:
+        try:
+            content, request_id = sample_identity(read_run_record(path))
+        except (ValueError, KeyError, json.JSONDecodeError):
+            problems.append(f"{path}: no identifiable sample content; provenance cannot be established")
+            continue
+        if content in development:
+            problems.append(
+                f"{path.parent.name}/{path.name} is the same sample as "
+                f"{development[content]} - a run the rubric was developed against "
+                f"cannot be official evidence for it. Generate a fresh run."
+            )
+        elif request_id and request_id in development_requests:
+            problems.append(
+                f"{path.parent.name}/{path.name} shares provider request id "
+                f"{request_id} with {development_requests[request_id]} - the same "
+                f"generation cannot be both development and official evidence."
+            )
+        if content in seen:
+            problems.append(
+                f"{path.parent.name}/{path.name} duplicates {seen[content]} inside "
+                f"the official battery - identical responses are one sample, not two."
+            )
+        else:
+            seen[content] = f"{path.parent.name}/{path.name}"
     return problems

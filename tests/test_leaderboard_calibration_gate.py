@@ -172,4 +172,4 @@ def test_every_published_leaderboard_declares_itself_official():
         data = json.loads(path.read_text(encoding="utf-8"))
         assert data.get("official") is True, path
         scenarios.add(data["scenario"])
-    assert scenarios == {"monday-001", "monday-002", "monday-003", "monday-004"}
+    assert scenarios == {"monday-001", "monday-002", "monday-003", "monday-004", "monday-005"}

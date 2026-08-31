@@ -7,6 +7,7 @@ API call - a failed attempt is logged, not scored.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import time
 from dataclasses import dataclass
@@ -352,6 +353,70 @@ def archived_run_numbers(
         except ValueError:
             continue
     return taken
+
+
+SAMPLE_IDENTITY_FIELDS = ("response", "provider_metadata.request_id")
+
+
+def sample_identity(record: dict[str, Any]) -> tuple[str, str | None]:
+    """The immutable identity of one generated sample.
+
+    Returns `(content_sha256, request_id)`.
+
+    WHY THIS AND NOT `run_id`. A run id is `<scenario>__<model>__<NNN>`, which is
+    a *location*, not a provenance fact. Archiving a battery frees its numbers,
+    the next generation reuses them, and two entirely different samples then
+    carry the same id - which is exactly what happened to monday-005, whose
+    official battery restarted at run-001 over the calibration battery's ids.
+    An identity that collides on the thing it is meant to distinguish is not an
+    identity.
+
+    WHAT IS HASHED, and why only this. `content_sha256` is sha256 over the
+    response text exactly as the provider returned it. That is the artefact a
+    rubric is developed against: when a criterion is written while reading a
+    response, it is those bytes the criterion was fitted to. `request_id` is the
+    provider's own generation id, carried alongside as a corroborating identity.
+
+    Deliberately NOT part of the identity, because none of it is a property of
+    the sample: the score, any judge verdict, the evaluation path, leaderboard
+    position, the run number, the file location, or the timestamp. All of those
+    can change without the sample changing, and some change precisely when a
+    battery is archived.
+
+    `request_id` is typed `str | None` in the schema, so it is corroborating
+    rather than primary - a provider that stops returning one must not silently
+    disable the guard. Verified across all 206 run files in the repository:
+    present on every one, and unique per distinct sample. The only repeats are
+    seven monday-003 samples filed in two archive directories at once, which is
+    archival duplication of one sample rather than two samples sharing an id.
+    """
+    body = record.get("response")
+    if not isinstance(body, str):
+        raise ValueError("run record has no response text to identify")
+    content = hashlib.sha256(body.encode("utf-8")).hexdigest()
+    request_id = (record.get("provider_metadata") or {}).get("request_id")
+    return content, request_id
+
+
+def archived_run_paths(scenario_id: str, root: Path | None = None) -> list[Path]:
+    """Every archived run file for a scenario, whatever archive holds it.
+
+    Same layout `archived_run_numbers` relies on: `archive/*/runs-<scenario>/`.
+    Archived material is development material by convention - every archive
+    README in this repository says so - so anything here is a sample the rubric
+    may have been written against.
+    """
+    base = (root or repo_root()) / "archive"
+    if not base.is_dir():
+        return []
+    return sorted(base.glob(f"*/runs-{scenario_id}/*/run-*.json"))
+
+
+def read_run_record(path: Path) -> dict[str, Any]:
+    """Raw run JSON. Deliberately not validated: an archived run written under
+    an older schema must still be identifiable, or archiving would erase
+    provenance rather than preserve it."""
+    return json.loads(path.read_text(encoding="utf-8"))
 
 
 def models_with_runs(scenario_id: str, root: Path | None = None) -> list[str]:
