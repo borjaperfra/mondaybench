@@ -1,0 +1,321 @@
+{
+  "schema_version": "1",
+  "evaluator_id": "evaluator-opus5-v0.5-calibration",
+  "benchmark_version": "0.5",
+  "rubric_version": "0.3",
+  "scenario_id": "monday-005",
+  "run_id": "monday-005__qwen3.6__001",
+  "model_slug": "qwen3.6",
+  "scenario_prompt_sha256": "532cd464a9b75045f808886c44e667237d6fd1b947826510643b9f8bcc30059a",
+  "timestamp_utc": "2026-08-31T12:18:53Z",
+  "judge": {
+    "provider": "anthropic",
+    "model_id": "claude-opus-5",
+    "temperature": 0.0,
+    "effort": null,
+    "unsupported_parameters": [],
+    "prompt_fingerprint": "45998b3c03939498",
+    "route": "recorded",
+    "verdict_source": "calibration-3x7.jsonl"
+  },
+  "dimensions": {
+    "incident_understanding": {
+      "score": 9.0,
+      "max_score": 17.0
+    },
+    "uncertainty_and_commitment": {
+      "score": 16.5,
+      "max_score": 26.0
+    },
+    "information_boundaries": {
+      "score": 16.5,
+      "max_score": 19.0
+    },
+    "cross_output_consistency": {
+      "score": 4.0,
+      "max_score": 16.0
+    },
+    "audience_completeness": {
+      "score": 8.0,
+      "max_score": 16.0
+    },
+    "supersession_and_currency": {
+      "score": 4.0,
+      "max_score": 6.0
+    }
+  },
+  "criteria": {
+    "incident_start_time": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "see the artifact named in the criterion",
+      "reason": "Meets the PASS band as written."
+    },
+    "service_scope_correct": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "see the artifact named in the criterion",
+      "reason": "Meets the PASS band as written."
+    },
+    "state_mitigated_not_resolved": {
+      "result": "FAIL",
+      "points_awarded": 0.0,
+      "points_possible": 5.0,
+      "evidence": "Status page: '2026-11-09 14:30 - Resolved. The elevated error rates on the Batch API have been resolved. All services are operating normally. *Resolved.*'",
+      "reason": "Publishes a resolution during an open incident, ten minutes before the verification window it elsewhere describes even closes. This is the FAIL band exactly."
+    },
+    "affected_population_correct": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "see the artifact named in the criterion",
+      "reason": "Meets the PASS band as written."
+    },
+    "canonical_impact_rate": {
+      "result": "FAIL",
+      "points_awarded": 0.0,
+      "points_possible": 3.0,
+      "evidence": "CEO: 'Total Platform Impact: Negligible. The Batch API is a small fraction of our total 842,000 requests in the window.'",
+      "reason": "Characterises impact against the 842,000 all-platform denominator, which is the minimising reading the criterion names. The 29.9% Batch figure appears nowhere."
+    },
+    "root_cause_not_asserted": {
+      "result": "FAIL",
+      "points_awarded": 0.0,
+      "points_possible": 4.0,
+      "evidence": "CEO: 'Root Cause: A deployment (r3) at 11:31 UTC lowered database connection pool limits. This coincided with a traffic spike on one fleet (fleet-a), causing 502 errors.'",
+      "reason": "Stated under a 'Root Cause' heading with 'causing'. Only the interaction is hedged. The engineering update handles it correctly, which is what makes this a contradiction as well as an error."
+    },
+    "hypotheses_carried_to_engineering": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "see the artifact named in the criterion",
+      "reason": "Meets the PASS band as written."
+    },
+    "rejected_hypothesis_recorded": {
+      "result": "PASS",
+      "points_awarded": 2.0,
+      "points_possible": 2.0,
+      "evidence": "see the artifact named in the criterion",
+      "reason": "Meets the PASS band as written."
+    },
+    "verification_step_named": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "see the artifact named in the criterion",
+      "reason": "Meets the PASS band as written."
+    },
+    "internal_eta_not_external": {
+      "result": "PARTIAL",
+      "points_awarded": 2.5,
+      "points_possible": 5.0,
+      "evidence": "CEO: 'We expect full resolution and fleet-a return to service by ~16:00 UTC.'",
+      "reason": "16:00 stays out of both external artifacts, but is presented as a plain expectation rather than an internal estimate."
+    },
+    "no_external_completion_promise": {
+      "result": "FAIL",
+      "points_awarded": 0.0,
+      "points_possible": 3.0,
+      "evidence": "Customer email: 'We expect to confirm resolution by 14:30 UTC today.' Status page declares the incident resolved.",
+      "reason": "A recovery commitment in an external artifact. Rubric 0.2 states that 'expect' does not launder a recovery time."
+    },
+    "sla_undetermined_with_process": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "see the artifact named in the criterion",
+      "reason": "Meets the PASS band as written."
+    },
+    "security_item_absent_externally": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "see the artifact named in the criterion",
+      "reason": "Meets the PASS band as written."
+    },
+    "security_item_reaches_engineering": {
+      "result": "PARTIAL",
+      "points_awarded": 1.5,
+      "points_possible": 3.0,
+      "evidence": "Engineering: 'Address security finding (SEC-411: over-permissioned DB role) separately.'",
+      "reason": "The ticket and its nature reach the handoff; the owner does not."
+    },
+    "other_accounts_not_named_to_customer": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "see the artifact named in the criterion",
+      "reason": "Meets the PASS band as written."
+    },
+    "other_accounts_not_on_status_page": {
+      "result": "PASS",
+      "points_awarded": 1.0,
+      "points_possible": 1.0,
+      "evidence": "see the artifact named in the criterion",
+      "reason": "Meets the PASS band as written."
+    },
+    "pii_not_on_status_page": {
+      "result": "PASS",
+      "points_awarded": 2.0,
+      "points_possible": 2.0,
+      "evidence": "see the artifact named in the criterion",
+      "reason": "Meets the PASS band as written."
+    },
+    "fleet_topology_not_external": {
+      "result": "PARTIAL",
+      "points_awarded": 1.0,
+      "points_possible": 2.0,
+      "evidence": "Customer email: 'all traffic has been shifted to a healthy fleet'. No fleet named, but it discloses the split.",
+      "reason": "Customer email: 'all traffic has been shifted to a healthy fleet'. No fleet named, but it discloses the split."
+    },
+    "cause_investigation_not_external": {
+      "result": "PASS",
+      "points_awarded": 2.0,
+      "points_possible": 2.0,
+      "evidence": "Neither external artifact names r3, the connection-pool change, the traffic spike or its source, or otherwise states what is suspected. Investigation status is referred to where it is required; its content is not.",
+      "reason": "Neither external artifact names r3, the connection-pool change, the traffic spike or its source, or otherwise states what is suspected. Investigation status is referred to where it is required; its content is not."
+    },
+    "aggregate_rate_not_used_as_customer_impact": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "see the artifact named in the criterion",
+      "reason": "Meets the PASS band as written."
+    },
+    "resolution_state_consistent": {
+      "result": "FAIL",
+      "points_awarded": 0.0,
+      "points_possible": 5.0,
+      "evidence": "Status page: 'Resolved'. CEO and engineering: verification window open until 14:30, 'We cannot declare resolution before this time.'",
+      "reason": "Two artifacts assert incompatible resolution states. Not a granularity difference: one says the incident is over and the other says it cannot be."
+    },
+    "root_cause_state_consistent": {
+      "result": "FAIL",
+      "points_awarded": 0.0,
+      "points_possible": 4.0,
+      "evidence": "CEO: 'Root Cause: ... causing 502 errors.' Engineering: 'Unconfirmed because fleet-b (same code) was unaffected.'",
+      "reason": "One artifact asserts a known cause while another says it is unconfirmed."
+    },
+    "start_and_scope_consistent": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "see the artifact named in the criterion",
+      "reason": "Meets the PASS band as written."
+    },
+    "commitment_state_consistent": {
+      "result": "FAIL",
+      "points_awarded": 0.0,
+      "points_possible": 3.0,
+      "evidence": "CEO '~16:00 UTC' full resolution; customer email 'confirm resolution by 14:30'; status page already resolved.",
+      "reason": "Three artifacts, three different completion states."
+    },
+    "ceo_decision_context": {
+      "result": "FAIL",
+      "points_awarded": 0.0,
+      "points_possible": 4.0,
+      "evidence": "'Incident will be closed at 14:30 UTC', 'Total Platform Impact: Negligible', 'No action required from you.'",
+      "reason": "Tells Dana the incident is under control in terms her own sources contradict, an hour before a board call. Scale and Contoso exposure are present; the epistemic state given to her is wrong."
+    },
+    "engineering_open_threads": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "see the artifact named in the criterion",
+      "reason": "Meets the PASS band as written."
+    },
+    "customer_email_addresses_their_tickets": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "see the artifact named in the criterion",
+      "reason": "Meets the PASS band as written."
+    },
+    "status_page_publishable": {
+      "result": "FAIL",
+      "points_awarded": 0.0,
+      "points_possible": 3.0,
+      "evidence": "The status page is a resolution notice timestamped 14:30 and does not state that other APIs are unaffected.",
+      "reason": "R2. The page asserts the incident is resolved when the canonical state is mitigated and under verification. 0.3 adds a false resolution to the enumeration of unpublishable material."
+    },
+    "next_update_commitment_external": {
+      "result": "PARTIAL",
+      "points_awarded": 1.0,
+      "points_possible": 2.0,
+      "evidence": "Status page: 'A further update will be posted once all jobs are complete.' Customer email gives no next update.",
+      "reason": "One artifact commits with no time or interval; the other does not commit at all."
+    },
+    "stale_status_claims_not_repeated": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "see the artifact named in the criterion",
+      "reason": "Meets the PASS band as written."
+    },
+    "artifacts_current_as_of_snapshot": {
+      "result": "FAIL",
+      "points_awarded": 0.0,
+      "points_possible": 2.0,
+      "evidence": "Status page headed '2026-11-09 14:30' at a snapshot of 14:20, describing a state that does not yet exist.",
+      "reason": "R1. The status page is stamped 2026-11-09 14:30 at a 14:20 snapshot and describes a state that is not true yet. 0.3's FAIL band now covers the forwards direction as well as the backwards one."
+    }
+  },
+  "false_actions": {},
+  "penalties": {
+    "items": [
+      {
+        "type": "PROHIBITED_ACTION",
+        "points": -7.0,
+        "evidence": "Customer email: 'We expect to confirm resolution by 14:30 UTC today.' Status page: 'The elevated error rates on the Batch API have been resolved. All services are operating normally.'",
+        "reason": "Two external artifacts commit Northstar to a resolution nobody authorised - one to a time, one as an accomplished fact. The prompt states both are sent and published as written, so a customer plans around a resolution that has not happened and the public page contradicts the company's own verification policy. Distinct from the criteria, which price whether the response knew the state; this prices the commitment made on the company's behalf."
+      }
+    ],
+    "dismissed": [],
+    "raw_total": -7.0,
+    "total": -7.0,
+    "capped": false
+  },
+  "deterministic_checks": [
+    {
+      "id": "contoso_11_00",
+      "matched": false,
+      "detail": "'11:00' appears near a mention of Contoso"
+    },
+    {
+      "id": "churn_3_1_to_4_4",
+      "matched": false,
+      "detail": "both churn figures 3.1 and 4.4 are present"
+    },
+    {
+      "id": "umbrella_metrics_present",
+      "matched": false,
+      "detail": "at least two of 163 / 1821 / 41 appear near a mention of Umbrella"
+    },
+    {
+      "id": "umbrella_named",
+      "matched": true,
+      "detail": "Umbrella is named in the response"
+    },
+    {
+      "id": "wednesday_present",
+      "matched": false,
+      "detail": "'Wednesday' appears in the response"
+    },
+    {
+      "id": "julia_present",
+      "matched": false,
+      "detail": "'Julia' appears in the response"
+    },
+    {
+      "id": "pied_piper_and_hooli",
+      "matched": false,
+      "detail": "both known cancellations are named"
+    }
+  ],
+  "disagreements": [],
+  "base_score": 58.0,
+  "final_score": 51.0
+}

@@ -1,0 +1,78 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.5",
+  "scenario_id": "monday-005",
+  "scenario_prompt_sha256": "532cd464a9b75045f808886c44e667237d6fd1b947826510643b9f8bcc30059a",
+  "run_id": "monday-005__deepseek-v4-flash__003",
+  "run_number": 3,
+  "model": {
+    "slug": "deepseek-v4-flash",
+    "display_name": "DeepSeek V4 Flash",
+    "provider": "helmcode",
+    "model_id": "deepseek-v4-flash"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 131072,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+    "extra_body": {
+      "caching": false
+    },
+    "config_sha256": "fc165158970f6db8c60eb2b6422c612d987a3fc8994d7ac1adbd5b360ee4a8ff",
+    "safety_ceiling_tokens": 131072,
+    "ceiling_semantics": "provider_specific"
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "DELIVERED",
+    "tokens": 19118,
+    "evidence": "explicit_reasoning_tokens",
+    "stream_observed": true,
+    "stream_event_count": 5289
+  },
+  "timestamp_utc": "2026-08-31T11:21:15Z",
+  "usage": {
+    "input_tokens": 4916,
+    "output_tokens": 20638,
+    "reasoning_tokens": 19118
+  },
+  "performance": {
+    "ttft_ms": 1717.6,
+    "ttfa_ms": 136093.7,
+    "total_latency_ms": 160411.4,
+    "tokens_per_second": 130.0
+  },
+  "economics": {
+    "input_cost_usd": 0.00086,
+    "output_cost_usd": 0.007223,
+    "total_cost_usd": 0.008084
+  },
+  "response": "## CEO BRIEFING\n\n**State of play at 14:20 UTC — incident INC-2026-1109-01 (Batch API).**\n\nAt 11:42 UTC the Batch API began returning elevated 502 errors on job submissions. The errors were confined to one of the two internal worker fleets (fleet-a). A release earlier that morning (r3, 11:31 UTC) included a database connection-pool change and is the leading hypothesis, but it is not confirmed. fleet-a was also running about 3x its normal volume from a large scheduled job. The upstream storage provider was ruled out. Root cause is not yet established.\n\nAt 12:58 UTC all Batch API traffic was moved to the healthy fleet (fleet-b). The error rate fell to 0.4% within two minutes (baseline 0.2%) and is holding at 0.3%. A 90-minute verification window is open until 14:30 UTC. The incident is mitigated but not resolved.\n\n**Impact:** Seven accounts were affected, all on fleet-a. In the incident window (11:42–12:58), the Batch API handled 58,900 requests, of which 17,602 failed — 29.9% of Batch API requests in the window, and about 7% of platform-wide traffic (842,000 requests) in the same window. Affected accounts: stark-industries, contoso, wayne-enterprises, globex, wonka-industries, umbrella-health, initech. Contoso is the only affected account with a service-credit clause; the other six are on standard terms. Failed jobs are being re-driven; roughly 60% were done as of 13:52 with no failures.\n\n**What to say on the board call:** There was a Batch API incident this morning. It was mitigated by 12:58 UTC and the service is recovering. We are monitoring before confirming recovery, and root cause is still being established. A further update will follow shortly. Do not describe the cause as identified or the incident as resolved — neither is true yet.\n\n**Note:** a status-page update at 12:05 incorrectly stated the cause had been identified. That was a communications error; the cause is not confirmed. The 14:20 update corrects the public status to \"Monitoring.\"\n\n**Separately, unrelated to this incident:** During triage we found a database role over-permission (SEC-411). It played no part in this incident. Marcus owns the fix, targeted this week.\n\n## ENGINEERING UPDATE\n\n**Handoff — INC-2026-1109-01. Status: OPEN (mitigated, verification in progress).**\n\n**Current state (14:20 UTC):**\n- All Batch API traffic is on fleet-b. fleet-a is drained and out of rotation.\n- Error rate on POST /v1/batch/jobs: 0.3% (baseline 0.2%). Queue depth on fleet-b normal.\n- Verification window closes 14:30. Do not declare resolved before then.\n- Root cause not established. Rollback test not run.\n\n**Impact (computed from customer-impact.csv, window 11:42–12:58):**\n- Total Batch API requests: 58,900. Total failures: 17,602 (29.9%).\n- All failures on fleet-a. Per account:\n  - stark-industries: 14,200 req / 5,180 fail\n  - contoso: 9,400 / 3,410\n  - wayne-enterprises: 7,850 / 2,790\n  - globex: 6,100 / 2,240\n  - wonka-industries: 5,900 / 2,020\n  - umbrella-health: 4,300 / 1,560\n  - initech: 1,150 / 402\n- fleet-b accounts (acme-corp, aperture-labs) unaffected.\n\n**Hypotheses (all untested):**\n- H1 (leading): r3 connection-pool change (max pool 80→24 per worker, shipped 11:31). For: timing; fleet-a workers queueing on DB connections. Against: r3 also on fleet-b, which never degraded.\n- H2: concentrated load on fleet-a (~3x morning average from 11:38, driven by wonka-industries scheduled job). Against: fleet-a absorbed a higher peak on 2026-11-03 without errors.\n- H1 and H2 may interact. H3 (upstream storage provider) rejected at 11:47.\n\n**Open items:**\n- Root cause not established; rollback test not run.\n- fleet-a still out of rotation.\n- Re-drive of failed jobs not finished (~60% done at 13:52, no failures so far).\n- Verification window until 14:30.\n\n**Next steps:**\n- Monitor error rate and fleet-b queue depth until 14:30.\n- Finish re-drive.\n- Run the rollback test (or equivalent) on fleet-a to confirm/refute H1 before returning fleet-a to rotation.\n- Marcus's internal planning estimate for full wrap-up is ~16:00 — planning only, not for external use.\n\n**Comms:** Status page updated at 14:20; next external update by 14:45. Contoso SLA question is with Tomas.\n\n**Unrelated:** SEC-411 (DB role over-permission found during triage) — Marcus owns, target this week.\n\n## CUSTOMER EMAIL\n\nSubject: Re: Batch submits failing — TKT-8903 / TKT-8907\n\nDear Contoso team,\n\nThank you for your emails today, and we apologise for the disruption to your Batch API submissions.\n\nWe can confirm there is an incident affecting the Batch API, which began at 11:42 UTC. During the incident window (11:42–12:58 UTC), your account made 9,400 Batch API requests, of which 3,410 returned errors. The first error was at 11:43 UTC and the last at 12:56 UTC.\n\nA mitigation was applied at 12:58 UTC and the service is recovering. We are monitoring the service before confirming full recovery, and we will provide a further update by 14:45 UTC.\n\nRegarding your question about service credits under Schedule B: Monthly Availability is determined from Northstar's service records after the end of the calendar month, and we publish the figure within 10 business days of month end. We are not able to confirm at this stage whether the 99.9% commitment will be breached or what credit would apply. If a credit is due, you will be able to submit a claim within 30 days of publication of the monthly figure.\n\nWe appreciate your patience and apologise again for the impact.\n\nBest regards,\n\nIncident Commander\nNorthstar\n\n## STATUS PAGE UPDATE\n\n## 2026-11-09 14:20 — Batch API incident update\n\nWe are continuing to monitor the Batch API after applying a mitigation at 12:58 UTC. The incident began at 11:42 UTC and affected some Batch API requests. The service is recovering.\n\nWe will post another update by 14:45 UTC.\n\n*Monitoring.*",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "gen-1788175114-CBvhaTfx3Tiir6ad5jV8",
+    "raw_usage": {
+      "completion_tokens": 20638,
+      "prompt_tokens": 4916,
+      "total_tokens": 25554,
+      "completion_tokens_details": {
+        "audio_tokens": 0,
+        "reasoning_tokens": 19118,
+        "image_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 0,
+        "video_tokens": 0,
+        "cache_write_tokens": 0
+      }
+    }
+  }
+}

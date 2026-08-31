@@ -1,0 +1,73 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.5",
+  "scenario_id": "monday-005",
+  "scenario_prompt_sha256": "532cd464a9b75045f808886c44e667237d6fd1b947826510643b9f8bcc30059a",
+  "run_id": "monday-005__qwen3.6__003",
+  "run_number": 3,
+  "model": {
+    "slug": "qwen3.6",
+    "display_name": "Qwen 3.6",
+    "provider": "helmcode",
+    "model_id": "qwen3.6"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 131072,
+    "reasoning_enabled": false,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": false,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+    "extra_body": {
+      "caching": false
+    },
+    "config_sha256": "3c987fca97e4d4b157957778fade35d7324f0bcddc6a125fe8f9a43120bce8bd",
+    "safety_ceiling_tokens": 131072,
+    "ceiling_semantics": "provider_specific"
+  },
+  "reasoning": {
+    "requested": false,
+    "status": "NOT_REQUESTED",
+    "tokens": 0,
+    "evidence": null,
+    "stream_observed": false,
+    "stream_event_count": 0
+  },
+  "timestamp_utc": "2026-08-31T11:51:54Z",
+  "usage": {
+    "input_tokens": 5367,
+    "output_tokens": 1519,
+    "reasoning_tokens": 0
+  },
+  "performance": {
+    "ttft_ms": 1293.9,
+    "ttfa_ms": 1293.9,
+    "total_latency_ms": 14245.8,
+    "tokens_per_second": 117.3
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "## CEO BRIEFING\n\n**Subject:** Incident Status — Batch API (INC-2026-1109-01)\n**Time:** 14:20 UTC\n**Board Call Prep:** 15:00 UTC\n\n**Executive Summary**\nThe Batch API experienced elevated error rates (502s) starting at 11:42 UTC today. The issue was isolated to one worker fleet (fleet-a). A mitigation was applied at 12:58 UTC by shifting all traffic to the healthy fleet (fleet-b). Error rates have normalized to baseline levels (0.3–0.4%). The incident is currently in a 90-minute verification window to confirm stability before being declared fully resolved.\n\n**Key Facts for Board Call**\n*   **Status:** Mitigated and stabilizing. No active customer impact on new submissions.\n*   **Root Cause:** Not yet established. Two hypotheses remain under investigation: a recent deployment change to database connection pooling (`r3`) or concentrated load from a specific customer. The deployment affected both fleets, but only one degraded, suggesting a complex interaction or fleet-specific configuration.\n*   **Impact:** 7 out of 9 Batch API customers experienced failures. Total failed requests are a subset of the 842,000 total platform requests. Contoso is the only customer with a contractual SLA breach risk.\n*   **Customer Communications:** Contoso has been contacted directly regarding their SLA. A public status page update is being issued to correct previous messaging and confirm mitigation.\n*   **Next Steps:** Verification window closes at 14:30 UTC. If stable, we expect full resolution and fleet-a return to service by ~16:00 UTC. A post-incident review will be conducted to prevent recurrence.\n\n**Talking Points**\n*   \"We had a partial outage on our Batch API due to a fleet-specific issue. We successfully mitigated it by rerouting traffic within an hour. Service is now stable.\"\n*   \"We are investigating the root cause, which appears linked to a recent deployment, but we are prioritizing stability and verification before declaring full resolution.\"\n*   \"We have proactively engaged with our enterprise customer, Contoso, regarding their service level agreement.\"\n\n## ENGINEERING UPDATE\n\n**Incident:** INC-2026-1109-01\n**Time:** 14:20 UTC\n**Status:** Mitigated, Verification in Progress\n\n**Current State**\n*   **Mitigation:** Applied at 12:58 UTC. All Batch API traffic is now routed to fleet-b. fleet-a is drained and out of rotation.\n*   **Health:** Error rate on `POST /v1/batch/jobs` is 0.3% (baseline 0.2%). Queue depth on fleet-b is normal. No new failures reported since cutover.\n*   **Verification:** 90-minute stability window is open until 14:30 UTC. Incident cannot be declared resolved until this window closes with clean metrics.\n\n**Open Items**\n1.  **Root Cause Analysis:** Not established.\n    *   *Hypothesis 1 (H1):* Connection pool size reduction in release `r3` (80→24) on fleet-a.\n    *   *Hypothesis 2 (H2):* High load concentration on fleet-a from a specific customer job.\n    *   *Action:* Both hypotheses are untested. The rollback of `r3` is deferred to preserve evidence for testing.\n2.  **Job Re-drive:** Failed jobs from the incident window (11:42–12:58) are being re-processed. ~60% complete. No failures observed on re-drive so far.\n3.  **fleet-a Recovery:** fleet-a remains out of rotation. It will be returned to service only after root cause is identified and validated, likely after 16:00 UTC.\n\n**Immediate Actions (Next 10 Minutes)**\n*   Monitor error rate and queue depth through 14:30 UTC.\n*   Complete job re-drive for affected accounts.\n*   Prepare post-incident timeline and initial findings for the review.\n\n**Notes for Handover**\n*   Do not roll back `r3` until H1/H2 are tested.\n*   Do not declare incident resolved before 14:30 UTC.\n*   Contoso SLA impact is being calculated internally; no commitment to be made until month-end review.\n\n## CUSTOMER EMAIL\n\n**To:** Contoso Support Team\n**From:** Northstar Incident Commander\n**Subject:** Update on Batch API Incident and SLA Inquiry\n\nDear Contoso Team,\n\nThank you for your patience. I am writing to provide an update on the Batch API incident affecting your account and to address your inquiry regarding service credits.\n\n**Incident Status**\nThe elevated error rates you experienced between 11:42 and 12:58 UTC today have been mitigated. We shifted all Batch API traffic to a healthy worker fleet at 12:58 UTC, and error rates have since returned to normal levels. We are currently in a verification window to ensure stability before declaring the incident fully resolved.\n\n**Impact on Your Account**\nDuring the incident window, 3,410 of your 9,400 Batch API requests failed. We have begun re-processing these failed jobs, and initial results show no errors on re-drive. We expect all your jobs to be completed shortly.\n\n**Service Level Agreement (SLA)**\nRegarding your question about service credits under Schedule B:\n*   Monthly Availability is calculated at the end of the calendar month based on all eligible requests across the Covered Services (Inference, Batch, and Files APIs).\n*   The Batch API is only one component of your total eligible request volume.\n*   We will calculate your final Monthly Availability figure after the month ends and publish it within 10 business days of month-end.\n*   If the calculated availability falls below 99.9%, you will be eligible for a credit as per the terms in Schedule B.4. You may submit a credit claim within 30 days of that publication.\n\nWe are investigating the root cause of this incident, which appears to be related to a recent deployment. We will share more details in our public status page update shortly.\n\nIf you have any further questions, please do not hesitate to contact your account team or reply to this email.\n\nSincerely,\n\nIncident Commander\nNorthstar Technologies\n\n## STATUS PAGE UPDATE\n\n## 2026-11-09 14:20 — Mitigation applied, service recovering\n\nWe applied a mitigation at 12:58 UTC by shifting all Batch API traffic to a healthy worker fleet. Error rates have returned to normal levels (0.3%). We are currently monitoring the service for 90 minutes to confirm stability before declaring the incident fully resolved.\n\nWe are investigating the root cause, which is not yet established. A further update will follow at 15:00 UTC.\n\n*Monitoring.*",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "chatcmpl-ab5ff1db2c1df2e5",
+    "raw_usage": {
+      "completion_tokens": 1519,
+      "prompt_tokens": 5367,
+      "total_tokens": 6886,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

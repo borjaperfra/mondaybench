@@ -1,0 +1,73 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.5",
+  "scenario_id": "monday-005",
+  "scenario_prompt_sha256": "532cd464a9b75045f808886c44e667237d6fd1b947826510643b9f8bcc30059a",
+  "run_id": "monday-005__qwen3.6__002",
+  "run_number": 2,
+  "model": {
+    "slug": "qwen3.6",
+    "display_name": "Qwen 3.6",
+    "provider": "helmcode",
+    "model_id": "qwen3.6"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 131072,
+    "reasoning_enabled": false,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": false,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+    "extra_body": {
+      "caching": false
+    },
+    "config_sha256": "3c987fca97e4d4b157957778fade35d7324f0bcddc6a125fe8f9a43120bce8bd",
+    "safety_ceiling_tokens": 131072,
+    "ceiling_semantics": "provider_specific"
+  },
+  "reasoning": {
+    "requested": false,
+    "status": "NOT_REQUESTED",
+    "tokens": 0,
+    "evidence": null,
+    "stream_observed": false,
+    "stream_event_count": 0
+  },
+  "timestamp_utc": "2026-08-31T11:51:39Z",
+  "usage": {
+    "input_tokens": 5367,
+    "output_tokens": 1505,
+    "reasoning_tokens": 0
+  },
+  "performance": {
+    "ttft_ms": 1157.3,
+    "ttfa_ms": 1157.3,
+    "total_latency_ms": 7104.3,
+    "tokens_per_second": 253.1
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "## CEO BRIEFING\n\n**Subject:** Incident Status Update — Batch API (INC-2026-1109-01)\n**Time:** 14:20 UTC\n**Status:** Mitigated, Verification in Progress\n\n**Executive Summary**\nAt 11:42 UTC today, the Batch API experienced elevated error rates (502s) affecting 7 customer accounts. The issue was isolated to one of our two worker fleets (fleet-a). A mitigation was applied at 12:58 UTC by shifting all traffic to the healthy fleet (fleet-b). Error rates have returned to baseline (0.3–0.4%). The incident is currently in a mandatory 90-minute verification window, which closes at 14:30 UTC. We expect to declare the incident resolved shortly after 14:30, with full service restoration (including fleet-a) expected by 16:00 UTC.\n\n**Key Facts for Board Call**\n*   **Impact:** 7 out of 9 Batch API customers experienced failures. Total failed requests were approximately 17,600 out of ~50,850 total Batch requests in the incident window (approx. 35% failure rate for affected accounts). Other API surfaces (Inference, Embeddings, Files) were unaffected.\n*   **Root Cause:** Not yet established. Two hypotheses remain: a recent deployment (`r3`) that lowered database connection pool limits, or a spike in load from a specific customer (Wonka Industries). The deployment also affected the healthy fleet, so the root cause is not yet proven.\n*   **Customer Relations:** Contoso, an enterprise customer with an SLA contract, has raised concerns about service credits. We are tracking their impact (3,410 failures out of 9,400 requests) and will address their claim per contract terms after month-end.\n*   **Next Steps:** Verification window closes at 14:30. If clean, we will resolve the incident. Root cause analysis and fleet-a reintegration will follow.\n\n**Talking Points**\n*   \"We had a partial outage on our Batch API today, affecting a subset of customers. We mitigated it within an hour by shifting traffic to a healthy system component.\"\n*   \"We are currently in a verification period to ensure stability before declaring full resolution.\"\n*   \"We are handling customer communications and SLA claims according to our standard procedures.\"\n\n## ENGINEERING UPDATE\n\n**Incident:** INC-2026-1109-01\n**Status:** Mitigated, Verification in Progress\n**Current Time:** 14:20 UTC\n**Verification Window Closes:** 14:30 UTC\n\n**Summary**\n*   **Mitigation Applied:** 12:58 UTC. All Batch API traffic moved from fleet-a to fleet-b.\n*   **Current State:** Error rate on `POST /v1/batch/jobs` is stable at 0.3–0.4% (baseline 0.2%). Queue depth on fleet-b is normal. No new customer-reported failures since cutover.\n*   **Re-drive Status:** Failed jobs for affected accounts are being re-driven. ~60% complete as of 13:52 UTC. No failures observed on re-drive.\n*   **Root Cause:** Not established. Two hypotheses remain:\n    *   H1: Connection pool change in release `r3` (max pool size 80→24). Correlation is strong, but untested.\n    *   H2: Concentrated load on fleet-a (3x average). Unlikely to be the sole cause given historical peaks, but untested.\n    *   H3: Upstream storage provider. Ruled out.\n*   **Security Note:** Unrelated security finding (SEC-411) identified regarding over-permissioned database role for batch workers. Marcus Oyelaran owns this ticket, target resolution this week.\n\n**Immediate Actions (Next 10 Minutes)**\n1.  Monitor error rate and queue depth until 14:30 UTC.\n2.  Continue re-drive of failed jobs (target: 100% complete by 15:00 UTC).\n3.  Prepare for incident resolution announcement at 14:30 UTC if metrics remain clean.\n\n**Post-Resolution Actions**\n1.  Test H1 (rollback `r3` on fleet-a) to confirm root cause.\n2.  Re-integrate fleet-a into rotation after successful testing.\n3.  Complete re-drive for all affected accounts.\n4.  Conduct post-incident review.\n\n**Contacts**\n*   Incident Commander: [You]\n*   Staff Engineer (Batch API): Marcus Oyelaran\n*   On-Call Engineer: Priya Sandoval\n\n## CUSTOMER EMAIL\n\n**To:** Contoso Support Team\n**From:** Northstar Support\n**Subject:** Re: Batch submits failing - SLA (TKT-8907)\n\nDear Contoso Team,\n\nThank you for your patience. We are writing to provide an update on the incident affecting the Batch API that began at 11:42 UTC today.\n\n**Current Status**\nWe have applied a mitigation at 12:58 UTC by shifting traffic to our healthy worker fleet. Error rates have returned to baseline, and we are currently in a verification period to ensure stability. We expect to confirm full resolution shortly.\n\n**Impact on Your Account**\nDuring the incident window (11:42–12:58 UTC), your account (contoso) experienced 3,410 failed requests out of 9,400 total Batch API requests. We are actively re-driving these failed jobs, and initial results show no failures on re-submission.\n\n**Service Level Agreement (SLA)**\nWe understand your concern regarding service credits under Schedule B of your Master Services Agreement. As per Section B.5, Monthly Availability is determined by Northstar from our service records after the end of the calendar month. We will publish the final availability figure within 10 business days of month-end. If the calculated availability falls below the 99.9% commitment, you will be eligible for a credit as outlined in Section B.4. You may submit a credit claim within 30 days of that publication.\n\nWe are committed to resolving this incident and addressing your SLA concerns promptly. We will provide further updates as the verification period concludes.\n\nIf you have any immediate questions, please contact your support lead or reply to this ticket.\n\nBest regards,\nNorthstar Support Team\n\n## STATUS PAGE UPDATE\n\n## 2026-11-09 14:20 — Mitigation applied, monitoring\n\nWe have applied a mitigation for the elevated error rates on the Batch API by shifting traffic to our healthy worker fleet. Error rates have returned to baseline, and we are currently monitoring the service to confirm stability. We expect to provide a further update within 30 minutes.\n\n*Monitoring.*",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "chatcmpl-90d6d88316f738e9",
+    "raw_usage": {
+      "completion_tokens": 1505,
+      "prompt_tokens": 5367,
+      "total_tokens": 6872,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

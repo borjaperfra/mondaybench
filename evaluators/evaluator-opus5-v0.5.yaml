@@ -1,0 +1,61 @@
+# MondayBench #005 "Read the Room" - OFFICIAL evaluator. Frozen.
+#
+# Bound to scenario 0.1 / rubric 0.4. Nothing in the rubric or the answer key
+# changed between the final calibration and this file; only the id and the
+# status did.
+#
+# The scenario version stays at 0.1 on purpose. The candidate-visible content -
+# prompt.md, context.md and the seven sources - has not changed a byte since the
+# first battery, and the prompt still hashes to
+# 532cd464a9b75045f808886c44e667237d6fd1b947826510643b9f8bcc30059a. What
+# iterated four times was the rubric, and the rubric carries its own version.
+#
+# The calibration evaluator stays on disk bound to the rubric it judged:
+#
+#   evaluator-opus5-v0.5-calibration  -> rubric-0.3.yaml (3x7 battery)
+#
+# Its whole battery is archived under archive/monday-005-v0.4-calibration/ and
+# NONE of those runs may become official evidence: rubrics 0.2, 0.3 and 0.4 were
+# each written while reading them. `leaderboard.check_calibration_overlap`
+# enforces this at publication time.
+#
+# Same architecture as every other official MondayBench evaluator: one judge
+# call per atomic criterion returning PASS/PARTIAL/FAIL with evidence, a
+# separate penalty judge, and deterministic scoring from those labels. The judge
+# never sees a total.
+#
+# NO judge pipeline change was needed for four outputs. The candidate returns
+# ONE response containing four delimited sections, so the judge receives all
+# four whenever it receives the response, and the cross-output criteria are
+# ordinary criteria over the whole text.
+#
+# `provider: anthropic` / `model_id: claude-opus-5` record WHICH MODEL reasoned
+# about the responses, for provenance. They are not a routing instruction: this
+# project never calls the Anthropic API. Labels are produced in a recorded
+# Claude Code session and replayed with `evaluate --verdicts`.
+id: evaluator-opus5-v0.5
+scenario: monday-005
+scenario_version: "0.1"
+rubric_version: "0.4"
+rubric_file: rubric-0.4.yaml
+status: official
+
+judge:
+  provider: anthropic
+  api_style: anthropic
+  model_id: claude-opus-5
+  prompt_file: judge-prompt.md
+  penalty_prompt_file: penalty-judge-prompt.md
+
+generation:
+  temperature: 0
+  max_output_tokens: 0
+
+behavior:
+  require_evidence: true
+
+# monday-005 ships a structured answer key (ground-truth.yaml) carrying the
+# incident state machine, both live hypotheses, the audience matrix, the
+# invariants and the not_inconsistency list. There are no per-criterion dotted
+# paths to slice, so the judge is given the whole key - as in #004.
+ground_truth_map: {}

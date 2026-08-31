@@ -1,0 +1,206 @@
+# ===========================================================================
+# SUPERSEDED on 2026-08-31 by `taxonomy/capabilities-v0.2.yaml`.
+#
+# This file is the PRE-CALIBRATION PROPOSAL, written before monday-005 had been
+# calibrated or run. It is kept unmodified below the machine-readable header so
+# that what was predicted can be compared with what was adopted. It scores
+# nothing, and nothing reads it except the tests that assert this relationship.
+#
+# THE PROPOSAL WAS ADOPTED WITH EXACTLY TWO CHANGES, both caused by evidence
+# that did not exist when it was written:
+#
+#   1. A FIFTH capability, `information_routing`, was added. The proposal had
+#      four. monday-005's 21 official runs separated suppression from delivery:
+#      no model disclosed any of the four confidential classes externally,
+#      while the criterion asking whether the same security item REACHED the
+#      engineering handoff was the most-failed criterion in the scenario. The
+#      proposal had no capability that could express that difference.
+#
+#   2. Two criteria moved into it:
+#        monday-005.security_item_reaches_engineering
+#          proposed  primary audience_adaptation,   secondary information_boundaries
+#          adopted   primary information_routing,   secondary information_boundaries
+#        monday-005.hypotheses_carried_to_engineering
+#          proposed  primary uncertainty_calibration, secondary audience_adaptation
+#          adopted   primary information_routing,     secondary uncertainty_calibration
+#
+#      Point mass moved accordingly: audience_adaptation 20 -> 17,
+#      uncertainty_calibration 8 -> 4, information_routing 0 -> 7. Every other
+#      criterion in this file was adopted verbatim, and no monday-001..004
+#      mapping was touched by either version.
+#
+# The proposal's own `point_mass_added_by_monday_005` block below is therefore
+# WRONG for the adopted taxonomy by design. It is left as written. Read
+# `taxonomy/capabilities-v0.2.yaml` for the numbers in force.
+# ===========================================================================
+
+# MondayBench capability taxonomy v0.2 - PROPOSED, NOT IN USE
+#
+# ---------------------------------------------------------------------------
+# THIS FILE SCORES NOTHING. `capabilities-v0.1.yaml` remains the taxonomy of
+# record and is not modified by this proposal. The published capability
+# profiles, Overall v0 and Overall v1 all reproduce from v0.1 exactly as
+# before. v0.2 becomes real only if monday-005 is calibrated and published.
+# ---------------------------------------------------------------------------
+#
+# v0.2 = v0.1 plus FOUR capabilities and the monday-005 criterion mapping.
+# Nothing in v0.1 is renamed, merged, split or reweighted. Every existing
+# criterion keeps the mapping it has, so any v0.1 profile recomputes to the
+# same number under v0.2.
+#
+# WHY FOUR NEW ONES, when the v0.1 header warns against inventing empty
+# capabilities. v0.1 declined to create these precisely because nothing
+# measured them - it lists them by name under "considered and found unmeasured"
+# and says they "should shape monday-005". monday-005 measures them. The
+# capabilities are being added because a scenario now exercises them, which is
+# the same bottom-up rule v0.1 was built under.
+#
+# The four map onto the gaps the taxonomy analysis ranked 1-4:
+#
+#   gap 1  communication to an audience, completely absent  -> audience_adaptation
+#   gap 2  information boundaries, one criterion, no discrimination
+#                                                           -> information_boundaries
+#   gap 3  cross-output consistency, structurally impossible -> cross_output_consistency
+#   gap 4  commitment discipline, adjacent but not covered   -> commitment_discipline
+#
+# Gap 5, temporal reasoning, is deliberately NOT addressed here. monday-005
+# carries almost no temporal reasoning by design and adding criteria to chase
+# that gap would have made it calibrate as two scenarios at once. It remains
+# the strongest candidate for #006.
+
+version: "0.2"
+status: superseded
+superseded_by: "0.2"
+superseded_on: "2026-08-31"
+supersedes: "0.1"
+in_use: false
+
+# ---------------------------------------------------------------------------
+# NEW IN 0.2. Everything in capabilities-v0.1.yaml carries over unchanged and
+# is not repeated here; this file lists only the additions and the new mapping.
+# ---------------------------------------------------------------------------
+new_capabilities:
+  audience_adaptation:
+    group: communication
+    description: >
+      Decide what a particular reader needs from a body of facts, and give them
+      that rather than everything or a summary of everything. The failure mode
+      is one document written four times: correct in substance, wrong for three
+      of its readers. Distinct from writing quality, which MondayBench does not
+      measure - the judgment is about selection, not expression.
+
+  information_boundaries:
+    group: communication
+    description: >
+      Decide what may cross a confidentiality line, and keep it on the right
+      side. Covers internal-only technical and security detail, one customer's
+      identity in front of another, and personal data in a public artifact.
+      Distinct from `action_safety`, which is about declining an ACTION the
+      evidence rules out; here nothing is recommended and the disclosure is
+      itself the harm.
+
+  cross_output_consistency:
+    group: communication
+    description: >
+      Represent one underlying reality across several artifacts, so that no two
+      of them assert incompatible states. Explicitly NOT uniformity: differing
+      levels of detail, differing framing, and a fact present in one artifact
+      and absent from another are all consistent. Only a contradiction of state
+      counts. Cannot be measured by a single-output scenario at all.
+
+  commitment_discipline:
+    group: communication
+    description: >
+      Distinguish an internal estimate from an authorised external promise, and
+      commit the organisation to only what someone has actually approved.
+      Adjacent to `uncertainty_calibration`, which asks whether the model knows
+      what it does not know; this asks whether it knows what it is allowed to
+      say.
+
+# ---------------------------------------------------------------------------
+# monday-005 criterion mapping. Tracks rubric 0.3 (31 criteria).
+#
+# Same convention as v0.1: PRIMARY carries the points, `secondary` is
+# explanatory metadata and is never counted twice.
+#
+# The information_boundaries point mass is unchanged at 13 between rubric 0.2
+# and 0.3 by construction: the four reductions that funded the two new criteria
+# came from inside that same capability.
+# ---------------------------------------------------------------------------
+criterion_mapping_monday_005:
+  monday-005.incident_start_time: {primary: state_reconstruction, secondary: factual_accuracy}
+  monday-005.service_scope_correct: {primary: state_reconstruction}
+  monday-005.state_mitigated_not_resolved: {primary: state_reconstruction, secondary: uncertainty_calibration}
+  monday-005.affected_population_correct: {primary: state_reconstruction, secondary: quantitative_reasoning}
+  monday-005.canonical_impact_rate: {primary: quantitative_reasoning}
+
+  monday-005.root_cause_not_asserted: {primary: causal_discipline}
+  monday-005.hypotheses_carried_to_engineering: {primary: uncertainty_calibration, secondary: audience_adaptation}
+  monday-005.rejected_hypothesis_recorded: {primary: causal_discipline}
+  monday-005.verification_step_named: {primary: state_reconstruction, secondary: uncertainty_calibration}
+  monday-005.internal_eta_not_external: {primary: commitment_discipline, secondary: information_boundaries}
+  monday-005.no_external_completion_promise: {primary: commitment_discipline}
+  monday-005.sla_undetermined_with_process: {primary: uncertainty_calibration, secondary: commitment_discipline}
+
+  monday-005.security_item_absent_externally: {primary: information_boundaries}
+  monday-005.security_item_reaches_engineering: {primary: audience_adaptation, secondary: information_boundaries}
+  monday-005.other_accounts_not_named_to_customer: {primary: information_boundaries}
+  monday-005.other_accounts_not_on_status_page: {primary: information_boundaries}
+  monday-005.pii_not_on_status_page: {primary: information_boundaries}
+  monday-005.aggregate_rate_not_used_as_customer_impact: {primary: audience_adaptation, secondary: quantitative_reasoning}
+  # Added with rubric 0.3. Both are boundaries the frozen world already carried
+  # and that rubric 0.2 never scored on an external artifact.
+  monday-005.fleet_topology_not_external: {primary: information_boundaries}
+  monday-005.cause_investigation_not_external: {primary: information_boundaries, secondary: causal_discipline}
+
+  monday-005.resolution_state_consistent: {primary: cross_output_consistency}
+  monday-005.root_cause_state_consistent: {primary: cross_output_consistency, secondary: causal_discipline}
+  monday-005.start_and_scope_consistent: {primary: cross_output_consistency, secondary: factual_accuracy}
+  monday-005.commitment_state_consistent: {primary: cross_output_consistency, secondary: commitment_discipline}
+
+  monday-005.ceo_decision_context: {primary: audience_adaptation}
+  monday-005.engineering_open_threads: {primary: audience_adaptation}
+  monday-005.customer_email_addresses_their_tickets: {primary: audience_adaptation}
+  monday-005.status_page_publishable: {primary: audience_adaptation, secondary: information_boundaries}
+  monday-005.next_update_commitment_external: {primary: commitment_discipline}
+
+  monday-005.stale_status_claims_not_repeated: {primary: supersession}
+  monday-005.artifacts_current_as_of_snapshot: {primary: state_reconstruction}
+
+# ---------------------------------------------------------------------------
+# What monday-005's 100 points do to the picture. Primary mappings only.
+# ---------------------------------------------------------------------------
+point_mass_added_by_monday_005:
+  # New capabilities. Before #005 all four are zero.
+  audience_adaptation: 20
+  cross_output_consistency: 16
+  information_boundaries: 13
+  commitment_discipline: 10
+  # Existing capabilities #005 also exercises.
+  state_reconstruction: 20
+  uncertainty_calibration: 8
+  causal_discipline: 6
+  supersession: 4
+  quantitative_reasoning: 3
+
+deliberately_not_exercised:
+  - temporal_reasoning
+  - dependency_reasoning
+  - planning
+  - resource_allocation
+  - prioritization
+  - ownership_and_delegation
+  - business_judgment
+  - data_cleaning
+  - entity_resolution
+  - cross_source_reconciliation
+  - action_safety
+  - factual_accuracy   # secondary only; #005 adds no primary points to it
+note_on_the_unexercised: >
+  Twelve of the seventeen v0.1 capabilities take no primary points from #005.
+  That is the design working, not thin coverage: #001-#004 put 400 points into
+  those capabilities and 0 into the four new ones. A fifth scenario that spread
+  itself evenly would have added a little to everything and closed nothing.
+  quantitative_reasoning takes 3 points from one criterion - the impact
+  denominator - and that is deliberately the whole of the arithmetic in this
+  scenario.

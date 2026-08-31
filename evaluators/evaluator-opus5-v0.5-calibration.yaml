@@ -1,0 +1,50 @@
+# MondayBench #005 "Read the Room" - CALIBRATION evaluator. DRAFT.
+#
+# Not official, not frozen, never used to score a published run. It exists so
+# the scenario can be validated and, when authorised, calibrated. The official
+# evaluator for #005, if #005 ships, will be a separate file bound to whatever
+# rubric version survives calibration - the same pattern #004 followed through
+# three calibration evaluators before evaluator-opus5-v0.4.
+#
+# Same architecture as every other MondayBench evaluator: one judge call per
+# atomic criterion returning PASS/PARTIAL/FAIL with evidence, a separate
+# penalty judge, and deterministic scoring from those labels. The judge never
+# sees a total. NO new judge pipeline is introduced for #005.
+#
+# WHY NO PIPELINE CHANGE WAS NEEDED, recorded because the brief asked for the
+# four outputs to be judged together. The candidate returns ONE response
+# containing four delimited sections, so the judge already receives all four
+# whenever it receives the response. Cross-output criteria are ordinary
+# criteria over the whole text. Nothing in the harness had to learn what an
+# "artifact" is.
+#
+# `provider: anthropic` / `model_id: claude-opus-5` record WHICH MODEL reasoned
+# about the responses, for provenance. They are not a routing instruction: this
+# project never calls the Anthropic API. Labels are produced in a recorded
+# Claude Code session and replayed with `evaluate --verdicts`.
+id: evaluator-opus5-v0.5-calibration
+scenario: monday-005
+scenario_version: "0.1"
+rubric_version: "0.3"
+rubric_file: rubric-0.3.yaml
+status: calibration
+
+judge:
+  provider: anthropic
+  api_style: anthropic
+  model_id: claude-opus-5
+  prompt_file: judge-prompt.md
+  penalty_prompt_file: penalty-judge-prompt.md
+
+generation:
+  temperature: 0
+  max_output_tokens: 0
+
+behavior:
+  require_evidence: true
+
+# monday-005 ships a structured answer key (ground-truth.yaml) carrying the
+# incident state machine, both live hypotheses, the audience matrix, the
+# invariants and the not_inconsistency list. There are no per-criterion dotted
+# paths to slice, so the judge is given the whole key - as in #004.
+ground_truth_map: {}

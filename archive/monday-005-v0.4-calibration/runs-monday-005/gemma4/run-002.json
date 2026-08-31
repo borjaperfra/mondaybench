@@ -1,0 +1,70 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.5",
+  "scenario_id": "monday-005",
+  "scenario_prompt_sha256": "532cd464a9b75045f808886c44e667237d6fd1b947826510643b9f8bcc30059a",
+  "run_id": "monday-005__gemma4__002",
+  "run_number": 2,
+  "model": {
+    "slug": "gemma4",
+    "display_name": "Gemma 4",
+    "provider": "helmcode",
+    "model_id": "gemma4"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 131072,
+    "reasoning_enabled": false,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": false,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+    "extra_body": {
+      "caching": false
+    },
+    "config_sha256": "f28c29bfe455806c33501b0c6dd5805d18dccd6863051faa955fb9141a6f9cf5",
+    "safety_ceiling_tokens": 131072,
+    "ceiling_semantics": "provider_specific"
+  },
+  "reasoning": {
+    "requested": false,
+    "status": "NOT_REQUESTED",
+    "tokens": 0,
+    "evidence": null,
+    "stream_observed": false,
+    "stream_event_count": 0
+  },
+  "timestamp_utc": "2026-08-31T11:21:23Z",
+  "usage": {
+    "input_tokens": 5429,
+    "output_tokens": 679,
+    "reasoning_tokens": 0
+  },
+  "performance": {
+    "ttft_ms": 764.7,
+    "ttfa_ms": 764.7,
+    "total_latency_ms": 7500.8,
+    "tokens_per_second": 100.8
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "## CEO BRIEFING\n\n**Status:** Mitigated. Verification in progress.\n**Incident Summary:** An incident affecting the Batch API began at 11:42 UTC today. The issue was confined to one of our two worker fleets (fleet-a). We applied a mitigation at 12:58 UTC by moving all Batch API traffic to the healthy fleet (fleet-b).\n**Current State:** Error rates have dropped significantly and are currently holding at approximately 0.3%. We are in a mandatory 90-minute verification window to ensure stability before declaring the incident resolved. This window closes at 14:30 UTC.\n**Impact:** Seven customer accounts experienced Batch API failures. Contoso is the only affected customer with an SLA that carries service credits. We are currently re-driving failed jobs for all affected accounts; roughly 60% of the backlog has been processed successfully so far.\n**Next Steps:** If the verification window closes without further issues, we expect to have the affected fleet back in rotation and the incident fully wrapped up around 16:00 UTC.\n\n## ENGINEERING UPDATE\n\n**Current Status:** Mitigated (traffic cut over to fleet-b at 12:58). Verification window open until 14:30.\n**Root Cause:** Not established. Two hypotheses remain:\n1. **H1 (Leading):** Connection-pool change in `r3` (max pool size 80 $\\rightarrow$ 24). Fleet-a workers were observed queueing on DB connections. However, `r3` is also running on fleet-b without issue.\n2. **H2 (Secondary):** Concentrated load on fleet-a. Volume was ~3x morning average due to a large scheduled job from wonka-industries.\n**Work in Progress:**\n- Monitoring error rates (currently ~0.3%) and queue depth on fleet-b.\n- Re-driving failed jobs for affected accounts (60% complete, no failures on re-drive).\n- fleet-a remains out of rotation.\n**Pending:**\n- Rollback test of `r3` to test H1.\n- Formal resolution declaration (post-14:30).\n\n## CUSTOMER EMAIL\n\nSubject: Re: Batch submits failing\n\nDear Contoso team,\n\nWe are currently experiencing an incident affecting the Batch API, which began at 11:42 UTC. \n\nA mitigation has been applied and the service is recovering. We are currently monitoring the service before confirming full recovery. We will provide a further update by 15:30 UTC.\n\nRegarding your specific impact, we have identified that 3,410 of your Batch API requests failed during the incident window (between 11:43 and 12:56 UTC) out of 9,400 total requests. We are currently re-driving these failed jobs.\n\n## STATUS PAGE UPDATE\n\nWe are monitoring the Batch API following a period of elevated error rates that began at 11:42 UTC. A mitigation has been applied and the service is recovering. We are monitoring the service before confirming recovery. A further update will follow at 15:30 UTC.",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "chatcmpl-a94741581f7f410c",
+    "raw_usage": {
+      "completion_tokens": 679,
+      "prompt_tokens": 5429,
+      "total_tokens": 6108,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      }
+    }
+  }
+}

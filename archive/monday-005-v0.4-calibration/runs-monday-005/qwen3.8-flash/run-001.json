@@ -1,0 +1,78 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.5",
+  "scenario_id": "monday-005",
+  "scenario_prompt_sha256": "532cd464a9b75045f808886c44e667237d6fd1b947826510643b9f8bcc30059a",
+  "run_id": "monday-005__qwen3.8-flash__001",
+  "run_number": 1,
+  "model": {
+    "slug": "qwen3.8-flash",
+    "display_name": "Qwen 3.8 Flash",
+    "provider": "nan",
+    "model_id": "qwen3.8-flash"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 131072,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+    "extra_body": {
+      "caching": false
+    },
+    "config_sha256": "dd9d5a3e511e512e8136a1f206cfcbb124f2bcb3833aa095681d7f8c9febecc6",
+    "safety_ceiling_tokens": 131072,
+    "ceiling_semantics": "provider_specific"
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "DELIVERED",
+    "tokens": 33548,
+    "evidence": "explicit_reasoning_tokens",
+    "stream_observed": true,
+    "stream_event_count": 9669
+  },
+  "timestamp_utc": "2026-08-31T09:58:58Z",
+  "usage": {
+    "input_tokens": 5403,
+    "output_tokens": 36687,
+    "reasoning_tokens": 33548
+  },
+  "performance": {
+    "ttft_ms": 2647.4,
+    "ttfa_ms": 323927.3,
+    "total_latency_ms": 345498.2,
+    "tokens_per_second": 107.0
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "## CEO BRIEFING\n\nDana — state of play at 14:20 UTC for your 15:00 board call. All times UTC.\n\n**Incident status**\n- INC-2026-1109-01 is OPEN: mitigated, verification in progress, root cause not established.\n- The affected surface is the Batch API. Errors were `502` responses on `POST /v1/batch/jobs`.\n- Incident start: 11:42 UTC.\n- Mitigation applied: 12:58 UTC. All Batch API traffic was moved to fleet-b; fleet-a is drained and held out of rotation.\n- Error rate has held at 0.3–0.4% since mitigation; baseline is 0.2%. No customer reports of new failures since cutover.\n- Verification window: 13:00–14:30 UTC. We cannot state the incident is resolved before 14:30, and only if the window closes clean.\n\n**Impact**\n- In the incident window, the Batch API served 58,900 requests; 17,602 failed. Headline impact: 29.9% of Batch API requests failed.\n- The Batch API accounted for 58,900 of 842,000 all-API requests in the window, about 7.0% of platform traffic.\n- Seven of the nine Batch API accounts took failures, all on fleet-a. The two fleet-b Batch API accounts had no failures.\n- Contoso: 9,400 Batch API requests, 3,410 failures (36.3%), first failure 11:43, last failure 12:56.\n- Other affected accounts: stark-industries, wayne-enterprises, globex, wonka-industries, umbrella-health, initech.\n- Contoso is the only affected account on a contract carrying service-level credits. The other six affected accounts are on standard terms with no credit clause.\n\n**Root cause**\n- Root cause is not established.\n- Leading untested hypothesis: `batch-api@2026.11.09-r3` lowered worker database connection-pool max from 80 to 24 at 11:31; fleet-a workers were queueing on database connections.\n- Secondary untested hypothesis: concentrated load on fleet-a, about 3x the morning average from 11:38, driven mainly by wonka-industries.\n- Rejected: upstream object-storage provider. The provider status was green, and the Files API, which uses the same provider, stayed healthy.\n- The r3 rollback test has not been run. fleet-a remains out of rotation pending testing.\n\n**Customer and SLA position**\n- Contoso has written twice today and asked whether this month breaches the 99.9% commitment and what credit applies.\n- We cannot confirm that now. Schedule B Monthly Availability is calculated for the full calendar month across Inference, Batch, and Files, from Northstar records after month end, with exclusions.\n- Contoso’s earlier ticket notes retry/backoff behaviour that may exceed documented rate limits. If Northstar excludes requests under Schedule B.2, we must identify the excluded volume and basis in the published figure.\n- Credits are on request after the monthly figure is published; claims must be submitted within 30 days of publication.\n\n**Communications position**\n- The 12:05 status-page update incorrectly stated the cause had been identified and a fix was being rolled out. The 14:20 status-page update corrects this without discussing unconfirmed cause.\n- Approved external language is limited to: incident affecting the Batch API and start time; mitigation applied and service recovering; monitoring before confirming recovery; next update with stated time; Contoso’s own figures in their private email.\n- Do not mention fleet names, customer names, root cause, untested hypotheses, SEC-411, or internal timing estimates externally.\n\n**Suggested board answer if asked**\n- “We had elevated Batch API errors starting at 11:42 UTC. We applied a mitigation at 12:58 UTC and are monitoring before confirming recovery. The incident affected the Batch API; 17,602 of 58,900 Batch API requests failed during the incident window, or 29.9%. Seven accounts were affected. One enterprise customer has service-level terms; credit determination is made after month end under the contract. Root cause is not confirmed. We have corrected an inaccurate status-page update and will publish another update by 15:00 UTC.”\n\n**Open items after 14:30**\n- If verification closes clean, we can confirm recovery, but root cause work and fleet-a return remain open.\n- Re-drive of failed jobs is about 60% complete, with no failures observed on re-drive so far.\n- Separate non-incident security follow-up SEC-411 is open: the batch worker database role has read and write access to the billing schema; Marcus owns it; target this week to narrow it. It is not a contributing factor to this incident.\n\n## ENGINEERING UPDATE\n\nTeam — handoff from IC at 14:20 UTC. All times UTC.\n\n**Current state**\n- Incident OPEN: mitigated, verification in progress, root cause not established.\n- Affected endpoint: `POST /v1/batch/jobs`; errors were `502`s.\n- Start: 11:42 UTC. Mitigation: 12:58 UTC. All Batch API traffic cut over to fleet-b. fleet-a drained and held out of rotation.\n- Error rate: 0.3–0.4% since mitigation; baseline 0.2%. 13:20 and 14:12 checks holding. Queue depth on fleet-b normal.\n- Verification window: 13:00–14:30 UTC. Do not declare resolved before 14:30; only if continuous normal error rate.\n- No customer reports of new failures since cutover.\n\n**Impact data**\n- Batch API window totals: 58,900 requests, 17,602 failures, 29.9% failed Batch API requests.\n- Platform context: 842,000 all-API requests in the window; Batch API was 58,900 requests.\n- Fleet-a: 48,900 requests, 17,602 failures, 36.0%. Fleet-b: 10,000 requests, 0 failures.\n\n| customer_id | fleet | requests | failures | first failure | last failure |\n|---|---:|---:|---:|---|---|\n| stark-industries | fleet-a | 14,200 | 5,180 | 11:43 | 12:57 |\n| contoso | fleet-a | 9,400 | 3,410 | 11:43 | 12:56 |\n| wayne-enterprises | fleet-a | 7,850 | 2,790 | 11:44 | 12:57 |\n| globex | fleet-a | 6,100 | 2,240 | 11:42 | 12:55 |\n| wonka-industries | fleet-a | 5,900 | 2,020 | 11:46 | 12:57 |\n| umbrella-health | fleet-a | 4,300 | 1,560 | 11:45 | 12:54 |\n| initech | fleet-a | 1,150 | 402 | 11:51 | 12:48 |\n| acme-corp | fleet-b | 6,700 | 0 | — | — |\n| aperture-labs | fleet-b | 3,300 | 0 | — | — |\n\n**Root cause state**\n- H1 untested: `r3` lowered max DB pool size from 80 to 24 per worker at 11:31; fleet-a workers queueing on DB connections. Counterpoint: `r3` also on fleet-b, which did not degrade.\n- H2 untested: concentrated load on fleet-a, ~3x morning average from 11:38, mainly wonka-industries. Counterpoint: fleet-a absorbed a higher peak on 2026-11-03 without elevated errors.\n- H3 rejected: upstream object-storage provider; provider green and Files API healthy.\n- H1 and H2 may interact, but that is untested.\n- Rollback test not run. Do not roll back or return fleet-a to rotation until controlled test/IC decision.\n\n**Open tasks**\n1. Continue monitoring through 14:30. If the window closes clean, we may declare the incident resolved under the 90-minute verification policy, while keeping root-cause follow-up open.\n2. Finish re-drive of failed jobs. Current status: about 60% through affected accounts; no failures observed on re-drive so far.\n3. Keep fleet-a drained and out of rotation. Preserve the evidence needed for testing.\n4. Prepare and run the r3 rollback/configuration test on fleet-a. No external communication about cause until confirmed.\n5. Support tickets:\n   - TKT-8912 wonka-industries asks whether to resubmit or whether jobs will be replayed.\n   - TKT-8904 umbrella-health asks about batch job errors and a compliance export.\n   - TKT-8918 globex asks whether they are affected.\n   - TKT-8903 and TKT-8907 contoso ask about failures and SLA credits.\n   - Use the approved external list. Named customers may receive only their own impact figures.\n6. Communications:\n   - 14:20 status-page update corrects the 12:05 inaccuracy, states mitigation and monitoring, and gives next update time.\n   - Next status update: 15:00 UTC.\n   - Do not publish fleet names, customer names, root cause, untested hypotheses, SEC-411, or internal estimates.\n7. Internal planning estimate from Marcus: if the window closes clean and re-drive finishes, expect fully wrapped and fleet-a back in rotation around 16:00 UTC. Internal only; do not share outside this channel.\n8. SEC-411: batch worker database role has read and write access to billing schema; unrelated to this incident; Marcus owns; target this week to narrow to read-only on the two tables it uses.\n\n## CUSTOMER EMAIL\n\nTo: Contoso Ltd.  \nSubject: Batch API incident — your account impact and Schedule B question\n\nDear Contoso team,\n\nThank you for tickets TKT-8903 and TKT-8907.\n\nAt 11:42 UTC on 9 November 2026, we began seeing elevated error rates affecting Batch API requests. A mitigation has since been applied, and the service is recovering. We are monitoring before confirming recovery.\n\nYour account’s Batch API impact during the incident window, 11:42 to 12:58 UTC, was:\n- Batch API requests: 9,400\n- Failed Batch API requests: 3,410\n- Failure rate: 36.3%\n- First failed request: 11:43 UTC\n- Last failed request: 12:56 UTC\n\nRegarding your question about service credits under Schedule B: we cannot confirm today whether November will breach the 99.9% Monthly Availability commitment, or which credit tier would apply. Monthly Availability is calculated per calendar month across the Covered Services — Inference API, Batch API, and Files API; Embeddings API is excluded — using the formula:\n\nMonthly Availability = (Eligible Requests - Failed Requests) / Eligible Requests\n\nFailed Requests are Eligible Requests returning a `5xx` status. Eligible Requests exclude:\n- requests during Scheduled Maintenance announced at least 48 hours ahead;\n- requests that failed as a result of Contoso’s own configuration, integration or client software, including retry behaviour that exceeds documented rate limits;\n- requests rejected for exceeding Contoso’s contracted rate limits.\n\nWe have noted the retry/backoff context from TKT-8841. If Northstar excludes any requests under Schedule B.2, we will identify the excluded volume and the basis for the exclusion in the published figure, and you may dispute an exclusion within the claim window.\n\nNorthstar determines Monthly Availability from its own service records after the end of the calendar month and publishes the figure within 10 business days of month end. If the published Monthly Availability is below 99.9%, Contoso may request a credit against the following month’s fees under Schedule B.4:\n- 10% if Monthly Availability is 99.0% or above, but below 99.9%;\n- 25% if Monthly Availability is 95.0% or above, but below 99.0%;\n- 50% if Monthly Availability is below 95.0%.\n\nCredits are the sole and exclusive remedy for failure to meet the commitment. Any credit claim must be submitted within 30 days of publication of the figure.\n\nWe will provide another update by 15:00 UTC. We have noted Priya Raghunathan as your technical contact, and we can continue via this ticket.\n\nAll times UTC.\n\nSincerely,  \nNorthstar Support\n\n## STATUS PAGE UPDATE\n\nUpdate — 14:20 UTC\n\nWe are correcting our 12:05 UTC update. That update was inaccurate. The statement that a fix was being rolled out was not correct. At 11:42 UTC we began seeing elevated error rates affecting some Batch API requests. A mitigation has since been applied, and the service is recovering. We are monitoring before confirming recovery.\n\nNext update: by 15:00 UTC.\n\n*Monitoring.*",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "chatcmpl-1788169992-HFoNUS5ZAetH3OmFCR1d",
+    "raw_usage": {
+      "completion_tokens": 36687,
+      "prompt_tokens": 5403,
+      "total_tokens": 42090,
+      "completion_tokens_details": {
+        "audio_tokens": 0,
+        "reasoning_tokens": 33548,
+        "image_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 0,
+        "video_tokens": 0,
+        "cache_write_tokens": 0
+      }
+    }
+  }
+}

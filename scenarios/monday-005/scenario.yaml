@@ -1,0 +1,94 @@
+id: monday-005
+title: "Read the Room"
+benchmark_version: "0.5"
+scenario_version: "0.1"
+# Frozen for publication after a 7x1 and a 3x7 calibration battery. The
+# candidate-visible content is byte-identical to what the first battery
+# answered - the version below stays 0.1 for that reason, and the prompt still
+# hashes to 532cd464. What iterated was the rubric, now 0.4.
+#
+# The whole calibration battery is archived under
+# archive/monday-005-v0.4-calibration/ and none of it may become official
+# evidence: every rubric after 0.1 was written while reading those responses.
+# The official battery is three fresh runs per model generated after this
+# freeze.
+status: official
+
+# 14:20 UTC, mid-incident. The scenario is deliberately set while the incident
+# is OPEN: mitigation applied at 12:58, verification window running until 14:30,
+# root cause not established. Setting it after resolution would remove the whole
+# problem - communicating from inside an unfinished situation is the point.
+#
+# Everything in every source is UTC and same-day. There is no time-zone
+# arithmetic anywhere in this scenario and no duration a criterion depends on,
+# deliberately: temporal reasoning is the capability the taxonomy shows every
+# model is worst at, and loading it here would make #005 calibrate as two
+# scenarios at once. The only time comparison the task needs is
+# "is 14:20 before 14:30", and both numbers are stated rather than derived.
+current_time: "2026-11-09T14:20:00+00:00"
+role: "Incident Commander"
+company: "Northstar"
+
+# context.md leads, as in #004: it defines the columns, names the roles, fixes
+# the time zone, and states which denominator is the reporting basis. The
+# remaining seven are ordered as an incident responder would meet them - what
+# happened, what engineering said, what I wrote down, who was hit, what we owe
+# them, what they asked, what we have already said publicly.
+source_order:
+  - context.md
+  - incident-timeline.md
+  - slack-engineering.md
+  - incident-notes.md
+  - customer-impact.csv
+  - sla-contract.md
+  - support-tickets.csv
+  - status-page-history.md
+
+# Generation ceiling for this scenario, in tokens.
+#
+# A SAFETY CEILING, not a reasoning budget - see the header of models.yaml and
+# analysis/token-budget-audit.md. It is raised from #004's 96,000 because this
+# scenario asks for four artifacts rather than one, and #004 already saw a
+# single-artifact run reach 80,470 completion tokens against that 96,000.
+#
+# RE-VERIFIED 2026-08-31 with tools/probe_output_ceiling.py, after the #004
+# probe's evidence went stale: glm5.2 spent a day returning HTTP 402 and two
+# NaN models were failing that afternoon. All seven endpoints accepted
+# max_tokens=131072 with HTTP 200 on their own declared endpoint:
+#
+#   helmcode  deepseek-v4-flash, glm5.2, qwen3.6, gemma4
+#   nan       glm5.3-flash, qwen3.8-flash, mimo-v2.5
+#
+# Accepted is not the same as applied - the token-budget audit established that
+# providers honour this value inconsistently, and #005 does not try to make
+# them consistent. What the probe establishes is that no endpoint rejects the
+# parameter, so a run cannot fail for declaring it.
+#
+# monday-005 declares no endpoint overrides, so every model is probed and run
+# on the endpoint models.yaml declares for it.
+generation:
+  safety_ceiling_tokens: 131072
+  ceiling_semantics: provider_specific
+
+prompt_file: prompt.md
+ground_truth_file: ground-truth.yaml
+# Rubric lineage, all three kept on disk unedited:
+#   rubric.yaml      0.1  what the 7x1 calibration battery was GENERATED under
+#   rubric-0.2.yaml  0.2  two judge-facing semantic corrections, made before any
+#                         response was judged; the 7x1 was judged under it
+#   rubric-0.3.yaml  0.3  four semantic repairs found BY that judging pass, plus
+#                         two information boundaries the frozen world already
+#                         contained and 0.2 never scored externally; the 3x7
+#                         battery was judged under it
+#   rubric-0.4.yaml  0.4  three semantic repairs found by that judging pass.
+#                         FROZEN. No criterion added, removed or repriced.
+#
+# No response has ever been regenerated for a rubric change. The prompt, the
+# eight sources and ground-truth.yaml are byte-identical across all three, so
+# the prompt still hashes to 532cd464 and every run answers the same bytes
+# whichever rubric scores it. See FROZEN-NOTE.md for the full transition record.
+#
+# monday-001 and monday-004 are frozen against version-numbered rubrics for the
+# same reason.
+rubric_file: rubric-0.4.yaml
+official_runs: 3

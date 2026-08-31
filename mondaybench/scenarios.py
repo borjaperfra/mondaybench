@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Any
 
 from .config import ConfigError, load_yaml, repo_root
+from .freeze import load_manifest
 
 
 class ScenarioError(Exception):
@@ -111,6 +112,12 @@ PENALTY_KEY_TO_TYPE = {
     "prohibited_business_action": "PROHIBITED_ACTION",
     "major_data_error": "MAJOR_DATA_ERROR",
     "unsupported_causality": "UNSUPPORTED_CAUSALITY",
+    # monday-005 (draft). Disclosure gets a new shared type because none of the
+    # others means "this left the company and should not have"; the
+    # unauthorised commitment reuses PROHIBITED_ACTION because that is exactly
+    # what it is.
+    "confidential_information_disclosure": "CONFIDENTIALITY_BREACH",
+    "unauthorized_external_commitment": "PROHIBITED_ACTION",
 }
 NOISE_DIMENSION = "noise_resistance"
 
@@ -194,6 +201,7 @@ def _parse_penalties(data: dict[str, Any]) -> tuple[dict[str, PenaltyDefinition]
             ptype = PENALTY_KEY_TO_TYPE.get(spec.get("id"))
             if ptype is None:
                 raise ScenarioError(f"unknown global penalty {spec.get('id')!r}")
+            _reject_collision(penalties, ptype, spec.get("id"))
             magnitude = abs(float(spec["points_each"]))
             penalties[ptype] = PenaltyDefinition(
                 type=ptype, points=-magnitude, definition=_clean(spec.get("definition"))
@@ -205,12 +213,40 @@ def _parse_penalties(data: dict[str, Any]) -> tuple[dict[str, PenaltyDefinition]
         ptype = PENALTY_KEY_TO_TYPE.get(key)
         if ptype is None:
             raise ScenarioError(f"unknown global penalty {key!r}")
+        _reject_collision(penalties, ptype, key)
         penalties[ptype] = PenaltyDefinition(
             type=ptype,
             points=float(spec["points"]),
             definition=_clean(spec.get("definition")),
         )
     return penalties, None
+
+
+def _reject_collision(
+    penalties: dict[str, PenaltyDefinition], ptype: str, key: str | None
+) -> None:
+    """Refuse two rubric keys that resolve to the same shared penalty type.
+
+    `penalties` is indexed by the shared TYPE, not by the rubric's own key, so
+    a second key mapping to a type already present used to overwrite the first
+    silently: one definition and one points value simply disappeared, and the
+    rubric still parsed. A scenario would have shipped scoring a penalty it did
+    not think it had.
+
+    No existing rubric collides - monday-001..004 were checked - so this only
+    ever fires on a new one. The fix when it does is to give the two failures
+    distinct shared types, or to merge them into one key, not to widen the map
+    with a near-duplicate type: a shared vocabulary that grows a synonym per
+    scenario has stopped being shared.
+    """
+    existing = penalties.get(ptype)
+    if existing is None:
+        return
+    raise ScenarioError(
+        f"global penalty {key!r} resolves to {ptype}, which this rubric already "
+        f"defines; two keys mapping to one shared type would silently discard "
+        f"one of them"
+    )
 
 
 def parse_rubric(data: dict[str, Any]) -> Rubric:
@@ -305,6 +341,11 @@ class Scenario:
     ground_truth_text: str = ""
     ground_truth_file: str = "ground-truth.yaml"
     prompt_file: str = "prompt.md"
+    # The rubric this scenario was actually loaded with. Recorded because the
+    # filename is a resolution outcome, not a constant: it can come from an
+    # explicit evaluator override, from scenario.yaml, or from FROZEN.yaml.
+    # Without it, a caller cannot tell which rubric it is holding.
+    rubric_file: str = "rubric.yaml"
     # Distinct from `benchmark_version`: a scenario can be revised while the
     # benchmark version stands still, and an evaluator is written against one
     # specific revision of the content.
@@ -371,8 +412,41 @@ def load_scenario(
     # declares `rubric_file: rubric.yaml` - the one that reproduces the first
     # calibration - silently started scoring against 0.3 instead. A caller that
     # names a rubric now gets that rubric.
-    scenario_rubric = meta.get("rubric_file", "rubric.yaml")
-    rubric_name = rubric_file or scenario_rubric
+    # Resolution order: explicit argument, then scenario.yaml, then the freeze
+    # manifest, then the directory default.
+    #
+    # The manifest step exists because monday-001 declares no `rubric_file` and
+    # its directory default `rubric.yaml` is version 0.1 and SUPERSEDED, while
+    # FROZEN.yaml freezes the scenario against rubric-0.2.yaml and
+    # `evaluator-opus5-v0.1` scores against rubric-0.2.yaml. A plain
+    # `load_scenario("monday-001")` therefore returned criteria that no
+    # published score was ever computed from. Every other scenario declares its
+    # rubric, so every other scenario was correct - which is exactly what made
+    # this survive four releases.
+    #
+    # The manifest is consulted rather than scenario.yaml being edited because
+    # scenario.yaml is itself a frozen, hashed artifact: editing it to fix the
+    # bug would have required re-freezing a published scenario, and the manifest
+    # already recorded the right answer.
+    manifest = load_manifest(directory)
+    scenario_rubric = meta.get("rubric_file")
+
+    if scenario_rubric and manifest and manifest.rubric_file != scenario_rubric:
+        # One of the two is wrong and there is no way to know which. Refusing is
+        # the only safe answer; silently preferring either can move a score.
+        raise ScenarioError(
+            f"scenario {scenario_id!r} disagrees with its freeze manifest about the rubric: "
+            f"scenario.yaml declares {scenario_rubric!r} but FROZEN.yaml freezes "
+            f"{manifest.rubric_file!r}. Fix whichever is wrong; do not edit the manifest "
+            f"to make a change pass."
+        )
+
+    rubric_name = (
+        rubric_file
+        or scenario_rubric
+        or (manifest.rubric_file if manifest else None)
+        or "rubric.yaml"
+    )
     gt_name = meta.get("ground_truth_file", "ground-truth.yaml")
 
     required = tuple(f for f in REQUIRED_FILES if f != "rubric.yaml") + (rubric_name, gt_name)
@@ -437,6 +511,7 @@ def load_scenario(
         ground_truth_text=ground_truth_text,
         ground_truth_file=gt_name,
         prompt_file=prompt_file,
+        rubric_file=rubric_name,
         scenario_version=str(meta.get("scenario_version", "")),
         status=str(meta.get("status", "frozen")),
         safety_ceiling_tokens=(

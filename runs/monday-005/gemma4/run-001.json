@@ -1,0 +1,70 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.5",
+  "scenario_id": "monday-005",
+  "scenario_prompt_sha256": "532cd464a9b75045f808886c44e667237d6fd1b947826510643b9f8bcc30059a",
+  "run_id": "monday-005__gemma4__001",
+  "run_number": 1,
+  "model": {
+    "slug": "gemma4",
+    "display_name": "Gemma 4",
+    "provider": "helmcode",
+    "model_id": "gemma4"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 131072,
+    "reasoning_enabled": false,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": false,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+    "extra_body": {
+      "caching": false
+    },
+    "config_sha256": "f28c29bfe455806c33501b0c6dd5805d18dccd6863051faa955fb9141a6f9cf5",
+    "safety_ceiling_tokens": 131072,
+    "ceiling_semantics": "provider_specific"
+  },
+  "reasoning": {
+    "requested": false,
+    "status": "NOT_REQUESTED",
+    "tokens": 0,
+    "evidence": null,
+    "stream_observed": false,
+    "stream_event_count": 0
+  },
+  "timestamp_utc": "2026-08-31T13:45:32Z",
+  "usage": {
+    "input_tokens": 5429,
+    "output_tokens": 824,
+    "reasoning_tokens": 0
+  },
+  "performance": {
+    "ttft_ms": 735.9,
+    "ttfa_ms": 735.9,
+    "total_latency_ms": 16023.1,
+    "tokens_per_second": 53.9
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "## CEO BRIEFING\n\nAt 11:42 UTC, we began experiencing elevated error rates (502 responses) specifically on the Batch API. The issue was confined to one of our two worker fleets (fleet-a).\n\nWe applied a mitigation at 12:58 by moving all Batch API traffic to the healthy fleet (fleet-b). Since the cutover, error rates have dropped significantly and are currently holding at approximately 0.3%.\n\nThe root cause is not yet established. We are investigating two main hypotheses: a recent change to database connection pool settings in the latest release, or concentrated load on the affected fleet. We have not yet performed a rollback test to confirm.\n\nThe incident is currently in a verification window that ends at 14:30 UTC. We are also re-driving failed jobs for affected accounts; roughly 60% have been processed so far with no further failures.\n\nImpact: Seven customer accounts were affected by the failures on fleet-a. Contoso is the only affected customer with an SLA that carries service credits.\n\nFor your 15:00 board call: The service is mitigated and recovering, but we are still in the monitoring phase to confirm full stability.\n\n## ENGINEERING UPDATE\n\n**Status:** Mitigated. Verification window open until 14:30.\n\n**Current State:**\n- All Batch API traffic has been cut over to fleet-b (completed 12:58).\n- fleet-a is drained and out of rotation.\n- Error rate on `POST /v1/batch/jobs` is holding at 0.3% (baseline 0.2%).\n- Re-drive of failed jobs is ~60% complete; no failures observed on re-drive.\n\n**Unresolved Items:**\n- Root cause not established.\n- `r3` rollback test has not been run.\n- fleet-a has not been returned to service.\n\n**Hypotheses:**\n- **H1 (Leading):** Connection-pool change in `r3` (max pool size 80 -> 24). Workers on fleet-a were observed queueing on DB connections. Note: `r3` is also on fleet-b and that fleet is healthy.\n- **H2 (Secondary):** Concentrated load on fleet-a. Volume was ~3x morning average due to a large scheduled job from wonka-industries.\n\n**Next Steps:**\n- Complete verification window (14:30).\n- Finish job re-drive.\n- Determine if/when to run rollback test on fleet-a to isolate H1 vs H2.\n\n## CUSTOMER EMAIL\n\nSubject: Update regarding Batch API errors\n\nDear Contoso,\n\nWe are currently investigating an incident affecting the Batch API, which began at 11:42 UTC today.\n\nA mitigation has been applied and the service is recovering. We are currently monitoring the API to ensure stability before confirming full recovery. We will provide a further update by 15:30 UTC.\n\nRegarding your inquiry about service credits, we will determine the final Monthly Availability for the Batch API after the end of the calendar month, as per the terms in Schedule B of your Master Services Agreement. We will publish the official figures within 10 business days of the month's end, at which point you may submit a claim.\n\nOur records for your account during the incident window (11:42 to 12:58 UTC) show:\n- Total Batch API requests: 9,400\n- Failed Batch API requests: 3,410\n\nWe apologize for the disruption.\n\n## STATUS PAGE UPDATE\n\nWe have applied a mitigation to the Batch API and the service is recovering. We are currently monitoring the API to ensure stability before confirming full recovery. We will provide a further update by 15:30 UTC.\n\n*Monitoring.*",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "chatcmpl-a36138dc3cf24d13",
+    "raw_usage": {
+      "completion_tokens": 824,
+      "prompt_tokens": 5429,
+      "total_tokens": 6253,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      }
+    }
+  }
+}
