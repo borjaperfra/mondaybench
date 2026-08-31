@@ -159,14 +159,31 @@ def models() -> None:
 
 
 @app.command()
-def endpoints() -> None:
+def endpoints(
+    scenario: str | None = typer.Option(
+        None,
+        "--scenario",
+        help="Apply that scenario's endpoint overrides before probing. "
+        "Without it, the endpoints declared in models.yaml are used as-is.",
+    ),
+) -> None:
     """Ask each configured endpoint which models it actually serves.
 
     Use this to confirm a `model_id` before an official run, and to discover ids
     that are served but not yet documented.
+
+    Endpoint overrides are per-scenario, so this command cannot apply them
+    unless it is told which scenario to check. Without `--scenario` it probes
+    the endpoints declared in models.yaml, which is the right default for
+    "is this platform up?"; with it, it probes the endpoints that scenario's
+    runs would actually use.
     """
     try:
-        configured = apply_endpoint_overrides(load_models(), endpoint_overrides_for(loaded.id))
+        configured = load_models()
+        if scenario is not None:
+            configured = apply_endpoint_overrides(
+                configured, endpoint_overrides_for(scenario)
+            )
     except ConfigError as exc:
         _fail(str(exc))
         return
