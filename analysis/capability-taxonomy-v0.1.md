@@ -1,3 +1,41 @@
+> ## ⚠ ERRATUM — added 2026-08-31, when MondayBench v1.0 was closed
+>
+> **The profiles this report is built from were stale when it was published, and
+> one of its findings is wrong as a result.**
+>
+> `analysis/capability-profiles-v0.1.json` covers **monday-001…003 — 300 points,
+> 14 capabilities**. The taxonomy it claims to apply,
+> `taxonomy/capabilities-v0.1.yaml`, maps **88 criteria across monday-001…004 —
+> 400 points, 17 capabilities**. The profiles were generated before monday-004
+> was official and were never rebuilt after it was published, so
+> `business_judgment`, `data_cleaning` and `entity_resolution` are missing
+> entirely and several other capabilities rest on a fraction of their evidence
+> (`quantitative_reasoning`: 21 of its 63 points).
+>
+> **The wrong finding.** Below, under *What the profiles say*, this report states
+> that Gemma 4 "copies accurately and computes badly" — 100% on
+> `factual_accuracy`. That 100% came from a single 5-point criterion. With
+> monday-004 included the capability is 8 points and Gemma 4 scores **68.8**.
+> The computation half of the claim stands and got stronger; the
+> accurate-copier half does not survive the extra evidence.
+>
+> **What was done about it.** Nothing in this file or in
+> `capability-profiles-v0.1.json` has been altered — they are the artifacts the
+> v0.1 release was made from, and rewriting them would silently move published
+> numbers. Instead:
+>
+> - **`analysis/capability-profiles-v0.1.1.json`** applies the *same,
+>   unmodified* v0.1 taxonomy to all four of its scenarios. Use it in place of
+>   `capability-profiles-v0.1.json` for any v0.1-taxonomy analysis.
+> - **`analysis/capability-taxonomy-v0.2.md`** supersedes this report entirely:
+>   five scenarios, 500 points, 22 capabilities.
+>
+> The root cause — a profile build that silently used whichever scenarios
+> happened to be official — is now pinned by
+> `tests/test_capability_profiles_v011.py`.
+
+---
+
 # MondayBench capability taxonomy v0.1
 
 **Not a scoring system.** No scenario score, rubric or published result changes
