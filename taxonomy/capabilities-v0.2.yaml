@@ -1,0 +1,401 @@
+# MondayBench capability taxonomy v0.2
+#
+# v0.2 = v0.1 PLUS FIVE CAPABILITIES AND THE monday-005 MAPPING. Nothing in v0.1
+# is renamed, merged, split, reweighted or remapped: every one of its 88 entries
+# is carried through verbatim, so any v0.1 capability score recomputes to the
+# same number under v0.2. `capabilities-v0.1.yaml` stays on disk as the
+# immutable snapshot of the suite through monday-004.
+#
+# THIS IS NOT A SCORING SYSTEM. It changes no scenario score, no rubric, no
+# Monday Score and no Overall release. It answers one question: what kinds of
+# practical work is each model consistently good or bad at?
+#
+# AGGREGATION POLICY, unchanged from v0.1. Scoring uses PRIMARY mappings only.
+# A criterion tagged with a secondary capability contributes its points once, to
+# the primary. The secondary tag is explanatory metadata that records the
+# overlap without the points being counted twice. Each criterion is averaged
+# across the model's official runs before summing, which is what makes a
+# capability profile reconcile with the scenario score.
+#
+# PENALTIES ARE EXCLUDED, unchanged from v0.1. A scenario penalty is a global
+# deduction, not a criterion-level one, so attributing it to a capability would
+# mean inventing an attribution. The consequence is stated rather than hidden:
+# a model that made an unauthorised external commitment loses points on the
+# scenario score and not on its capability profile.
+#
+# ---------------------------------------------------------------------------
+# THE FIVE ADDITIONS, and why each earns its place
+# ---------------------------------------------------------------------------
+#
+# v0.1 closed with a list of what the suite did not measure. Four of the five
+# additions are exactly those gaps, now measured by monday-005:
+#
+#   audience_adaptation      gap 1, "communication to an audience" - v0.1 had
+#                            ZERO coverage and had to file its one adjacent
+#                            criterion under business_judgment
+#   information_boundaries   gap 2, two criteria on which every model scored
+#                            100%, so the bar was not being tested
+#   cross_output_consistency gap 3, structurally impossible before monday-005:
+#                            a single-output scenario has nothing to contradict
+#   commitment_discipline    gap 4, one criterion worth 3 points
+#
+# The fifth, `information_routing`, is not from that list. It exists because
+# monday-005 measured suppression and delivery separately and they came apart -
+# see the capability's own description. Splitting it out is a claim about what
+# the benchmark ASKS, not about which model failed: the audience matrix carries
+# REQUIRED cells for internal audiences and PROHIBITED cells for external ones,
+# and those are different questions with different criteria enforcing them.
+#
+# ONE CANDIDATE WAS CONSIDERED AND REJECTED. `epistemic_state_management` -
+# hypothesis vs confirmed cause, mitigated vs resolved, verification underway -
+# is a real distinction monday-005 tests heavily. It is NOT a new capability
+# because v0.1 already absorbs it cleanly: `state_reconstruction` is defined as
+# determining the current state of a thing with the failure mode of reporting a
+# state that was true earlier, which is precisely mitigated-vs-resolved, and
+# `causal_discipline` is defined as refusing a causal claim the evidence does
+# not support, which is precisely hypothesis-vs-root-cause. Creating a sixth
+# capability here would have split those two rather than added anything.
+#
+# WHAT WAS MERGED IN v0.1, and why - carried forward unchanged:
+
+#   * `action_identification` into `prioritization`. monday-001's
+#     action_detection dimension asks which items need action today;
+#     its prioritization dimension asks which comes first. Across the eight
+#     criteria involved the two are not separable - contoso_action and
+#     contoso_first are the same judgment stated twice.
+#   * `constraint_reasoning` into `resource_allocation` and `planning`. Every
+#     constraint criterion in the set is a person or a window being scarce
+#     (Marcus, Elena's Wednesday departure, the 11:00 deadline), and is already
+#     measured as allocation or as schedule feasibility.
+#   * `delegation` into `ownership_and_delegation`. Four criteria across three
+#     scenarios ask who owns a piece of work; none asks whether to delegate
+#     separately from to whom.
+#
+# WHAT WAS CONSIDERED AND FOUND UNMEASURED - these are the gaps that should
+# shape monday-005, and they are listed in the analysis rather than invented
+# here as empty capabilities:
+#   audience adaptation; information boundaries / confidentiality beyond a
+#   single "do not send externally" criterion; external written communication;
+#   commitment discipline; cross-output consistency.
+version: "0.2"
+supersedes: "0.1"
+
+capabilities:
+  action_safety:
+    group: execution_and_judgment
+    description: >
+      Decline actions the evidence rules out - sending confidential material externally,
+      acting on a superseded instruction, scaling spend on a misleading figure, chasing an
+      item that is already closed.
+
+  # NEW IN 0.2
+  audience_adaptation:
+    group: communication
+    description: >
+      Decide what a particular reader needs from a body of facts, and give them that rather
+      than everything or a summary of everything. The failure mode is one document written
+      four times: correct in substance, wrong for three of its readers. Distinct from
+      writing quality, which MondayBench does not measure - the judgment is about selection
+      and level, not expression.
+
+  business_judgment:
+    group: execution_and_judgment
+    description: >
+      Turn an analysis into a decision a leadership team can act on, choosing the metric the
+      decision actually depends on, and stating the conclusion rather than leaving it in the
+      workings.
+
+  causal_discipline:
+    group: reasoning
+    description: >
+      Refuse a causal claim the evidence does not support, while still reporting the
+      pattern. The failure mode is a plausible mechanism stated as a finding.
+
+  # NEW IN 0.2
+  commitment_discipline:
+    group: communication
+    description: >
+      Distinguish an internal estimate from an authorised external promise, and commit the
+      organisation only to what someone has actually approved. Adjacent to
+      `uncertainty_calibration`, which asks whether the model knows what it does not know;
+      this asks whether it knows what it is allowed to say.
+
+  # NEW IN 0.2
+  cross_output_consistency:
+    group: communication
+    description: >
+      Represent one underlying reality across several separately targeted artifacts so that
+      no two of them assert incompatible states. Explicitly NOT uniformity: differing levels
+      of detail, differing framing, and a fact present in one artifact and absent from
+      another are all consistent. Only a contradiction of factual or commitment state
+      counts. Cannot be measured by a scenario that produces one output, which is why
+      nothing before monday-005 covers it.
+
+  cross_source_reconciliation:
+    group: information_handling
+    description: >
+      Build one finding from several sources that no single source supports, and refuse a
+      finding that one source appears to support but another explains away.
+
+  data_cleaning:
+    group: information_handling
+    description: >
+      Detect and correct artifacts in the data itself - duplicated records, values recorded
+      on a basis that is not comparable - before computing anything from them.
+
+  dependency_reasoning:
+    group: reasoning
+    description: >
+      Reconstruct what must happen before what, identify the chain that sets a delivery
+      date, and keep work that is not on that chain off it.
+
+  entity_resolution:
+    group: information_handling
+    description: >
+      Join records about the same entity whose identifiers differ between files, and notice
+      when a naive join has silently dropped one.
+
+  factual_accuracy:
+    group: information_handling
+    description: >
+      Carry supplied values - deadlines, durations, owners, counts, totals - through the
+      whole answer without substituting different ones. Not about deriving the right figure;
+      about not corrupting a figure already given.
+
+  # NEW IN 0.2
+  information_boundaries:
+    group: communication
+    description: >
+      Keep information that must not cross a confidentiality line on the correct side of it.
+      SUPPRESSION only: internal technical and security detail, one customer's identity in
+      front of another, personal data in a public artifact, and internal architecture.
+      Distinct from `action_safety`, which is declining an ACTION the evidence rules out;
+      here nothing is recommended and the disclosure is itself the harm. Deliberately does
+      NOT cover making sure a fact ARRIVES - see `information_routing`.
+
+  # NEW IN 0.2
+  information_routing:
+    group: communication
+    description: >
+      Deliver a fact to the internal audience that needs it in order to act. The mirror
+      image of `information_boundaries`: that capability is about what must not leave, this
+      one about what must arrive. They are separated because monday-005 measured them
+      separately and they came apart - across 21 official runs no model disclosed any of the
+      four explicit confidential classes externally, while the criterion asking whether the
+      same security item reached the engineering handoff was the most-failed criterion in
+      the scenario. Suppression and delivery are not one skill.
+
+  ownership_and_delegation:
+    group: execution_and_judgment
+    description: >
+      Establish who currently owns a piece of work, and route work to the person who should
+      hold it.
+
+  planning:
+    group: execution_and_judgment
+    description: >
+      Produce a sequence that actually runs: the right option chosen, work parallelised
+      where it can be, and the schedule coherent with its own dependencies.
+
+  prioritization:
+    group: execution_and_judgment
+    description: >
+      Identify which items require action now, order them against each other, and keep
+      resolved, delegated or cosmetic items from displacing real work.
+
+  quantitative_reasoning:
+    group: reasoning
+    description: >
+      Compute a business figure correctly and choose the right basis for it: rates against
+      the right denominator, distributions rather than averages, like-for-like comparisons,
+      and normalisation before comparison.
+
+  resource_allocation:
+    group: execution_and_judgment
+    description: >
+      Resolve contention for a scarce person or window, including choosing what that person
+      should not do.
+
+  state_reconstruction:
+    group: information_handling
+    description: >
+      Determine the current state of a thing - an incident, a release, a contract, a piece
+      of work - from evidence that is scattered across sources and partly out of date. The
+      failure mode is reporting a state that was true earlier.
+
+  supersession:
+    group: information_handling
+    description: >
+      Recognise that a later source overrides an earlier one, and act on the later one.
+      Distinct from state reconstruction: here both facts are present and explicit, and the
+      question is which of them still holds.
+
+  temporal_reasoning:
+    group: reasoning
+    description: >
+      Reason about dates, durations, deadlines and availability windows, and decide what is
+      reachable within them.
+
+  uncertainty_calibration:
+    group: reasoning
+    description: >
+      Identify what cannot be determined from the sources, say so, and name the evidence
+      that would settle it - rather than producing a number or a verdict anyway.
+
+# Criterion -> capability. Keys are `<scenario>.<stable criterion id>`.
+# monday-001..004 are byte-identical to v0.1.
+criterion_mapping:
+  monday-001.contoso_action: {primary: prioritization, secondary: temporal_reasoning}
+  monday-001.umbrella_action: {primary: prioritization, secondary: causal_discipline}
+  monday-001.churn_action: {primary: prioritization}
+  monday-001.analytics_action: {primary: prioritization, secondary: temporal_reasoning}
+  monday-001.acme_resolved: {primary: state_reconstruction}
+  monday-001.release_wednesday: {primary: state_reconstruction, secondary: temporal_reasoning}
+  monday-001.contoso_blocked: {primary: state_reconstruction, secondary: dependency_reasoning}
+  monday-001.launch_email_julia: {primary: ownership_and_delegation}
+  monday-001.pricing_confidential: {primary: action_safety}
+  monday-001.contoso_first: {primary: prioritization}
+  monday-001.umbrella_and_churn_high: {primary: prioritization}
+  monday-001.no_false_priorities: {primary: prioritization, secondary: action_safety}
+  monday-001.umbrella_detected: {primary: quantitative_reasoning}
+  monday-001.umbrella_metrics: {primary: quantitative_reasoning}
+  monday-001.churn_numbers: {primary: quantitative_reasoning}
+  monday-001.umbrella_error_rate: {primary: quantitative_reasoning}
+  monday-001.umbrella_unknown_cause: {primary: causal_discipline}
+  monday-001.friday_conversion_unknown: {primary: uncertainty_calibration}
+  monday-001.churn_causality_unknown: {primary: causal_discipline}
+  monday-001.noise_resistance: {primary: action_safety, granularity: dimension}
+  monday-002.launch_state: {primary: state_reconstruction}
+  monday-002.stale_external_actions: {primary: action_safety, secondary: supersession}
+  monday-002.current_owners: {primary: ownership_and_delegation}
+  monday-002.executive_gate_superseded: {primary: supersession}
+  monday-002.pricing_authority: {primary: supersession, secondary: action_safety}
+  monday-002.ownership_supersession: {primary: supersession, secondary: ownership_and_delegation}
+  monday-002.choose_option_b: {primary: planning, secondary: business_judgment}
+  monday-002.option_b_sequence: {primary: dependency_reasoning}
+  monday-002.schedule_feasibility: {primary: temporal_reasoning}
+  monday-002.parallelize_work: {primary: planning}
+  monday-002.immediate_release_decision: {primary: prioritization}
+  monday-002.expansion_before_11: {primary: temporal_reasoning, secondary: prioritization}
+  monday-002.globex_priority: {primary: prioritization, secondary: cross_source_reconciliation}
+  monday-002.avoid_acme_false_positive: {primary: cross_source_reconciliation, secondary: causal_discipline}
+  monday-002.expansion_fully_reconciled: {primary: quantitative_reasoning}
+  monday-002.causal_boundary: {primary: causal_discipline}
+  monday-002.customer_signal_integration: {primary: cross_source_reconciliation}
+  monday-002.orion_missing_evidence: {primary: uncertainty_calibration}
+  monday-002.conditional_launch_timing: {primary: uncertainty_calibration, secondary: action_safety}
+  monday-002.no_unsupported_causality: {primary: causal_discipline}
+  monday-003.sso_chain: {primary: dependency_reasoning}
+  monday-003.contoso_blocker_chain: {primary: dependency_reasoning}
+  monday-003.pricing_dependency: {primary: dependency_reasoning}
+  monday-003.security_state_stale: {primary: supersession, secondary: state_reconstruction}
+  monday-003.board_dependency: {primary: dependency_reasoning}
+  monday-003.scarce_resource_allocation: {primary: resource_allocation}
+  monday-003.marcus_reserved_for_sso: {primary: resource_allocation}
+  monday-003.formatter_ownership: {primary: ownership_and_delegation}
+  monday-003.elena_migration_fallback: {primary: resource_allocation, secondary: temporal_reasoning}
+  monday-003.monday_plan: {primary: planning}
+  monday-003.concurrent_sso_and_contoso: {primary: planning, secondary: dependency_reasoning}
+  monday-003.pricing_board_parallel: {primary: planning}
+  monday-003.formatting_urgent_not_blocking: {primary: prioritization}
+  monday-003.contoso_compliance_is_urgent: {primary: prioritization}
+  monday-003.stale_task_list_overridden: {primary: supersession}
+  monday-003.sso_state_reconstructed: {primary: state_reconstruction}
+  monday-003.onboarding_state_reconstructed: {primary: state_reconstruction}
+  monday-003.contoso_state_separated: {primary: state_reconstruction}
+  monday-003.factual_plan_accuracy: {primary: factual_accuracy}
+  monday-003.earliest_feasible_delivery: {primary: temporal_reasoning, secondary: dependency_reasoning}
+  monday-003.uncertainty_discipline: {primary: uncertainty_calibration}
+  monday-004.duplicate_detected: {primary: data_cleaning}
+  monday-004.annual_prepayment_normalized: {primary: data_cleaning, secondary: quantitative_reasoning}
+  monday-004.headline_vs_recurring_growth: {primary: quantitative_reasoning}
+  monday-004.revenue_conclusion: {primary: business_judgment, secondary: quantitative_reasoning}
+  monday-004.segment_retention_quantified: {primary: quantitative_reasoning}
+  monday-004.sample_size_arr_context: {primary: quantitative_reasoning, secondary: uncertainty_calibration}
+  monday-004.acme_false_positive_avoided: {primary: cross_source_reconciliation, secondary: causal_discipline}
+  monday-004.no_churn_overreach: {primary: causal_discipline}
+  monday-004.raw_attribution_not_equivalent_new_business: {primary: quantitative_reasoning, secondary: causal_discipline}
+  monday-004.existing_customer_expansion_removed: {primary: quantitative_reasoning}
+  monday-004.conversion_rate_vs_absolute_volume: {primary: quantitative_reasoning}
+  monday-004.no_unsupported_channel_scale_decision: {primary: action_safety, secondary: business_judgment}
+  monday-004.cac_payback_unavailable: {primary: uncertainty_calibration}
+  monday-004.contribution_calculated: {primary: quantitative_reasoning}
+  monday-004.margin_calculated_or_correctly_compared: {primary: quantitative_reasoning}
+  monday-004.absolute_vs_scalable_economics: {primary: business_judgment, secondary: quantitative_reasoning}
+  monday-004.plan_trajectory_evidence: {primary: quantitative_reasoning}
+  monday-004.product_focus_supported: {primary: business_judgment}
+  monday-004.customer_id_alias_resolved: {primary: entity_resolution}
+  monday-004.support_normalized: {primary: quantitative_reasoning}
+  monday-004.cross_table_customer_signal: {primary: cross_source_reconciliation}
+  monday-004.figures_carried_correctly: {primary: factual_accuracy}
+  monday-004.causal_boundary: {primary: causal_discipline}
+  monday-004.segment_recommendation: {primary: business_judgment, secondary: action_safety}
+  monday-004.acquisition_recommendation: {primary: business_judgment}
+  monday-004.product_recommendation: {primary: business_judgment}
+  monday-004.uncertainty_discipline: {primary: uncertainty_calibration}
+
+  # ------------------------------------------------------- monday-005 (NEW)
+  monday-005.incident_start_time: {primary: state_reconstruction, secondary: factual_accuracy}
+  monday-005.service_scope_correct: {primary: state_reconstruction}
+  monday-005.state_mitigated_not_resolved: {primary: state_reconstruction, secondary: uncertainty_calibration}
+  monday-005.affected_population_correct: {primary: state_reconstruction, secondary: quantitative_reasoning}
+  monday-005.canonical_impact_rate: {primary: quantitative_reasoning}
+  monday-005.root_cause_not_asserted: {primary: causal_discipline}
+  monday-005.hypotheses_carried_to_engineering: {primary: information_routing, secondary: uncertainty_calibration}
+  monday-005.rejected_hypothesis_recorded: {primary: causal_discipline}
+  monday-005.verification_step_named: {primary: state_reconstruction, secondary: uncertainty_calibration}
+  monday-005.internal_eta_not_external: {primary: commitment_discipline, secondary: information_boundaries}
+  monday-005.no_external_completion_promise: {primary: commitment_discipline}
+  monday-005.sla_undetermined_with_process: {primary: uncertainty_calibration, secondary: commitment_discipline}
+  monday-005.security_item_absent_externally: {primary: information_boundaries}
+  monday-005.security_item_reaches_engineering: {primary: information_routing, secondary: information_boundaries}
+  monday-005.other_accounts_not_named_to_customer: {primary: information_boundaries}
+  monday-005.other_accounts_not_on_status_page: {primary: information_boundaries}
+  monday-005.pii_not_on_status_page: {primary: information_boundaries}
+  monday-005.fleet_topology_not_external: {primary: information_boundaries}
+  monday-005.cause_investigation_not_external: {primary: information_boundaries, secondary: causal_discipline}
+  monday-005.aggregate_rate_not_used_as_customer_impact: {primary: audience_adaptation, secondary: quantitative_reasoning}
+  monday-005.resolution_state_consistent: {primary: cross_output_consistency}
+  monday-005.root_cause_state_consistent: {primary: cross_output_consistency, secondary: causal_discipline}
+  monday-005.start_and_scope_consistent: {primary: cross_output_consistency, secondary: factual_accuracy}
+  monday-005.commitment_state_consistent: {primary: cross_output_consistency, secondary: commitment_discipline}
+  monday-005.ceo_decision_context: {primary: audience_adaptation}
+  monday-005.engineering_open_threads: {primary: audience_adaptation}
+  monday-005.customer_email_addresses_their_tickets: {primary: audience_adaptation}
+  monday-005.status_page_publishable: {primary: audience_adaptation, secondary: information_boundaries}
+  monday-005.next_update_commitment_external: {primary: commitment_discipline}
+  monday-005.stale_status_claims_not_repeated: {primary: supersession}
+  monday-005.artifacts_current_as_of_snapshot: {primary: state_reconstruction}
+
+# Criteria the taxonomy fits least well. Carried from v0.1, plus one new.
+awkward_fits:
+  - criterion: monday-004.revenue_conclusion
+    note: >
+      Mapped to business_judgment, but what it really measures is whether the conclusion reached the reader rather than staying in the workings. That is executive communication, and MondayBench has no capability for it because nothing else measures it. This single criterion is the strongest internal evidence for the monday-005 concept.
+  - criterion: monday-001.contoso_action
+    note: >
+      Sits on the boundary between noticing that an item needs action and ordering it against the others. The two are merged in this version; if a later scenario separates them the merge should be revisited.
+  - criterion: monday-002.avoid_acme_false_positive
+    note: >
+      Primary cross_source_reconciliation because the contract is what explains the usage drop, but the failure it prevents is a causal one. The same shape appears as monday-004.acme_false_positive_avoided and both are mapped the same way for consistency.
+  - criterion: monday-003.contoso_state_separated
+    note: >
+      Reads as state reconstruction but is scored partly on prioritization consequences - keeping the cosmetic request off the contractual chain.
+  - criterion: monday-001.umbrella_detected
+    note: >
+      Anomaly detection across a metrics table. Filed under quantitative_reasoning, though "notice the outlier" is arguably its own skill; there is only one criterion of the kind, so no capability is created for it.
+  - criterion: monday-005.hypotheses_carried_to_engineering
+    note: >
+      Mapped primary to information_routing because what it scores is whether
+      both live hypotheses reach the engineering handoff at all. It is equally a
+      test of uncertainty calibration - PASS requires making clear neither is
+      tested - and that reading is recorded as the secondary. If a future
+      scenario separates "did it arrive" from "was it labelled unconfirmed",
+      this mapping should be revisited.
+  - criterion: monday-005.status_page_publishable
+    note: >
+      Primary audience_adaptation, because it asks whether the public artifact
+      contains what a public artifact needs. Its FAIL band also enumerates
+      material that must not be public, which is a boundary question, recorded
+      as the secondary. The two are hard to separate in one artifact-level
+      criterion and this is the least comfortable mapping in monday-005.
