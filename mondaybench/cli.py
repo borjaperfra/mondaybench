@@ -1307,6 +1307,228 @@ def benchmark(
 
 
 # --------------------------------------------------------------------------
+# challenge (benchmark a new model against a frozen suite)
+# --------------------------------------------------------------------------
+
+
+@app.command()
+def challenge(
+    model: str = typer.Option(..., "--model", help="Model slug, as in models.yaml"),
+    suite: str = typer.Option("1.0", "--suite", help="Suite version to challenge"),
+    revision_block: bool = typer.Option(
+        False, "--revision-block", help="Print the overall-releases.yaml block to append"
+    ),
+) -> None:
+    """Where a challenger stands against the frozen suite, and what is left to do.
+
+    Reports only - it generates nothing and judges nothing. Existing models are
+    never touched: a Monday Score is the mean of a model's own runs, so a new
+    entrant cannot move an incumbent's score.
+    """
+    from .challenge import ChallengeError, draft_revision_block, incumbents, status_for
+
+    try:
+        status = status_for(model, suite_version=suite)
+    except ChallengeError as exc:
+        _fail(str(exc))
+        return
+
+    for note in status.notes:
+        console.print(f"[yellow]note[/yellow]  {note}")
+    if status.notes:
+        console.print()
+
+    table = Table(title=f"{status.display_name} vs MondayBench suite v{suite}", box=None)
+    table.add_column("scenario")
+    table.add_column("evaluator")
+    table.add_column("official", justify="right")
+    table.add_column("judged", justify="right")
+    table.add_column("board")
+    table.add_column("stage")
+    for entry in status.scenarios:
+        table.add_row(
+            entry.scenario_id,
+            entry.evaluator,
+            f"{entry.official}/{entry.target}",
+            f"{entry.evaluations}/{entry.target}",
+            "[green]yes[/green]" if entry.on_leaderboard else "[dim]no[/dim]",
+            ("[green]" + entry.stage + "[/green]") if entry.complete else entry.stage,
+        )
+    console.print(table)
+    console.print()
+
+    incumbent_list = incumbents(suite_version=suite)
+    console.print(f"[bold]incumbents[/bold]          {len(incumbent_list)} models, untouched")
+    console.print(f"[bold]generations needed[/bold]  {status.runs_needed}")
+    console.print(
+        f"[bold]runs to judge[/bold]       {status.judgements_remaining}"
+        f"  ({status.judgements_needed} ready now)"
+    )
+    console.print(f"[bold]criterion verdicts[/bold]  {status.criteria_to_judge}")
+    console.print()
+
+    if status.eligible_for_overall:
+        console.print("[green]eligible[/green] for an Overall revision.")
+        if revision_block:
+            console.print()
+            console.print(draft_revision_block(model, suite_version=suite))
+        else:
+            console.print("[dim]Run again with --revision-block for the YAML to append.[/dim]")
+        return
+
+    blocked = [e for e in status.scenarios if not e.complete]
+    console.print(f"[yellow]not yet eligible[/yellow] for Overall: {len(blocked)} scenario(s) open.")
+    for entry in blocked:
+        need = []
+        if entry.runs_needed:
+            need.append(f"{entry.runs_needed} generation(s)")
+        if entry.judgements_needed:
+            need.append(f"{entry.judgements_needed} judging pass(es)")
+        if not entry.on_leaderboard and not need:
+            need.append("leaderboard rebuild")
+        console.print(f"  {entry.scenario_id}: {', '.join(need) or 'blocked'}")
+        for verdict in entry.plan.rejected[:3]:
+            console.print(f"    [red]rejected[/red] {verdict.path.name}: {'; '.join(verdict.reasons)}")
+
+
+# --------------------------------------------------------------------------
+# suite releases
+# --------------------------------------------------------------------------
+
+
+@app.command(name="release")
+def release_suite(
+    version: str = typer.Option(..., "--version", help="Suite version, e.g. 1.0"),
+    status: str = typer.Option("released", "--status"),
+    released_on: str | None = typer.Option(None, "--date", help="ISO date; defaults to today"),
+    overwrite: bool = typer.Option(False, "--overwrite", help="Replace an existing manifest"),
+) -> None:
+    """Freeze the whole suite: hash every artifact and write the release manifest."""
+    from .suite import (
+        MANIFEST_NAME,
+        SuiteError,
+        build_suite_manifest,
+        release_dir,
+        write_suite_manifest,
+    )
+
+    target = release_dir(version) / MANIFEST_NAME
+    if target.exists() and not overwrite:
+        _fail(
+            f"suite v{version} is already frozen ({target}). A published suite is "
+            f"immutable: publish a new version rather than overwriting this one. "
+            f"Use --overwrite only to correct a manifest that was never published."
+        )
+        return
+
+    try:
+        manifest, index = build_suite_manifest(version, status=status, released=released_on)
+    except SuiteError as exc:
+        _fail(str(exc))
+        return
+
+    manifest_path, index_path = write_suite_manifest(manifest, index)
+
+    table = Table(title=f"MondayBench suite v{version}", box=None)
+    table.add_column("group")
+    table.add_column("files", justify="right")
+    table.add_column("content digest")
+    for name, group in manifest.groups.items():
+        table.add_row(name, str(group["file_count"]), group["content_digest"])
+    console.print(table)
+    console.print()
+    console.print(f"[bold]suite digest[/bold]  {manifest.suite_digest}")
+    console.print(f"[bold]files[/bold]         {manifest.file_count}")
+    console.print(f"[bold]scenarios[/bold]     {len(manifest.scenarios)}")
+    console.print()
+    console.print(f"wrote {manifest_path}")
+    console.print(f"wrote {index_path}")
+
+
+@app.command(name="verify-release")
+def verify_release(
+    version: str = typer.Option(..., "--version", help="Suite version, e.g. 1.0"),
+    strict: bool = typer.Option(
+        False,
+        "--strict",
+        help="Require the tree to be byte-identical to the release, ignoring group policy",
+    ),
+    show: int = typer.Option(10, "--show", help="Max drifting paths to list per group"),
+) -> None:
+    """Check the working tree against a published suite manifest.
+
+    By default each group is judged against its policy: `immutable` groups must
+    not change at all, `append_only` groups may gain files but not lose or
+    rewrite them, `mutable` groups are reported only. That is what lets a new
+    model be benchmarked against a frozen suite and still be verifiable.
+
+    `--strict` demands a byte-identical tree, which is the check for "does this
+    reproduce the release exactly".
+    """
+    from .suite import SuiteError, load_suite_manifest, verify_suite
+
+    manifest = load_suite_manifest(version)
+    if manifest is None:
+        _fail(f"no manifest for suite v{version}")
+        return
+
+    try:
+        drift = verify_suite(version)
+    except SuiteError as exc:
+        _fail(str(exc))
+        return
+
+    table = Table(title=f"suite v{version} - released {manifest['released']}", box=None)
+    table.add_column("group")
+    table.add_column("policy")
+    table.add_column("files", justify="right")
+    table.add_column("status")
+
+    failed: dict[str, object] = {}
+    for name, report in drift.items():
+        passing = report.identical if strict else report.ok
+        if report.identical:
+            status = "[green]identical[/green]"
+        elif passing:
+            status = f"[yellow]{report.summary()}[/yellow]"
+        else:
+            status = f"[red]{report.summary()}[/red]"
+        if not passing:
+            failed[name] = report
+        table.add_row(name, report.policy, str(manifest["groups"][name]["file_count"]), status)
+    console.print(table)
+
+    if not failed:
+        console.print()
+        mode = "strict" if strict else "policy"
+        console.print(f"[green]verified[/green] ({mode})  suite digest {manifest['suite_digest']}")
+        if not strict and any(not r.identical for r in drift.values()):
+            console.print(
+                "[dim]Groups marked yellow differ from the release but within policy - "
+                "expected while a new model is being benchmarked.[/dim]"
+            )
+        return
+
+    console.print()
+    for name, report in failed.items():
+        console.print(f"[bold red]{name}[/bold red]  (policy: {report.policy})")
+        for path, expected, actual in report.changed[:show]:
+            console.print(f"  changed  {path}")
+            console.print(f"           expected {expected[:16]}  actual {actual[:16]}")
+        for path in report.missing[:show]:
+            console.print(f"  missing  {path}")
+        for path in report.added[:show]:
+            console.print(f"  added    {path}")
+        shown = min(len(report.changed), show) + min(len(report.missing), show) + min(
+            len(report.added), show
+        )
+        total = len(report.changed) + len(report.missing) + len(report.added)
+        if total > shown:
+            console.print(f"  ... and {total - shown} more")
+    _fail(f"suite v{version} does not verify")
+
+
+# --------------------------------------------------------------------------
 # prompt (utility: see exactly what a model is sent)
 # --------------------------------------------------------------------------
 

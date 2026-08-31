@@ -77,10 +77,31 @@ class OverallRelease:
     status: str = STATUS_DRAFT
     label: str | None = None
     note: str | None = None
+    # Model-set revision within a fixed scenario set.
+    #
+    # An Overall release pins SCENARIOS, not models. Benchmarking a new model
+    # against the frozen suite adds a row without touching any existing score -
+    # each model's Monday Score is the mean of its own runs and cannot be moved
+    # by another model appearing. But the published FILE changes, and
+    # `overall-v2.json` is cited and hashed elsewhere.
+    #
+    # So the model set gets its own axis: v2 stays byte-frozen forever, and the
+    # eight-model board is published as v2.1. Same scenarios, same arithmetic,
+    # more competitors.
+    revision: int = 0
 
     @property
     def scenario_ids(self) -> list[str]:
         return [s.id for s in self.scenarios]
+
+    @property
+    def key(self) -> tuple[int, int]:
+        return (self.version, self.revision)
+
+    @property
+    def slug(self) -> str:
+        """`2` -> "2"; `2` revision `1` -> "2.1". What the artifact is named."""
+        return f"{self.version}" if not self.revision else f"{self.version}.{self.revision}"
 
 
 @dataclass
@@ -153,15 +174,24 @@ def releases_path(root: Path | None = None) -> Path:
     return (root or repo_root()) / "overall-releases.yaml"
 
 
-def load_releases(path: Path | None = None, root: Path | None = None) -> dict[int, OverallRelease]:
-    """Every declared Overall release, keyed by version."""
+def load_releases(
+    path: Path | None = None, root: Path | None = None
+) -> dict[int | str, OverallRelease]:
+    """Every declared Overall release.
+
+    Keyed by version for a base release (`releases[2]`) and by its slug for a
+    model-set revision (`releases["2.1"]`), so existing callers that index by
+    integer keep working and a revision cannot shadow the release it extends.
+    """
     path = path or releases_path(root)
     data = load_yaml(path) or {}
-    out: dict[int, OverallRelease] = {}
+    out: dict[int | str, OverallRelease] = {}
     for raw in data.get("releases") or []:
         version = int(raw["overall_version"])
-        if version in out:
-            raise OverallError([f"overall_version {version} is declared twice"])
+        revision = int(raw.get("revision", 0) or 0)
+        key: int | str = version if not revision else f"{version}.{revision}"
+        if key in out:
+            raise OverallError([f"overall v{key} is declared twice"])
         scenarios = tuple(
             ScenarioPin(
                 id=str(s["id"]) if isinstance(s, dict) else str(s),
@@ -170,14 +200,39 @@ def load_releases(path: Path | None = None, root: Path | None = None) -> dict[in
             )
             for s in raw.get("scenarios") or []
         )
-        out[version] = OverallRelease(
+        out[key] = OverallRelease(
             version=version,
+            revision=revision,
             scenarios=scenarios,
             aggregation=str(raw.get("aggregation", AGGREGATION_ARITHMETIC_MEAN)),
             status=str(raw.get("status", STATUS_DRAFT)),
             label=raw.get("label"),
             note=raw.get("note"),
         )
+
+    # A revision must extend a real release and must not quietly change what it
+    # extends: same scenarios, same aggregation, or it is a different claim
+    # wearing a decimal point.
+    for key, release in out.items():
+        if not release.revision:
+            continue
+        base = out.get(release.version)
+        if base is None:
+            raise OverallError(
+                [f"overall v{key} is a revision of v{release.version}, which is not declared"]
+            )
+        if release.scenario_ids != base.scenario_ids:
+            raise OverallError(
+                [
+                    f"overall v{key} covers {release.scenario_ids} but v{release.version} "
+                    f"covers {base.scenario_ids}. A revision adds MODELS to a fixed scenario "
+                    f"set; changing the scenarios makes it a new version, not a revision."
+                ]
+            )
+        if release.aggregation != base.aggregation:
+            raise OverallError(
+                [f"overall v{key} changes aggregation from v{release.version}"]
+            )
     return out
 
 
@@ -357,6 +412,10 @@ def build_overall(
 
     payload = {
         "overall_version": release.version,
+        # Emitted only for an actual model-set revision, so the payloads of
+        # v0/v1/v2 stay byte-reproducible from this code.
+        **({"overall_revision": release.revision, "overall_slug": release.slug}
+           if release.revision else {}),
         "label": release.label,
         "status": release.status,
         "aggregation": release.aggregation,
@@ -442,7 +501,7 @@ def write_overall(
         )
     directory = overall_dir(root, preview=preview)
     directory.mkdir(parents=True, exist_ok=True)
-    stem = f"overall-v{release.version}" + ("-preview" if preview else "")
+    stem = f"overall-v{release.slug}" + ("-preview" if preview else "")
 
     json_path = directory / f"{stem}.json"
     json_path.write_text(
