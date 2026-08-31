@@ -198,16 +198,16 @@ def test_non_transient_failure_writes_no_run(scenario, tmp_path, monkeypatch):
     assert find_runs("monday-001", "fixture-model", tmp_path) == []
 
 
-def test_evaluation_scores_and_audits(scenario, evaluator_config, tmp_path, patched_provider):
-    run = execute_run(scenario=scenario, model=TEST_MODEL, run_number=1, root=tmp_path)
+def test_evaluation_scores_and_audits(legacy_scenario, evaluator_config, tmp_path, patched_provider):
+    run = execute_run(scenario=legacy_scenario, model=TEST_MODEL, run_number=1, root=tmp_path)
     evaluator = _evaluator(evaluator_config.ground_truth_map)
     judge = Judge(evaluator, provider=FakeJudgeProvider("PASS"))
 
     evaluation = evaluate_run(
-        scenario=scenario, evaluator=evaluator, run=run, judge=judge, root=tmp_path
+        scenario=legacy_scenario, evaluator=evaluator, run=run, judge=judge, root=tmp_path
     )
     assert evaluation.final_score == 100
-    assert judge.provider.criterion_calls == len(scenario.rubric.criteria)
+    assert judge.provider.criterion_calls == len(legacy_scenario.rubric.criteria)
     # A judge that PASSes everything cannot disagree with the matchers.
     assert evaluation.disagreements == []
     # The good response really does contain the evidence the matchers look for.
@@ -215,13 +215,13 @@ def test_evaluation_scores_and_audits(scenario, evaluator_config, tmp_path, patc
     assert {"contoso_11_00", "churn_3_1_to_4_4", "umbrella_metrics_present"} <= matched
 
 
-def test_matcher_flags_a_suspicious_fail(scenario, evaluator_config, tmp_path, patched_provider):
-    run = execute_run(scenario=scenario, model=TEST_MODEL, run_number=1, root=tmp_path)
+def test_matcher_flags_a_suspicious_fail(legacy_scenario, evaluator_config, tmp_path, patched_provider):
+    run = execute_run(scenario=legacy_scenario, model=TEST_MODEL, run_number=1, root=tmp_path)
     evaluator = _evaluator(evaluator_config.ground_truth_map)
     judge = Judge(evaluator, provider=FakeJudgeProvider("FAIL"))
 
     evaluation = evaluate_run(
-        scenario=scenario, evaluator=evaluator, run=run, judge=judge, root=tmp_path
+        scenario=legacy_scenario, evaluator=evaluator, run=run, judge=judge, root=tmp_path
     )
     flagged = {d.criterion_id for d in evaluation.disagreements}
     # The response plainly states 3.1% -> 4.4%, so a FAIL on churn_numbers is
@@ -232,15 +232,15 @@ def test_matcher_flags_a_suspicious_fail(scenario, evaluator_config, tmp_path, p
 
 
 def test_leaderboard_aggregates_three_runs(
-    scenario, evaluator_config, tmp_path, patched_provider
+    legacy_scenario, evaluator_config, tmp_path, patched_provider
 ):
     evaluator = _evaluator(evaluator_config.ground_truth_map)
     labels = ["PASS", "PARTIAL", "PASS"]
     for number, label in enumerate(labels, start=1):
-        run = execute_run(scenario=scenario, model=TEST_MODEL, run_number=number, root=tmp_path)
+        run = execute_run(scenario=legacy_scenario, model=TEST_MODEL, run_number=number, root=tmp_path)
         judge = Judge(evaluator, provider=FakeJudgeProvider(label))
         evaluate_run(
-            scenario=scenario, evaluator=evaluator, run=run, judge=judge, root=tmp_path
+            scenario=legacy_scenario, evaluator=evaluator, run=run, judge=judge, root=tmp_path
         )
 
     payload, summaries = build_leaderboard(
@@ -268,16 +268,16 @@ def test_leaderboard_aggregates_three_runs(
     assert "Monday Score" in md and "Fixture Model" in md
 
 
-def test_mixed_prompt_hashes_are_flagged(scenario, evaluator_config, tmp_path, patched_provider):
+def test_mixed_prompt_hashes_are_flagged(legacy_scenario, evaluator_config, tmp_path, patched_provider):
     evaluator = _evaluator(evaluator_config.ground_truth_map)
     for number in (1, 2):
-        run = execute_run(scenario=scenario, model=TEST_MODEL, run_number=number, root=tmp_path)
+        run = execute_run(scenario=legacy_scenario, model=TEST_MODEL, run_number=number, root=tmp_path)
         judge = Judge(evaluator, provider=FakeJudgeProvider("PASS"))
         evaluate_run(
-            scenario=scenario, evaluator=evaluator, run=run, judge=judge, root=tmp_path
+            scenario=legacy_scenario, evaluator=evaluator, run=run, judge=judge, root=tmp_path
         )
 
-    # Simulate a run generated against a different scenario version.
+    # Simulate a run generated against a different legacy_scenario version.
     path = find_runs("monday-001", "fixture-model", tmp_path)[1]
     payload = json.loads(path.read_text(encoding="utf-8"))
     payload["scenario_prompt_sha256"] = "0" * 64

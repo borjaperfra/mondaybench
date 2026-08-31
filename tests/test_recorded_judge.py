@@ -178,19 +178,19 @@ def test_noise_entry_omitting_a_category_is_rejected(rubric, tmp_path, manual_ev
 # --------------------------------------------------------------------------
 
 
-def test_full_recorded_evaluation_scores(scenario, manual_evaluator, tmp_path, monkeypatch):
+def test_full_recorded_evaluation_scores(legacy_scenario, manual_evaluator, tmp_path, monkeypatch):
     from mondaybench import runner as runner_mod
     from tests.test_end_to_end import TEST_MODEL, FakeModelProvider
 
     monkeypatch.setattr(runner_mod, "build_model_provider", lambda model: FakeModelProvider())
     run = runner_mod.execute_run(
-        scenario=scenario, model=TEST_MODEL, run_number=1, root=tmp_path
+        scenario=legacy_scenario, model=TEST_MODEL, run_number=1, root=tmp_path
     )
 
     path = _write(
         tmp_path,
         _full_verdicts(
-            scenario.rubric,
+            legacy_scenario.rubric,
             "PASS",
             triggered=("lunch",),
             violations=[
@@ -202,7 +202,7 @@ def test_full_recorded_evaluation_scores(scenario, manual_evaluator, tmp_path, m
     judge.bind(run.run_id)
 
     evaluation = evaluate_run(
-        scenario=scenario,
+        scenario=legacy_scenario,
         evaluator=manual_evaluator,
         run=run,
         judge=judge,
