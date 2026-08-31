@@ -90,3 +90,67 @@ releases:
       - id: monday-004
         prompt_sha256: 3a0cbb569ca4f711b8907177af9204cec267d26f35f732829df56b03ed23ef99
         rubric_version: "0.3"
+
+  - overall_version: 2
+    label: "Overall v2 — through Read the Room"
+    # RELEASED after monday-005's official battery was published. v0 and v1 are
+    # untouched and stay valid: each is a permanent claim about its own set of
+    # scenarios, not a superseded draft of this one.
+    status: released
+    aggregation: arithmetic_mean
+    note: >
+      Adds monday-005 "Read the Room" to the four scenarios of Overall v1. All
+      five are frozen, official and pinned below by prompt hash and rubric
+      version; monday-005 is scored under rubric 0.4, the rubric its freeze
+      covers.
+
+      Monday Score is the arithmetic mean of the five official scenario scores,
+      equal weight per scenario. Each scenario score is itself the arithmetic
+      mean of three valid official runs. Nothing else enters it: not latency,
+      TTFA, cost, reasoning tokens, serving reliability, run range, standard
+      deviation, penalty count or scenario wins. Across-scenario range and
+      sigma are published beside the score and are descriptive only - and they
+      measure variation across five different kinds of work, which is not the
+      same quantity as run-to-run stability inside one scenario.
+
+      SERVING RELIABILITY IS EXCLUDED FROM THE SCORE AND REPORTED SEPARATELY.
+      Three models needed a retry to complete the monday-005 battery -
+      deepseek-v4-flash and glm5.3-flash each produced one reasoning-only
+      generation with no answer, and qwen3.8-flash took one HTTP 429. None of
+      those attempts is scored. mondaybench serving publishes attempts per
+      valid run.
+
+      MONDAY-005 IS OUT-OF-SAMPLE. Its rubric was revised three times while
+      reading a separate 21-run calibration battery, which is archived under
+      archive/monday-005-v0.4-calibration/ and enters no official score. The
+      official battery is 21 fresh runs generated after the freeze, and their
+      independence is enforced mechanically by leaderboard.check_sample_provenance
+      rather than asserted - 21 calibration samples against 21 official samples,
+      zero overlap by response content and by provider request id.
+
+      CARRIED FORWARD FROM v1, because it is still true of the monday-004
+      component of every v2 average. Qwen 3.6's monday-004 runs were served by
+      NaN, not Helmcode, under a per-scenario endpoint override - Helmcode was
+      unreachable while that battery was generated. NaN serves qwen3.6 as a
+      REASONING model and Helmcode does not, on a byte-identical request:
+      roughly 6,000 reasoning tokens against zero. Measured afterwards, the
+      regime moved the score by -1.8 points out of 100 and in both directions
+      at criterion level, so this is a caveat about serving configuration and
+      about latency, TTFA and token counts - which do differ materially - not a
+      claim that the score is inflated. models.yaml carries the measurement.
+    scenarios:
+      - id: monday-001
+        prompt_sha256: ed4d7beb1d7d1029c36eb8533e449027e0dc1a1047f8a38951a91781a0a5e398
+        rubric_version: "0.2"
+      - id: monday-002
+        prompt_sha256: 740e627cbc7413c321ede0d54000504de54821d34ff4677f82731b89600423a8
+        rubric_version: "0.2"
+      - id: monday-003
+        prompt_sha256: aaf788f309d955d2b427c86fe7d95d2bbf88575fde7306adcfd74b0ec4a4103f
+        rubric_version: "0.3"
+      - id: monday-004
+        prompt_sha256: 3a0cbb569ca4f711b8907177af9204cec267d26f35f732829df56b03ed23ef99
+        rubric_version: "0.3"
+      - id: monday-005
+        prompt_sha256: 532cd464a9b75045f808886c44e667237d6fd1b947826510643b9f8bcc30059a
+        rubric_version: "0.4"
