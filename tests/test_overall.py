@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import json
 import statistics
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -380,15 +381,50 @@ def test_overall_v0_covers_exactly_the_published_scenarios():
         assert pin.prompt_sha256 and pin.rubric_version, pin.id
 
 
-def test_overall_v1_is_a_draft_that_names_monday_004():
-    """It must not claim monday-004 before monday-004 is official."""
+def test_overall_v1_is_released_and_names_monday_004():
+    """v1 was released on 2026-08-31, once monday-004's battery was published."""
     release = load_releases()[1]
-    assert release.status == "draft"
-    assert release.scenario_ids[-1] == "monday-004"
+    assert release.status == "released"
+    assert release.scenario_ids == ["monday-001", "monday-002", "monday-003", "monday-004"]
+    for pin in release.scenarios:
+        assert pin.prompt_sha256 and pin.rubric_version, pin.id
+
+    _, ranked, _ = build_overall(release, require_released=True)
+    assert ranked, "a released v1 must build"
+    assert all(m.complete for m in ranked)
+
+
+def test_overall_v1_carries_the_serving_caveat_it_is_required_to_carry():
+    """models.yaml says the release note has to carry this, so it is tested.
+
+    qwen3.6's monday-004 runs came from NaN under a per-scenario endpoint
+    override, and NaN serves that model as a reasoning model where Helmcode does
+    not. A v1 average that hides this is the failure mode; the note is where it
+    is prevented.
+    """
+    note = load_releases()[1].note or ""
+    assert "qwen3.6" in note.lower()
+    assert "nan" in note.lower()
+    for term in ("reasoning", "override", "latency"):
+        assert term in note.lower(), term
+
+
+def test_a_draft_release_refuses_to_build_however_published_its_scenarios_are():
+    """Draft is a decision, not a state derived from the scenarios.
+
+    Every scenario v1 names is published and official, so nothing about their
+    state could justify refusing. A draft copy of it must still refuse, and
+    must refuse for the right reason - otherwise `status` is decorative and the
+    "second, separate act" the file describes is not actually enforced.
+    """
+    draft = replace(load_releases()[1], status="draft")
+
     with pytest.raises(OverallError) as exc:
-        build_overall(release, require_released=True)
-    assert any("monday-004" in b for b in exc.value.blockers)
-    assert not (REPO_ROOT / "leaderboard" / "overall" / "overall-v1.json").exists()
+        build_overall(draft, require_released=True)
+
+    assert any("status=draft" in b for b in exc.value.blockers)
+    # It must not refuse for a reason that is no longer true of these scenarios.
+    assert not any("not published yet" in b for b in exc.value.blockers)
 
 
 def test_the_published_overall_v0_matches_the_live_scenario_results():

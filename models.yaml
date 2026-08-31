@@ -30,7 +30,55 @@
 # third-party frontier models (claude-*, gpt-*, gemini-*) failed, with
 # "not covered by any subscription tier". So the cost figures below are
 # accounting detail on plan-covered inference, not a prepaid balance being
-# drawn down. Only the JUDGE is exposed to credit exhaustion.
+# drawn down.
+#
+# THE LAST SENTENCE OF THAT PARAGRAPH USED TO READ "Only the JUDGE is exposed to
+# credit exhaustion." It is not reliable. On 2026-08-31 glm5.2 returned HTTP 402
+# from Helmcode and held the monday-004 battery at 2/3 runs for a day:
+#
+#   litellm.APIError: OpenrouterException - "This request requires more
+#   credits, or fewer max_tokens. You requested up to 96000 tokens, but can
+#   only afford 0."  code 402, limit_source "openrouter_credits"
+#
+# WHAT WAS MEASURED, same key, same base_url, while it was down:
+#
+#   glm5.2   max_tokens 96000 / 32000 / 8000 / 16   402 at every budget
+#   gemma4, qwen3.6, deepseek-v4-flash (helmcode)   200, answered normally
+#   glm-5.2  (the id Helmcode's docs use)           401 team_model_access_denied
+#
+# The 401 body enumerates this key's team allowlist, and it contains `glm5.2`
+# and not `glm-5.2`. The id here is the one the team is entitled to call; this
+# was never a wrong-id or an access problem.
+#
+# RESOLVED the same day with no change on this side. run-005 then generated
+# normally and monday-004 is published. Full record, including what the outage
+# did and did not cost the result, in
+# runs/monday-004/glm5.2/SERVING-INCIDENT.md.
+#
+# WHAT IS NOT ESTABLISHED, and must not be written down as though it were.
+# Helmcode states that GLM is served from their own inference, NOT via
+# OpenRouter. A client cannot see past the gateway to confirm or refute that:
+# /model/info and /model_group/info return 404 and the 402 carried no routing
+# headers. So the 402 is evidence about how the `glm5.2` deployment behaved on
+# one day, not about where Helmcode serves GLM from.
+#
+# One observation, recorded as an observation: on Helmcode, glm5.2 and
+# deepseek-v4-flash return OpenRouter-style `gen-...` request ids and are the
+# two models here carrying per-token pricing, while the plan-covered gemma4 and
+# qwen3.6 return `chatcmpl-...`. deepseek-v4-flash never hit a 402, so this
+# correlation does not by itself predict which model can be cut off.
+#
+# The one solid client-side conclusion:
+#
+#   * "or fewer max_tokens" in the message is a red herring. The affordable
+#     budget was ZERO, so a 16-token request failed identically to a
+#     96,000-token one. Lowering a scenario's safety ceiling would not buy a
+#     run, and doing so to chase this error would corrupt the battery for
+#     nothing.
+#
+# Do NOT infer that a non-null `pricing` block marks a credit-exposed model.
+# That was the first reading written here and it over-generalised from a single
+# day; pricing records what cost_details reported, nothing more.
 # ---------------------------------------------------------------------------
 #
 # Response caching: DISABLED on every model, deliberately.
@@ -234,7 +282,13 @@ models:
     notes: >
       500K context. The docs list this as a EUR 150/month add-on, but the key
       calls it successfully and is billed per token, so no add-on gate applies
-      here. Reports reasoning_tokens.
+      here. Reports reasoning_tokens. Returned HTTP 402 from the gateway for one
+      day on 2026-08-31, citing OpenRouter credit at every max_tokens value
+      tried, while the other three Helmcode models answered normally on the same
+      key; resolved with no change on this side. See the credit note in the
+      header and runs/monday-004/glm5.2/SERVING-INCIDENT.md. Output volume on a
+      fixed prompt at temperature 0 varies by a factor of six across runs
+      (4,931 to 30,288 tokens), which is what its latency spread tracks.
 
   qwen3.6:
     display_name: "Qwen 3.6"

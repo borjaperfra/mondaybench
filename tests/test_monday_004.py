@@ -1177,12 +1177,28 @@ def test_calibration_penalties_stayed_conservative():
 
 
 def test_the_calibration_draft_was_never_published():
+    """The draft stays in archive/, and what got published is not it.
+
+    monday-004 is now published, so "leaderboard/monday-004 does not exist" is
+    no longer the way to check this. The guard that still bites is that the
+    published board is the official one - official evaluator, official flag,
+    frozen rubric - and carries none of the calibration draft's markings.
+    """
     board = ARCHIVE / "draft-leaderboard" / "leaderboard.json"
     payload = json.loads(board.read_text(encoding="utf-8"))
     assert payload["scenario_status"] == "calibration"
     assert payload["evaluator"] == CALIBRATION_EVALUATOR
     assert not payload.get("official")
-    assert not (REPO_ROOT / "leaderboard" / "monday-004").exists()
+
+    published = json.loads(
+        (REPO_ROOT / "leaderboard" / "monday-004" / "leaderboard.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert published["official"] is True
+    assert published["evaluator"] != CALIBRATION_EVALUATOR
+    assert published["scenario_status"] != "calibration"
+    assert published["rubric_version"] == "0.3"
 
 
 def test_naming_a_rubric_explicitly_overrides_the_scenario_default():

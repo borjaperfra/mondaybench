@@ -302,8 +302,9 @@ def build_overall(
     blockers = validate_release(release)
     if require_released and release.status != STATUS_RELEASED:
         blockers.append(
-            f"overall v{release.version} is status={release.status}: it names a scenario that is "
-            f"not published yet, so it cannot be released"
+            f"overall v{release.version} is status={release.status}, not {STATUS_RELEASED}. "
+            f"Marking a release is a deliberate act, separate from publishing the scenarios "
+            f"it names - so this is not something the build infers from their state"
         )
 
     payloads: dict[str, dict[str, Any]] = {}
