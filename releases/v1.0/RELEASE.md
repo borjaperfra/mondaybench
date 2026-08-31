@@ -158,8 +158,9 @@ handles it correctly. Sharp edge, not a defect in any published result.
 **Penalties are excluded from capability profiles.** A scenario penalty is a
 global deduction, not a criterion-level one, so attributing it to a capability
 would mean inventing an attribution. The consequence is stated rather than
-hidden: qwen3.6's −7 monday-005 confidentiality breach appears in its Monday
-Score and not in its `information_boundaries` profile.
+hidden: qwen3.6's −7 monday-005 deduction — a PROHIBITED_ACTION for promising a
+recovery time nobody authorised on the public status page — appears in its
+Monday Score and in no capability profile at all.
 
 ---
 
