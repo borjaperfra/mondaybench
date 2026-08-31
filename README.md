@@ -8,15 +8,49 @@ One question:
 
 ## Scenarios
 
-Two scenarios are published and official. Each is frozen independently, scored
-against its own rubric, and comparable only within itself — there is no combined
-"overall" score, and there will not be one until there are enough scenarios for
-a weighting to mean something.
+**Five scenarios are published and official**, frozen together as suite
+[`v1.0`](releases/v1.0/RELEASE.md). Each is frozen independently and scored
+against its own rubric.
 
-| # | Scenario | Version | What it tests | Leader | Results |
-|---|---|---|---|---|---|
-| 001 | **Back to Work** | 0.1 | Reconstructing a state that changed while you were away | GLM 5.3 Flash — 98.0 | [`leaderboard/`](leaderboard/leaderboard.md) |
-| 002 | **Moving Targets** | 0.2 | Release-path choice under hard scheduling, cross-source customer risk, arithmetic vs causality | GLM 5.2 — 91.2 | [`leaderboard/monday-002/`](leaderboard/monday-002/leaderboard.md) |
+| # | Scenario | Rubric | What it tests | Leader | Spread | Results |
+|---|---|---|---|---|---:|---|
+| 001 | **Back to Work** | 0.2 | Reconstructing a state that changed while you were away | GLM 5.3 Flash — 98.0 | 27.3 | [`leaderboard/`](leaderboard/leaderboard.md) |
+| 002 | **Moving Targets** | 0.2 | Release-path choice under hard scheduling, cross-source customer risk, arithmetic vs causality | Qwen 3.8 Flash — 94.8 | 40.7 | [`leaderboard/monday-002/`](leaderboard/monday-002/leaderboard.md) |
+| 003 | **Blockers** | 0.3 | Prioritisation and resource allocation against a hard limit | DeepSeek V4 Flash — 95.0 | 29.7 | [`leaderboard/monday-003/`](leaderboard/monday-003/leaderboard.md) |
+| 004 | **Numbers Don't Lie** | 0.3 | Reconciling contradictory data, and what leadership is told about it | GLM 5.3 Flash — 98.0 | 62.8 | [`leaderboard/monday-004/`](leaderboard/monday-004/leaderboard.md) |
+| 005 | **Read the Room** | 0.4 | One incident, four audiences, four different right answers | GLM 5.2 — 98.5 | 19.2 | [`leaderboard/monday-005/`](leaderboard/monday-005/leaderboard.md) |
+
+`monday-004` is the scenario that separates the field — 62.8 points between
+first and last, and the worst Monday for five of the seven models.
+
+## Overall
+
+A model's **Monday Score** is the arithmetic mean of its official score on every
+scenario in a release. Equal weight per scenario; nothing else folded in.
+
+| Overall | Scenarios | Leader | Artefacts |
+|---|---|---|---|
+| [v0](leaderboard/overall/overall-v0.md) | 001–003 | Qwen 3.8 Flash | frozen |
+| [v1](leaderboard/overall/overall-v1.md) | 001–004 | Qwen 3.8 Flash | frozen |
+| **[v2](leaderboard/overall/overall-v2.md)** | **001–005** | **Qwen 3.8 Flash — 95.1** | current |
+
+Each release names its scenarios explicitly and pins their prompt hashes, so
+adding a scenario later cannot move a number already published. v0, v1 and v2
+are different claims about different scenario sets, not successive corrections
+of one. A model is ranked only if it has an official score on *every* scenario
+in the release.
+
+Adding a **model** to a fixed scenario set publishes a revision — v2.1, v2.2 —
+and leaves `overall-v2.json` byte-frozen. See
+[`docs/benchmarking-a-new-model.md`](docs/benchmarking-a-new-model.md).
+
+## What each model is actually good at
+
+Monday Score cannot say what *kind* of work a model handles well.
+[`analysis/capability-taxonomy-v0.2.md`](analysis/capability-taxonomy-v0.2.md)
+maps all 119 scored criteria onto 22 capabilities and reports coverage,
+discrimination and what the suite still does not measure. It changes no score;
+nothing in the scoring path reads it.
 
 `monday-002` ships two extra audit artefacts: a
 [criterion matrix](leaderboard/monday-002/criterion-matrix.md) covering all 20
@@ -27,7 +61,7 @@ behind the scores. It discriminates far harder than #001: the score spread is
 every one of its 21 runs.
 
 `archive/` keeps every superseded battery — earlier prompt hashes, an earlier
-output budget, and both calibration drafts of #002 — separated from the official
+output budget, and the calibration drafts of #002 through #005 — separated from the official
 results and never mixed with them.
 
 ## Why it exists

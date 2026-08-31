@@ -1,4 +1,14 @@
-# Calibration log — MondayBench v0.1, `monday-001`
+# Calibration log — `monday-001`
+
+> **Scope.** This is the calibration log for **monday-001 only**, written when it
+> was the whole benchmark. It is accurate and is not superseded, but it is not
+> the calibration record for the suite. The later scenarios have their own:
+> `analysis/monday-004-calibration.md`, and for monday-005 the four-stage record
+> in `analysis/monday-005-pre-calibration.md`,
+> `analysis/monday-005-calibration-v0.2.md`,
+> `analysis/monday-005-boundary-audit-blind.md` and
+> `analysis/monday-005-calibration-3x7.md`. Current suite state is in
+> `STATUS.md`.
 
 `IMPLEMENTATION.md` §32 defines calibration as a non-official sweep whose purpose
 is to find defects in the benchmark, not to rank models: *"Fix only

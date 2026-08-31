@@ -1,33 +1,172 @@
-# MondayBench v0.1 — published 2026-08-28
+# MondayBench v1.0 — published 2026-08-31
 
-v0.1 is done. `monday-001` has an official result: 7 models, 3 runs each, 21
-runs, all judged, every publication gate passed. Everything below is verified,
-not remembered.
+Five scenarios, seven models, 105 official runs, all judged, every publication
+gate passed. The suite is frozen and tagged `v1.0`. Everything below is
+verified, not remembered.
 
 ## Verified state
 
 ```
-pytest                                                     173 passed
-mondaybench freeze --scenario monday-001 --check            frozen content is intact
-mondaybench validate --scenario monday-001 \
-    --evaluator evaluator-opus5-v0.1                        validation passed
-official runs                                              21 / 21
-judged under evaluator-opus5-v0.1 (rubric 0.2)             21 / 21
-mondaybench leaderboard --official                         published, all gates passed
+pytest                                              835 passed
+mondaybench verify-release --version 1.0 --strict   identical, 617 artefacts
+freeze check, all five scenarios                    clean, in tree and in a fresh clone
+official runs                                       105 / 105
+criterion verdicts, all recorded                    2478
+Overall v0 / v1 / v2                                all three still build
 ```
 
-- **Scenario:** `monday-001`, frozen. Prompt SHA-256 `ed4d7beb1d7d1029c36eb8533e449027e0dc1a1047f8a38951a91781a0a5e398`.
-  `FROZEN.yaml` covers 9 canonical files; `validate` fails on drift.
-- **Rubric:** `rubric-0.2.yaml`, version 0.2. Untouched since freezing.
-- **Official evaluator:** `evaluator-opus5-v0.1` — judge `claude-opus-5`, route
-  `recorded` (interactive session, verdicts in `verdicts/*.jsonl`).
-- **Generation:** `max_output_tokens: 32000`, `temperature: 0`, uniform across
-  all seven models.
-- 441 verdicts, zero API calls during scoring. Every run has a `.review.md`.
-- All 21 runs share one prompt hash. No duplicate responses, none truncated,
-  every `finish_reason` is `stop`.
+The suite digest is recorded in `releases/v1.0/SUITE-FROZEN.yaml` and nowhere
+else. It must not be quoted in a file the manifest hashes — this one included —
+or re-cutting the release changes the file that states the digest, which changes
+the digest.
 
-## The official result
+## The suite
+
+| # | Scenario | Rubric | Criteria | Evaluator | Spread | Prompt sha256 |
+|---|---|---|---:|---|---:|---|
+| 001 | Back to Work | 0.2 | 19 | `evaluator-opus5-v0.1` | 27.3 | `ed4d7beb1d7d…` |
+| 002 | Moving Targets | 0.2 | 20 | `evaluator-opus5-v0.2` | 40.7 | `740e627cbc74…` |
+| 003 | Blockers | 0.3 | 21 | `evaluator-opus5-v0.3` | 29.7 | `aaf788f309d9…` |
+| 004 | Numbers Don't Lie | 0.3 | 27 | `evaluator-opus5-v0.4` | 62.8 | `3a0cbb569ca4…` |
+| 005 | Read the Room | 0.4 | 31 | `evaluator-opus5-v0.5` | 19.2 | `532cd464a9b7…` |
+
+monday-001's atomic criteria sum to 90; the remaining 10 points are the
+noise-resistance dimension, scored at dimension granularity. All five scenarios
+contribute exactly 100.
+
+## Overall v2
+
+```
+ #  model              Monday   001   002   003   004   005   range   sigma
+ 1  Qwen 3.8 Flash       95.1  92.5  94.8  94.5  96.5  97.0     4.5     1.8
+ 2  GLM 5.3 Flash        94.9  98.0  87.3  92.8  98.0  98.5    11.2     4.8
+ 3  DeepSeek V4 Flash    91.7  90.8  89.3  95.0  86.0  97.3    11.3     4.5
+ 4  MIMO v2.5            86.7  88.2  81.2  90.3  78.5  95.2    16.7     6.8
+ 5  GLM 5.2              86.5  84.3  91.2  87.3  71.2  98.5    27.3    10.1
+ 6  Qwen 3.6             68.8  82.8  70.2  65.5  46.0  79.3    36.8    14.5
+ 7  Gemma 4              63.0  70.7  54.2  65.3  35.2  89.7    54.5    20.2
+```
+
+Monday Score is the arithmetic mean of the five scenario scores, equal weight,
+nothing else folded in. Range and sigma describe dispersion **across
+scenarios** and are published beside the score, never inside it.
+
+Overall v0 (three scenarios) and v1 (four) are untouched and still build. They
+are different claims about different scenario sets, not superseded views of
+this one.
+
+**The 0.2 between first and second is not a ranking.** Qwen 3.8 Flash never
+drops below 92.5 on any Monday; GLM 5.3 Flash wins four of five and loses 11
+points on the second. See `analysis/capability-taxonomy-v0.2.md`.
+
+**Serving caveat that travels with the result.** qwen3.6's three official
+monday-004 runs came from NaN, not Helmcode, which was unreachable during
+generation. NaN serves that model as a *reasoning* model and Helmcode does not,
+on a byte-identical request. Recorded as a scenario-scoped override in
+`models.yaml`.
+
+## What v1.0 repaired
+
+Three integrity defects. None moved a published score, and each is asserted
+rather than claimed.
+
+1. **A frozen scenario resolving to a superseded rubric.**
+   `scenarios/monday-001/scenario.yaml` declares no `rubric_file`, so a default
+   load returned `rubric.yaml` (0.1) while the scenario is frozen against
+   `rubric-0.2.yaml`. Repaired in the resolver — `FROZEN.yaml` already recorded
+   the right answer, so no frozen artefact was edited.
+   `tests/test_rubric_resolution.py`.
+
+2. **Capability profiles stale against their own taxonomy.**
+   `capability-profiles-v0.1.json` covers three scenarios; the taxonomy it
+   applies maps four. Repaired additively as
+   `capability-profiles-v0.1.1.json`; the original is byte-identical and the
+   v0.1 report now carries an erratum.
+   `tests/test_capability_profiles_v011.py`.
+
+3. **A CRLF working tree against an LF repository.** 220 files carried CRLF
+   while git stored LF, so three of five freeze manifests failed in a fresh
+   clone. `git diff` cannot show this — it normalises both sides. No prompt
+   source was affected, so no `prompt_sha256` moved and no run was invalidated.
+   `tests/test_line_endings.py`.
+
+## Known, documented, not repaired
+
+- **`evaluator-opus5-v0.1` declares no `scenario_id`**, so scenario-to-evaluator
+  resolution for monday-001 falls through to a hardcoded fallback. Read the
+  evaluator from the published leaderboard instead, as
+  `challenge.official_evaluator` does. Recommended for v1.1 with a re-freeze.
+- **`run --runs N` ignores archived run numbers.** `--reuse-valid-runs` handles
+  it correctly.
+- **Penalties are excluded from capability profiles.** A scenario penalty is a
+  global deduction; attributing it to a capability would mean inventing the
+  attribution. qwen3.6's −7 monday-005 breach shows in its Monday Score and not
+  in its `information_boundaries` profile.
+
+## Benchmarking a new model
+
+A Monday Score is the mean of a model's own runs, so a challenger needs 15
+generations and 354 criterion verdicts and moves no incumbent number.
+
+```
+mondaybench challenge --model <slug>       # what exists, what qualifies, what is left
+mondaybench verify-release --version 1.0   # frozen content intact, evidence may only grow
+```
+
+Full runbook in `docs/benchmarking-a-new-model.md`. New models publish as
+Overall **v2.1, v2.2, …** — same five scenarios, one more competitor. `v2` stays
+byte-frozen.
+
+## Things not to redo
+
+- **Do not touch scenario content, any rubric, or any evaluator.** All are
+  frozen; `verify-release` marks those groups `immutable`.
+- **Do not regenerate or rejudge an incumbent.** Judge state is not reproducible
+  across sessions, and a mixed-vintage board is not one measurement.
+- **Do not rewrite `overall-v2.json`.** It is cited and hashed. Publish a
+  revision instead.
+- **Do not delete anything under `archive/`.** It holds every superseded
+  battery — the earlier prompt hashes, the gateway cache hits, the
+  16,000-token budget, and the calibration drafts of #002 through #005 — all
+  evidence behind documented defects.
+- **Do not remove `extra_body: {caching: false}`** from any model. Without it,
+  back-to-back identical prompts return a byte-identical cached response in ~1s
+  and run 3 becomes a copy of run 2.
+- **`mondaybench results` writes files** and prints no summary. Run it only at
+  publication time, or it overwrites the per-model cards.
+- **Do not write files with CRLF.** `tests/test_line_endings.py` will fail, and
+  it is right to.
+
+## What v1.0 does not measure
+
+Ranked in `analysis/capability-taxonomy-v0.2.md`:
+
+1. **Temporal reasoning under a moving clock.** The field's worst capability
+   (mean 61.0) and the only one whose shadow mass exceeds its primary mass — 22
+   points depend on getting time right while scoring something else, against 14
+   that score it directly.
+2. **Multi-turn correction.** All five scenarios are one prompt and one
+   response. Structural; no rubric change closes it.
+3. **Entity resolution and data cleaning beyond one Monday.** Still #004-only.
+4. **A criterion the field actually fails.** Zero of 500 points are
+   constant-fail, so there is no evidence about where the frontier is.
+
+`RECOMMEND #006` — temporal reasoning under a moving clock, delivered
+multi-turn. Gaps 1 and 2 compose rather than compete. Not started.
+
+The v0.1 open item about **noise resistance not discriminating** is now
+confirmed at suite scale: `ownership_and_delegation` has never separated two
+models across three scenarios and 105 runs, and `action_safety` is 87%
+constant-pass. #006 should not spend points there.
+
+---
+
+# Historical — monday-001 under v0.1
+
+Kept because it is the evidence behind documented defects, not because it is
+current. The result it describes is superseded by the board above.
+
+## The v0.1 result
 
 ```
  #  model              Monday Score  runs  range  TTFA med  total med
@@ -40,9 +179,9 @@ mondaybench leaderboard --official                         published, all gates 
  7  Gemma 4                    70.7     3    6.5      0.6s       5.5s
 ```
 
-Artifacts: `leaderboard/leaderboard.{json,csv,md}` and
-`leaderboard/models/<slug>.json`. The banner reads *"official v0.1 result. Every
-publication gate passed."*
+Generation was `max_output_tokens: 32000`, `temperature: 0`, uniform across all
+seven models. 441 verdicts, zero API calls during scoring; every run has a
+`.review.md`.
 
 Two penalties in the whole battery, both `MATERIAL_HALLUCINATION` (−5) and both
 `qwen3.6`, runs 001 and 002: proposed Enterprise pricing described as
@@ -67,26 +206,10 @@ It is preserved under `archive/budget-16000/` with its own README. Its verdicts
 are keyed by run id and this battery reuses those ids for different responses —
 **do not serve them against the current runs.**
 
-## Things not to redo
+## monday-001 labelling conventions
 
-- **Do not touch scenario content or rubric 0.2.** Both are frozen; `validate`
-  and `--official` enforce it.
-- **Do not delete anything under `archive/`.** It holds the superseded
-  calibration runs (`prompt-e19d123c/`), the four gateway cache hits
-  (`cache-hits/`), and the retired 16,000-token battery (`budget-16000/`) —
-  all evidence behind documented defects.
-- **Do not remove `extra_body: {caching: false}`** from any model. Without it,
-  back-to-back identical prompts return a byte-identical cached response in
-  ~1s, and run 3 becomes a copy of run 2.
-- **`mondaybench results` writes files** and prints no summary. Run it only at
-  publication time, or it overwrites the per-model cards.
-- Changing `max_output_tokens` again invalidates the whole battery. That is the
-  gate working, not a bug.
-
-## Labelling conventions used for all 21 runs
-
-Recorded so a re-judge, a v0.2 battery, or a dispute can be held to the same
-line. Each was derived from the rubric text and applied to every run.
+Recorded so a re-judge or a dispute can be held to the same line. Each was
+derived from the rubric text and applied to every one of the 21 runs.
 
 - **`umbrella_error_rate`.** PASS needs the error count read against traffic: a
   rate, the 94,217 denominator beside the 163 errors, or the point that Stark
@@ -117,27 +240,3 @@ line. Each was derived from the rubric text and applied to every run.
   floor for the peer p95 band; the point being made — Umbrella at 1821ms is a
   huge outlier — is correct. Recorded in the criterion evidence. The rubric says
   to be conservative and not to penalise harmless slips.
-
-## Open items for v0.2
-
-Detail in the two criterion-level sections at the end of `CALIBRATION.md`.
-
-- **The ceiling is the main problem.** Eight criteria scored 21/21 PASS; with
-  noise resistance's flat 10, **46 of the 100 base points are earned by every
-  run**. The scenario is effectively scored out of 54.
-- **Noise resistance does not discriminate** — no false action triggered in any
-  of the 21 runs, in either battery. Make the items genuinely tempting or drop
-  the dimension and redistribute its 10 points.
-- **`umbrella_error_rate` is the strongest criterion** (0 PASS / 8 PARTIAL /
-  13 FAIL). Models will compare customers; almost none divide. Keep it and build
-  more like it.
-- **`friday_conversion_unknown` is nearly a constant** (2 / 19 / 0). Reachable,
-  but consider whether PASS should also accept flagging the gap without the
-  explicit "not in the data" phrasing.
-- **The judge-developer overlap is unresolved and inherent to
-  `evaluator-opus5-v0.1`.** The same session that built the harness produced the
-  labels. Every verdict ships with its evidence, which is the mitigation, not a
-  claim that none was needed. An independent re-judge of the same 21 runs would
-  be the single most valuable thing to do next.
-- `IMPLEMENTATION.md` §22 deviation (penalty judge sees the sources) is
-  documented in `README.md` and was proven necessary during calibration.

@@ -161,9 +161,21 @@ def test_archive_is_excluded_deliberately(index):
 # ------------------------------------------------------------------ digests
 
 
+FROZEN_GROUPS = [n for n, p in GROUP_POLICY.items() if p != "mutable"]
+
+
 def test_the_manifest_digests_match_the_working_tree(manifest, index):
-    for name, patterns in GROUPS.items():
-        actual = collect_group(patterns, REPO_ROOT)
+    """Byte-identity for every group the release actually freezes.
+
+    Scoped to non-mutable groups on purpose. `config`, `docs`, `harness` and
+    `tests` are declared `mutable` precisely so they can be edited after the
+    release - a README gains a section, a runbook is added - and a test that
+    demanded byte-identity across all twelve groups would contradict the policy
+    it is meant to verify, failing on exactly the legitimate edits the policy
+    permits.
+    """
+    for name in FROZEN_GROUPS:
+        actual = collect_group(GROUPS[name], REPO_ROOT)
         assert actual == index[name], name
         assert group_digest(actual) == manifest["groups"][name]["content_digest"], name
 
@@ -185,10 +197,39 @@ def test_a_group_digest_is_order_independent_but_path_sensitive():
     assert group_digest(renamed) != group_digest(files), "a rename must be drift"
 
 
-def test_the_working_tree_verifies_strictly():
+def test_the_working_tree_verifies_under_policy():
+    """The invariant that has to hold at all times.
+
+    Nothing frozen has moved; anything append-only has at most grown. Mutable
+    groups may differ and that is not a failure - see
+    test_the_manifest_digests_match_the_working_tree.
+    """
     drift = verify_suite(VERSION)
-    dirty = {name: r.summary() for name, r in drift.items() if not r.identical}
-    assert not dirty, dirty
+    failed = {name: r.summary() for name, r in drift.items() if not r.ok}
+    assert not failed, failed
+
+
+def test_nothing_frozen_or_append_only_has_drifted():
+    """Stronger than policy for the groups that carry the result: an
+    append_only group may gain a file, but no existing byte may move."""
+    drift = verify_suite(VERSION)
+    for name in FROZEN_GROUPS:
+        report = drift[name]
+        assert report.changed == [], (name, [path for path, _, _ in report.changed])
+        assert report.missing == [], (name, report.missing)
+        if GROUP_POLICY[name] == "immutable":
+            assert report.added == [], (name, report.added)
+
+
+def test_the_tagged_release_is_what_verifies_strictly(manifest):
+    """Strict identity is a property of the released tree, not of the working
+    tree forever after. It was verified in a fresh clone of the v1.0 tag at
+    release time - five freeze manifests clean, 617 artefacts, digest matching -
+    and that is the check a consumer runs. What this asserts here is only that
+    the manifest still describes a complete, self-consistent release."""
+    assert manifest["status"] == "released"
+    assert manifest["file_count"] == sum(g["file_count"] for g in manifest["groups"].values())
+    assert len(manifest["suite_digest"]) == 64
 
 
 # ------------------------------------------------------------------ policy

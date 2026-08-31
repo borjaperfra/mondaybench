@@ -43,8 +43,21 @@ raw response
   → scoring.py converts labels to points (deterministic Python, no model)
   → dimensions sum to a base score out of 100
   → global penalties subtract, capped at −20, floored at 0
-  → Monday Score = mean of the three runs
+  → scenario score = mean of the three runs
+  → Monday Score  = mean of the scenario scores in the release
 ```
+
+Two levels, and the names matter. A **scenario score** is the mean of a model's
+three official runs on one scenario. Its **Monday Score** is the arithmetic mean
+of its scenario scores across every scenario in an Overall release — equal
+weight per scenario, no weighting infrastructure.
+
+Nothing else enters either level: not latency, TTFA, cost, reasoning or
+completion tokens, run stability, serving qualification, attempt count or
+scenario wins. Those are published beside the score. A model is ranked in an
+Overall release only if it has an official score on every scenario in it —
+averaging over whichever scenarios a model happened to finish would reward not
+competing.
 
 The judge is **never asked for a number**. It classifies 19 atomic criteria
 against fixed definitions and returns the evidence in the response that
@@ -257,21 +270,39 @@ battery. Two things follow:
   for nothing: the ceiling is not a budget and costs nothing when it does not
   bind.
 
-## Limitations of monday-001
+## Limitations
 
-- **One scenario.** A single task, however realistic, is not a general measure.
+Suite v1.0, five scenarios.
+
+- **Five scenarios, one Monday each.** Broader than one task, still narrow. Nine
+  of the 22 capabilities in the taxonomy rest on a single scenario.
+- **Single-turn.** Every scenario is one prompt and one response. Nothing
+  measures what happens when the requester says "that's not what I meant", when
+  new information arrives mid-task, or when the model should ask before acting.
+  This is the largest structural gap and no rubric change closes it.
+- **Nothing is out of reach.** Zero of the 500 points are failed by every model,
+  so the suite carries no evidence about where the frontier is.
+- **Seven models, three runs each.** A "range" is a max-minus-min over seven
+  points; a scenario score rests on three samples.
 - **English only.**
 - **Office knowledge work.** Nothing here tests engineering, clinical, legal or
   physical work.
 - **An LLM judge** does the semantic classification. Human audit covered the
   calibration phase, and the judge's own reasoning is published for every label
   so a disputed call can be checked rather than trusted.
-- **No headroom at the top.** Calibration found the scenario separates models
-  well through the middle of the range but compresses at the ceiling. See
-  `CALIBRATION.md`.
-- **Noise resistance does not discriminate.** Every model in the calibration
-  sweep scored 10/10. The false-action categories catch a failure mode these
-  models simply do not have.
+- **Compression at the ceiling.** monday-001 separates models through the middle
+  of the range and compresses at the top; 133 of the suite's 500 points are
+  passed by every model in every official run. See `CALIBRATION.md` and
+  `analysis/capability-taxonomy-v0.2.md`.
+- **Noise resistance does not discriminate**, now confirmed at suite scale
+  rather than from one calibration sweep: `ownership_and_delegation` has never
+  separated two models across three scenarios and 105 official runs, and
+  `action_safety` is 87% constant-pass. The false-action categories catch a
+  failure mode these models do not have.
+- **The judge is recorded, not sampled.** Every verdict was produced in-session
+  and is replayed from disk. Scores reproduce exactly; judge variance cannot be
+  estimated from these artefacts, and re-judging would be a new measurement
+  rather than a reproduction.
 - **Not a measure of general intelligence.** It answers one question: can this
   model handle your Monday?
 
