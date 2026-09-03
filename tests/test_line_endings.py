@@ -30,26 +30,46 @@ from pathlib import Path
 
 import pytest
 
-from mondaybench.suite import GROUPS, collect_group
+from mondaybench.suite import GROUPS, GROUP_EXCLUDES, collect_group
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
 
 def _in_scope() -> list[Path]:
+    """Exactly the files a release manifest hashes.
+
+    Built through `collect_group` rather than from the raw globs: the globs also
+    match `__pycache__`, and a group may hand a subtree to another group. A test
+    that scanned the globs directly failed on a stray .pyc that no manifest has
+    ever contained.
+    """
     paths: set[Path] = set()
-    for patterns in GROUPS.values():
-        for pattern in patterns:
-            paths.update(p for p in REPO_ROOT.glob(pattern) if p.is_file())
+    for name, patterns in GROUPS.items():
+        for relative in collect_group(patterns, REPO_ROOT, GROUP_EXCLUDES.get(name, ())):
+            paths.add(REPO_ROOT / relative)
     return sorted(paths)
 
 
+#: Suffixes whose bytes are not text and must not be scanned for line endings.
+#:
+#: A JPEG or a PNG contains the byte pair 0D 0A wherever its compressed stream
+#: happens to produce it. That is not a line ending, and git will not rewrite
+#: it: `.gitattributes` treats these as binary, so they round-trip a clone
+#: unchanged and their hashes are stable. Scanning them flagged two audit
+#: screenshots as CRLF offenders, and would have flagged every image ever added
+#: to a hashed group.
+BINARY_SUFFIXES = frozenset(
+    {".png", ".jpg", ".jpeg", ".gif", ".webp", ".pdf", ".ico", ".woff", ".woff2", ".zip"}
+)
+
+
 def test_no_released_artifact_contains_a_carriage_return():
-    """Every file the suite manifest hashes must be LF, so the hash a clone
+    """Every TEXT file the suite manifest hashes must be LF, so the hash a clone
     computes is the hash the manifest recorded."""
     offenders = [
         p.relative_to(REPO_ROOT).as_posix()
         for p in _in_scope()
-        if b"\r\n" in p.read_bytes()
+        if p.suffix.lower() not in BINARY_SUFFIXES and b"\r\n" in p.read_bytes()
     ]
     assert not offenders, (
         f"{len(offenders)} file(s) carry CRLF and will hash differently in a fresh "
