@@ -1,0 +1,78 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.5",
+  "scenario_id": "monday-005",
+  "scenario_prompt_sha256": "532cd464a9b75045f808886c44e667237d6fd1b947826510643b9f8bcc30059a",
+  "run_id": "monday-005__glm5.3__001",
+  "run_number": 1,
+  "model": {
+    "slug": "glm5.3",
+    "display_name": "GLM 5.3",
+    "provider": "helmcode",
+    "model_id": "glm5.3"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 131072,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+    "extra_body": {
+      "caching": false
+    },
+    "config_sha256": "30456ec77228d78ff948bc23452c04395c128c5e7d3387c0411c5306cbe8bb7c",
+    "safety_ceiling_tokens": 131072,
+    "ceiling_semantics": "provider_specific"
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "DELIVERED",
+    "tokens": 34395,
+    "evidence": "explicit_reasoning_tokens",
+    "stream_observed": true,
+    "stream_event_count": 31029
+  },
+  "timestamp_utc": "2026-09-03T07:20:16Z",
+  "usage": {
+    "input_tokens": 4874,
+    "output_tokens": 36926,
+    "reasoning_tokens": 34395
+  },
+  "performance": {
+    "ttft_ms": 1923.0,
+    "ttfa_ms": 2104171.0,
+    "total_latency_ms": 2231014.6,
+    "tokens_per_second": 16.6
+  },
+  "economics": {
+    "input_cost_usd": 0.000366,
+    "output_cost_usd": 0.009232,
+    "total_cost_usd": 0.009597
+  },
+  "response": "## CEO BRIEFING\n\n**For your 15:00 board call. State as of 14:20 UTC. Incident is OPEN — mitigated, not yet resolved.**\n\n**One line:** The Batch API had a 76-minute window of elevated errors this morning (11:42–12:58 UTC). We mitigated at 12:58 by moving all Batch traffic to healthy capacity; error rates have been near baseline since, and a mandatory 90-minute verification window closes at 14:30 — we cannot call it resolved before that closes clean. Root cause is **not** established.\n\n**What happened**\n- 11:31 — A small release (`r3`) rolled out to the Batch API, including a database connection-pool reduction (80 → 24 per worker).\n- 11:38 — Batch volume spiked to ~3x the morning average on one worker fleet, driven by one customer's large scheduled job.\n- 11:42–12:58 — Elevated 502s on batch submissions, confined to that fleet. Our other APIs (Inference, Embeddings, Files) were unaffected; the upstream storage provider was ruled out early.\n- 12:58 — Mitigated by moving all Batch API traffic to the healthy fleet. Error rate fell to ~0.3–0.4% within minutes (baseline 0.2%).\n- Since — Verification window (13:00–14:30, policy requires 90 clean minutes). At 14:12 the rate was 0.3%. Failed jobs are being re-driven (~60% done, no failures so far).\n\n**Who is hit**\n- Headline figure: **17,602 of 58,900 Batch API requests failed in the window — 29.9%.** Batch was ~7% of the 842,000 total requests served in the window; all other APIs were healthy.\n- 7 of the 9 accounts that use the Batch API were affected; the other 27 Northstar accounts do not use the Batch API.\n\n| Account | Batch requests (11:42–12:58) | Failed | Rate |\n|---|---|---|---|\n| stark-industries | 14,200 | 5,180 | 36.5% |\n| contoso | 9,400 | 3,410 | 36.3% |\n| wayne-enterprises | 7,850 | 2,790 | 35.5% |\n| globex | 6,100 | 2,240 | 36.7% |\n| wonka-industries | 5,900 | 2,020 | 34.2% |\n| umbrella-health | 4,300 | 1,560 | 36.3% |\n| initech | 1,150 | 402 | 35.0% |\n\n- **Contoso** is the only affected account on service-level-credit terms. They wrote twice today, including a credits question under Schedule B. An email with their own figures and the contractual process goes out now. Note: the contract determines monthly availability **after month end**, published within 10 business days — no breach can be confirmed today, and we have not promised one. The other six affected accounts are on standard terms with no credit clause.\n- Watch item: umbrella-health has a compliance export due today (their ticket) — support is prioritising them.\n\n**What we don't know yet**\n- Root cause. Two candidates, neither tested: the release's pool reduction (leading) and the load spike; they may have interacted. The upstream provider is ruled out. We chose mitigation first to restore service fast and preserve the evidence needed to test the cause properly.\n- fleet-a is still out of rotation; the re-drive isn't finished; resolution can't be declared before 14:30 at the earliest.\n\n**If it comes up on the call, say:**\n> \"This morning the Batch API had about 76 minutes of elevated errors, affecting 7 of our 9 Batch API customers; roughly 30% of Batch requests in that window failed. We mitigated by moving traffic, the service has been stable since 12:58, and we're in a standard verification window that closes at 14:30 UTC before we declare resolution. Root cause is under investigation — we have two candidate explanations and are testing them rather than guessing. Our other APIs were unaffected. We've proactively contacted our affected enterprise customer and will publish a further update by 15:00 UTC.\"\n\n**Do not say:** any cause (\"we've identified it\"), \"resolved/fixed,\" or any restoration time — engineering's internal planning estimate is not for external use.\n\n**Heads-up:** our 12:05 status-page post prematurely said the cause was identified. The 14:20 update corrects that publicly. If a board member quotes it, the accurate line is \"mitigated and recovering; cause under investigation.\"\n\n**Next:** I'll send you a one-line status at ~14:35, after the verification window closes, before your call.\n\n---\n\n## ENGINEERING UPDATE\n\n**Handoff state — INC-2026-1109-01, 14:20 UTC. OPEN: mitigated, verification in progress, root cause not established.**\n\n**Current state**\n- All Batch API traffic on fleet-b since the 12:58 cutover. fleet-a drained, out of rotation, evidence state preserved (per the 12:31 decision not to roll back).\n- `POST /v1/batch/jobs` error rate 0.3% at 14:12 (baseline 0.2%). Queue depth normal. No customer-reported failures since cutover.\n- Verification window closes **14:30** (10 minutes). Policy: 90 minutes continuous normal error rate before \"resolved.\" Nothing is resolved before it closes clean.\n- Re-drive ~60% complete as of 13:52, zero failures.\n\n**If the window closes clean at 14:30**\n1. I declare the incident resolved per policy and hand Ruth the resolved update (approved wording only). She is publishing the 14:20 correction/monitoring update now; the next public update is due **by 15:00** — content from me.\n2. Then run the `r3` rollback test on fleet-a. fleet-a stays out of rotation until the test is done and I sign off its return.\n3. Finish the re-drive; post per-account completion in channel.\n\n**Root cause — standing position**\n- **H1 (leading, untested):** `r3` pool ceiling 80 → 24, shipped 11:31, eleven minutes before first page; fleet-a workers observably queueing on DB connections. Against: fleet-b runs the same release and never degraded.\n- **H2 (live, untested):** concentrated load, ~3x morning average from 11:38 (wonka's scheduled job). Against: fleet-a rode a higher peak on 2026-11-03 without errors.\n- Interaction is plausible and untested. H3 (storage provider) was ruled out at 11:47.\n- The rollback test has **not** been run. Marcus: bring a test design to the channel before fleet-a returns — it must discriminate H1 vs H2 vs interaction, and specify what fleet-a state must be preserved first.\n\n**Assignments (confirm in channel)**\n- **Priya:** hold watch through 14:30 (error rate + queue depth); flag immediately if the window breaks; finish the re-drive.\n- **Marcus:** rollback-test plan before any fleet-a return. No changes to fleet-b during the verification window; change freeze until resolution is declared.\n- **Ruth:** 14:20 correction/monitoring update publishing now; next update by 15:00 from my wording.\n- **Tomas:** Contoso email going out now (their own figures + Schedule B process — no cause, no credit commitment). Globex asked directly — they may be given their own figures. Wonka's \"resubmit or replay?\" question needs cleared wording before anyone answers. Umbrella-health's compliance export makes them the re-drive priority to confirm.\n\n**External guardrails**\n- The approved list is the whole list: incident + start time; mitigation applied and recovering; monitoring before confirming recovery; a further update with a stated time; a named customer's own figures to that customer. Nothing else — no cause, no timelines.\n- Fleet membership never appears externally. Marcus's 13:41 planning estimate stays in this channel.\n\n**Reference figures (window 11:42–12:58):** 58,900 Batch API requests, 17,602 failed = **29.9%** (headline). Batch was ~7% of the 842,000 platform-wide requests. Affected: 7 accounts, all fleet-a; acme-corp and aperture-labs (fleet-b) unaffected. Per-account numbers in `customer-impact.csv`.\n\n---\n\n## CUSTOMER EMAIL\n\n**Subject:** Re: Batch submits failing — incident update and your Schedule B question (TKT-8903 / TKT-8907)\n\nDear Contoso team,\n\nThank you for your two messages today, and please accept our apologies for the disruption this morning.\n\n**What happened.** Between 11:42 and 12:58 UTC today (9 November 2026), some Batch API requests returned errors (502 responses on batch job submissions). The issue was confined to the Batch API; our other APIs (Inference, Embeddings, Files) were unaffected. We applied a mitigation at 12:58 UTC, and error rates on the Batch API have been at near-normal levels since. In line with our incident policy, we are continuing to monitor the service before confirming recovery, and the incident is not yet marked as resolved. We will send you a further update by 15:00 UTC today, and we will confirm to you directly once monitoring is complete.\n\n**Your account's impact.** Between 11:42 and 12:58 UTC, your account made 9,400 Batch API requests, of which 3,410 returned errors — approximately 36%. Your first failed request was at 11:43 UTC and your last at 12:56 UTC.\n\n**Your Schedule B question.** Monthly Availability under Schedule B is calculated across the Covered Services (Inference, Batch and Files APIs) over the full calendar month, and is determined by Northstar from its own service records after the end of the calendar month. We are therefore not able to confirm today whether November will fall below the 99.9% commitment. The failed requests from this morning will enter that calculation as defined in Schedule B. We will publish the Monthly Availability figure within 10 business days of month end; if it falls below the commitment, service credits apply under the table in Section B.4, and any claim may be submitted within 30 days of that publication.\n\nThank you also for offering your ops lead, Priya Raghunathan, as a direct technical contact — we have noted her details and may reach out if a call would be helpful.\n\nWe will write again by 15:00 UTC with a further update, and will confirm to you directly once monitoring is complete.\n\nKind regards,\nNorthstar Support\nRef: TKT-8903, TKT-8907\n\n---\n\n## STATUS PAGE UPDATE\n\n**2026-11-09 14:20 — Monitoring**\n\nBetween 11:42 and 12:58 UTC, some Batch API requests returned errors. We applied a mitigation at 12:58 UTC, and error rates on the Batch API have since returned to near-normal levels. Northstar's other APIs (Inference, Embeddings, Files) were not affected.\n\nWe are continuing to monitor the service before confirming recovery. This incident is not yet marked as resolved.\n\nCorrection: our 12:05 update stated that the cause of this incident had been identified. That was premature — the cause has not yet been identified, and our investigation is continuing. We apologise for the error.\n\nWe will post a further update by 15:00 UTC.\n\n*Monitoring.*",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "gen-1788417784-Rs63z5aDlRMX0JNSJ8y2",
+    "raw_usage": {
+      "completion_tokens": 36926,
+      "prompt_tokens": 4874,
+      "total_tokens": 41800,
+      "completion_tokens_details": {
+        "audio_tokens": 0,
+        "reasoning_tokens": 34395,
+        "image_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 0,
+        "video_tokens": 0,
+        "cache_write_tokens": 0
+      }
+    }
+  }
+}

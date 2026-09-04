@@ -1,0 +1,78 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.3",
+  "scenario_id": "monday-003",
+  "scenario_prompt_sha256": "aaf788f309d955d2b427c86fe7d95d2bbf88575fde7306adcfd74b0ec4a4103f",
+  "run_id": "monday-003__glm5.3__003",
+  "run_number": 3,
+  "model": {
+    "slug": "glm5.3",
+    "display_name": "GLM 5.3",
+    "provider": "helmcode",
+    "model_id": "glm5.3"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 32000,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+    "extra_body": {
+      "caching": false
+    },
+    "config_sha256": "25351b89c4a38bb3081c3934311dd57b00a466002c5559d2613725181895c9fb",
+    "safety_ceiling_tokens": 32000,
+    "ceiling_semantics": "provider_specific"
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "DELIVERED",
+    "tokens": 9055,
+    "evidence": "explicit_reasoning_tokens",
+    "stream_observed": true,
+    "stream_event_count": 9055
+  },
+  "timestamp_utc": "2026-09-03T06:18:02Z",
+  "usage": {
+    "input_tokens": 3292,
+    "output_tokens": 10510,
+    "reasoning_tokens": 9055
+  },
+  "performance": {
+    "ttft_ms": 5892.2,
+    "ttfa_ms": 424378.1,
+    "total_latency_ms": 462197.3,
+    "tokens_per_second": 23.0
+  },
+  "economics": {
+    "input_cost_usd": 0.000247,
+    "output_cost_usd": 0.002628,
+    "total_cost_usd": 0.002874
+  },
+  "response": "# Situation in one line\nEverything engineering-side is gated by Elena's billing schema migration (3h, can start now), and Marcus is the bottleneck — so the plan routes the Contoso patch to Daniel and strips non-essential work off Marcus. The \"stale\" items (security review, onboarding instrumentation, Contoso \"broken export\") are already resolved or re-framed by Friday/Monday messages.\n\n---\n\n## 1. CRITICAL PATH\n\n**Chain A — Enterprise SSO for Atlas (committed Wed EOD; hard cutoff Wed 17:00 per work item):**\n1. **Billing schema migration — Elena, 3h → Mon 09:30–12:30** (the starting gun; nothing engineering-side moves until it lands)\n2. **SSO API compatibility patch — Marcus, 4h → Mon 12:30–16:45**\n3. **SSO regression — QA, 2h → Tue 09:00–11:00** (QA slot already open)\n4. **Production rollout — Marcus, 1h → Tue 13:00–14:00** (first slot after his Atlas session 09:00–13:00)\n\n**Chain B — Contoso compliance export (contractual, Tue 16:00 CET, immovable):**\n1. **Walkthrough of delegated-admin path — Marcus → Daniel, 30 min, Mon AM**\n2. **Permission patch — Daniel, 3.5h → Mon 10:00–13:30**, merges after the migration lands (~12:30)\n3. **Produce + send file — Julia, 1h → Mon ~16:00** (Tue AM worst case)\n\n**Constraint:** Marcus is single-owner of the compat branch (per Elena, nobody else has been inside it). That's why Chain B goes to Daniel.\n\n## 2. MY PLAN FOR TODAY (Mon)\n\n| Time | Action | Owner |\n|---|---|---|\n| 09:15 | Ping Elena: **start migration now**; kick off backfill immediately after (~done 14:00); book 30-min Daniel handover Tue AM as insurance | Elena |\n| 09:15 | Lock Marcus's day: AM = Daniel walkthrough + rollout runbook + QA scope alignment; **compat patch 12:30–16:45**; confirm instrumentation is off his plate (Julia already waived it) | Marcus |\n| 09:20 | Reassign `contoso_permission_patch` to Daniel (Rachel logged it to Marcus — she asked to be corrected) | Daniel, Rachel |\n| 09:25 | Book QA regression for **Tue 09:00**; confirm scope with Marcus this morning | QA |\n| 09:30 | Tell Sarah: **mockups are acceptable** per Priya — don't wait for the live page; submit approval pack **before 12:00 today** if tier/margin content is ready | Sarah |\n| 09:35 | Julia: formatter fix 2h this AM (demo Tue PM); run + send compliance export (1h) once Daniel's patch is in; onboarding launch Tue | Julia |\n| 09:40 | Replies: **Anja** — confirm delivery before Tue 16:00; **Laura** — confirm Wed EOD, targeting Tue; **CEO** — clarify it's two issues (cosmetic format = demo preference; real permission bug = being fixed today); **Peter** — format fix lands today | Me |\n| 09:50 | Clean the tracker: security review closed (Maya, Fri 16:48); instrumentation not a launch blocker; add compliance export as 🔴 | Me |\n\n## 3. PARALLEL WORK (no waiting required)\n- **Julia** — export formatter fix (Mon AM, zero dependencies).\n- **Daniel** — permission patch (Mon, after 30-min walkthrough; only the merge waits for the migration).\n- **Sarah** — packaging approval pack with mockups (submit <12:00), pricing page build (3h, Mon PM/Tue), board pack non-revenue sections (4h, Tue). Revenue charts unblock ~Mon 14:00 when backfill completes → she does them Tue.\n- **Marcus (AM)** — rollout runbook, QA alignment, prep — while blocked on the migration.\n- **Onboarding launch** — Julia, Tue (flow is ready; instrumentation ships later; deadline Fri 12:00).\n\n## 4. BLOCKERS & DEPENDENCIES\n**Real:**\n- Migration gates everything: compat patch, permission patch (merge), backfill → revenue charts.\n- Compat patch gates QA → rollout. Permission patch gates the compliance export.\n- Marcus is a shared resource across both chains — resolved by giving Daniel Chain B.\n\n**Stale blockers to clear (no longer real):**\n- Security review — **closed Friday**, approved for current scope; permission-check fixes inside scope need no re-review.\n- Onboarding instrumentation as launch blocker — **waived by Julia Friday**.\n- Pricing approval waiting on live screenshots — **mockups accepted** per Priya's checklist.\n- \"Broken Contoso export\" — actually two items: cosmetic date format (demo) + delegated-admin permission bug (contractual).\n\n## 5. EARLIEST DELIVERY\n- **SSO: Tuesday ~14:00** — a full day ahead of the Wednesday EOD commitment.\n- **Compliance export: Monday ~16:00** — a day ahead of the Tue 16:00 contractual deadline.\n- **Demo-format export: Monday** (before Tuesday PM demo).\n- **Float analysis:** migration landing Tue midday is the last viable window (compat squeezed into Marcus's Tue 13:00–17:30, QA + rollout Wed AM — zero buffer). Migration on Wed = miss. Hence Elena starts **today**.\n\n## 6. RISKS / UNKNOWNS\n- **Can Marcus start the compat patch before the migration \"lands\"?** He said he can't *finish* — if he can build against Elena's branch, ~2–3h comes off Chain A. Verify this morning.\n- **Deployment process** for the permission patch isn't described; Julia's export assumes it's live in production, not just merged.\n- **Sarah's pack inputs** (tier structure, margin summary) — readiness unknown; determines Mon-noon vs Tue-noon committee clearance.\n- **QA outcome** — estimates assume \"nothing surprising\"; no fix-time SLA exists if regression fails Tuesday.\n- **Whether Contoso's auditor requires a specific date format** on the compliance export — both formats import fine per Contoso, but auditor preference is unstated.\n- **Atlas session Tuesday** may generate follow-up work for Marcus on Wed — content unknown.\n- **Scope check:** the delegated-admin fix is assumed to be a \"permission-check fix inside approved scope\" (no re-review needed) — confirm it doesn't touch the auth flow, or Maya's re-review clause triggers.",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "gen-1788415819-hpEMTFbj7DaRprykBAGe",
+    "raw_usage": {
+      "completion_tokens": 10510,
+      "prompt_tokens": 3292,
+      "total_tokens": 13802,
+      "completion_tokens_details": {
+        "audio_tokens": 0,
+        "reasoning_tokens": 9055,
+        "image_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 0,
+        "video_tokens": 0,
+        "cache_write_tokens": 0
+      }
+    }
+  }
+}

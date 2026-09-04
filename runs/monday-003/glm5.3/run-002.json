@@ -1,0 +1,78 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.3",
+  "scenario_id": "monday-003",
+  "scenario_prompt_sha256": "aaf788f309d955d2b427c86fe7d95d2bbf88575fde7306adcfd74b0ec4a4103f",
+  "run_id": "monday-003__glm5.3__002",
+  "run_number": 2,
+  "model": {
+    "slug": "glm5.3",
+    "display_name": "GLM 5.3",
+    "provider": "helmcode",
+    "model_id": "glm5.3"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 32000,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+    "extra_body": {
+      "caching": false
+    },
+    "config_sha256": "25351b89c4a38bb3081c3934311dd57b00a466002c5559d2613725181895c9fb",
+    "safety_ceiling_tokens": 32000,
+    "ceiling_semantics": "provider_specific"
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "DELIVERED",
+    "tokens": 7511,
+    "evidence": "explicit_reasoning_tokens",
+    "stream_observed": true,
+    "stream_event_count": 7511
+  },
+  "timestamp_utc": "2026-09-03T06:10:20Z",
+  "usage": {
+    "input_tokens": 3292,
+    "output_tokens": 8827,
+    "reasoning_tokens": 7511
+  },
+  "performance": {
+    "ttft_ms": 2108.4,
+    "ttfa_ms": 253260.4,
+    "total_latency_ms": 286619.6,
+    "tokens_per_second": 31.0
+  },
+  "economics": {
+    "input_cost_usd": 0.000247,
+    "output_cost_usd": 0.002207,
+    "total_cost_usd": 0.002454
+  },
+  "response": "# Execution Plan — Monday 09:10\n\n## 1. CRITICAL PATH\n\nThe Atlas SSO commitment (Wed EOD; hard external deadline Wed 17:00) is the spine. Everything on it runs through Elena's migration:\n\n| Step | Owner | Duration | Window |\n|---|---|---|---|\n| Billing schema migration | Elena | 3h | Mon 09:15–12:15 |\n| SSO API compatibility patch (gated on migration) | Marcus | 4h | Mon 12:15–16:15 |\n| SSO regression | QA | 2h | Tue 09:00–11:00 |\n| Production rollout | Marcus | 1h | Tue 13:00–14:00 (first slot after his Atlas session) |\n\nSecond chain (Contoso contractual export, hard deadline **Tue 16:00 CET**): schema migration → delegated-admin permission patch → Julia produces/sends file (1h). Marcus must be **taken off** this patch — he's the single point of failure on the SSO path and only has Tue afternoon. Reassign to Daniel (Rachel already flagged this as an option): Daniel knows the permission model from SCIM work, and the fix is inside the already-approved security scope.\n\n## 2. MY PLAN FOR TODAY (in order)\n\n1. **09:15 — Elena:** confirm migration starts now; backfill (1.5h) immediately after → done ~13:45.\n2. **09:15 — Reassign** `contoso_permission_patch` Marcus → Daniel. Tell Rachel, Marcus, Daniel. Daniel needs **30 min with Marcus this morning** to walk the delegated-admin path.\n3. **09:20 — Clear stale tasks:** Security review was **closed Friday 16:48** (Maya's email) — update the release checklist, kill the 🔴 \"unblock Security review\" task. Also de-scope onboarding instrumentation from launch (Julia confirmed Friday); free Marcus's held 3h.\n4. **09:30 — Reply to Anja Weber** confirming delivery of the compliance export by Tue 16:00 CET (target: today EOD). CC Noah/CEO — CEO asked Friday not to let this linger.\n5. **09:45 — Julia:** two asks — (a) run the 2h date-format fix this morning (covers Tuesday demo); (b) **confirm whether she can produce/send the compliance file today via the export path that worked Friday** — if yes, the contractual deadline is decoupled from the patch entirely.\n6. **10:00 — Sarah:** build pricing page today (3h); approval pack can use **mockups** (Priya confirmed) — if tier structure + margin summary exist, submit before 12:00 tomorrow for same-day clearance. Revenue charts (2h) only after backfill completes ~13:45.\n7. **12:15 checkpoint:** migration not landed → trigger Elena→Daniel handover (30 min) immediately.\n8. **PM — confirm QA slot** for Tue 09:00 (Sam said it's open) and that Marcus reviews Daniel's patch before merge.\n\n## 3. PARALLEL WORK (no waiting required)\n\n- **Julia:** date-format fix (2h, Mon AM) — independent.\n- **Daniel:** Marcus walkthrough + build permission fix ready to merge the moment the schema lands.\n- **Sarah:** pricing page (3h), approval pack (1.5h), non-revenue board pack (4h) — all independent of engineering.\n- **Onboarding launch** (Julia, 2h, due Thu 12:00) — flow is ready; schedule Tue/Wed.\n- **Marcus instrumentation** (3h) — de-scoped; do Wed+, post-rollout.\n\n## 4. BLOCKERS & DEPENDENCIES\n\n| Blocked item | Blocked by | Unblocks when |\n|---|---|---|\n| SSO compat patch | Schema migration | ~Mon 12:15 |\n| SSO regression → rollout | Compat patch | Mon 16:15 → QA Tue |\n| Delegated-admin export | Schema migration + permission patch | ~Mon 14:00 |\n| Contoso compliance file | Permission patch — **unless** Julia's workaround path is viable | Mon PM |\n| Board revenue charts | Backfill complete | ~Mon 13:45 |\n| Pricing page goes public | Packaging approval — decoupled from page build if mockups used | Tue if submitted before 12:00 |\n\nStale info corrected: security review done; Contoso export isn't \"broken\" — it's a permission gap + a format preference; instrumentation is not a launch blocker.\n\n## 5. EARLIEST DELIVERY\n\n- **Atlas SSO: Tuesday ~14:00** — a full day ahead of the Wed 17:00 hard deadline, with all of Wednesday as contingency.\n- **Contoso compliance export: Monday ~16:00** if Daniel's patch merges PM; Tuesday AM at the latest (deadline 16:00).\n- Monday EOD for SSO is theoretically possible only with QA evening overtime — not the plan.\n\n## 6. RISKS / UNKNOWNS\n\n- **Compliance workaround unverified:** Julia's Friday run produced a valid file, but whether Northstar can legitimately deliver the contractual export without the patch needs confirmation this morning.\n- **Merge risk:** Daniel's fix and Marcus's rewrite touch the same account-mapping layer — Marcus must review before merge.\n- **Deploy/verify time for the permission patch is not quantified** anywhere; buffer before Tue 16:00 is thin if it slips to Tuesday.\n- **QA estimate** assumes \"nothing surprising\"; any finding compresses Tuesday.\n- **Elena's 3h estimate is her own**, untested; her only stated contingency (Daniel handover) costs 30 min and must happen before Wed noon.\n- **Atlas session Tuesday** could surface flow changes → would trigger security re-review; unknown until it happens.\n- **Compliance file format** unspecified (does Anja need DD/MM/YYYY too?); and whether team working hours align with the CET deadline isn't stated.\n- **Sarah's inputs** (tier structure, margin summary, mockups) not confirmed to exist for early approval submission.",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "gen-1788415533-fATIQcaV8MPcOJ1wk43b",
+    "raw_usage": {
+      "completion_tokens": 8827,
+      "prompt_tokens": 3292,
+      "total_tokens": 12119,
+      "completion_tokens_details": {
+        "audio_tokens": 0,
+        "reasoning_tokens": 7511,
+        "image_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 3264,
+        "video_tokens": 0,
+        "cache_write_tokens": 0
+      }
+    }
+  }
+}

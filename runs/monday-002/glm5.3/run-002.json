@@ -1,0 +1,78 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.2",
+  "scenario_id": "monday-002",
+  "scenario_prompt_sha256": "740e627cbc7413c321ede0d54000504de54821d34ff4677f82731b89600423a8",
+  "run_id": "monday-002__glm5.3__002",
+  "run_number": 2,
+  "model": {
+    "slug": "glm5.3",
+    "display_name": "GLM 5.3",
+    "provider": "helmcode",
+    "model_id": "glm5.3"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 32000,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+    "extra_body": {
+      "caching": false
+    },
+    "config_sha256": "25351b89c4a38bb3081c3934311dd57b00a466002c5559d2613725181895c9fb",
+    "safety_ceiling_tokens": 32000,
+    "ceiling_semantics": "provider_specific"
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "DELIVERED",
+    "tokens": 12583,
+    "evidence": "explicit_reasoning_tokens",
+    "stream_observed": true,
+    "stream_event_count": 4585
+  },
+  "timestamp_utc": "2026-09-03T05:55:03Z",
+  "usage": {
+    "input_tokens": 2338,
+    "output_tokens": 14270,
+    "reasoning_tokens": 12583
+  },
+  "performance": {
+    "ttft_ms": 14087.3,
+    "ttfa_ms": 182105.3,
+    "total_latency_ms": 197127.3,
+    "tokens_per_second": 78.0
+  },
+  "economics": {
+    "input_cost_usd": 0.000175,
+    "output_cost_usd": 0.003567,
+    "total_cost_usd": 0.003743
+  },
+  "response": "## 1. CURRENT STATE\n\n- **Enterprise Controls release:** Build 2.9.4 passed staging and Priya's Security verification (Fri). Friday's production attempt failed on shard eu-03 before rollout opened — no customer impact. Two recovery paths exist; per Friday's readiness meeting, **Product (me) picks the path**. Maya has explicitly declined another executive gate, so the \"get Maya approval by 09:15\" task is superseded.\n- **Atlas:** Renewal signed. Migration window is Monday — rollout must **begin before 12:00** or slips to Thursday (exec noise, not renewal risk).\n- **Availability:** Marcus 09:15–10:20 only; Priya 09:00–09:35 and 10:25–12:30; Sam and Daniel 09:00–12:30.\n- **Zenith:** Signed €96k ARR / 24 months, countersigned, fix validated. The \"call Zenith about renewal risk\" task is stale.\n- **Comms:** Sarah is out; Daniel holds Julia's final draft + Atlas recipient list and sends only after Sam confirms rollout is open.\n- **Pricing:** Pinned v4 workbook is explicitly not authoritative; Daniel's 09:07 scenario (€2,500 / 40 seats / €55) is internal-only; nothing external until a public announcement that has no date.\n- **Orion:** Conflicting SCIM signals — admin says it worked; bot shows org_71A=false; ticket says org_17A. Sam froze status replies until the correct org's live flag is read.\n- **Expansion:** Target €180k vs expected €126k (gap €54k). Wayne €18k (moved to October by signed amendment) + Globex €12k (pending procurement) = €30k documented. Soylent €10k + Wonka €14k have no stated cause; Daniel claims account files explain the rest (unverified).\n- **Acme:** Usage/logins down 40–45%, but the contract documents an approved shift to annual batch-processing with expected 40–50% interactive reduction — expected, not a problem.\n\n## 2. MY PLAN FOR TODAY\n\n**Path decision: Option A** (retry verified 2.9.4 with shard precheck). It fits all windows with ~60 min of buffer and tolerates failed attempts (20-min retries fit before Marcus leaves at 10:20). Option B needs a 25-min delta review plus a 45-min deploy inside Marcus's 65-minute window — near-zero slack; any slip means no deploy Monday and Atlas misses the window. A's 8% session-reset risk is the acceptable trade.\n\n1. **09:07–09:15** — Post decision in #enterprise-launch: Option A; Marcus deploys 09:15; Priya verifies 10:25; Sam opens ~10:45. No Maya approval needed per her Thursday instruction.\n2. **09:15–09:35** — Marcus deploys 2.9.4 with shard precheck; I monitor. If it fails, he retries immediately (retries fit until ~10:15).\n3. **09:45** — Confirm to Atlas via Laura: launch on for today, rollout ETA ~11:00, inside their window; final confirm when Sam opens. (Supersedes the task's \"10:30\" — Priya's 09:35–10:25 gap makes 10:30 impossible.)\n4. **09:45–10:20** — Escalate Globex G-441 (high-sev SSO) with support; ask Daniel to nudge Globex procurement (renewal in 18 days).\n5. **09:50–10:50** — Build expansion reconciliation; check account files for documented Soylent/Wonka causes; send to Maya by ~10:50 (deadline 11:00; board locks 11:30), separating established facts from hypotheses.\n6. **10:25–10:45** — Priya runs 20-min post-deploy verification.\n7. **10:45–11:00** — Sam opens rollout + sanity check. **Rollout begins ~11:00 — before 12:00.**\n8. **~11:00** — Sam confirms rollout open → Daniel sends the customer announcement; I verify it went.\n9. **11:00–12:00** — Orion: confirm org ID from the support ticket, read the live SCIM flag for that org, then reply in #orion.\n10. **Afternoon** — Soylent: push SO-19 and investigate the unexplained €10k cut. Wonka: proactive outreach on the steep decline. Acme: confirm renewal logistics (9 days out) — no alarm.\n\n**Contingency:** If production isn't healthy by ~10:15 after retries, the window likely slips to Thursday — tell Laura and Maya immediately, before Marcus leaves at 10:20.\n\n## 3. CUSTOMER / REVENUE PRIORITIES\n\n- **Globex (top):** Renewal in 18 days, €12k expansion stuck in procurement, 3 open tickets including a high-sev SSO blocker (G-441) consistent with the −61% admin-login drop. Escalate the ticket today; unblock procurement.\n- **Soylent:** Renewal in 44 days; €10k expansion cut with no contract explanation; SO-19 (slower onboarding) plus −22% usage. Active investigation today.\n- **Wonka:** Renewal in 31 days; €14k cut, no explanation; −35% usage / −49% logins with zero tickets — a silent decline. Proactive outreach, no assumed cause.\n- **Acme:** Renewal in 9 days. The usage drop matches the contractually approved batch-processing shift — **not a churn signal**; just confirm renewal mechanics.\n- **No action today:** Wayne (renewed; October expansion documented), Stark (on plan, one low doc ticket), Zenith (signed, normal cadence), Atlas (handled via the launch path).\n\n## 4. DO NOT DO\n\n- Don't call Zenith about renewal risk — signed and countersigned; Laura closed it.\n- Don't ask Maya for release approval or add a gate — she explicitly declined; Security's policy + Sam's process govern.\n- Don't send anything to Initech procurement or quote pricing externally; don't use the pinned v4 workbook; Daniel's 09:07 numbers are internal-only.\n- Don't send any Orion SCIM status until the org ID is confirmed and the live flag for that org is read.\n- Don't send the customer announcement yourself — Daniel owns it, triggered by Sam's confirmation.\n- Don't deploy 2.9.5-patch or anything changing code from 2.9.4 without Priya's delta review — and don't pick Option B given the schedule risk.\n- Don't let rollout begin at/after 12:00.\n- Don't invent causes for the Soylent/Wonka reductions in the board reconciliation.\n- Don't escalate Acme's usage decline as a problem.\n\n## 5. UNCLEAR / MUST VERIFY\n\n- **Orion's real org ID** (ticket says org_17A; bot flagged org_71A) and the **live scim_enabled value** for the confirmed org — need the ticket record and a live flag read before any reply.\n- **Documented causes for Soylent (−€10k) and Wonka (−€14k):** Daniel says account files explain the remaining €24k, but contract context shows no explanation and I don't have those files. Verify before the 11:00 send; if absent, report as unexplained per Maya's instruction.\n- **Whether Option A's deploy succeeds on eu-03** — Friday's failure there; the precheck mitigates but the 8% session-reset risk remains. Contingency is defined in the plan.",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "gen-1788414705-H9x3PaMnC0Ayx7AbxuXT",
+    "raw_usage": {
+      "completion_tokens": 14270,
+      "prompt_tokens": 2338,
+      "total_tokens": 16608,
+      "completion_tokens_details": {
+        "audio_tokens": 0,
+        "reasoning_tokens": 12583,
+        "image_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 0,
+        "video_tokens": 0,
+        "cache_write_tokens": 0
+      }
+    }
+  }
+}

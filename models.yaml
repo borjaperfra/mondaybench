@@ -290,6 +290,45 @@ models:
       fixed prompt at temperature 0 varies by a factor of six across runs
       (4,931 to 30,288 tokens), which is what its latency spread tracks.
 
+  glm5.3:
+    display_name: "GLM 5.3"
+    provider: helmcode
+    api_style: openai_compatible
+    model_id: "glm5.3"
+    base_url_env: HELMCODE_BASE_URL
+    api_key_env: HELMCODE_API_KEY
+    generation:
+      temperature: 0
+      max_output_tokens: 32000
+    extra_body:
+      # See the cache note in the header. Not part of the prompt.
+      caching: false
+    capabilities:
+      reasoning: true
+    pricing:
+      input_per_million_usd: 0.075
+      output_per_million_usd: 0.25
+      source: "measured from gateway cost_details, 2026-09-03"
+    notes: >
+      Added 2026-09-03. NOT on the endpoint when this file was first written -
+      the header note "the spec's ids glm-5.3 ... exist nowhere" was true on
+      2026-08-27 and is now stale for this id: Helmcode serves `glm5.3`, and a
+      completion echoes `glm5.3` back as the served model. This is the non-Flash
+      model; `glm5.3-flash` is a different entry on NaN and stays there.
+
+      Reports reasoning_tokens and streams reasoning_content, so it thinks by
+      default and capabilities.reasoning is true accordingly.
+
+      Two things a reader should not have to rediscover. (1) The gateway fans
+      `glm5.3` out to more than one upstream: four calls at benchmark prompt
+      size were served by Z.AI at 0.075/0.25 per million, and one long-prompt
+      call by Parasail at 0.15/0.50. The served model id was `glm5.3` on both,
+      so this is an upstream-vendor difference, not a different model - but the
+      per-token cost depends on which one answered. (2) Neither `provider` nor
+      `cost` appears on the STREAMING response, which is the path the runner
+      uses, so per-run cost is not observable from the run files and is measured
+      separately. See audits/glm-5.3/pricing-summary.json.
+
   qwen3.6:
     display_name: "Qwen 3.6"
     provider: helmcode

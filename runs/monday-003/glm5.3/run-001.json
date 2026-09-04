@@ -1,0 +1,78 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.3",
+  "scenario_id": "monday-003",
+  "scenario_prompt_sha256": "aaf788f309d955d2b427c86fe7d95d2bbf88575fde7306adcfd74b0ec4a4103f",
+  "run_id": "monday-003__glm5.3__001",
+  "run_number": 1,
+  "model": {
+    "slug": "glm5.3",
+    "display_name": "GLM 5.3",
+    "provider": "helmcode",
+    "model_id": "glm5.3"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 32000,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+    "extra_body": {
+      "caching": false
+    },
+    "config_sha256": "25351b89c4a38bb3081c3934311dd57b00a466002c5559d2613725181895c9fb",
+    "safety_ceiling_tokens": 32000,
+    "ceiling_semantics": "provider_specific"
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "DELIVERED",
+    "tokens": 7397,
+    "evidence": "explicit_reasoning_tokens",
+    "stream_observed": true,
+    "stream_event_count": 2795
+  },
+  "timestamp_utc": "2026-09-03T05:58:53Z",
+  "usage": {
+    "input_tokens": 3292,
+    "output_tokens": 9074,
+    "reasoning_tokens": 7397
+  },
+  "performance": {
+    "ttft_ms": 1750.6,
+    "ttfa_ms": 87988.1,
+    "total_latency_ms": 102410.0,
+    "tokens_per_second": 90.1
+  },
+  "economics": {
+    "input_cost_usd": 0.000247,
+    "output_cost_usd": 0.002269,
+    "total_cost_usd": 0.002515
+  },
+  "response": "**Bottom line:** One piece of work — Elena's billing schema migration — unlocks both major commitments (Atlas SSO Wednesday, Contoso compliance export Tuesday 16:00). The stale tracker is wrong about two \"blockers\" (security review closed Friday; onboarding instrumentation de-scoped), and the Contoso permission patch must move off Marcus to Daniel or the Tuesday contractual deadline lands with zero slack.\n\n---\n\n## 1. CRITICAL PATH\n\n**Main path — Atlas Enterprise SSO (committed Wed 23 EOD; Laura's rollout starts Thu 09:00, so Wednesday is hard):**\n\n> Elena: schema migration (3h) → Marcus: API compatibility patch (4h) → QA: regression (2h) → Marcus: production rollout (1h)\n\n- Migration is the root: Marcus cannot start the patch until it lands.\n- Compatibility patch is single-threaded — Elena confirmed nobody else has been inside Marcus's branch (answers Sam's Friday question: no backup exists).\n- Security review is **not** on this path — SEC-4471 closed Friday 16:48; permission-check fixes in scope need no re-review.\n\n**Secondary path — Contoso compliance export (contractual, Tue 16:00 CET, no fallback — tenant owner on leave until October):**\n\n> Schema migration lands → permission patch (Daniel 3.5h, after 0.5h walkthrough with Marcus) → Julia produces and sends export (1h)\n\n- **Key decision:** Rachel assigned the patch to Marcus, but he's in the Atlas session Tuesday 09:00–13:00. If he keeps it: patch Tue 13:00–15:00, export 15:00–16:00 — zero slack against a hard auditor deadline. Reassign to Daniel → done Monday, export Tuesday morning, hours of slack.\n\n## 2. MY PLAN FOR TODAY\n\n| # | Time | Action | Owner |\n|---|------|--------|-------|\n| 1 | 09:15 | Email Anja Weber confirming delivery before Tue 16:00 (cc Noah, CEO, Peter) — she asked for confirmation today | Me |\n| 2 | 09:15 | Reassign `contoso_permission_patch` Marcus → Daniel; book Marcus–Daniel 30-min walkthrough at 09:30 (walkthrough doesn't depend on the migration) | Me / Rachel |\n| 3 | 09:20 | Confirm Elena starts migration immediately; ask her to kick off the backfill the moment it lands (~12:00) so post-backfill data is ready ~13:30 | Elena |\n| 4 | 09:25 | Confirm Marcus: compatibility patch Mon 13:00–17:00; hold rollout slot Tue 13:00 (fallback Wed 09:00). Release his 3h instrumentation hold — de-scoped from launch | Marcus |\n| 5 | 09:30 | Correct the stale tracker: security review closed; onboarding instrumentation off the blocker list; launch support already with Julia; Contoso \"investigation\" done — root cause known | Me |\n| 6 | 09:30 | Julia: date-format fix (2h) this morning for Tuesday's demo; schedule export run Tue 09:00 | Julia |\n| 7 | 09:30 | Sarah: pricing page (3h) AM → approval pack (1.5h) → submit **before 12:00** using mockups (Priya confirmed mockups suffice; same-day clearance) | Sarah |\n| 8 | 10:00 | Confirm QA regression slot Tue 09:00–11:00 | QA / Sam |\n| 9 | ~12:00 | Checkpoint: migration landed? If slipped, trigger Daniel handoff (Elena needs 30 min with him before Wed 12:00) — escalate only if not landed by Wed 12:00 | Me |\n| 10 | PM | Daniel executes permission patch (done by Mon EOD); Marcus on patch 13:00–17:00 | Daniel / Marcus |\n\n## 3. PARALLEL WORK\n\n- **Julia — date formatter (2h, Mon):** independent of everything; covers Peter's Tuesday demo.\n- **Sarah — pricing page + approval pack (Mon):** independent; submission unblocks the committee.\n- **Sarah — board pack non-revenue (4h, Tue–Wed):** independent; deadline Fri 10:00.\n- **Sarah — revenue charts (2h):** unblocked ~13:30 today once backfill completes; do Tuesday.\n- **Julia — onboarding launch (2h, Wed/Thu):** no dependencies; deadline Fri 12:00.\n- **Marcus (optional):** Mon 09:00–12:00 he's blocked on the migration anyway — the freed instrumentation work (3h, now non-blocking enrichment) fits the gap if he wants it.\n- **Daniel:** walkthrough 09:30, then patch — fully parallel to Marcus's SSO work.\n\n## 4. BLOCKERS & DEPENDENCIES\n\n- **Schema migration** blocks: SSO compatibility patch, Contoso permission patch, and (via backfill) board revenue charts. One item, three unlocks — already in motion.\n- **Marcus is the constrained resource.** Resolved by: reassigning the permission patch to Daniel, de-scoping instrumentation. What remains on him: patch (Mon), rollout (Tue/Wed), Atlas session (Tue AM, fixed).\n- **Security review — not a blocker.** Closed Friday; update the release checklist.\n- **Packaging approval** blocks the public pricing page (Thu 17:00) — unblocked today by submitting the pack; same-day clearance if in before 12:00.\n- **Daniel's production migration permissions** — contingency only; the 30-min Elena handoff is needed *only if* the migration hasn't landed by Tuesday EOD.\n\n## 5. EARLIEST DELIVERY\n\n**Atlas SSO:** migration Mon 09:00–12:00 → patch Mon 13:00–17:00 → QA Tue 09:00–11:00 → rollout **Tue ~14:00** — roughly 24h ahead of the Wednesday EOD commitment. Treat Tuesday PM as the internal target; Wednesday EOD holds even with one recovery cycle.\n\n**Contoso compliance export:** patch lands Mon EOD → Julia runs it Tue 09:00–10:00 → delivered ~6h before the 16:00 CET deadline.\n\n## 6. RISKS / UNKNOWNS\n\n- **QA finds issues Tuesday morning:** Marcus is unreachable until 13:00 (Atlas session). Fixes slip to Tue PM, rollout Wed AM — commitment holds, but buffer is gone.\n- **\"Can only go in after the migration lands\" is ambiguous** — if Daniel is code-blocked (not just merge-blocked) until 12:00, his patch finishes ~15:30–16:00 Monday. Still fine, but Tuesday slack shrinks.\n- **Merge interaction:** Daniel's patch and Marcus's patch both touch the account-mapping layer. Merge/rebase sequencing and conflict risk are unspecified.\n- **Can QA run regression without Marcus present** Tuesday morning? Unverified.\n- **Compliance export format:** only the demo format preference is documented; the auditor's required format for the compliance file is unstated (Contoso confirms both import fine, so low risk — worth one confirming line to Anja).\n- **Sarah has no slack:** 4.5h today on pricing + pack; board non-revenue (4h) must go Tue/Wed. Friday 10:00 deadline is safe but tight if anything slips.\n- **Onboarding launch day** isn't confirmed — only the Fri 12:00 deadline exists.\n- **Estimate risk on the migration** is the single point of failure for both paths; Elena is fully available Mon–Tue, so recovery time exists, but there is no named backup with permissions until the 30-min handoff happens.",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "gen-1788415030-rtVl1cabrIoJcZtqar66",
+    "raw_usage": {
+      "completion_tokens": 9074,
+      "prompt_tokens": 3292,
+      "total_tokens": 12366,
+      "completion_tokens_details": {
+        "audio_tokens": 0,
+        "reasoning_tokens": 7397,
+        "image_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 0,
+        "video_tokens": 0,
+        "cache_write_tokens": 0
+      }
+    }
+  }
+}
