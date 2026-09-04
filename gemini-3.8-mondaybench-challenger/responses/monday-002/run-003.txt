@@ -1,0 +1,94 @@
+### 1. CURRENT STATE
+
+* **Enterprise Controls Release:** Staging build 2.9.4 passed security verification. Friday’s production deploy failed on shard `eu-03` before rollout opened (no customer impact). Maya explicitly confirmed there is **no executive gate**—release follows Priya’s security policy and Sam’s rollout process.
+* **Release Personnel & Availability:** 
+  * Marcus (Engineering): available 09:15–10:20 (hard departure at 10:20).
+  * Priya (Security): available 09:00–09:35 and 10:25–12:30; unavailable 09:35–10:25.
+  * Sam (Release): available 09:00–12:30.
+* **Atlas Status:** Renewal is signed. Migration window is Monday morning; rollout must begin before 12:00 to prevent postponement to Thursday.
+* **Zenith Status:** Resolved. Contract countersigned Friday for 24 months at €96k ARR. Audit-log export verified. Zenith is back on standard CS cadence; no Monday escalation needed.
+* **Enterprise Pricing:** Pinned workbook (`v4-final.xlsx`) is obsolete. Current internal scenario planning values are €2,500 platform fee / 40 seats / €55 extra seat. Strictly internal—no external quoting allowed.
+* **Customer Communications:** Sarah is out Monday. Daniel has the final announcement copy and Atlas recipient list; he will send immediately after Sam confirms rollout is open.
+* **Revenue / September Expansion Gap:** Target is €180k, expected is €126k, leaving a €54k gap. The gap arithmetic reconciles across four accounts:
+  * Wayne Enterprises: -€18k (expansion postponed to October via signed amendment).
+  * Globex: -€12k (expansion delayed pending procurement).
+  * Soylent: -€10k (expected expansion fell from €28k to €18k; no contract explanation).
+  * Wonka: -€14k (expected expansion fell from €24k to €10k; no contract explanation).
+* **Orion SCIM:** Discrepancy between support ticket (`org_17A`) and CRM/Rollout Bot (`org_71A` showing `scim_enabled=false`). Status comms on hold until org ID and live flag are confirmed.
+
+---
+
+### 2. MY PLAN FOR TODAY
+
+#### Chosen Release Path: **Option A (Build 2.9.4)**
+* **Why Option A:** Build 2.9.4 has no code changes from the build Priya already verified in staging. Per Security policy, it requires **only a 20-minute production post-deploy verification** (no pre-deploy delta review). Deploy takes 20 minutes with a shard precheck.
+* **Why Option B is impossible:** Option B (2.9.5-patch) introduces code changes, requiring a 25-minute delta review by Priya *prior* to production deploy, followed by a 45-minute deploy. Because Marcus arrives at 09:15 and Priya is unavailable from 09:35–10:25, Priya cannot complete a 25-minute review before 09:35. Marcus departs at 10:20, leaving no window for Marcus to complete the 45-minute deploy.
+
+#### Ordered Schedule & Execution:
+* **09:08 – 09:15 | Release Alignment & Staging**
+  * Direct Marcus to execute Option A (Build 2.9.4 with shard precheck) starting at 09:15.
+  * Inform Priya that Option A was selected (no pre-deploy delta review required; post-deploy check scheduled for 10:25).
+  * Align with Sam (standby for 10:45 rollout) and Daniel (hold announcement until Sam confirms rollout).
+  * Instruct Laura (CS) not to promise a 10:30 launch to Atlas, but reassure them rollout will open well before the 12:00 deadline.
+* **09:15 – 09:35 | Production Deploy**
+  * Marcus deploys Build 2.9.4 with shard precheck (20 min). Marcus completes deploy by 09:35 and is free before his 10:20 hard stop.
+* **09:35 – 10:25 | Board Expansion Reconciliation (Solo Focus)**
+  * Finalize and deliver the September Enterprise Expansion reconciliation to Maya before 11:00 (Board pack locks 11:30).
+  * Deliver pure arithmetic: €54k total gap = Wayne (-€18k, signed amendment to Oct), Globex (-€12k, procurement pending), Wonka (-€14k, contract unexplained), Soylent (-€10k, contract unexplained). Note operational correlation (usage/onboarding drops) strictly as hypotheses, not contractual facts.
+* **10:25 – 10:45 | Security Post-Deploy Verification**
+  * Priya returns at 10:25 and executes the required 20-minute post-deploy verification on production.
+* **10:45 – 11:00 | Rollout Opening & Communications**
+  * Sam conducts 15-minute rollout opening and sanity checks. Rollout live by 11:00 (1 hour ahead of Atlas 12:00 deadline).
+  * Sam signals green; Daniel sends customer announcement and Atlas notification.
+* **11:00 – 12:30 | Customer & Technical Follow-up**
+  * Triage Globex SSO blockers (Ticket G-441) with Support/Engineering.
+  * Direct CS to investigate Wonka and Soylent unexplained contractions.
+  * Resolve Orion org ID mismatch with Support/Engineering before sending any customer update.
+
+---
+
+### 3. CUSTOMER / REVENUE PRIORITIES
+
+1. **Globex (Immediate Threat — ARR €84k, Renewal in 18 days):**
+   * *Status:* Usage down 18%, admin logins down 61%, €12k September expansion stalled in procurement.
+   * *Action:* Ticket G-441 (high severity) shows admins cannot complete SSO setup, directly driving the 61% login drop. Escalate G-441 and G-447 (SCIM delay) to Engineering immediately to unblock admin access and rescue renewal/expansion.
+2. **Wonka (Silent Churn Risk — ARR €48k, Renewal in 31 days):**
+   * *Status:* Expansion dropped by €14k without explanation; usage plummeted 35% and admin logins 49%. Zero support tickets logged.
+   * *Action:* Urgent CS executive outreach today. Lack of tickets paired with steep usage drops indicates silent disengagement.
+3. **Soylent (Adoption Friction — ARR €60k, Renewal in 44 days):**
+   * *Status:* Expansion reduced by €10k without explanation; usage down 22%, logins down 28%.
+   * *Action:* Support ticket SO-19 cites slower onboarding. Align CS/Onboarding to resolve adoption friction before the 30-day renewal window.
+4. **Atlas (Operational Delivery Today — ARR at scale):**
+   * *Status:* Signed renewal, but failure to roll out by 12:00 delays migration to Thursday and causes executive friction.
+   * *Action:* Execute Option A deployment to open rollout by 11:00.
+5. **Acme (Healthy / Do Not Alarm — ARR €150k, Renewal in 9 days):**
+   * *Status:* Usage down 45%, logins down 42%.
+   * *Assessment:* **Not a churn risk.** Contract documents an approved shift to annual batch-processing with an anticipated 40–50% interactive usage reduction. Expansion is €0 on plan. Verify renewal signature administratively with CS; do not escalate usage drops.
+
+---
+
+### 4. DO NOT DO
+
+* **DO NOT request Maya’s approval for Enterprise Controls:** Maya explicitly stated on Thursday that she will not add an executive gate; follow Security and Release policy directly.
+* **DO NOT deploy Option B (Build 2.9.5-patch):** Option B cannot be completed within Marcus’s and Priya’s availability windows and will cause missed deadlines.
+* **DO NOT call Zenith regarding renewal risk:** The 24-month contract was countersigned Friday at €96k ARR; the account is resolved and stable.
+* **DO NOT send Enterprise pricing externally to Initech procurement:** The pinned workbook is obsolete, and current pricing scenarios are confidential internal models only.
+* **DO NOT send the Enterprise Controls customer announcement yourself:** Daniel owns this task and has the copy/distribution list ready to send upon Sam’s confirmation.
+* **DO NOT promise a 10:30 launch to Atlas:** Production rollout will not complete verification and sanity checks until ~11:00. Committing to 10:30 creates false expectations.
+* **DO NOT reply to Orion regarding SCIM status:** Do not send updates until the discrepancy between `org_17A` (ticket) and `org_71A` (CRM) is verified.
+* **DO NOT fabricate causal narratives for Soylent and Wonka in the Board reconciliation:** Maya explicitly instructed to restrict board reporting to arithmetic and document that these reductions have no contractual explanation.
+* **DO NOT escalate Acme's negative usage metrics:** The decline was planned and contracted.
+
+---
+
+### 5. UNCLEAR / MUST VERIFY
+
+1. **Orion Account Identity & SCIM Status:**
+   * *Missing Evidence:* Live configuration for the actual Orion account.
+   * *Action:* Support/Engineering must confirm whether Orion is `org_17A` or `org_71A` and read the live `scim_enabled` database flag for the verified org ID.
+2. **Wonka & Soylent Expansion Contraction Drivers:**
+   * *Missing Evidence:* Commercial and customer rationale for reductions (-€14k and -€10k respectively).
+   * *Action:* CS owner (Laura) must contact account sponsors to determine whether these are budget cuts, timeline slips, or competitive threats.
+3. **Globex Ticket G-441 Resolution Timeline:**
+   * *Missing Evidence:* Root cause and ETA for SSO setup failure.
+   * *Action:* Support lead must provide an update on G-441 to ensure SSO is functional before procurement sign-off.

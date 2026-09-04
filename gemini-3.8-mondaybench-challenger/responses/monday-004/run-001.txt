@@ -1,0 +1,178 @@
+# Product & Growth Leadership Business Review
+
+**To:** Northstar Executive Leadership Team  
+**From:** Product & Growth Lead  
+**Date:** Monday Review, November 2, 2026  
+**Subject:** Cross-Functional Business Review: Customer Health, Acquisition Channels, and Plan Economics
+
+---
+
+## 1. EXECUTIVE SUMMARY
+
+Headline metrics for October 2026 appear reassuring on the surface—recognized plan MRR increased from **€746.1k** to **€757.7k**, and invoiced cash jumped due to an upfront annual payment. However, a deeper look reveals critical underlying risks, misleading attribution, and immediate operational priorities:
+
+1. **The November Revenue Cliff:** October was hit by **5 customer churns totaling €303,600 in ARR (€25,300 MRR)**. Because subscriptions were invoiced on October 1st before customers churned mid-month, **zero** of this revenue loss appears in October’s billed numbers. It will hit financials in November.
+2. **Decision 1 — Customer Segment Investment:** **Do not execute an indiscriminate cut to the SMB segment.** While the low-tier **Starter plan** (all SMB) is failing (31% logo churn in October, forward gross margin near 0%), SMB accounts on the **Pro plan** (e.g., Wonka Industries) are expanding usage rapidly and generate high margins. Investment should be removed specifically from the self-serve **Starter plan**, while actively defending **Mid-Market** accounts, where a single churn (Nakatomi, €180k ARR) erased more revenue than all SMB churns combined.
+3. **Decision 2 — Acquisition Channel Spend:** **Do not increase spend on Paid Search.** The perceived surge in Paid Search performance (+€238.8k in attributed bookings) is an attribution artifact: **€174k (73%)** of that total came from contract expansions on existing multi-year Enterprise accounts (Stark Industries, Umbrella Health, Globex). Furthermore, lead-to-trial conversion on Paid Search deteriorated from **8.46% to 6.44%**. Crucially, **CAC payback cannot be calculated** because marketing spend is absent from company reporting.
+4. **Decision 3 — Product Plan Engineering Focus:** Engineering focus next quarter must be allocated to the **Pro Plan**. Pro is Northstar’s most profitable tier (**62.7% gross margin**, compared to 29.5% for Enterprise and 32.2% for Starter), but customers are hitting a hard ceiling. Pro rate-limit support tickets surged from 5 in September to 13 in October as top accounts exceeded the 600k request cap. Engineering must deliver automated burst capacity, dynamic overage billing, and bridging tiers to prevent churn and unlock expansion.
+
+---
+
+## 2. REVENUE & CUSTOMER HEALTH
+
+### Headline vs. Underlying Revenue
+
+At first glance, October performance appeared strong:
+- **Invoiced Collections:** Total invoiced amount was **€883,600** (or €864,100 excluding a duplicate invoice), up from €798,100 in September. This was heavily distorted by **Gringotts**, which converted from a €10,000/month subscription in September to a **€120,000 upfront 12-month contract** in October (`INV-2026-10-0236`).
+- **Recurring Plan MRR:** Normalized monthly recurring revenue in `plans.csv` grew by **€11,600** (+1.6%):
+  - Enterprise: €659,000 $\rightarrow$ €659,500 (+€500)
+  - Pro: €63,000 $\rightarrow$ €66,200 (+€3,200)
+  - Starter: €24,100 $\rightarrow$ €32,000 (+€7,900)
+
+### The Churn Reality
+
+The monthly invoices were issued between October 1st and 3rd. Five accounts paid for the full month of October but terminated contracts mid-month:
+
+| Customer | Segment | Plan | Churn Date | Invoiced Oct 1 | Annual ARR Lost |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Nakatomi** | Mid-market | Pro | 2026-10-19 | €15,000 | €180,000 |
+| **Slate Rock** | SMB | Starter | 2026-10-08 | €2,000 | €24,000 |
+| **Mega-Lo-Mart** | SMB | Starter | 2026-10-15 | €2,700 | €32,400 |
+| **Dinoco** | SMB | Starter | 2026-10-22 | €2,300 | €27,600 |
+| **Buy-N-Large** | SMB | Starter | 2026-10-27 | €3,300 | €39,600 |
+| **TOTAL** | | | | **€25,300** | **€303,600** |
+
+**Impact:** On November 1st, Northstar faces an automatic contracted revenue drop of **€25,300 MRR**.
+
+### Segment Health Analysis
+
+```
+Current Customer Base (as of morning review):
+├── Enterprise:  8 Active | 0 Churned | €6,780,000 Active ARR (77.2%)
+├── Mid-Market:  9 Active | 1 Churned | €1,530,000 Active ARR (17.4%)
+└── SMB:        14 Active | 4 Churned |   €478,800 Active ARR ( 5.4%)
+Total Active ARR: €8,788,800
+```
+
+#### 1. Enterprise Segment (8 accounts — €6,780,000 ARR)
+- **Acme Corp Usage Drop is Benign:** Acme’s API request volume declined by **-45.0%** (4,200,000 to 2,310,000). Operational records confirm Acme transitioned its reporting workload to two daily scheduled batch runs in late September, which carried an anticipated 40–50% drop in interactive calls. Acme's token volume fell by only 12% (4,620M to 4,066M), active users remained stable (240 vs. 232), and Acme filed zero high-severity support tickets in October. This was a successful architectural optimization, not customer decay.
+- **Core Stability:** The remaining Enterprise accounts expanded usage modestly (+5% to +10% request growth).
+
+#### 2. Mid-Market Segment (10 accounts — €1,710,000 total ARR)
+- **High-Severity Risk:** Mid-market is experiencing severe technical churn and contraction. Nakatomi churned on Oct 19 after continuous high-severity API errors and performance tickets in both September and October.
+- **Soylent in Crisis:** Soylent contracted its subscription from €22,000 to €19,500/month. Its usage fell **-27.0%** (980k to 715.4k requests). In October, Soylent raised **8 support tickets**, including high-severity performance issues and a **critical API outage** (`TCK-10-0086`). Without immediate executive intervention, Soylent (€234k ARR) is on track to churn.
+
+#### 3. SMB Segment (18 accounts — €602,400 total ARR)
+- **Bifurcated Performance:** 
+  - **SMB on Pro (5 accounts, €218.4k ARR):** Rapidly growing. Wonka Industries processed 1,020,000 requests in October (+13.3%) and has 85 active users.
+  - **SMB on Starter (13 accounts, €384k initial ARR):** Experiencing structural failure. 4 of 13 accounts churned in October (30.8% logo loss). The drop in October usage for Slate Rock (-34.7%), Mega-Lo-Mart (-37.1%), Dinoco (-35.5%), and Buy-N-Large (-37.0%) was the direct result of partial-month usage before contract cancellation.
+
+---
+
+## 3. ACQUISITION
+
+### CFO Request: CAC Payback by Channel
+**Conclusion:** **CAC Payback cannot be calculated.**  
+The provided data contains lead volumes, trial conversions, and closed contract values, but **contains zero marketing or sales cost data** (no ad spend, headcount costs, or channel budgets). Any estimate of CAC or CAC payback derived from this pack would be fabricated.
+
+### Channel Attribution & Growth's Proposal to Increase Spend
+
+Growth has requested an increase in spend on **Paid Search**, pointing to **€238,800** in attributed revenue in October. **This proposal is fundamentally flawed.**
+
+#### 1. The Attribution Distortion
+Examining `acquisition.csv` reveals that the marketing platform credited Paid Search with renewals and expansions belonging to long-standing enterprise customers:
+
+| Customer | Channel Credited | Attribution Date | First Customer Date | Contract Type | Attributed ARR |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Stark Industries** | Paid Search | 2026-10-13 | **2023-06-02** | Expansion | €84,000 |
+| **Umbrella Health** | Paid Search | 2026-10-20 | **2024-01-15** | Expansion | €48,000 |
+| **Globex** | Paid Search | 2026-10-26 | **2024-03-11** | Expansion | €42,000 |
+| **TOTAL FALSE ATTRIBUTION** | | | | | **€174,000** |
+
+All three accounts have been Northstar clients for 2 to 3 years. They clicked on a campaign launched on September 28, 2026 (`campaign_start`), likely via branded search navigation, and the marketing platform credited the entire account expansion to Paid Search.
+
+In reality, Paid Search generated only **€64,800** in true new logo ARR in October (Spacely-Sprockets at €38.4k and Gekko-Co at €26.4k), and **€0** in September.
+
+#### 2. Funnel Efficiency Decay
+Data from `funnel.csv` shows that Paid Search top-of-funnel efficiency is degrading as volume scales:
+
+| Channel | Sept Leads | Sept Trials | Sept Conv % | Oct Leads | Oct Trials | Oct Conv % | Lead Growth | Conv Rate Change |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Paid Search** | 520 | 44 | **8.46%** | 900 | 58 | **6.44%** | +73.1% | **-2.02% pts** |
+| **Content** | 260 | 31 | **11.92%** | 330 | 34 | **10.30%** | +26.9% | -1.62% pts |
+| **Partner** | 60 | 15 | **25.00%** | 75 | 17 | **22.67%** | +25.0% | -2.33% pts |
+| **Outbound** | 160 | 10 | **6.25%** | 195 | 11 | **5.64%** | +21.9% | -0.61% pts |
+
+While Paid Search lead volume surged 73.1% in October, lead-to-trial conversion dropped by nearly a quarter. In contrast, the **Partner** channel converts leads to paid trials at over **22%** and delivered **€166,800** in genuine new logo ARR in September (Vandelay: €132k; Clampett Oil: €34.8k).
+
+---
+
+## 4. PLAN ECONOMICS
+
+Evaluating plans by gross margin (accounting for direct infrastructure and customer success support costs) completely changes the perspective on where value is created:
+
+### Plan Financial Performance Summary
+
+$$\text{Gross Profit} = \text{Revenue} - (\text{Infra Cost} + \text{Support Cost})$$
+
+| Plan | Month | Customers | MRR (€) | Infra (€) | Support (€) | Total Cost (€) | Gross Profit (€) | Gross Margin | Direct Cost / Cust. |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Enterprise** | Sept | 14 | 659,000 | 288,000 | 159,000 | 447,000 | 212,000 | **32.17%** | €31,929 |
+| | Oct | 14 | 659,500 | 296,800 | 168,000 | 464,800 | 194,700 | **29.52%** | €33,200 |
+| **Pro** | Sept | 8 | 63,000 | 13,600 | 6,900 | 20,500 | 42,500 | **67.46%** | €2,563 |
+| | Oct | 9 | 66,200 | 16,100 | 8,600 | 24,700 | 41,500 | **62.69%** | €2,744 |
+| **Starter** | Sept | 9 | 24,100 | 8,400 | 7,300 | 15,700 | 8,400 | **34.85%** | €1,744 |
+| | Oct | 13 | 32,000 | 11,400 | 10,300 | 21,700 | 10,300 | **32.19%** | €1,669 |
+
+```
+October Gross Margin by Plan:
+Pro:        ████████████████████████████████ 62.7%
+Starter:    ████████████████ 32.2%
+Enterprise: ███████████████ 29.5%
+```
+
+### Key Economic Insights
+
+1. **The Pro Plan is Northstar’s Economic Engine:** Generating **~63% gross margin**, Pro is twice as profitable as Enterprise. However, Pro customers are running into rigid capacity constraints. The plan includes **600,000 requests/month**. In October:
+   - **Wonka Industries** hit **1,020,000 requests** (exceeded limit by 70%; raised 4 rate-limit tickets).
+   - **Aperture Labs** hit **705,000 requests** (raised 2 rate-limit tickets).
+   - **Vandelay** hit **690,000 requests** (raised 1 rate-limit ticket).
+   - **Support bottleneck:** Rate-limit support tickets across Pro jumped from 5 in September to **13 in October**. Because usage beyond the plan is billed only at renewal, Northstar absorbs the immediate compute expense without immediate revenue capture, while frustrating expanding clients.
+2. **Enterprise Margins are Unhealthy:** Despite contributing 87% of monthly revenue, Enterprise delivers a sub-30% gross margin due to heavy direct compute costs (€296.8k) and dedicated Customer Success staff (€168k, averaging €12k per customer/month).
+3. **The Starter Plan Collapse:** Starter shows an apparent 32.2% gross margin in October, but this plan carries severe churn. In November, MRR will fall by €10,300 to **€21,700**. If infrastructure and support costs do not instantly scale down by 45%, **Starter will operate at near 0% gross margin or a net loss**.
+
+---
+
+## 5. RECOMMENDATIONS
+
+### Decision 1: Customer Segment Strategy (Finance Inquiry)
+* **Do NOT disinvest from SMB as an entire category.** High-growth SMB accounts on Pro (Wonka, Oscorp, Pied Piper) are healthy, high-margin, and expanding.
+* **Deprecate or Automate the Starter Plan:** Discontinue dedicated CS allocation for the Starter plan immediately. Transition Starter to a 100% self-serve, unassisted tier with strict automated guardrails. If Starter cannot operate profitably on automated infrastructure, sunset the plan entirely.
+* **Form an Urgent Mid-Market SWAT Team:** Mid-Market represents €1.53M in active ARR but is our greatest immediate risk. Deploy dedicated engineering support to Soylent to resolve API/performance failures before it churns, and conduct executive reviews across the remaining 9 Mid-Market accounts.
+
+### Decision 2: Acquisition Channel Spend (Growth Inquiry)
+* **Reject the Proposed Spend Increase on Paid Search:** Paid Search is experiencing diminishing lead-to-trial conversion, and its apparent ARR generation is an artifact of credited enterprise expansions.
+* **Audit Marketing Attribution Logic:** Reconfigure the attribution model to differentiate between new logo acquisition and account expansion. Existing accounts clicking search ads must be routed to account management and excluded from channel acquisition ROI.
+* **Invest in the Partner Channel:** Partner produces the highest trial conversion rates (>22%) and generated Northstar’s largest new logo deal in September (Vandelay, €132k ARR). Channel investments should prioritize partner co-marketing and integration ecosystems.
+
+### Decision 3: Engineering Focus (Product Inquiry)
+* **Dedicate Next Quarter’s Engineering to the Pro Plan:**
+  1. **Automated Usage & Overages:** Replace static rate limits with soft caps, automatic tiered throttling notifications, and automated in-month overage billing to replace manual renewal reconciliation.
+  2. **Introduce an "Enterprise-Lite" / Pro-Scale Tier:** Wonka (1.02M requests) and Aperture (705k requests) have outgrown the 600k Pro limit but are not yet ready for a €50k+/month Enterprise commitment. Create a bridge tier (e.g., 1.5M requests at €8k–€10k/month) to capture expansion revenue naturally.
+* **Secondary Focus — Platform Batching:** Productize the batch processing pattern proven by Acme Corp across other Enterprise workloads to lower compute footprints and improve Enterprise plan gross margins.
+
+---
+
+## 6. UNCERTAINTIES / DATA ISSUES
+
+During this analysis, six major data discrepancies and structural reporting gaps were identified:
+
+1. **Missing Spend Data (CFO Request Unexecutable):** There is no cost, marketing expense, or sales headcount data in `funnel.csv`, `acquisition.csv`, or any other table. CAC and CAC payback cannot be calculated.
+2. **Double Invoicing Glitch (`revenue.csv`):** Transaction ID `INV-2026-10-0209` for Soylent appears twice:
+   - `2026-10-01, subscription, 1 month, €19,500, source: stripe`
+   - `2026-10-02, subscription, 1 month, €19,500, source: billing_sync`  
+   If both records are ingested into accounting, October cash revenue is overstated by **€19,500**.
+3. **Flawed Expansion Attribution:** Campaigns launched on 2026-09-28 are claiming credit for contract expansions on customers that joined in 2023 and 2024 (Stark Industries, Umbrella Health, Globex, Cyberdyne). This systematically skews channel ROI toward whichever channel existing users happen to click when accessing the service.
+4. **Uncaptured Accrued Revenue:** `plans.csv` states that request volume exceeding plan limits is billed separately at renewal. Accounts such as Wonka, Aperture, and Vandelay ran significant overages in October, but no accrued unbilled revenue is tracked in the monthly reporting pack.
+5. **Database Identifier Inconsistencies:** In `customers.csv`, Wayne Enterprises uses `usage_account_id` = `wayne_ent` and Prestige Worldwide uses `prestige_ww`. While mapped in this review, non-standard naming conventions between billing and telemetry pipelines pose an ongoing risk of pipeline join failures.
+6. **Funnel Cohort Lag:** Funnel conversions represent leads converting to paid trials within the same calendar month, but trial-to-paid subscription cycles are tracked on a separate, unprovided timeline. Funnel conversions cannot be directly correlated to new logo subscription revenue in the same monthly period.

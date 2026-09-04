@@ -1,0 +1,147 @@
+## CEO BRIEFING
+
+**Incident:** INC-2026-1109-01 (Batch API Elevated Error Rates)  
+**Current Status at 14:20 UTC:** OPEN — Mitigated; verification monitoring in progress; root cause under investigation.  
+**CEO Context:** Prepared for your 15:00 UTC board call.
+
+---
+
+### 1. Executive Summary & Current State
+* **What occurred:** Beginning at 11:42 UTC, Northstar’s Batch API experienced elevated 502 errors on job submissions (`POST /v1/batch/jobs`). Non-batch services (Inference, Embeddings, Files) were completely unaffected.
+* **Current state:** Mitigation was applied at 12:58 UTC by routing 100% of Batch API traffic to our healthy worker fleet (fleet-b) and isolating the degraded fleet (fleet-a). Submission error rates dropped from peak to 0.4% within two minutes and are currently stable at 0.3% (normal baseline is 0.2%).
+* **Verification window:** Per Northstar incident policy, a 90-minute stable verification window opened at 13:00 UTC and will conclude at 14:30 UTC (10 minutes from now). If error rates remain normal, the incident will be declared resolved at 14:30 UTC.
+* **Failed job recovery:** We are re-driving all failed submissions internally. As of 13:52 UTC, approximately 60% of failed jobs had been successfully re-processed with zero re-drive errors.
+
+---
+
+### 2. Customer & Traffic Impact
+* **Scope:** Northstar has 36 customer accounts in total. 9 accounts use the Batch API. Exactly **7 customer accounts** experienced errors (all pinned to worker fleet-a). The 2 batch customers pinned to fleet-b experienced zero errors.
+* **Platform volume (incident window 11:42–12:58 UTC):**
+  * Total platform requests across all APIs: 842,000.
+  * Total Batch API requests submitted: 58,900 (~7.0% of platform traffic).
+  * Total Batch API failed requests: 17,602.
+  * **Headline impact figure:** **29.9%** of Batch API requests failed during the 76-minute incident window (representing 2.09% of platform-wide traffic).
+* **Breakdown by affected account (11:42–12:58 UTC):**
+  1. *Stark Industries:* 14,200 requests; 5,180 failures (11:43–12:57 UTC)
+  2. *Contoso:* 9,400 requests; 3,410 failures (11:43–12:56 UTC)
+  3. *Wayne Enterprises:* 7,850 requests; 2,790 failures (11:44–12:57 UTC)
+  4. *Globex:* 6,100 requests; 2,240 failures (11:42–12:55 UTC)
+  5. *Wonka Industries:* 5,900 requests; 2,020 failures (11:46–12:57 UTC)
+  6. *Umbrella Health:* 4,300 requests; 1,560 failures (11:45–12:54 UTC)
+  7. *Initech:* 1,150 requests; 402 failures (11:51–12:48 UTC)
+
+---
+
+### 3. Commercial & SLA Credit Exposure
+* **Standard Terms:** 6 of the 7 affected customers are on standard terms with no SLA credit provisions.
+* **Enterprise SLA (Contoso):** Contoso is the sole affected customer with an agreement providing service credits (Schedule B). Contoso submitted a support ticket at 12:26 UTC inquiring whether this incident breaches their 99.9% Monthly Availability commitment.
+* **Contractual Position:**
+  * Under Schedule B.2 and B.5, Monthly Availability is evaluated across all Covered Services (Inference, Batch, Files) over the **entire calendar month** and is calculated after the close of the month. It cannot be determined from a single 76-minute window mid-month.
+  * Schedule B.2(b) explicitly excludes failures caused by customer integration issues exceeding rate limits. On 2026-11-04 (ticket TKT-8841), Contoso formally notified us that their client software has a known issue retrying failed submits immediately without backoff and tripping rate limits, which remains undeployed pending their Q4 freeze.
+
+---
+
+### 4. Root Cause Status
+* **Root cause is not yet established.** Release `batch-api@2026.11.09-r3` deployed at 11:31 UTC (lowering worker DB connection pool ceilings from 80 to 24), and batch volume surged ~3x at 11:38 UTC due to a scheduled job from Wonka Industries.
+* Workers on fleet-a were observably queueing for database connections; however, the identical software release ran on fleet-b without degradation, and fleet-a has historically handled higher loads. Hypotheses regarding pool sizing, traffic load, or their interaction remain untested while fleet-a is held out of rotation for isolated diagnostics.
+
+---
+
+### 5. Talking Points for Your 15:00 Board Call
+* "Earlier today between 11:42 and 12:58 UTC, we experienced elevated 502 errors on our Batch API endpoint."
+* "Our real-time APIs (Inference, Embeddings, Files) were completely unaffected and operated normally throughout."
+* "Mitigation was executed at 12:58 UTC by routing batch traffic to our secondary worker infrastructure. Error rates immediately normalized to 0.3% and have remained stable."
+* "Our mandatory 90-minute verification window concludes at 14:30 UTC, at which point the incident will be marked resolved. Failed submissions are already ~60% re-processed with zero errors."
+* "Impact was isolated to 7 batch accounts, representing 29.9% of Batch API volume during the 76-minute window, or roughly 2.1% of overall platform traffic."
+* "Financial exposure is minimal: only one affected account holds an SLA credit agreement. Under the contract, SLA availability is measured across all core services over the full month, so this incident does not automatically trigger a breach."
+
+---
+
+## ENGINEERING UPDATE
+
+**Incident ID:** INC-2026-1109-01  
+**Incident Commander Handover**  
+**Time:** 14:20 UTC | Monday 9 November 2026  
+**Status:** OPEN (Mitigated — Verification Phase)
+
+### 1. Current State & Routing
+* **Traffic routing:** 100% of Batch API traffic is currently serving from **fleet-b**. Gateway routing was cut over at 12:58 UTC.
+* **fleet-a state:** Drained and held out of rotation. Preserved in its incident state to allow diagnostic testing without losing forensic evidence. Release `batch-api@2026.11.09-r3` has **not** been rolled back.
+* **System metrics:** Error rate on `POST /v1/batch/jobs` is holding steady at 0.3% (baseline is 0.2%). Queue depths on fleet-b are normal.
+
+### 2. Verification Window
+* **Window duration:** Opened at 13:00 UTC; closes at **14:30 UTC** (10 minutes remaining).
+* **Policy requirement:** 90 minutes of continuous normal error rate on the affected endpoint prior to declaring resolution.
+* **Action at 14:30 UTC:** If error rates remain at ~0.3% with no new failure reports, the incident may formally transition from Mitigated to Resolved.
+
+### 3. Backlog Re-Drive
+* Re-drive of all batch jobs that failed between 11:42 and 12:58 UTC is underway.
+* Progress as of 13:52 UTC was ~60% across all 7 affected accounts (stark-industries, contoso, wayne-enterprises, globex, wonka-industries, umbrella-health, initech). Zero failures observed on re-drive.
+* Incoming team must monitor the remaining ~40% through to completion.
+
+### 4. Root Cause Investigation (Open Hypotheses)
+Root cause remains unverified. Two live hypotheses require systematic testing:
+* **H1 — Connection pool reduction in `r3`:** Release `batch-api@2026.11.09-r3` shipped at 11:31 UTC, reducing max pool size from 80 to 24 per worker. fleet-a workers were seen queueing on DB connections at 12:03 UTC. *Counter-evidence:* fleet-b received the exact same release and never degraded.
+* **H2 — Concentrated load on fleet-a:** fleet-a volume spiked to ~3x morning average starting 11:38 UTC (wonka-industries batch job). *Counter-evidence:* fleet-a handled higher traffic volume on 2026-11-03 without errors.
+* **H1 + H2 Interaction:** Lowered connection pool ceiling may have created a failure cliff under sudden concurrency. Untested.
+* *Ruled out:* Upstream object storage provider (checked 11:47 UTC; green status, Files API healthy).
+
+### 5. Engineering Action Items for Handover
+1. **At 14:30 UTC:** Verify 90-minute window. If clean, log incident resolution. Coordinate with Ruth Adeyemi for final status page update.
+2. **Monitor Re-drive:** Track the remaining 40% of failed job re-drives to 100% completion.
+3. **fleet-a Diagnostic Testing:** Conduct controlled load and connection-pool testing on isolated fleet-a. Validate whether rolling back pool configuration resolves the connection bottleneck under synthetic load.
+4. **fleet-a Restoration:** Prepare fleet-a for re-introduction to rotation once validated (internal target for wrap-up and rotation is ~16:00 UTC per Marcus).
+5. **Security Follow-up (SEC-411):** Non-incident maintenance logged during configuration review: batch worker DB role has unnecessary read/write access to the billing schema. Marcus owns this ticket to restrict permissions to read-only on required tables this week.
+
+---
+
+## CUSTOMER EMAIL
+
+**To:** Priya Raghunathan <priya.raghunathan@contoso.example>  
+**Cc:** Tomas Lindqvist <support@northstar.example>  
+**Subject:** Update regarding Batch API service issues [TKT-8903, TKT-8907]
+
+Dear Priya,
+
+We are writing to update you directly regarding the elevated error rates you reported earlier today on the Batch API (`POST /v1/batch/jobs`), and to address your follow-up inquiry regarding service levels.
+
+### Incident Status & Mitigation
+An incident affecting Batch API submissions began at 11:42 UTC today, 9 November 2026. At 12:58 UTC, our engineering team applied a mitigation that shifted batch processing onto healthy infrastructure. 
+
+Following this change, service error rates returned to normal baseline levels. We are currently actively monitoring the service to confirm sustained stability before declaring full recovery. In parallel, our systems are actively re-driving the batch submissions that failed during the disruption.
+
+### Contoso Account Impact
+During the incident window between 11:42 UTC and 12:58 UTC, Contoso’s account experienced the following:
+* **Batch API requests submitted:** 9,400
+* **Failed requests (502 status):** 3,410
+* **First recorded failure:** 11:43 UTC
+* **Last recorded failure:** 12:56 UTC
+
+Our real-time APIs (Inference, Files, and Embeddings) were not part of this incident and remained fully operational.
+
+### Schedule B / Service Level Inquiry
+Regarding your question in ticket TKT-8907 concerning service credits under Schedule B: 
+
+Under Section B.2 and Section B.5 of our agreement, Monthly Availability is calculated across all Covered Services (Inference, Batch, and Files APIs) across the entirety of the calendar month, based on service records evaluated after the month concludes. Because Monthly Availability is an aggregate monthly calculation, commitment determinations and applicable service credit entitlements cannot be established mid-month while the billing period is active. In accordance with Section B.5, Northstar publishes final monthly availability figures within 10 business days of month-end, after which any applicable credit claims may be submitted.
+
+We will provide our next update on overall service stability by 15:00 UTC. If you have immediate operational questions regarding your queued jobs, please let us know.
+
+Sincerely,
+
+Incident Commander  
+Northstar API Platform
+
+---
+
+## STATUS PAGE UPDATE
+
+**Update: Monitoring**  
+**Affected Service:** Batch API  
+
+Between 11:42 UTC and 12:58 UTC, the Batch API experienced elevated 502 error rates on job submissions. Other Northstar API services (Inference, Embeddings, and Files) were unaffected and have remained fully operational.
+
+A mitigation was applied at 12:58 UTC by routing Batch API traffic to alternative healthy infrastructure. Error rates returned to normal baseline levels immediately following the traffic shift. 
+
+We are actively monitoring system performance and error rates across the platform before confirming full recovery. A backlog re-drive of failed submissions is currently in progress.
+
+We will provide our next update by 14:45 UTC or as soon as full recovery is confirmed.
