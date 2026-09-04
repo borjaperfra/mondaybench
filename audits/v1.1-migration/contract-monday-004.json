@@ -1,0 +1,488 @@
+{
+  "contract_schema_version": "1",
+  "scenario_id": "monday-004",
+  "scenario_prompt_sha256": "3a0cbb569ca4f711b8907177af9204cec267d26f35f732829df56b03ed23ef99",
+  "evaluator_id": "evaluator-opus5-v0.4",
+  "rubric_version": "0.3",
+  "rubric_file": "rubric-0.3.yaml",
+  "ground_truth_sha256": "efe99c65db5a7f79bc1b554dd601f23e4422525a125a645f61401eedd01b6810",
+  "ground_truth_sliced_per_criterion": false,
+  "judge_instructions": {
+    "system_prompt_sha256": "89baecb8058f2896d222da4c678112734588f37d6c7e0a2077c04f48136a487a",
+    "criterion": {
+      "source": "evaluators/monday-004/judge-prompt.md",
+      "sha256": "3a6b47dda72b246a88abe2858138f7b1f489fa90c7d96bee5775c2fbb63ddc4e"
+    },
+    "penalty": {
+      "source": "evaluators/monday-004/penalty-judge-prompt.md",
+      "sha256": "fd1cab54f8b166e4ea4b4487e032e6edc508034c9376c8acdfe4e0b4821837b9"
+    },
+    "noise": null
+  },
+  "label_semantics": {
+    "labels": [
+      "PASS",
+      "PARTIAL",
+      "FAIL"
+    ],
+    "tie_rule": "lower"
+  },
+  "scoring": {
+    "total_base_points": 100.0,
+    "maximum_global_penalty": 25.0,
+    "dimension_max": {
+      "acquisition_reasoning": 19.0,
+      "cross_table_data_quality": 18.0,
+      "customer_health": 15.0,
+      "decision_quality": 9.0,
+      "plan_economics": 19.0,
+      "revenue_reasoning": 20.0
+    }
+  },
+  "criteria": [
+    {
+      "id": "duplicate_detected",
+      "dimension": "revenue_reasoning",
+      "points": {
+        "pass": 4.0,
+        "partial": 2.0,
+        "fail": 0.0
+      },
+      "pass_definition": "Identifies that one October invoice is recorded twice under the same transaction_id (INV-2026-10-0209, Soylent, EUR 19,500, loaded from two sources) and excludes one copy before quoting an October total.",
+      "partial_definition": "Flags a possible duplicate or a suspicious pair of rows without identifying the transaction, or identifies it but still quotes the inflated total as the October figure.",
+      "fail_definition": "The duplicate is not mentioned, or its existence is denied.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "annual_prepayment_normalized",
+      "dimension": "revenue_reasoning",
+      "points": {
+        "pass": 6.0,
+        "partial": 3.0,
+        "fail": 0.0
+      },
+      "pass_definition": "Identifies the EUR 120,000 Gringotts invoice covering twelve months and converts it to its monthly equivalent of EUR 10,000 before comparing months. Any equivalent treatment - dividing by twelve, excluding it and noting the exclusion, or restating October on a recurring basis - counts.",
+      "partial_definition": "Notices that October contains a large or annual invoice, or that the two months are not comparable, without normalising it or without stating the monthly equivalent.",
+      "fail_definition": "Treats the EUR 120,000 as October revenue with no adjustment, or treats it as Gringotts' monthly value.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "headline_vs_recurring_growth",
+      "dimension": "revenue_reasoning",
+      "points": {
+        "pass": 6.0,
+        "partial": 3.0,
+        "fail": 0.0
+      },
+      "pass_definition": "States both figures: the headline of about +12% on the raw invoice sum, and a normalised figure that refutes it. Two normalisations are correct and they do not land in the same place - subscriptions only gives roughly +1.6%, and subscriptions plus one-off services gives roughly -4.2%, because September carried EUR 51,000 of professional services against October's EUR 5,700. Either passes (tolerance +/- 1.5 points, and 'roughly flat' or 'low single digits' passes for the first) provided the treatment is stated. The gap is attributed to the annual invoice, and to the duplicate where the candidate found it.",
+      "partial_definition": "Establishes that the headline overstates underlying growth but gives only one of the two figures, or gives a normalised figure outside both tolerances while the reasoning is right, or gives a figure without saying which invoices are in it.",
+      "fail_definition": "Reports the headline growth as the real growth rate, or offers no month-on-month comparison.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "revenue_conclusion",
+      "dimension": "revenue_reasoning",
+      "points": {
+        "pass": 4.0,
+        "partial": 2.0,
+        "fail": 0.0
+      },
+      "pass_definition": "The section's conclusion is that underlying recurring revenue is roughly flat and that the growth in the reported number is non-recurring, and the conclusion is carried into what leadership is told rather than left in the workings.",
+      "partial_definition": "Reaches the right conclusion but hedges it against the headline, or states it without any figure behind it.",
+      "fail_definition": "Concludes that revenue grew materially, or leaves the reader with the headline as the answer.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "segment_retention_quantified",
+      "dimension": "customer_health",
+      "points": {
+        "pass": 5.0,
+        "partial": 2.5,
+        "fail": 0.0
+      },
+      "pass_definition": "Quantifies retention or churn across the customer populations on any correct and clearly labelled basis, and gets the ranking right. Any of these counts, and no particular one is required: logo churn (SMB 4 of 18 = 22.2%, Mid-market 1 of 10 = 10.0%, Enterprise 0 of 8); ARR-weighted churn (SMB EUR 123,600 against an SMB base of about EUR 602,400, roughly 20-26% depending on whether the base is opening or closing); or gross/net revenue retention by segment. Plan-level figures - Starter 4 of 13, Pro 1 of 9, Enterprise plan 0 of 14 - are equally correct provided they are labelled as plan rather than segment. The framing must be stated and used consistently, and the figures must support the interpretation the response then draws.",
+      "partial_definition": "Quantifies retention for some populations but not enough to rank them; or one denominator or base is wrong in a way that does not change which population is worst; or the segment and plan framings are mixed without saying so.",
+      "fail_definition": "No quantification of churn or retention on any basis, or a figure that misstates which population is worst, or plan counts presented as segment counts with no other figures to correct them.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "sample_size_arr_context",
+      "dimension": "customer_health",
+      "points": {
+        "pass": 4.0,
+        "partial": 2.0,
+        "fail": 0.0
+      },
+      "pass_definition": "Puts the SMB rate in context with at least one of: the size of the denominator (18 customers, 4 events), the ARR lost (EUR 123,600, about 1.4% of the book), or the comparison that the single Mid-market churn cost EUR 180,000 - more than all four SMB churns together.",
+      "partial_definition": "Notes that SMB is small or that the numbers are few, without quantifying it.",
+      "fail_definition": "Treats the SMB rate as directly comparable with the other segments' rates with no reference to size or value.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "acme_false_positive_avoided",
+      "dimension": "customer_health",
+      "points": {
+        "pass": 4.0,
+        "partial": 2.0,
+        "fail": 0.0
+      },
+      "pass_definition": "Identifies Acme's roughly -45% request decline, connects it to the stated batch migration, and shows the account is otherwise healthy using at least one further figure - tokens down only about 12%, active users about flat, MRR unchanged at EUR 78,000, or no rise in tickets.",
+      "partial_definition": "Cites the migration and declines to call it churn risk, but supports it with no second signal; or flags the decline as a risk while acknowledging the migration.",
+      "fail_definition": "Presents Acme as a churn or revenue risk on the request decline, or does not mention the decline at all.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "no_churn_overreach",
+      "dimension": "customer_health",
+      "points": {
+        "pass": 2.0,
+        "partial": 1.0,
+        "fail": 0.0
+      },
+      "pass_definition": "Does not claim a cause for the churn that has happened. Churn reasons are absent from the pack and the response says so, or simply refrains from asserting one.",
+      "partial_definition": "Offers a speculative cause but labels it as a hypothesis to be tested.",
+      "fail_definition": "States why customers churned as though the data showed it.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "raw_attribution_not_equivalent_new_business",
+      "dimension": "acquisition_reasoning",
+      "points": {
+        "pass": 5.0,
+        "partial": 2.5,
+        "fail": 0.0
+      },
+      "pass_definition": "States that Paid Search's leading attributed revenue (EUR 274,800) is not new business, and gives the split or its size: EUR 210,000 of it, about 76%, is expansion on existing accounts.",
+      "partial_definition": "Observes that attribution includes expansion or existing customers without quantifying it, or quantifies it for the whole table without singling out Paid Search.",
+      "fail_definition": "Ranks channels on attributed revenue with no adjustment.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "existing_customer_expansion_removed",
+      "dimension": "acquisition_reasoning",
+      "points": {
+        "pass": 5.0,
+        "partial": 2.5,
+        "fail": 0.0
+      },
+      "pass_definition": "Recomputes the ranking on new-logo revenue and gets the reversal: Partner EUR 166,800 first, Content EUR 91,200 second, Paid Search EUR 64,800 third (tolerance 1%). Using new-logo counts, or first_customer_date preceding campaign_start, to reach the same ordering also passes.",
+      "partial_definition": "Separates new logos from expansion but gets the resulting ranking or two of the three figures wrong, or does it for Paid Search alone.",
+      "fail_definition": "No new-logo view of the channels.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "conversion_rate_vs_absolute_volume",
+      "dimension": "acquisition_reasoning",
+      "points": {
+        "pass": 4.0,
+        "partial": 2.0,
+        "fail": 0.0
+      },
+      "pass_definition": "Reports both movements: conversion rate fell from 10.0% to 8.0% while absolute conversions rose from 100 to 120 (+20%) on 50% more leads. Channel-level equivalents pass if both directions are stated.",
+      "partial_definition": "Reports one of the two, or reports both without noticing they point in opposite directions.",
+      "fail_definition": "Declares October better or worse on one of the two figures alone.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "no_unsupported_channel_scale_decision",
+      "dimension": "acquisition_reasoning",
+      "points": {
+        "pass": 3.0,
+        "partial": 1.5,
+        "fail": 0.0
+      },
+      "pass_definition": "Declines to recommend doubling or materially increasing Paid Search spend on this evidence, and says what would be needed - channel spend, cost per acquisition, or lead quality.",
+      "partial_definition": "Hedges the recommendation, or recommends a limited test without naming what is missing.",
+      "fail_definition": "Recommends increasing Paid Search spend on attributed revenue, or recommends cutting it with equally thin evidence.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "cac_payback_unavailable",
+      "dimension": "acquisition_reasoning",
+      "points": {
+        "pass": 2.0,
+        "partial": 1.0,
+        "fail": 0.0
+      },
+      "pass_definition": "States that CAC and CAC payback cannot be calculated from the pack, and identifies what is absent: acquisition or marketing spend by channel. Infrastructure and support cost are correctly not treated as acquisition cost.",
+      "partial_definition": "Says the metric is uncertain or hard to compute without naming the missing input, or computes a proxy while flagging it as not CAC payback.",
+      "fail_definition": "Produces a CAC or payback figure, or assumes a spend number.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "contribution_calculated",
+      "dimension": "plan_economics",
+      "points": {
+        "pass": 3.0,
+        "partial": 1.5,
+        "fail": 0.0
+      },
+      "pass_definition": "Computes contribution per plan as revenue less infrastructure and support cost for at least October, within 1%: enterprise EUR 194,700, pro EUR 41,500, starter EUR 10,300.",
+      "partial_definition": "Computes contribution for some plans, or subtracts only one of the two cost lines, or uses September without saying so.",
+      "fail_definition": "No cost-adjusted figure; plans compared on revenue alone.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "margin_calculated_or_correctly_compared",
+      "dimension": "plan_economics",
+      "points": {
+        "pass": 3.0,
+        "partial": 1.5,
+        "fail": 0.0
+      },
+      "pass_definition": "Expresses the result as a margin or an equivalent ranking and gets it right within 1 percentage point: enterprise 29.5%, pro 62.7%, starter 32.2%. A correct ordering with contribution per euro of revenue, stated numerically, also passes.",
+      "partial_definition": "Gives margins for some plans, or an ordering with one figure materially wrong.",
+      "fail_definition": "No margin or equivalent, or a margin ranking that puts Enterprise on top.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "absolute_vs_scalable_economics",
+      "dimension": "plan_economics",
+      "points": {
+        "pass": 5.0,
+        "partial": 2.5,
+        "fail": 0.0
+      },
+      "pass_definition": "Holds both halves of the plan comparison at once and says which question each answers. Enterprise leads on absolute contribution (EUR 194,700 against Pro's EUR 41,500) and on revenue per customer (about EUR 47,100 against about EUR 7,400), and is the weakest of the three on contribution margin (29.5% against 62.7%). The response states that a question about where the revenue is takes the first figure and a question about which economics scale takes the second, and does not then argue a product-priority decision from the absolute figure.",
+      "partial_definition": "Presents both figures and draws the contrast, but does not distinguish what each is good for; or draws the distinction and then leans on absolute size anyway when it matters.",
+      "fail_definition": "Treats absolute contribution and margin as the same signal, or concludes Enterprise is the strongest plan on economics.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "plan_trajectory_evidence",
+      "dimension": "plan_economics",
+      "points": {
+        "pass": 3.0,
+        "partial": 1.5,
+        "fail": 0.0
+      },
+      "pass_definition": "Quantifies at least one forward-looking usage signal per plan and gets it right: Pro requests up about 14.8% month on month against an Enterprise book that is flat (-0.4%), or the customers already above their included request volume (three of nine on Pro - Wonka 1.02M, Aperture 705k, Vandelay 690k - against a 600,000 allowance, and two of fourteen on Enterprise). Reading the distribution rather than the plan average is the point.",
+      "partial_definition": "Refers to adoption, growth or the included-volume ceiling without a figure, or quantifies it for one plan only.",
+      "fail_definition": "No usage trajectory anywhere, or a claim about utilisation that is contradicted by the accounts - for example that no plan has customers above its included volume, which is true of the averages and false of the customers.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "product_focus_supported",
+      "dimension": "plan_economics",
+      "points": {
+        "pass": 5.0,
+        "partial": 2.5,
+        "fail": 0.0
+      },
+      "pass_definition": "Recommends Pro for product attention and supports it with at least two signals beyond margin - usage growth against a flat Enterprise book, three of nine customers already over the 600,000 included requests, the highest tickets per customer (3.11) and rising, or the new logo added in October. Recommending another plan passes only if it is argued on cost-adjusted economics and at least two independent signals, and does not rest on absolute revenue.",
+      "partial_definition": "Recommends Pro on margin alone, or names Pro alongside another plan without choosing, or recommends a plan on one signal.",
+      "fail_definition": "Recommends the plan with the largest revenue because it is the largest, or makes no recommendation.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "customer_id_alias_resolved",
+      "dimension": "cross_table_data_quality",
+      "points": {
+        "pass": 4.0,
+        "partial": 2.0,
+        "fail": 0.0
+      },
+      "pass_definition": "Uses usage_account_id to join billing to usage, so Wayne Enterprises' usage (3.10M requests in September, 3.41M in October) is present and attributed to it. Naming the alias, or reporting Wayne's usage correctly anywhere, both count; so does an aggregate that is only arithmetically reachable with Wayne included.",
+      "partial_definition": "Notices that some identifiers differ between files without resolving them, or resolves Wayne but reports another aliased account as missing.",
+      "fail_definition": "Reports Wayne Enterprises as having no usage; excludes it from a usage analysis without noticing; or never attempts an account-level join between billing and usage at all, in which case there is no evidence the alias was handled and no credit is due.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "support_normalized",
+      "dimension": "cross_table_data_quality",
+      "points": {
+        "pass": 4.0,
+        "partial": 2.0,
+        "fail": 0.0
+      },
+      "pass_definition": "Compares support load on a normalised basis rather than raw counts, and reaches a conclusion in which Enterprise is not the worst despite raising the most tickets (35 of 74 in October). Any consistent denominator counts: tickets per customer (Pro 3.11 against Enterprise 2.50 is the canonical form), per active user, per million requests, or support cost as a share of plan revenue.",
+      "partial_definition": "Notes that Enterprise's raw count reflects its size without computing a rate, or computes a rate for one plan only.",
+      "fail_definition": "Concludes Enterprise has the worst support experience from the raw ticket count.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "cross_table_customer_signal",
+      "dimension": "cross_table_data_quality",
+      "points": {
+        "pass": 4.0,
+        "partial": 2.0,
+        "fail": 0.0
+      },
+      "pass_definition": "Builds at least one account-level finding from three or more tables - for example Soylent's usage, tickets and revenue read together, or an account's plan, usage and included volume - and states the figures it rests on.",
+      "partial_definition": "Combines two tables, or asserts a cross-table pattern without the figures.",
+      "fail_definition": "Every finding comes from a single table.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "figures_carried_correctly",
+      "dimension": "cross_table_data_quality",
+      "points": {
+        "pass": 3.0,
+        "partial": 1.5,
+        "fail": 0.0
+      },
+      "pass_definition": "Every figure the response relies on that can be checked against the pack is correct within tolerance, and no quantitative claim it makes is left contradicting another. Rounding, approximation and a stated basis that differs from the answer key's all pass; so does omitting a figure entirely.",
+      "partial_definition": "One or more quantitative slips that change no decision: the recommendations still stand on correct figures, and the analysis reads the same with the errors corrected. A single wrong figure that produces a misleading secondary rate belongs here.",
+      "fail_definition": "Repeated incorrect figures across different parts of the analysis, or a figure that is materially wrong, or an incorrect value that a recommendation actually rests on.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "causal_boundary",
+      "dimension": "cross_table_data_quality",
+      "points": {
+        "pass": 3.0,
+        "partial": 1.5,
+        "fail": 0.0
+      },
+      "pass_definition": "Treats Soylent's three simultaneous movements - requests down 27%, tickets from 3 to 8, MRR down EUR 2,500 - as a pattern to investigate and states that the data does not establish what caused what.",
+      "partial_definition": "Reports the pattern and implies a mechanism without asserting it, or asserts causation but marks it as a hypothesis.",
+      "fail_definition": "States that one of the three caused another, or reports only one of them.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "segment_recommendation",
+      "dimension": "decision_quality",
+      "points": {
+        "pass": 3.0,
+        "partial": 1.5,
+        "fail": 0.0
+      },
+      "pass_definition": "Does not recommend cutting or exiting SMB. Recommends investigating it, with what is needed named: acquisition cost, lifetime value, retention drivers, or segment-level economics the pack does not contain.",
+      "partial_definition": "Declines to cut SMB but gives no next step, or recommends a reduction hedged with conditions.",
+      "fail_definition": "Recommends cutting, exiting or defunding SMB.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "acquisition_recommendation",
+      "dimension": "decision_quality",
+      "points": {
+        "pass": 3.0,
+        "partial": 1.5,
+        "fail": 0.0
+      },
+      "pass_definition": "The channel recommendation follows the corrected view: Partner (or Partner and Content) is identified as the stronger new-logo performer, and any spend recommendation is conditioned on the missing cost data.",
+      "partial_definition": "Corrects the attribution but leaves no recommendation, or names the right channel without conditioning the spend.",
+      "fail_definition": "Recommends scaling on raw attributed revenue.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "product_recommendation",
+      "dimension": "decision_quality",
+      "points": {
+        "pass": 1.0,
+        "partial": 0.5,
+        "fail": 0.0
+      },
+      "pass_definition": "A single, actionable plan recommendation is stated in the recommendations section, consistent with the plan economics section.",
+      "partial_definition": "A recommendation that is stated but vague, or inconsistent with the analysis above it.",
+      "fail_definition": "No plan recommendation, or one that contradicts its own analysis.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "uncertainty_discipline",
+      "dimension": "decision_quality",
+      "points": {
+        "pass": 2.0,
+        "partial": 1.0,
+        "fail": 0.0
+      },
+      "pass_definition": "The uncertainties section names real gaps in this pack - missing channel spend, no segment-level economics, no churn reasons, trial-to-paid conversion not tracked - and invents no figures anywhere in the response.",
+      "partial_definition": "Names one real gap, or names gaps that are not the material ones.",
+      "fail_definition": "No uncertainties, or an uncertainties section that only restates findings.",
+      "ground_truth_paths": []
+    }
+  ],
+  "noise": null,
+  "penalties": [
+    {
+      "type": "MAJOR_DATA_ERROR",
+      "points": -7.0,
+      "definition": ""
+    },
+    {
+      "type": "MATERIAL_HALLUCINATION",
+      "points": -5.0,
+      "definition": ""
+    },
+    {
+      "type": "PROHIBITED_ACTION",
+      "points": -7.0,
+      "definition": ""
+    },
+    {
+      "type": "UNSUPPORTED_CAUSALITY",
+      "points": -5.0,
+      "definition": ""
+    }
+  ],
+  "output_contract": {
+    "criterion_schema": {
+      "type": "object",
+      "properties": {
+        "result": {
+          "type": "string",
+          "enum": [
+            "PASS",
+            "PARTIAL",
+            "FAIL"
+          ]
+        },
+        "evidence": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "result",
+        "evidence",
+        "reason"
+      ],
+      "additionalProperties": false
+    },
+    "noise_schema": null,
+    "penalty_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "violations": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "evidence": {
+                "type": "string"
+              },
+              "materially_misleading": {
+                "type": "boolean"
+              },
+              "reason": {
+                "type": "string"
+              },
+              "type": {
+                "enum": [
+                  "MAJOR_DATA_ERROR",
+                  "MATERIAL_HALLUCINATION",
+                  "PROHIBITED_ACTION",
+                  "UNSUPPORTED_CAUSALITY"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "type",
+              "evidence",
+              "reason",
+              "materially_misleading"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "violations"
+      ],
+      "type": "object"
+    }
+  }
+}

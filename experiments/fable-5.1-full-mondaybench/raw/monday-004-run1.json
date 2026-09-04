@@ -1,0 +1,1489 @@
+{
+  "record_type": "off_benchmark_sensitivity_run",
+  "not_a_benchmark_artifact": true,
+  "label": "M004_RUN1",
+  "scenario_id": "monday-002",
+  "rubric_version": "0.2",
+  "prompt_file": "monday-004.txt",
+  "prompt_sha256": "3a0cbb569ca4f711b8907177af9204cec267d26f35f732829df56b03ed23ef99",
+  "route": "claude -p (Claude Code CLI 2.1.258), OAuth subscription",
+  "model": {
+    "requested": "claude-fable-5-1",
+    "served": "claude-fable-5-1",
+    "provider": "firstParty"
+  },
+  "generation": {
+    "system_prompt_requested": "You are a helpful assistant.",
+    "effort_requested": "high",
+    "temperature": null,
+    "top_p": null,
+    "route_max_output_tokens": 64000,
+    "tools": []
+  },
+  "timestamp_utc": "2026-09-02T08:18:51Z",
+  "usage": {
+    "input_tokens": 2,
+    "output_tokens": 16714,
+    "thinking_tokens": 9502,
+    "cache_read_input_tokens": 0,
+    "cache_creation_input_tokens": 12630
+  },
+  "performance": {
+    "ttft_ms": 5223.4,
+    "ttfa_ms": 123773.9,
+    "total_latency_ms": 211279.3,
+    "duration_api_ms": 212382
+  },
+  "economics": {
+    "cost_usd_route_reported": 1.08832,
+    "cost_basis": "list",
+    "models_billed": [
+      "claude-fable-5-1",
+      "claude-haiku-4-5-20251001"
+    ]
+  },
+  "finish_reason": "end_turn",
+  "is_error": false,
+  "num_turns": 1,
+  "response": "# Northstar — Monday Business Review: Product & Growth analysis\n\n## 1. EXECUTIVE SUMMARY\n\n1. **The headline revenue growth is an artefact.** Raw October invoicing is €892.9k vs €797.1k in September (+12%). Strip out a duplicate invoice (€19.5k), an annual pre-payment booked at full value (€110k excess), and non-recurring professional services, and recurring revenue grew **€746.1k → €757.7k (+1.6%)**. After the five October churns, the November run-rate starting point is **€732.4k — below September**.\n2. **Churn just spiked.** 5 of 31 customers active on 1 October churned (16% logo churn in one month): 4 of 9 starter customers (44%) plus Nakatomi (Mid-market Pro, €180k ARR). All five showed a ~16–37% usage drop in October and most had unresolved high-severity `api_errors` tickets. The €25.3k MRR lost is more than double the €11.1k MRR from October's five new logos.\n3. **Soylent (€234k ARR) is the next churn risk**: usage −27%, downgraded €22k → €19.5k/month, and 8 tickets in October including a critical `api_errors`. **Wayne Enterprises (€1.008M ARR) renews 30 November** with recurring high-severity `api_errors`/`performance` tickets in both months.\n4. **Acme's −45% request drop is not a churn signal** — it matches the planned batch migration (40–50% expected); tokens −12%, users 240→232, tickets fell 4→3 with none high-severity. But it mechanically drags the Enterprise plan's average usage down and masks +8% underlying growth.\n5. **Paid search's \"€238.8k attributed\" is not evidence to increase spend.** €174k of it is last-touch-attributed expansion from customers acquired in 2023–24, none of which is yet visible in invoices or ARR. New-logo ARR from paid search over two months is €64.8k. Lead-to-trial fell from 8.5% to 6.4% as volume grew 73%. **CAC and payback cannot be calculated — there is no spend data in the pack.**\n6. **Pro is the strongest plan on economics** (~63% margin) and shows clear unmet demand (3 customers over the 600k included requests; rate-limit tickets 5 → 13). Enterprise margin compressed 32.2% → 29.5% on flat revenue. Starter is marginal (32%) and shrinking in ACV.\n\n---\n\n## 2. REVENUE & CUSTOMER HEALTH\n\n### 2.1 Reconciling the headline\n\n| | Sept | Oct | Change |\n|---|---|---|---|\n| Raw invoices as loaded | 797,100 | 892,900 | +12.0% |\n| Remove duplicate INV-2026-10-0209 (Soylent, `billing_sync`) | 797,100 | 873,400 | +9.6% |\n| Normalise Gringotts annual (€120k → €10k monthly-equivalent) | 797,100 | 763,400 | −4.2% |\n| Remove professional services (€51k Sept: Globex 33k, Hooli 18k; €5.7k Oct: Aperture) | **746,100** | **757,700** | **+1.6%** |\n\nThe recurring figures reconcile exactly to `plans.csv` (659,000+63,000+24,100 = 746,100; 659,500+66,200+32,000 = 757,700), which confirms plans.csv is already MRR-normalised while revenue.csv is not.\n\n### 2.2 MRR bridge Sept → Oct (+€11,600)\n\n- New logos (Oct): Spacely 3,200 + Cogswell 2,100 + Bishop 1,700 + Gekko 2,200 + Paper Street 1,900 = **+11,100**\n- Expansion: Hooli 18,000 → 21,000 = **+3,000** (matches acquisition.csv's €36k ARR attribution)\n- Contraction: Soylent 22,000 → 19,500 = **−2,500**\n- Net = +11,600 ✓\n\n**Not yet in the bridge but already known:**\n- Churned in October after being invoiced 1 Oct: Nakatomi 15,000 + Slate Rock 2,000 + Mega-Lo-Mart 2,700 + Dinoco 2,300 + Buy N Large 3,300 = **−25,300** → November starting MRR ≈ **€732,400** (−1.8% vs Sept).\n- October expansions in acquisition.csv (Stark 7,000, Umbrella 4,000, Globex 3,500, Massive Dynamic 1,500, Cyberdyne 2,000 = +18,000/month) \"take effect from the following billing cycle\". If they land, November ≈ €750k — roughly flat with September. None are reflected in `arr_eur` yet, so they are unverified.\n\n### 2.3 Segment view\n\n| Segment | Customers | Oct MRR | Share | Post-churn MRR | Notes |\n|---|---|---|---|---|---|\n| Enterprise | 8 | 565,000 | 74.6% | 565,000 | ARR €6.78M; zero movement in 2 months |\n| Mid-market | 10 → 9 | 142,500 | 18.8% | 127,500 | Nakatomi churned; Soylent contracted & at risk; Hooli expanded; Gringotts moved to annual |\n| SMB | 18 → 14 | 50,200 | 6.6% | 39,900 | 4 starter churns; 5 new logos smaller than those lost |\n\n**Concentration:** 8 logos = 75% of MRR; Stark + Wayne + Acme alone = €257k/month (34%). Wayne renews 30 Nov and has open/pending high-severity tickets.\n\n### 2.4 Churn signals were visible in the data\n\n| Customer | Plan | Usage Δ Oct | Tickets | Churn date |\n|---|---|---|---|---|\n| Nakatomi | Pro | −16.1% | High api_errors Sept & Oct (Oct open) | 19 Oct |\n| Slate Rock | Starter | −34.7% | High api_errors Sept (open), Oct | 8 Oct |\n| Mega-Lo-Mart | Starter | −37.1% | billing pending | 15 Oct |\n| Dinoco | Starter | −35.5% | High api_errors Oct | 22 Oct |\n| Buy N Large | Starter | −37.0% | billing | 27 Oct |\n\nEvery non-churned starter customer grew 8–53%. A ~35% same-month drop clustered in one cohort (all acquired 2024–2025, all churning in October) points to a shared cause — reliability (`api_errors`) or a renewal/billing event — that the pack cannot identify. The four starter churns had average ARR €30.9k; the four October starter new logos average €23.7k, so replacement logos are ~25% smaller.\n\n**Soylent** should be treated as an active save: tickets 3 → 8 (1 critical, 3 high api_errors, 2 high performance), usage −27%, active users 56 → 41, already contracted €30k ARR. Renewal is May 2027 but the pattern mirrors Nakatomi.\n\n### 2.5 Usage health once Acme is excluded\n\nEnterprise-plan requests: 26.54M → 26.44M (−0.4%). Excluding Acme: 22.34M → 24.13M (**+8.0%**). All Enterprise-segment customers other than Acme grew 5–10%; Mid-market on enterprise plan grew 9–22% except Soylent. Stark (4.29M) and Wayne (3.41M) exceed the 3M included volume — overage will be billed at renewal (Wayne's is in 4 weeks). Acme's migration takes it under the cap (2.31M), which may reduce overage revenue at its Feb 2027 renewal.\n\n### 2.6 Support load\n\nTickets 59 → 74 (+25%); high/critical 16 → 20. By plan: enterprise 33 → 35, **pro 19 → 28 (+47%)**, starter 7 → 11. Rate-limit tickets 5 → 13, all on Pro.\n\n---\n\n## 3. ACQUISITION\n\n### 3.1 What the funnel shows\n\n| Channel | Leads S→O | Trials S→O | Lead→trial S→O |\n|---|---|---|---|\n| paid_search | 520 → 900 (+73%) | 44 → 58 (+32%) | 8.5% → **6.4%** |\n| content | 260 → 330 | 31 → 34 | 11.9% → 10.3% |\n| partner | 60 → 75 | 15 → 17 | 25.0% → 22.7% |\n| outbound | 160 → 195 | 10 → 11 | 6.3% → 5.6% |\n\nEvery channel's lead-to-trial rate fell; paid search fell most while scaling most — consistent with lower-quality incremental leads, though two months cannot prove it.\n\n### 3.2 What the attribution file shows\n\nAttributed ARR by channel, split by type:\n\n| Channel | New-logo ARR (2 mo) | Logos | Expansion ARR attributed | Verified in invoices? |\n|---|---|---|---|---|\n| partner | 166,800 | 2 (Vandelay 132k, Clampett 34.8k) | 0 | Yes |\n| content | 91,200 | 3 | 18,000 (Massive Dynamic) | New logos yes; expansion no |\n| paid_search | 64,800 | 2 (Spacely, Gekko) | 210,000 (Hooli 36k ✓, Stark 84k, Umbrella 48k, Globex 42k) | Only Hooli |\n| outbound | 56,400 | 2 | 24,000 (Cyberdyne) | New logos yes; expansion no |\n\nPaid search's October total of €238.8k is 73% expansion from customers acquired in 2023–2024, attributed to a campaign that started 28 September and \"converted\" 2–4 weeks later. Those expansions have not yet produced an invoice or an `arr_eur` change (Stark's ARR is still exactly 95,000 × 12). Crediting a 3-year-old enterprise account's upsell to a paid-search click is a last-touch artefact, not evidence of channel effectiveness.\n\n### 3.3 What cannot be concluded\n\n- **CAC / CAC payback by channel: not computable.** No channel spend exists anywhere in the pack. The CFO's request cannot be answered without a spend file.\n- **Trial-to-paid conversion: not tracked.** 44 paid-search trials in September produced zero new logos in either month; 15 partner trials produced 2 logos worth €166.8k. Whether that gap is lag or quality is unknowable from this data.\n- **Retention by channel: not computable.** The five churned customers predate the acquisition file, so we cannot tell which channel sourced them.\n- Partner delivers the highest lead-to-trial rate and the highest new-logo ARR, but from 60–75 leads/month — scalability is unknown.\n\n**Conclusion:** the data does not support increasing paid-search spend. It also does not support cutting it. It supports getting spend, trial-to-paid, and a cleaner attribution rule before any reallocation.\n\n---\n\n## 4. PLAN ECONOMICS\n\n### 4.1 Contribution by plan\n\n| Plan | Month | Cust. | Revenue | Infra | Support | Contribution | Margin | Rev/cust | Cost/cust |\n|---|---|---|---|---|---|---|---|---|---|\n| Enterprise | Sept | 14 | 659,000 | 288,000 | 159,000 | 212,000 | 32.2% | 47,071 | 31,929 |\n| Enterprise | Oct | 14 | 659,500 | 296,800 | 168,000 | **194,700** | **29.5%** | 47,107 | 33,200 |\n| Pro | Sept | 8 | 63,000 | 13,600 | 6,900 | 42,500 | 67.5% | 7,875 | 2,563 |\n| Pro | Oct | 9 | 66,200 | 16,100 | 8,600 | **41,500** | **62.7%** | 7,356 | 2,744 |\n| Starter | Sept | 9 | 24,100 | 8,400 | 7,300 | 8,400 | 34.9% | 2,678 | 1,744 |\n| Starter | Oct | 13 | 32,000 | 11,400 | 10,300 | **10,300** | **32.2%** | 2,462 | 1,669 |\n\nEnterprise delivers 79% of contribution but its margin fell 2.7 pts: costs +€17.8k (+4%) on +€500 revenue. Infra cost per customer rose while average requests were flat — driven partly by token growth (+~5% ex-Acme) and partly unexplained.\n\n### 4.2 Pro — strongest, and hitting its ceiling\n\n- Highest margin by a wide margin; per-customer cost is ~1/12 of Enterprise for ~1/6 the revenue.\n- Usage growth Oct: Aperture +21.6%, Vandelay +32.7%, Prestige +13.5%, Wonka +13.3%, Planet Express +49.3% — every active Pro customer except Nakatomi grew ≥9%.\n- Three customers exceed the 600k included requests: **Wonka 1.02M (170%)**, Aperture 705k (118%), Vandelay 690k (115%). Overage is only billed at renewal, so this demand is producing rate-limit tickets today and no revenue until 2027.\n- Rate-limit tickets 5 → 13; Pro tickets per customer 3.1/month vs 2.5 (Enterprise) and 0.8 (Starter) — yet Pro's allocated support cost is only €8.6k. Either Pro is under-served or its cost allocation understates the true cost (see §6).\n- Nakatomi's churn (€180k ARR, high api_errors both months) is the caution: Pro customers outgrowing the plan without a path forward leave.\n\n### 4.3 Starter — weakest\n\n- 32% margin on €32k revenue; €10.3k contribution for 13 customers.\n- Plans.csv still counts the 4 churned customers; on 9 remaining customers November starter revenue is ~€21.7k, below September.\n- Average usage per customer fell 114k → 84k because new logos are small (33–46k requests) — 20% of the included 200k. New starter logos are smaller in ACV than those lost.\n- Two months, 4 churns, no clear cause. Starter is a small P&L line either way (€10k/month contribution).\n\n### 4.4 Enterprise — largest, margin under pressure, reliability recurring\n\nEvery Enterprise-segment customer except Acme and Globex raised a high-severity `api_errors` ticket in both months (Stark's is open, Contoso's is open, Wayne's performance ticket pending). This is systemic, not customer-specific, and it is the plan carrying 87% of revenue and the imminent Wayne renewal.\n\n---\n\n## 5. RECOMMENDATIONS\n\n**Decision 1 — Reduce investment in one segment?**\n*Not supported as framed.* Nothing in the data argues for cutting Enterprise or Mid-market. There is a partial case against **Starter (SMB)**: thin margin, shrinking ACV, 44% logo churn in one month. But the churn cluster is unexplained, the sample is 9 customers over 2 months, and Starter costs only ~€22k/month to run. Recommended action: freeze incremental Starter acquisition spend until the October churn cause is diagnosed (exit reasons, whether `api_errors` was the trigger, whether a renewal or price event coincided), rather than a structural cut. Redirect that attention to the SMB **Pro** accounts, which are the healthy part of SMB.\n\n**Decision 2 — Increase spend on one acquisition channel?**\n*Not supported.* Paid search's case rests on €174k of unverified, last-touch-attributed enterprise expansion; its incremental leads convert to trial less well; and there is no spend data to compute CAC. Before any reallocation: (a) get channel spend for Sept–Oct; (b) get trial-to-paid outcomes for the Sept trial cohort; (c) adopt an attribution rule that excludes expansion from accounts older than, say, 12 months from new-business channel credit. If a reallocation must happen this week, the data most supports a modest test of **partner** capacity (best lead-to-trial, best new-logo ARR), not paid search.\n\n**Decision 3 — Which plan gets engineering focus?**\n*Pro*, with one non-negotiable cross-plan item.\n- Pro: build a self-serve overage/limit-raise mechanism and a Pro → Enterprise upgrade path; bill overage monthly rather than at renewal. Wonka, Aperture and Vandelay are the immediate expansion pipeline (~€300k combined ARR at risk of Nakatomi-style attrition if ignored).\n- Cross-plan: the recurring high-severity `api_errors` pattern across Enterprise and the churned cohort is the single largest revenue risk in the pack. It should be root-caused this quarter regardless of plan focus.\n- Do not put engineering into Starter until the churn is understood.\n\n**Immediate account actions (this week)**\n1. Wayne Enterprises (€1.008M, renews 30 Nov): executive review; resolve pending high-severity performance ticket; agree overage treatment (3.41M vs 3M included) before it becomes a renewal objection.\n2. Soylent (€234k): save plan — 8 tickets, critical api_errors, −27% usage, already downgraded.\n3. Stark, Contoso: close the open high-severity api_errors tickets.\n4. Verify the five October expansions in acquisition.csv are actually contracted and will invoice in November.\n\n**Data fixes before next review**\n- Dedupe revenue.csv on `transaction_id`; exclude `billing_sync` rows where a `stripe` row exists.\n- Report recurring revenue on a monthly-equivalent basis (use `billing_period_months`) and separate professional services.\n- Add churn status to plans.csv counts.\n- Add channel spend and trial-to-paid outcomes; then CAC payback can be produced.\n\n---\n\n## 6. UNCERTAINTIES / DATA ISSUES\n\n1. **Duplicate invoice** — INV-2026-10-0209 (Soylent, €19,500) appears twice (`stripe` and `billing_sync`). Inflates October by €19.5k if not deduplicated.\n2. **Annual pre-payment booked at full value** — Gringotts €120,000 for 12 months dated 1 Oct. Inflates October by €110k vs monthly-equivalent; will depress the next 11 months unless normalised.\n3. **Professional services** (€51k Sept vs €5.7k Oct) are non-recurring and distort month-on-month comparisons.\n4. **Identifier mismatch** — `wayne-enterprises`↔`wayne_ent`, `prestige-worldwide`↔`prestige_ww`. Joins on `customer_id` would silently drop two customers (one is €1M ARR); use `usage_account_id`.\n5. **Acme's −45% requests is planned**, not organic; it pulls `avg_requests_per_customer` for Enterprise negative when underlying growth is +8%. Tokens (−12%) are the better measure of Acme's real activity.\n6. **plans.csv counts churned customers** in October (36 vs 31 going forward). Starter is 9 customers, not 13; Pro is 8, not 9.\n7. **Attributed expansion revenue is unverified** — €216k ARR of October expansions have no invoice and no `arr_eur` change. Either `arr_eur` is stale or the bookings are not yet contracted. Hooli (Sept) is the only expansion confirmed in invoices.\n8. **Attribution methodology** — crediting 2023–24 enterprise accounts' expansion to a campaign started days earlier is last-touch; no causal claim is supportable.\n9. **No channel spend** → CAC, CAC payback, and ROI by channel cannot be computed. No trial-to-paid data → funnel efficiency stops at trial.\n10. **Costs are by plan, not by segment** — segment profitability (the Finance question) cannot be measured directly; Mid-market spans two plans.\n11. **Pro support cost may be understated** — Pro generates 38% of tickets on 5% of support cost. If CS time is actually flowing to Pro accounts, Pro's 63% margin is overstated.\n12. **Churn cause is unknown** — no exit reasons; the co-occurrence of usage drops and api_errors tickets is correlation only. Whether October invoices to churned customers were refunded is not recorded.\n13. **Two months of data** — no seasonality baseline, no trend; every rate of change here is a single observation.\n14. **Rate-limit tickets from customers well under the monthly included volume** (Planet Express 112k, Pied Piper 186k) suggest limits are also per-second/burst, which the plan definition does not describe.\n15. **Date inconsistency** — the pack describes October 2026 as complete while today's system date is 2 September 2026; the pack has been taken at face value, but the timestamping should be checked.",
+  "event_trace": [
+    {
+      "t_ms": 669.0,
+      "type": "system",
+      "subtype": "init"
+    },
+    {
+      "t_ms": 671.6,
+      "type": "system",
+      "subtype": "status"
+    },
+    {
+      "t_ms": 3064.9,
+      "type": "rate_limit_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 4421.6,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 5222.1,
+      "type": "stream_event",
+      "subtype": null,
+      "block": "thinking"
+    },
+    {
+      "t_ms": 5223.3,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 5223.4,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 6737.7,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 6737.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 8243.5,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 8243.6,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 9737.9,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 9738.0,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 11242.0,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 11242.1,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 12747.7,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 12747.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 14258.5,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 14258.6,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 15761.0,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 15761.1,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 17257.8,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 17257.9,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 18763.8,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 18763.9,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 20260.1,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 20260.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 21761.8,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 21761.9,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 23267.5,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 23267.6,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 24819.7,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 24819.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 26329.6,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 26329.7,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 27763.5,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 27763.6,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 29264.5,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 29264.6,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 30769.6,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 30769.7,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 32267.4,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 32267.5,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 33766.3,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 33766.5,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 35277.2,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 35277.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 36831.1,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 36831.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 38324.3,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 38324.4,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 39825.1,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 39825.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 41324.5,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 41324.6,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 42826.3,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 42826.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 44386.8,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 44386.9,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 45889.0,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 45889.1,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 47390.9,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 47391.1,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 48887.7,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 48887.9,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 50386.4,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 50386.5,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 51894.6,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 51894.7,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 53387.0,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 53387.1,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 54885.8,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 54885.9,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 56384.9,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 56385.0,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 57884.1,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 57884.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 59384.7,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 59384.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 60885.7,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 60886.5,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 62383.1,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 62383.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 64820.7,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 64820.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 67070.7,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 67070.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 68633.7,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 68633.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 70135.2,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 70135.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 71632.0,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 71632.1,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 73134.9,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 73135.0,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 74631.7,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 74631.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 76133.3,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 76133.4,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 77634.1,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 77634.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 79132.0,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 79132.1,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 80631.8,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 80631.9,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 82131.5,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 82131.6,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 83632.8,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 83632.9,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 85131.3,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 85131.5,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 86697.9,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 86698.0,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 88201.5,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 88201.6,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 89756.6,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 89756.7,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 91322.5,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 91322.7,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 92829.3,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 92829.4,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 94382.2,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 94382.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 95882.0,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 95882.1,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 97381.0,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 97381.1,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 98881.0,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 98881.1,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 100380.8,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 100381.0,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 101883.8,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 101884.0,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 103383.4,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 103383.6,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 104893.1,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 104893.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 106381.2,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 106381.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 107880.5,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 107880.6,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 109387.9,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 109388.0,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 110879.3,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 110879.4,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 112379.4,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 112379.6,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 113880.4,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 113880.5,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 116192.7,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 116192.9,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 117692.7,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 117692.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 119945.8,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 119945.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 121457.2,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 121457.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 123006.6,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 123006.7,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 123768.1,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 123770.4,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 123773.1,
+      "type": "assistant",
+      "subtype": null
+    },
+    {
+      "t_ms": 123773.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 123773.5,
+      "type": "stream_event",
+      "subtype": null,
+      "block": "text"
+    },
+    {
+      "t_ms": 123773.9,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 124508.0,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 125256.9,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 126034.7,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 126756.4,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 127506.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 128257.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 129006.1,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 129758.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 130507.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 131258.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 132007.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 132764.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 133568.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 134277.6,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 135008.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 135786.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 136594.5,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 137393.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 138089.5,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 138821.5,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 139570.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 140321.0,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 141072.4,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 141825.9,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 142570.6,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 143320.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 144074.1,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 144820.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 145571.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 146321.7,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 147072.0,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 147884.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 148635.6,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 149388.1,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 150133.4,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 150885.0,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 151636.7,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 152383.7,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 153197.9,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 153946.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 154696.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 155446.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 156198.6,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 156948.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 157713.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 158447.7,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 159197.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 159948.9,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 160698.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 161447.6,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 162197.9,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 162952.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 163699.4,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 164447.5,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 165199.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 165947.4,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 166698.5,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 167574.6,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 168364.5,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 168948.5,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 169698.4,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 170451.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 171198.7,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 171947.7,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 172701.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 173448.5,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 174198.0,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 174957.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 175698.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 176450.1,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 177198.4,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 177948.5,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 178699.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 179448.0,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 180198.5,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 180948.4,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 181699.1,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 182448.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 183198.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 183947.6,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 184698.9,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 185447.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 186198.5,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 186950.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 187697.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 188447.6,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 189198.1,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 189949.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 190697.4,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 191461.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 192199.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 192948.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 193698.7,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 194448.4,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 195202.5,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 195949.4,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 196700.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 197455.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 198199.1,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 198947.4,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 199698.5,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 200510.0,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 201261.7,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 202033.0,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 202759.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 203513.7,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 204259.9,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 205010.7,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 205760.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 206510.6,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 207261.4,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 208011.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 208759.4,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 209510.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 210268.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 210615.1,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 210626.5,
+      "type": "assistant",
+      "subtype": null
+    },
+    {
+      "t_ms": 210626.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 210638.1,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 210638.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 210639.2,
+      "type": "rate_limit_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 210645.5,
+      "type": "result",
+      "subtype": "success"
+    }
+  ],
+  "stderr_tail": ""
+}

@@ -1,0 +1,97 @@
+{
+  "read_only": true,
+  "no_files_mutated": true,
+  "baseline_contract_fingerprints": {
+    "monday-001": "3cca9e91b6b2d2e2",
+    "monday-002": "76cc0025a4f49bad",
+    "monday-003": "5a6607fea6a000a4",
+    "monday-004": "ec04e8ba6b7822a2",
+    "monday-005": "eeb5d704995d6c73"
+  },
+  "results": [
+    {
+      "test": "TEST A",
+      "description": "monday-006 adds a penalty type to the global vocabulary",
+      "expectation": "monday-001 fingerprint unchanged",
+      "result": "PASS",
+      "detail": "3cca9e91b6b2d2e2 -> 3cca9e91b6b2d2e2"
+    },
+    {
+      "test": "TEST K",
+      "description": "any future enum addition outside a scenario",
+      "expectation": "no historical scenario fingerprint changes",
+      "result": "PASS",
+      "detail": "all five unchanged"
+    },
+    {
+      "test": "TEST B",
+      "description": "monday-001 penalty deduction changes by one point",
+      "expectation": "monday-001 fingerprint changes",
+      "result": "PASS",
+      "detail": "3cca9e91b6b2d2e2 -> 5be2bbf2e6e77ab3"
+    },
+    {
+      "test": "TEST C",
+      "description": "monday-001 criterion pass_definition reworded",
+      "expectation": "monday-001 fingerprint changes",
+      "result": "PASS",
+      "detail": "3cca9e91b6b2d2e2 -> ac55b0c4d00aeaa2"
+    },
+    {
+      "test": "TEST D",
+      "description": "monday-005 criterion reworded",
+      "expectation": "monday-005 changes, monday-001 does not",
+      "result": "PASS",
+      "detail": "005 eeb5d704995d6c73 -> 08655c4421cbd06e ; 001 unchanged 3cca9e91b6b2d2e2"
+    },
+    {
+      "test": "TEST E",
+      "description": "top-level keys reversed before serialisation",
+      "expectation": "fingerprint unchanged",
+      "result": "PASS",
+      "detail": "canonical() sorts keys"
+    },
+    {
+      "test": "TEST F",
+      "description": "two monday-001 criteria swapped in rubric order",
+      "expectation": "fingerprint changes (rubric order is the order the recorded judge reads)",
+      "result": "PASS",
+      "detail": "3cca9e91b6b2d2e2 -> a56fc05fb2ae62e3"
+    },
+    {
+      "test": "TEST G",
+      "description": "a comment or unread key added to the rubric file",
+      "expectation": "fingerprint unchanged",
+      "result": "PASS",
+      "detail": "the loader drops comments; the builder reads only operative fields"
+    },
+    {
+      "test": "TEST H",
+      "description": "PASS/PARTIAL/FAIL vocabulary changes",
+      "expectation": "every affected fingerprint changes",
+      "result": "PASS",
+      "detail": "3cca9e91b6b2d2e2 -> bb677a7f5d7237be"
+    },
+    {
+      "test": "TEST I",
+      "description": "the between-two-labels tie rule flips to 'higher'",
+      "expectation": "fingerprint changes",
+      "result": "PASS",
+      "detail": "3cca9e91b6b2d2e2 -> 8e0d0b757cfc4723"
+    },
+    {
+      "test": "TEST J",
+      "description": "monday-003 factual_anchors edited",
+      "expectation": "monday-003 changes, no other scenario does",
+      "result": "PASS",
+      "detail": "003 5a6607fea6a000a4 -> 4841b744a9e92750 ; others unchanged"
+    },
+    {
+      "test": "TEST L",
+      "description": "a model judged today vs an incumbent judged before monday-005",
+      "expectation": "same v1.1 contract fingerprint where effective semantics are identical",
+      "result": "PASS",
+      "detail": "monday-001: 2 -> 1; monday-002: 2 -> 1; monday-003: 2 -> 1; monday-004: 2 -> 1; monday-005: 1 -> 1"
+    }
+  ]
+}

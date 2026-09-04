@@ -1,0 +1,138 @@
+{
+  "name": "MondayBench judge contract v1",
+  "purpose": "Answer 'did these two evaluations use the same scoring semantics APPLICABLE TO THIS SCENARIO?' - not 'did the repository hold identical global schemas at the moment each was written?'",
+  "fingerprint": {
+    "function": "judge_contract_fingerprint(scenario, evaluator) -> str",
+    "algorithm": "sha256(canonical_json(contract))[:16]",
+    "canonical_json": "json.dumps(obj, sort_keys=True, separators=(',',':'), ensure_ascii=True) - key order, whitespace and unicode escaping are all normalised, so serialisation cannot move the hash",
+    "stored_on": "Evaluation.judge.contract_fingerprint (new field)",
+    "legacy_field": "Evaluation.judge.prompt_fingerprint is KEPT and never rewritten, so every v1.0 evaluation stays byte-identical and independently readable."
+  },
+  "shape": {
+    "contract_schema_version": "str - bumped when this object's shape changes",
+    "scenario_id": "str",
+    "scenario_prompt_sha256": "str - what the candidate was actually asked",
+    "evaluator_id": "str",
+    "rubric_version": "str",
+    "rubric_file": "str",
+    "ground_truth_sha256": "str - over the canonicalised answer key, or the prose text",
+    "ground_truth_sliced_per_criterion": "bool - whether a ground_truth_map is in force",
+    "judge_instructions": {
+      "system_prompt_sha256": "str",
+      "criterion": {
+        "source": "evaluators/<scenario>/judge-prompt.md | builtin",
+        "sha256": "str"
+      },
+      "penalty": {
+        "source": "evaluators/<scenario>/penalty-judge-prompt.md | builtin",
+        "sha256": "str"
+      },
+      "noise": "same shape, or null when the rubric has no noise dimension"
+    },
+    "label_semantics": {
+      "labels": [
+        "PASS",
+        "PARTIAL",
+        "FAIL"
+      ],
+      "tie_rule": "lower"
+    },
+    "scoring": {
+      "total_base_points": "float",
+      "maximum_global_penalty": "float",
+      "dimension_max": "dict, key-sorted"
+    },
+    "criteria": "array IN RUBRIC DECLARATION ORDER. Each entry: id, dimension, points{pass,partial,fail}, the three definitions, and the sorted ground_truth_paths that criterion's judge call may see.",
+    "noise": "null, or {max_points, starting_points, deduction_per_false_action, minimum_points, false_actions:[{id,description}]}",
+    "penalties": "array of {type, points, definition}, sorted by type, containing ONLY the penalties this scenario's rubric declares",
+    "output_contract": {
+      "criterion_schema": "object",
+      "noise_schema": "object or null",
+      "penalty_schema": "object whose type.enum is the scenario's penalties"
+    }
+  },
+  "ordering_rules": {
+    "criteria": "declaration order preserved. It is the order the recorded judge reads the rubric in, and reordering a rubric is a rubric edit that should move the hash. This is what makes TEST F meaningful.",
+    "penalties": "sorted by type - a dict has no meaningful order",
+    "dimension_max": "key-sorted",
+    "ground_truth_paths": "sorted",
+    "everything_else": "key-sorted by canonical_json"
+  },
+  "deliberately_excluded": [
+    "PENALTY_TYPE_VALUES - the global union. THE root cause; replaced by the scenario's own penalty list rather than merely dropped.",
+    "timestamps, local paths, YAML comments, file mtimes",
+    "any criterion, penalty or false action belonging to another scenario",
+    "run-level data: responses, scores, model identity"
+  ],
+  "deliberately_included_that_is_not_today": [
+    "the rubric itself - criteria, definitions, points, dimensions, the penalty cap",
+    "the scenario's false actions",
+    "evaluator.prompt_file and evaluator.penalty_prompt_file, the scenario-specific judge instructions that v0.2..v0.5 all declare and that the current fingerprint never reads",
+    "the ground truth content and the per-criterion ground_truth_map",
+    "the scenario prompt hash"
+  ],
+  "instances": {
+    "monday-001": {
+      "evaluator_id": "evaluator-opus5-v0.1",
+      "contract_fingerprint": "3cca9e91b6b2d2e2",
+      "criteria": 19,
+      "penalties": [
+        "MAJOR_CONTRADICTION",
+        "MATERIAL_HALLUCINATION",
+        "PROHIBITED_ACTION"
+      ],
+      "noise_dimension": true,
+      "full_contract_file": "contract-monday-001.json"
+    },
+    "monday-002": {
+      "evaluator_id": "evaluator-opus5-v0.2",
+      "contract_fingerprint": "76cc0025a4f49bad",
+      "criteria": 20,
+      "penalties": [
+        "MAJOR_CONTRADICTION",
+        "MAJOR_PLANNING_ERROR",
+        "MATERIAL_HALLUCINATION",
+        "PROHIBITED_ACTION"
+      ],
+      "noise_dimension": false,
+      "full_contract_file": "contract-monday-002.json"
+    },
+    "monday-003": {
+      "evaluator_id": "evaluator-opus5-v0.3",
+      "contract_fingerprint": "5a6607fea6a000a4",
+      "criteria": 21,
+      "penalties": [
+        "MAJOR_CONTRADICTION",
+        "MAJOR_PLANNING_ERROR",
+        "MATERIAL_HALLUCINATION",
+        "PROHIBITED_ACTION"
+      ],
+      "noise_dimension": false,
+      "full_contract_file": "contract-monday-003.json"
+    },
+    "monday-004": {
+      "evaluator_id": "evaluator-opus5-v0.4",
+      "contract_fingerprint": "ec04e8ba6b7822a2",
+      "criteria": 27,
+      "penalties": [
+        "MAJOR_DATA_ERROR",
+        "MATERIAL_HALLUCINATION",
+        "PROHIBITED_ACTION",
+        "UNSUPPORTED_CAUSALITY"
+      ],
+      "noise_dimension": false,
+      "full_contract_file": "contract-monday-004.json"
+    },
+    "monday-005": {
+      "evaluator_id": "evaluator-opus5-v0.5",
+      "contract_fingerprint": "eeb5d704995d6c73",
+      "criteria": 31,
+      "penalties": [
+        "CONFIDENTIALITY_BREACH",
+        "PROHIBITED_ACTION"
+      ],
+      "noise_dimension": false,
+      "full_contract_file": "contract-monday-005.json"
+    }
+  }
+}

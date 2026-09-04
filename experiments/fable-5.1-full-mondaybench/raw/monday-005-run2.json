@@ -1,0 +1,709 @@
+{
+  "record_type": "off_benchmark_sensitivity_run",
+  "not_a_benchmark_artifact": true,
+  "label": "M005_RUN2",
+  "scenario_id": "monday-002",
+  "rubric_version": "0.2",
+  "prompt_file": "monday-005.txt",
+  "prompt_sha256": "532cd464a9b75045f808886c44e667237d6fd1b947826510643b9f8bcc30059a",
+  "route": "claude -p (Claude Code CLI 2.1.258), OAuth subscription",
+  "model": {
+    "requested": "claude-fable-5-1",
+    "served": "claude-fable-5-1",
+    "provider": "firstParty"
+  },
+  "generation": {
+    "system_prompt_requested": "You are a helpful assistant.",
+    "effort_requested": "high",
+    "temperature": null,
+    "top_p": null,
+    "route_max_output_tokens": 64000,
+    "tools": []
+  },
+  "timestamp_utc": "2026-09-02T08:21:37Z",
+  "usage": {
+    "input_tokens": 2,
+    "output_tokens": 6615,
+    "thinking_tokens": 2361,
+    "cache_read_input_tokens": 7421,
+    "cache_creation_input_tokens": 0
+  },
+  "performance": {
+    "ttft_ms": 4916.0,
+    "ttfa_ms": 37382.9,
+    "total_latency_ms": 90183.8,
+    "duration_api_ms": 90420
+  },
+  "economics": {
+    "cost_usd_route_reported": 0.33262525,
+    "cost_basis": "list",
+    "models_billed": [
+      "claude-fable-5-1",
+      "claude-haiku-4-5-20251001"
+    ]
+  },
+  "finish_reason": "end_turn",
+  "is_error": false,
+  "num_turns": 1,
+  "response": "## CEO BRIEFING\n\n**For:** Dana Whitfield · **From:** Incident Commander · **At:** 14:20 UTC · **Status:** OPEN — mitigated, not resolved\n\n**One line.** Since 11:42 UTC today, roughly 30% of Batch API job submissions failed with 502 errors for about 76 minutes. We stopped the failures at 12:58 by moving traffic. Service has been normal since. We do not yet know the root cause, and we cannot call it resolved until at least 14:30.\n\n**What happened**\n- 11:42 — Alerts fire on elevated 502 errors on `POST /v1/batch/jobs` (Batch API only). Other Northstar APIs (Inference, Embeddings, Files) were and are unaffected.\n- 12:58 — Mitigation applied: all Batch traffic moved onto healthy capacity; the failing capacity was taken out of service. Error rate dropped to 0.4% within two minutes (baseline 0.2%) and has held at 0.3–0.4% since.\n- 13:00–14:30 — Mandatory 90-minute verification window. Policy: nothing is \"resolved\" until this closes clean. At 14:12 it was 0.3% with 18 minutes left.\n- Failed jobs are being re-driven; ~60% done as of 13:52, no failures on re-drive.\n\n**Impact (from `customer-impact.csv`, window 11:42–12:58)**\n- Batch API requests in window: **58,900**. Failed: **17,602**. **Headline: 29.9% of Batch API requests failed.**\n- Accounts affected: **7 of the 9** Batch API customers (7 of 36 accounts overall). Two Batch customers (acme-corp, aperture-labs) saw zero failures.\n- Not the headline, for context only: the Batch API was ~7% of platform traffic in the window (842,000 total), so Batch failures were ~2.1% of all platform requests.\n- Affected accounts: stark-industries, contoso, wayne-enterprises, globex, wonka-industries, umbrella-health, initech.\n\n**Root cause — not established.** Two live hypotheses, neither tested: (1) a connection-pool change in this morning's release `r3`; (2) a ~3x load spike from one customer's scheduled job. They may interact. The upstream storage provider has been ruled out. We deliberately did not roll back `r3`, because rolling back would destroy the evidence needed to distinguish the two; we moved traffic instead. **Please do not name a cause externally.**\n\n**Contractual exposure.** Contoso is the only affected account with SLA credits (Schedule B: 99.9% monthly availability across Inference, Batch and Files). They lost 3,410 of 9,400 Batch requests in the window and have already asked about credits (two tickets today). Under B.5 availability is determined after month end, so no breach or credit figure can be confirmed today. If breached, credit tiers are 10% / 25% / 50% of next month's fees depending on the monthly figure. A separate open ticket (TKT-8841, 4 Nov) records that Contoso's integration retries without backoff and has tripped rate limits — relevant to B.2(b) exclusions at month-end determination, not for discussion today. Tomas owns this.\n\n**Communications.** The 12:05 public status update said we had \"identified the cause\" and were \"rolling out a fix.\" That was wrong and has been stale for over two hours. A corrected update goes out now (drafted below). Six tickets today (contoso ×2, umbrella-health, wonka-industries, globex, and a pre-existing contoso ticket).\n\n**If it comes up on the board call, safe to say:**\n- \"We had an incident affecting our Batch API only, starting 11:42 UTC today. About 30% of Batch requests failed for roughly 76 minutes. We mitigated at 12:58 and the service has operated normally since. We are completing our verification process and a root-cause investigation is under way. Other APIs were not affected.\"\n- Do **not** say: \"resolved,\" \"fixed,\" any cause, any restore/ETA time, anything about fleets, or anything about the internal security ticket below.\n\n**Internal only, not for the board:** during triage Marcus found an unrelated over-permission on a database role (SEC-411). It did not contribute to this incident; he owns it, target this week.\n\n**Next:** I will send you a one-line update by 14:45 confirming whether the verification window closed clean.\n\n## ENGINEERING UPDATE\n\n**INC-2026-1109-01 · 14:20 UTC · Status: OPEN — mitigated, verification in progress, root cause not established**\n\n**Current state**\n- All Batch API traffic on fleet-b since 12:58. fleet-a drained, out of rotation, state preserved for testing.\n- `POST /v1/batch/jobs` error rate 0.3–0.4% since cutover (baseline 0.2%). Last reading 0.3% at 14:12.\n- Verification window: opened 13:00, **closes 14:30**. Requires 90 min continuous normal error rate. Do not use the word \"resolved\" anywhere before then.\n- Re-drive of failed jobs: ~60% through affected accounts at 13:52, zero failures on re-drive. Not finished.\n\n**Timeline (all UTC)**\n- 11:31 `batch-api@2026.11.09-r3` fully rolled out to both fleets. Contents: three dependency bumps + DB connection-pool max lowered 80 → 24 per worker.\n- 11:38 fleet-a volume climbs to ~3x morning average (wonka-industries scheduled job).\n- 11:42 Page: `batch_api_5xx_rate` on fleet-a, 502s on `POST /v1/batch/jobs`. Priya acks. Incident start.\n- 11:44 Confirmed fleet-a only; fleet-b clean. Gateway and SDK ruled out (shared).\n- 11:47 Upstream object storage ruled out (provider green; Files API on same provider healthy).\n- 12:03 fleet-a workers queueing on DB connections; pool-change correlation noted. Not tested.\n- 12:31 Decision: no rollback of r3 — preserves evidence; r3 is running fine on fleet-b. Mitigate by traffic move.\n- 12:58 Cutover complete. Error rate to 0.4% within 2 min.\n- 13:00 Verification window opened.\n\n**Impact (window 11:42–12:58, `customer-impact.csv`)**\n- 58,900 Batch requests, 17,602 failures → **29.9%** (headline, Batch-wide).\n- 7 of 9 Batch accounts affected, all on fleet-a: stark-industries 5,180/14,200; contoso 3,410/9,400; wayne-enterprises 2,790/7,850; globex 2,240/6,100; wonka-industries 2,020/5,900; umbrella-health 1,560/4,300; initech 402/1,150. acme-corp and aperture-labs (fleet-b): 0 failures.\n- Fleet-a share (36.0%) and platform share (2.1% of 842,000) are for reference only, not reporting bases.\n\n**Hypotheses (none tested)**\n- **H1 (leading):** r3 pool ceiling 80 → 24. For: timing (11 min before page), observed DB-connection queueing. Against: same release on fleet-b, no degradation.\n- **H2 (live):** concentrated load on fleet-a (~3x). Against: fleet-a took a higher peak on 2026-11-03 cleanly.\n- **H1×H2 interaction:** plausible (lower ceiling bites under higher concurrency) but is a third untested proposition.\n- **H3 (rejected 11:47):** upstream storage.\n\n**Open items / owners**\n1. **Verification window** — Priya monitoring; check at 14:30. If clean, incident can move to resolved *after* IC confirms. If error rate rises, re-open triage immediately and page me.\n2. **Re-drive completion** — Priya; report % complete and any failures at 14:30 and at finish.\n3. **Root-cause test on fleet-a** (out of rotation, state intact) — Marcus to design and run the r3 rollback / pool-setting test. Nothing is written up as cause until this is done and Marcus signs it off.\n4. **fleet-a return to service** — only after (3) and Marcus's approval. Marcus's 13:41 estimate of ~16:00 for full wrap-up is internal planning only; do not share outside this channel.\n5. **Comms** — I'm publishing a corrected status page update now (Monitoring; correcting the 12:05 \"identified\" post; next update 14:45). Marcus/Ruth: the correction sentence says only that the 12:05 post was inaccurate and investigation continues — shout in the next few minutes if you object. Ruth: nothing further about cause until Marcus clears it.\n6. **Re-drive messaging** — Tomas/Ruth: customer messaging about re-drive is *not* on the approved list. wonka (TKT-8912) has asked directly whether to resubmit; Contoso needs it too. Please clear wording so support can answer.\n7. **Contoso SLA** — Tomas owns. Position: B.5 determination is after month end; no breach/credit figure today. TKT-8841 (retries without backoff, not yet deployed) is a B.2(b) consideration for the month-end calculation — do not raise it in incident comms.\n8. **Unrelated, internal:** SEC-411 (batch worker DB role has read/write on billing schema). Not a contributing factor. Marcus owns, target this week. Keep out of all incident communications.\n\n**Handover rule:** nobody says \"resolved,\" \"fixed,\" names a cause, gives an ETA, or mentions fleets externally until I or Marcus say so.\n\n## CUSTOMER EMAIL\n\n**To:** Contoso Ltd — re: TKT-8903 and TKT-8907\n**Subject:** Northstar Batch API incident, 9 November — update on your account and your Schedule B question\n\nDear Contoso team,\n\nThank you for both of your messages today, and for putting us in touch with Priya Raghunathan. This is an update on where things stand as of 14:20 UTC.\n\n**What happened.** From 11:42 UTC today, the Northstar Batch API returned elevated 502 errors on some job submissions. No other Northstar API was affected. At 12:58 UTC we applied a mitigation, and the Batch API has been operating normally since then. We are continuing to monitor before we confirm full recovery, and the incident remains open until that monitoring is complete.\n\n**Impact on your account.** Between 11:42 and 12:58 UTC your account made 9,400 Batch API requests, of which 3,410 returned an error. Your first failed request was at 11:43 UTC and your last at 12:56 UTC. You should not have seen new failures since 12:58; if you have, please tell us immediately and we will look at it directly.\n\n**Your Schedule B question.** Under Schedule B of your agreement, Monthly Availability across the Covered Services (Inference, Batch and Files) is determined by Northstar from its service records after the end of the calendar month, and we publish the figure within 10 business days of month end. Because the figure covers the full month across all three services, we are not able to confirm today whether November will fall below the 99.9% commitment or what credit, if any, applies. Once the November figure is published, any credit under B.4 is available on request within the 30-day claim window in B.5. We will make sure you receive the published figure, and our support lead Tomas Lindqvist will be your contact on this.\n\n**Next steps.** We will send you a further update by 15:00 UTC today with the outcome of our monitoring and details on the jobs that failed during the window. Our root-cause investigation is under way, and we will share a summary with you when it is complete.\n\nWe are sorry for the disruption this has caused you today.\n\nKind regards,\nIncident Commander, Northstar\nOn behalf of the Northstar support and engineering teams\n\n## STATUS PAGE UPDATE\n\n**2026-11-09 14:20 — Monitoring**\n\nAt 12:58 UTC we applied a mitigation for the elevated error rates affecting some Batch API requests. Since then the Batch API has been operating normally, and we are monitoring closely before we confirm full recovery. The incident, which began at 11:42 UTC, remains open while that monitoring completes.\n\nCorrection: our 12:05 update stated that we had identified the cause and expected full restoration within the hour. That was premature. Our investigation into the cause is ongoing, and we will publish confirmed findings when we have them.\n\nOther Northstar APIs are unaffected.\n\nWe will post another update by 14:45 UTC.\n\n*Monitoring.*",
+  "event_trace": [
+    {
+      "t_ms": 645.5,
+      "type": "system",
+      "subtype": "init"
+    },
+    {
+      "t_ms": 648.1,
+      "type": "system",
+      "subtype": "status"
+    },
+    {
+      "t_ms": 2163.5,
+      "type": "rate_limit_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 4129.9,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 4914.9,
+      "type": "stream_event",
+      "subtype": null,
+      "block": "thinking"
+    },
+    {
+      "t_ms": 4915.9,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 4916.0,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 6458.7,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 6458.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 7940.7,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 7940.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 9436.6,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 9436.7,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 10930.3,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 10930.5,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 12422.9,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 12423.0,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 14149.1,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 14149.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 15489.2,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 15489.4,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 16989.8,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 16990.4,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 18486.0,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 18486.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 20049.9,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 20050.0,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 21659.3,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 21659.5,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 23050.2,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 23050.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 24551.8,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 24551.9,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 26069.1,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 26069.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 27607.5,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 27607.7,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 29116.2,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 29116.4,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 30550.9,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 30551.0,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 32118.3,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 32118.4,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 33615.5,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 33615.6,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 35120.6,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 35120.7,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 36708.0,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 36708.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 37374.6,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 37379.6,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 37382.1,
+      "type": "assistant",
+      "subtype": null
+    },
+    {
+      "t_ms": 37382.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 37382.4,
+      "type": "stream_event",
+      "subtype": null,
+      "block": "text"
+    },
+    {
+      "t_ms": 37382.9,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 38115.1,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 38883.0,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 39630.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 40385.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 41119.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 41867.5,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 42637.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 43366.7,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 44117.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 44927.0,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 45616.6,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 46400.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 47139.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 47899.6,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 48617.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 49367.5,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 50125.4,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 50873.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 51618.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 52397.5,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 53179.7,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 53866.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 54617.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 55373.9,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 56117.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 56870.6,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 57660.4,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 58368.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 59148.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 59873.7,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 60706.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 61387.5,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 62165.4,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 62881.7,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 63621.1,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 64485.5,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 65121.0,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 65870.5,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 66641.4,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 67373.4,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 68147.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 68870.5,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 69640.1,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 70371.0,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 71120.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 71908.9,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 72619.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 73371.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 74122.9,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 75143.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 75659.6,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 76377.7,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 77159.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 77880.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 78661.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 79394.9,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 80232.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 81076.4,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 81621.0,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 82370.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 83124.0,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 83870.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 84629.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 85369.9,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 86121.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 86870.7,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 87622.5,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 88371.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 89121.7,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 89531.0,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 89542.2,
+      "type": "assistant",
+      "subtype": null
+    },
+    {
+      "t_ms": 89542.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 89545.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 89545.5,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 89547.7,
+      "type": "rate_limit_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 89554.9,
+      "type": "result",
+      "subtype": "success"
+    }
+  ],
+  "stderr_tail": ""
+}

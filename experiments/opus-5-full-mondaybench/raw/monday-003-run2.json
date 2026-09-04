@@ -1,0 +1,161 @@
+{
+  "record_type": "off_benchmark_run",
+  "not_a_benchmark_artifact": true,
+  "route": "claude_code_subscription",
+  "route_classification": "PROVISIONAL / OFF-BENCHMARK / CLAUDE CODE ROUTE",
+  "scenario": "monday-003",
+  "run": 2,
+  "requested_model": "claude-opus-5",
+  "generated_at_utc": "2026-09-02T11:41:22Z",
+  "prompt_sha256": "aaf788f309d955d2b427c86fe7d95d2bbf88575fde7306adcfd74b0ec4a4103f",
+  "system_prompt": "You are a helpful assistant.",
+  "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+  "system_prompt_as_sent_note": "NOT the frozen bytes - the Agent SDK preamble is prepended by the route. See audits/monday-opus5/route-audit.md.",
+  "cli_flags": [
+    "-p",
+    "--model",
+    "claude-opus-5",
+    "--system-prompt",
+    "You are a helpful assistant.",
+    "--tools",
+    "",
+    "--effort",
+    "high",
+    "--output-format",
+    "stream-json",
+    "--include-partial-messages",
+    "--verbose",
+    "--safe-mode",
+    "--setting-sources",
+    "",
+    "--strict-mcp-config",
+    "--disable-slash-commands",
+    "--no-session-persistence"
+  ],
+  "env": {
+    "DISABLE_NON_ESSENTIAL_MODEL_CALLS": "1"
+  },
+  "temperature": null,
+  "top_p": null,
+  "temperature_note": "not settable and not observable on this route; claude-opus-5 is in providers/anthropic_native.NO_TEMPERATURE_MODELS so the official adapter would also drop it",
+  "response_text": "## What's actually going on (reading past the stale info)\n\nThree items in my task list are wrong:\n- **Security review is NOT outstanding.** Maya closed SEC-4471 Friday 16:48 — approved for the account-mapping rewrite *and* the tenant permission model. Permission-check fixes need no re-review. Nothing to unblock.\n- **Onboarding instrumentation is NOT a launch blocker** (Julia, Friday 17:06). Marcus's 3 held hours are free. Launch support is Julia's now.\n- **\"Contoso export is broken\" is two different things.** The CEO's Friday escalation is a cosmetic date-format preference for a Tuesday demo (Peter: \"not blocking production\"). The *real* issue arrived Monday 07:40: delegated admins can't run the tenant export, and Anja's contractual compliance export is due **Tue 22 Sep 16:00 CET**, tenant owner on leave until October. That is the hard deadline, not the CEO's ticket.\n\nEverything real converges on one bottleneck: **Elena's billing schema migration**. Both the SSO compatibility patch and the Contoso permission patch sit on the account-mapping layer and can only land after it. Marcus cannot do both — and he's gone Tuesday 09:00–13:00 for the Atlas session.\n\n**The unlock:** reassign `contoso_permission_patch` to Daniel (Rachel's assignment to Marcus was module-based, not capacity-based). Costs 3.5h of Daniel + 0.5h of Marcus, saves 2h of Marcus's scarce time and de-conflicts the two deadlines.\n\n## 1. CRITICAL PATH\n\n`billing_schema_migration` (Elena, 3h) → `api_compatibility_patch` (Marcus, 4h) → `sso_regression` (QA, 2h) → `sso_production_rollout` (Marcus, 1h) = **10h serial**, gated by Marcus's Tuesday-morning absence.\n\nSecond path off the same gate (contractual, tighter deadline):\n`billing_schema_migration` → `contoso_permission_patch` (Daniel, 3.5h + 0.5h Marcus walkthrough) → `contoso_compliance_export` (Julia, 1h) → **due Tue 16:00**.\n\nThird: `billing_schema_migration` → `billing_backfill` (Elena, 1.5h) → `board_pack_revenue` (Sarah, 2h).\n\nElena's migration is the single point that gates all three. It must start this morning.\n\n## 2. MY PLAN FOR TODAY (in order)\n\n| # | Time | Action | Owner |\n|---|---|---|---|\n| 1 | 09:15 | Tell Elena: start the schema migration now, before anything else. Confirm start time. | Me → Elena |\n| 2 | 09:15 | Reassign `contoso_permission_patch` from Marcus to **Daniel**. Tell Rachel. | Me → Daniel/Rachel |\n| 3 | 09:20 | Book Marcus + Daniel for the 30-min delegated-admin walkthrough **now** (~09:30), while Marcus is blocked anyway. | Marcus + Daniel |\n| 4 | 09:25 | Close the stale tasks: security review (approved), onboarding instrumentation (not a blocker). Tell Marcus his 3h are released and his only jobs are compat patch → rollout → Atlas session prep. | Me |\n| 5 | 09:30 | Reply to **Anja** confirming delivery of the compliance export ahead of Tue 16:00 CET, with named owners. This is the contractual one — it needs a same-day answer. | Me |\n| 6 | 09:35 | Tell Sarah: Priya accepts **mockups** — do not wait for the pricing page. Build `packaging_approval_pack` and submit **before 12:00 today** for same-day clearance. | Me → Sarah |\n| 7 | 09:40 | Reply to CEO/Peter: separate the two issues. Formatter (cosmetic) lands today for Tuesday's demo; the compliance/access issue is the real one and is owned and dated. | Me |\n| 8 | 09:45 | Julia: `contoso_export_formatter` (2h) this morning — no dependencies. Then hold 1h for the compliance export the moment Daniel's patch lands. | Julia |\n| 9 | 09:50 | Confirm QA holds the regression slot for **Tuesday 09:00** and can run without Marcus present. | Me → Sam/QA |\n| 10 | ~12:30 | Confirm schema landed → release Marcus onto the compat patch (13:00–17:00) and Elena onto the backfill. | Me |\n| 11 | ~17:00 | Decide: do we need the Elena→Daniel migration-permissions handoff? Only if the migration or backfill has *not* cleanly landed. If it has, skip it and keep Daniel on the permission patch. | Me |\n\n## 3. PARALLEL WORK (no dependency on the migration)\n\n- **Julia** — export formatter (2h), then onboarding launch prep (2h, due Fri 12:00).\n- **Sarah** — approval pack from mockups (1.5h, submit pre-12:00), then pricing page (3h, due Thu 17:00), then `board_pack_non_revenue` (4h). Revenue charts wait for the backfill only.\n- **Marcus, Monday morning** — Atlas session prep + Daniel walkthrough + rebasing/staging the compat branch. He is genuinely blocked on code until 12:30.\n- **QA** — regression prep/test setup Monday.\n\n## 4. BLOCKERS & DEPENDENCIES\n\n**Real blockers**\n- Schema migration blocks the compat patch, the permission patch and the backfill. Nothing else moves the SSO or Contoso dates.\n- Marcus is unavailable Tue 09:00–13:00 — rollout cannot happen Tuesday morning.\n- Compat patch is Marcus-only: nobody else has been inside that branch since the spike (Elena confirmed). No parallelisation available.\n- Packaging approval blocks the pricing page going *public*, not the page being built.\n\n**Unblocked / false blockers**\n- Security review — already approved.\n- Onboarding instrumentation — not a launch blocker; frees 3h of Marcus.\n- Pricing page → approval pack — mockups suffice; the sequence Sarah assumed is unnecessary.\n- Marcus/Daniel contention on the permission patch — resolved by reassignment.\n- Elena's Wednesday-noon departure — a non-issue if the migration lands today; the 30-min handoff becomes contingency, not required work.\n\n## 5. EARLIEST DELIVERY\n\n- **Enterprise SSO in production: Tuesday ~14:00.** Migration Mon 09:30–12:30 → compat patch Mon 13:00–17:00 → QA Tue 09:00–11:00 → Marcus rolls out Tue 13:00–14:00 (first slot after Atlas). **~1.5 days ahead of the Wednesday EOD commitment to Laura.**\n- If the migration slips a full day: compat patch Tue 13:00–17:30, QA Wed 09:00–11:00, rollout Wed 11:00–12:00 — **still meets Wednesday EOD**, with no slack left.\n- **Contoso compliance export: Monday late afternoon, or Tuesday morning at the latest.** Daniel 12:30–16:30, Julia 1h after merge. Comfortably inside Tue 16:00 CET.\n- **Contoso demo formatter: Monday midday**, ahead of the Tuesday-afternoon ask.\n- **Board revenue charts: unblocked from Monday ~14:30** (backfill complete); Sarah's 2h can run Tuesday, well before Friday 10:00.\n\n## 6. RISKS / UNKNOWNS\n\n- **Do usable pricing mockups exist today?** Priya accepts mockups, but nothing in the record says any exist. If not, Sarah must build the page first and the same-day-clearance window is lost — check this first, it changes her whole sequence.\n- **Elena's start time is unconfirmed.** The plan assumes she begins this morning. Every hour she slips pushes the compat patch toward Tuesday afternoon and consumes the Wednesday buffer.\n- **Estimates are single-point and unpadded** (Sam explicitly said 2h \"if nothing surprising appears\"). No contingency is built into any figure.\n- **Daniel at 3.5h vs Marcus at 2h** is Daniel's own estimate on a module he last touched two weeks ago — the wider variance sits here. Mitigation: Marcus is on-site Monday afternoon for questions.\n- **Review/merge time is not costed anywhere.** No work item covers code review, CI or deploy windows between patch completion and QA start.\n- **Whether the delegated-admin fix stays inside Maya's approved scope.** It should (permission-check fix, not auth flow), but if Daniel has to touch the authentication flow, re-review is triggered and the Tuesday 16:00 contractual date is at risk. Daniel should flag this within the first hour.\n- **Contoso expansion signature date** is \"this quarter\" per the CEO — no date given; I'm treating the Tue 16:00 compliance obligation as the only hard commercial deadline.\n- **Backfill correctness is unverified.** Sarah's revenue charts assume the 90-min backfill fully resolves the duplicate expansion events. Nobody has confirmed a validation step.",
+  "response_chars": 7803,
+  "latency_ms": 73337.9,
+  "ttft_ms": 2846.6,
+  "ttfa_ms": 32678.0,
+  "stderr": "",
+  "served_model": "claude-opus-5",
+  "served_model_key": "claude-opus-5",
+  "provider": "firstParty",
+  "cost_basis": "list",
+  "context_window": 1000000,
+  "max_output_tokens": 64000,
+  "input_tokens": 2,
+  "output_tokens": 5512,
+  "reasoning_tokens": 2271,
+  "cache_read_input_tokens": 5226,
+  "cache_creation_input_tokens": 0,
+  "cost_usd_route_reported": 0.14042300000000002,
+  "model_usage_all": {
+    "claude-haiku-4-5-20251001": {
+      "inputTokens": 4435,
+      "outputTokens": 15,
+      "cacheReadInputTokens": 0,
+      "cacheCreationInputTokens": 0,
+      "webSearchRequests": 0,
+      "costUSD": 0.00451,
+      "contextWindow": 200000,
+      "maxOutputTokens": 32000,
+      "thinkingTokens": 0,
+      "canonicalModel": "claude-haiku-4-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    },
+    "claude-opus-5": {
+      "inputTokens": 2,
+      "outputTokens": 5512,
+      "cacheReadInputTokens": 5226,
+      "cacheCreationInputTokens": 0,
+      "webSearchRequests": 0,
+      "costUSD": 0.14042300000000002,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 64000,
+      "thinkingTokens": 2271,
+      "canonicalModel": "claude-opus-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "auxiliary_models": [
+    "claude-haiku-4-5-20251001"
+  ],
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 5226,
+    "output_tokens": 5512,
+    "output_tokens_details": {
+      "thinking_tokens": 2271
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 5512,
+        "cache_read_input_tokens": 5226,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "stop_reason": "end_turn",
+  "terminal_reason": "completed",
+  "finish_reason": "end_turn",
+  "is_error": false,
+  "subtype": "success",
+  "api_error_status": null,
+  "num_turns": 1,
+  "route_ttft_ms": 1513,
+  "route_ttfa_ms": 32064,
+  "duration_api_ms": 73338,
+  "total_cost_usd_including_auxiliary": 0.14493300000000003,
+  "session_id": "069cda84-2da4-4eb1-bd6f-9f25a423ec9a",
+  "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+      "background": 0,
+      "foreground": 0,
+      "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+      "parent": 0,
+      "user": 0,
+      "system": 0
+    },
+    "refused": {
+      "depth_limit": 0,
+      "concurrency_limit": 0,
+      "budget": 0
+    },
+    "by_type": {}
+  }
+}

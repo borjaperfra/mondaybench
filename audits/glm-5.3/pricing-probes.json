@@ -1,0 +1,60 @@
+{
+  "measured_utc": "2026-09-03",
+  "method": "non-streaming completions through the Helmcode gateway, reading usage.cost_details",
+  "why_non_streaming": "the streaming response carries neither `provider` nor `cost`; both appear only on the blocking path",
+  "probes": [
+    {
+      "probe": "short",
+      "model": "glm5.3",
+      "upstream_provider": "Z.AI",
+      "prompt_tokens": 44,
+      "completion_tokens": 128,
+      "cost_usd": 3.53e-05,
+      "in_per_million_usd": 0.075,
+      "out_per_million_usd": 0.25
+    },
+    {
+      "probe": "medium",
+      "model": "glm5.3",
+      "upstream_provider": "Z.AI",
+      "prompt_tokens": 182,
+      "completion_tokens": 692,
+      "cost_usd": 0.00018665,
+      "in_per_million_usd": 0.075,
+      "out_per_million_usd": 0.25
+    },
+    {
+      "probe": "long (first attempt)",
+      "model": "glm5.3",
+      "upstream_provider": null,
+      "error": "gateway returned an empty body; no JSON. Retried below."
+    },
+    {
+      "probe": "long (retry)",
+      "model": "glm5.3",
+      "upstream_provider": "Parasail",
+      "prompt_tokens": 823,
+      "completion_tokens": 8029,
+      "in_per_million_usd": 0.15,
+      "out_per_million_usd": 0.5,
+      "note": "same served model id, different upstream vendor, double the per-token price"
+    },
+    {
+      "probe": "single non-streaming, 'Say OK.'",
+      "model": "glm5.3",
+      "upstream_provider": "Z.AI",
+      "prompt_tokens": 44,
+      "completion_tokens": 16,
+      "cost_usd": 7.3e-06,
+      "cost_details": {
+        "upstream_inference_cost": 7.3e-06,
+        "upstream_inference_prompt_cost": 3.3e-06,
+        "upstream_inference_completions_cost": 4e-06
+      },
+      "in_per_million_usd": 0.075,
+      "out_per_million_usd": 0.25
+    }
+  ],
+  "benchmark_size_probes": "see routing-probes.json - four calls at ~2,541 prompt tokens, all Z.AI",
+  "cache_observation": "Two immediate repeats of the same benchmark-size prompt were billed at an effective input rate of $0.016063/M against $0.075/M on the first call, despite extra_body {caching: false}. Output stayed at $0.25/M. Recorded as an observation about gateway billing, not as a claim that the cache flag failed - run qualification independently rejects duplicate responses, and all 15 official runs have distinct response hashes."
+}

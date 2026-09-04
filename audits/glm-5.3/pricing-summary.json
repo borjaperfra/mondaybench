@@ -1,0 +1,51 @@
+{
+  "model_slug": "glm5.3",
+  "basis": "measured from Helmcode gateway usage.cost_details on non-streaming completions, 2026-09-03",
+  "first_party_verifiable": true,
+  "observed_rates_usd_per_million": {
+    "Z.AI upstream": {
+      "input": 0.075,
+      "output": 0.25,
+      "observations": 6,
+      "note": "every probe at benchmark prompt size routed here"
+    },
+    "Parasail upstream": {
+      "input": 0.15,
+      "output": 0.5,
+      "observations": 1,
+      "note": "one long-prompt call; same served model id"
+    },
+    "repeat-prompt input": {
+      "input": 0.016063,
+      "note": "effective input rate on an immediately repeated prompt, despite extra_body caching:false"
+    }
+  },
+  "per_run_cost_observable": false,
+  "per_run_cost_note": "The STREAMING response the runner uses carries neither `provider` nor `cost`; both appear only on non-streaming calls. Per-run cost is therefore derived from measured rates and recorded token counts, not read from the run files.",
+  "tokens": {
+    "runs": 15,
+    "total_input": 70038,
+    "total_output": 319479,
+    "total_reasoning": 289322,
+    "mean_input": 4669.2,
+    "mean_output": 21298.6,
+    "mean_reasoning": 19288.1,
+    "reasoning_double_count_note": "reasoning_tokens are INSIDE output_tokens (completion_tokens). They are not added again.",
+    "cache_read_tokens": 0,
+    "cache_write_tokens": 0
+  },
+  "normalized_cost_usd": {
+    "per_task": 0.005675,
+    "per_1k_tasks": 5.67,
+    "per_100k_tasks": 567.48,
+    "per_1m_tasks": 5674.84,
+    "upper_bound_per_task_parasail_rate": 0.01135,
+    "upper_bound_per_1k_tasks": 11.35,
+    "basis_note": "one completion per task. MondayBench is not an agent benchmark and there are no steps to multiply."
+  },
+  "efficiency": {
+    "median_ttft_ms": 2108.4,
+    "median_ttfa_ms": 253260.4,
+    "median_total_latency_ms": 286619.6
+  }
+}

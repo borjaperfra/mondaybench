@@ -1,0 +1,134 @@
+{
+  "record_type": "off_benchmark_comparison",
+  "not_a_benchmark_artifact": true,
+  "opus_provisional_overall": 97.1,
+  "opus_route": "PROVISIONAL / OFF-BENCHMARK / CLAUDE CODE ROUTE",
+  "noise_reference_points": 1.53,
+  "opus_variance": {
+    "mean_run_stddev": 1.87,
+    "max_run_range": 9.5,
+    "mean_run_range": 3.5,
+    "across_scenario_stddev": 4.2,
+    "across_scenario_range": 10.33,
+    "standard_error_of_overall": 0.672
+  },
+  "gaps": {
+    "Qwen 3.8 Flash": {
+      "their_score": 95.07,
+      "opus_minus_them": 2.03,
+      "exceeds_noise_reference": true,
+      "gap_in_standard_errors_of_opus_mean_alone": 3.02
+    },
+    "GLM 5.3 Flash": {
+      "their_score": 94.93,
+      "opus_minus_them": 2.17,
+      "exceeds_noise_reference": true,
+      "gap_in_standard_errors_of_opus_mean_alone": 3.23
+    },
+    "Claude Fable 5.1*": {
+      "their_score": 94.9,
+      "opus_minus_them": 2.2,
+      "exceeds_noise_reference": true,
+      "gap_in_standard_errors_of_opus_mean_alone": 3.27
+    }
+  },
+  "confounds": [
+    "THE JUDGE IS THE CANDIDATE. MondayBench's judge is claude-opus-5 and the candidate is claude-opus-5. This is a systematic effect of unknown sign and magnitude that averaging over runs does not reduce. No other model in the band was judged by itself.",
+    "THE ROUTE DIFFERS. The seven published models ran as direct streaming completions through the official gateway adapter. Opus ran through Claude Code with an Agent SDK preamble prepended to the frozen system prompt and a <system-reminder> injected into the user turn, and the auxiliary Haiku call was not suppressed.",
+    "Both confounds plausibly act in Opus's favour, so they cannot be waved through as noise that might cut either way."
+  ],
+  "resolution_verdict": {
+    "can_mondaybench_resolve_a_significant_difference": "NO",
+    "why": "The gaps (2.03 to 2.20 points) are marginally larger than the 1.53-point noise reference, and Opus's own mean run-to-run sigma is 1.87 - larger than that reference - with a 9.5-point run range on monday-004 and a 4.20-point spread across scenario means. On the statistics alone the difference is suggestive and not established. But the statistics are not the binding constraint: the candidate was judged by itself, and it ran on a different route with a different system prompt. Neither confound is reduced by averaging, and both plausibly favour Opus. A quality difference measured under those conditions is not comparable with the seven models measured without them.",
+    "conclusion": "Opus 5 joins the TOP PERFORMANCE BAND. It is not stated as beating Qwen 3.8 Flash, GLM 5.3 Flash or Fable 5.1.",
+    "top_performance_band_with_opus": [
+      {
+        "model": "Claude Opus 5*",
+        "score": 97.1,
+        "status": "provisional, off-benchmark, self-judged"
+      },
+      {
+        "model": "Qwen 3.8 Flash",
+        "score": 95.07,
+        "status": "official"
+      },
+      {
+        "model": "GLM 5.3 Flash",
+        "score": 94.93,
+        "status": "official"
+      },
+      {
+        "model": "Claude Fable 5.1*",
+        "score": 94.9,
+        "status": "provisional, off-benchmark"
+      }
+    ]
+  },
+  "opus_vs_fable": {
+    "monday_score": {
+      "opus": 97.1,
+      "fable": 94.9,
+      "difference": 2.2,
+      "resolved": true,
+      "note": "Both are provisional off-benchmark results on the SAME contaminated route, so the route confound cancels between them. The self-judging confound does NOT cancel: Opus was judged by itself and Fable was not."
+    },
+    "per_scenario": {
+      "monday-001": {
+        "opus": 98.5,
+        "fable": 97.5,
+        "difference": 1.0
+      },
+      "monday-002": {
+        "opus": 99.0,
+        "fable": 91.0,
+        "difference": 8.0
+      },
+      "monday-003": {
+        "opus": 98.33,
+        "fable": 96.67,
+        "difference": 1.66
+      },
+      "monday-004": {
+        "opus": 89.67,
+        "fable": 89.33,
+        "difference": 0.34
+      },
+      "monday-005": {
+        "opus": 100.0,
+        "fable": 100.0,
+        "difference": 0.0
+      }
+    },
+    "median_ttfa_s": {
+      "opus": 41.3,
+      "fable": 50.9
+    },
+    "median_ttft_s": {
+      "opus": 3.2,
+      "fable": 5.2
+    },
+    "median_total_latency_s": {
+      "opus": 90.5,
+      "fable": 93.2
+    },
+    "mean_output_tokens": {
+      "opus": 9201.2,
+      "fable": 8197.9
+    },
+    "mean_reasoning_tokens": {
+      "opus": 4837.4,
+      "fable": 4363.1
+    },
+    "mean_total_input_tokens": {
+      "opus": 6783.8,
+      "fable": 6785.0
+    },
+    "multiples": {
+      "speed_ttfa_opus_vs_fable": 0.81,
+      "speed_ttft_opus_vs_fable": 0.61,
+      "output_tokens_opus_vs_fable": 1.12,
+      "reasoning_tokens_opus_vs_fable": 1.11,
+      "reasoning_comparability": "COMPARABLE. Both are claude-* models on the identical route, and both report thinking_tokens from usage.output_tokens_details on the same field with the same semantics, with reasoning counted inside billable output tokens in both cases. This is the one cross-model reasoning comparison in this repository that is observably like-for-like."
+    }
+  }
+}

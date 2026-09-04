@@ -1,0 +1,114 @@
+{
+  "record_type": "pricing_snapshot",
+  "snapshot_id": "opus-5-pricing-2026-09-02",
+  "scope": "Claude Opus 5 only. This snapshot is ADDITIVE and does not modify, supersede or reference any existing snapshot. analysis/cost-value/pricing-snapshot-2026-09-02.yaml, provider-pricing-snapshot-2026-09-02.yaml (v1) and provider-pricing-snapshot-2026-09-02-v2.yaml remain byte-identical.",
+
+  "model": "Claude Opus 5",
+  "model_id": "claude-opus-5",
+  "provider": "Anthropic (Claude API, first party)",
+  "pricing_tier": "standard (not batch, not fast mode, global inference geography)",
+
+  "source_url": "https://platform.claude.com/docs/en/about-claude/pricing",
+  "source_type": "vendor_pricing_page",
+  "source_party": "first_party",
+  "retrieved_at": "2026-09-02",
+
+  "rates_usd_per_million_tokens": {
+    "base_input": 5.00,
+    "output": 25.00,
+    "cache_read": 0.50,
+    "cache_write_5m": 6.25,
+    "cache_write_1h": 10.00
+  },
+
+  "published_multipliers": {
+    "cache_write_5m": "1.25x base input price",
+    "cache_write_1h": "2x base input price",
+    "cache_read": "0.1x base input price",
+    "cache_read_exception_note": "The pricing page footnote reads: 'Cache hits and refreshes on Claude Fable 5.1 and Claude Mythos 5.1 are priced at 0.025x the base input price. All other models use the standard 0.1x multiplier.' Claude Opus 5 is NOT one of the exceptions, so its cache read is 0.1x base input = $0.50/MTok. This is the specific point on which Opus 5 must not be assumed to match Fable 5.1."
+  },
+
+  "batch_pricing": {
+    "batch_input_per_million": 2.50,
+    "batch_output_per_million": 12.50,
+    "discount": "50% on both input and output",
+    "applied_to_these_runs": false,
+    "why_not": "usage.service_tier is 'standard' on all 15 runs; none was a Batch API request. Recorded for completeness only."
+  },
+
+  "modifiers_not_applied": {
+    "fast_mode": {
+      "published_rates": "$10/MTok input, $50/MTok output for Claude Opus 5",
+      "applied": false,
+      "evidence": "usage.speed is 'standard' on all 15 runs, and the route metadata reports fast_mode_state 'off'. Fast mode would have doubled both rates."
+    },
+    "data_residency_us": {
+      "published": "1.1x multiplier on all token categories when inference_geo is 'us'",
+      "applied": false,
+      "evidence": "usage.inference_geo is 'not_available' on all 15 runs, i.e. the global default."
+    },
+    "regional_endpoint_premium": {
+      "published": "10% premium on Bedrock/Google Cloud regional and multi-region endpoints",
+      "applied": false,
+      "evidence": "these runs are first-party Claude API (modelUsage reports provider 'firstParty'), not a partner-operated cloud platform."
+    },
+    "subscription_pricing": {
+      "applied": false,
+      "why": "The generation route authenticated with a Claude subscription, but this audit deliberately prices the tasks at PUBLIC LIST rates so the figure is comparable with the other models in the benchmark. A subscription seat price is not a per-token rate and cannot be compared with one."
+    }
+  },
+
+  "identity": {
+    "requested_model": "claude-opus-5",
+    "served_model": "claude-opus-5",
+    "served_model_evidence": "modelUsage canonicalModel is 'claude-opus-5' with provider 'firstParty' on all 15 of 15 runs.",
+    "pricing_sku": "Claude Opus 5",
+    "identity_confidence": "EXACT",
+    "identity_justification": "The served model id and the pricing-table row are the same model from the same party. No variant resolution, no family inference and no gateway indirection is involved: the route reports provider 'firstParty' and costBasis 'list', so the party that served the tokens is the party that publishes the rate card. There is exactly one 'Claude Opus 5' row on the pricing page and exactly one served canonicalModel, and they match on the nose.",
+    "pricing_basis": "FIRST_PARTY_LIST",
+    "pricing_confidence": "HIGH",
+    "confidence_justification": "Two independent lines of evidence agree on all five rates, and the agreement is exact. See evidence below."
+  },
+
+  "billing_semantics": {
+    "input_token_semantics": "Anthropic reports input_tokens CACHE-EXCLUSIVE. input_tokens, cache_creation_input_tokens and cache_read_input_tokens are three DISJOINT buckets. On these runs input_tokens reads 2 on every run because essentially the whole prompt is either a cache write or a cache read.",
+    "effective_prompt_tokens": "input_tokens + cache_creation_input_tokens + cache_read_input_tokens. Kept as a DESCRIPTIVE metric only. It is never multiplied by a single rate; each bucket is charged at its own rate.",
+    "cache_semantics_short": "1-hour writes at $10/MTok, reads at $0.50/MTok, directly observed",
+    "cache_semantics": "RESOLVED FROM THE RAW USAGE, NOT INFERRED. usage.cache_creation splits the write into ephemeral_1h_input_tokens and ephemeral_5m_input_tokens. Across all 15 runs every cache-creation token is ephemeral_1h and ephemeral_5m is zero, so the 1-hour write rate ($10/MTok, 2x base input) is the applicable one and the 5-minute rate ($6.25/MTok) never applies. Four runs create the cache (monday-001/002/003/005 run 1) and the rest read it.",
+    "reasoning_treatment_short": "already inside billable output_tokens - NOT charged separately",
+    "reasoning_treatment": "thinking_tokens is observable in usage.output_tokens_details and is a SUBSET of output_tokens, not an additional bucket. PROVEN TWO WAYS. (1) The pricing page defines no reasoning or thinking token category anywhere; the only output category is 'Output tokens'. (2) The meter settles it directly: charging output_tokens alone reproduces the provider-reported Opus cost to 0.000000000% on all 15 runs, whereas adding thinking_tokens on top would overstate monday-004 run 1 by 69.71% ($1.0258 against a reported $0.6044). Doing output_tokens + thinking_tokens would therefore be double counting, and reasoning_additional_cost is 0 by demonstration rather than by assumption.",
+    "output_includes": "answer tokens plus thinking tokens, billed once at the output rate."
+  },
+
+  "auxiliary_call_handling": {
+    "problem": "The generation route made an auxiliary claude-haiku-4-5 call per run that DISABLE_NON_ESSENTIAL_MODEL_CALLS=1 did not suppress. The route's total_cost_usd therefore covers Claude Code's own overhead as well as the Opus generation.",
+    "resolution": "The normalized cost is computed from the claude-opus-5 modelUsage line and its token buckets ONLY. The Haiku line is excluded entirely from the normalized figure and from the reconciliation, and is reported separately so the exclusion is visible rather than silent.",
+    "buckets_reported_separately": ["route_total_cost_usd", "opus_reported_cost_usd", "auxiliary_cost_usd"],
+    "comparable_figure": "opus_reported_cost_usd is the only route figure that may be compared with the normalized list-price cost. We are pricing the cost of the Opus generation, not the cost of running Claude Code."
+  },
+
+  "evidence": {
+    "line_1_vendor_page": {
+      "method": "Retrieved the first-party Anthropic pricing page and read the Claude Opus 5 row.",
+      "row_verbatim": "| Claude Opus 5 | $5 / MTok | $6.25 / MTok | $10 / MTok | $0.50 / MTok | $25 / MTok |",
+      "column_order": "Base input tokens | 5m cache writes | 1h cache writes | Cache hits and refreshes | Output tokens",
+      "corroborating_worked_example": "The page's own Managed Agents worked example prices cache reads as '40,000 x $5 x 0.1 / 1,000,000', confirming the 0.1x read multiplier applies to Opus 5."
+    },
+    "line_2_solved_meter": {
+      "method": "Solved the provider-reported costUSD (costBasis 'list') for the four unknown rates using the observed token buckets across the 15 runs, then verified the solution against every run.",
+      "derivation": [
+        "monday-001 run2 and run3 differ only in output tokens: (0.0762255 - 0.0657005) / (2952 - 2531) = $25.000000/MTok output.",
+        "monday-001 run2 is a cache-read run: with input at $5/MTok, (cost - 2*5e-6 - 2531*25e-6) / 4831 = $0.500000/MTok cache read, exactly 0.1x input.",
+        "monday-001 run1 is a cache-write run: (cost - 2*5e-6 - 3118*25e-6) / 4831 = $10.000000/MTok cache write, exactly 2.0x input."
+      ],
+      "verification": "With input $5.00, output $25.00, cache read $0.50 and cache write $10.00, the recomputed cost equals the provider-reported Opus-only cost on ALL 15 RUNS with a worst-case error of 0.000000000%.",
+      "why_this_matters": "The solved rates were derived without reference to the vendor page and land on the published figures exactly, including both canonical multipliers (0.1x read, 2.0x 1h write). Two methods, one answer."
+    },
+    "not_assumed_from_fable": "Fable 5.1 is $10/$50 with a 0.025x cache-read exception. Opus 5 is $5/$25 with the standard 0.1x cache read - half the per-token price and a different cache-read multiplier. Assuming Fable's rates would have overstated Opus's cost by roughly 2x."
+  },
+
+  "caveats": {
+    "monday_004_cache_write_not_charged": "In four scenarios run 1 pays the 1-hour cache write and runs 2-3 pay cache reads. In monday-004 all three runs pay cache READS and none pays a write, because the write was paid by a generation that was later discarded (see experiments/opus-5-full-mondaybench/GENERATION-INCIDENT.md). The as-observed normalized cost is faithful to what was metered, but it omits one 12,629-token 1-hour cache write worth $0.126290. The size of the omission is reported in usage_and_cost_totals rather than smoothed into the mean.",
+    "cache_dependent_comparability": "These 15 tasks were run as three repeats of five prompts, so 11 of 15 runs benefit from a warm 1-hour cache. A cold single run of each task would pay the write instead of the read and cost more. This is a property of the run schedule, not of the model, and it applies to the other models' figures in the benchmark too."
+  }
+}

@@ -1,0 +1,397 @@
+{
+  "contract_schema_version": "1",
+  "scenario_id": "monday-002",
+  "scenario_prompt_sha256": "740e627cbc7413c321ede0d54000504de54821d34ff4677f82731b89600423a8",
+  "evaluator_id": "evaluator-opus5-v0.2",
+  "rubric_version": "0.2",
+  "rubric_file": "rubric.yaml",
+  "ground_truth_sha256": "8a53e5f98c5285a4069fd2aff579a994ac1be6b41e3777bd124eaf48261539f8",
+  "ground_truth_sliced_per_criterion": false,
+  "judge_instructions": {
+    "system_prompt_sha256": "89baecb8058f2896d222da4c678112734588f37d6c7e0a2077c04f48136a487a",
+    "criterion": {
+      "source": "evaluators/monday-002/judge-prompt.md",
+      "sha256": "17af46e1c0a1a41b943fb2d81c1e382b50b573259f9cd1c3180c7a1569e4edc4"
+    },
+    "penalty": {
+      "source": "evaluators/monday-002/penalty-judge-prompt.md",
+      "sha256": "f61ff49287d66f87a8628f12c3513328dc0cdc5dddc54dacd78ebfdcb874e2d6"
+    },
+    "noise": null
+  },
+  "label_semantics": {
+    "labels": [
+      "PASS",
+      "PARTIAL",
+      "FAIL"
+    ],
+    "tie_rule": "lower"
+  },
+  "scoring": {
+    "total_base_points": 100.0,
+    "maximum_global_penalty": 30.0,
+    "dimension_max": {
+      "cross_source_data_reasoning": 15.0,
+      "decision_prioritization": 20.0,
+      "planning_dependencies": 25.0,
+      "state_reconstruction": 15.0,
+      "temporal_supersession": 15.0,
+      "uncertainty_epistemic": 10.0
+    }
+  },
+  "criteria": [
+    {
+      "id": "launch_state",
+      "dimension": "state_reconstruction",
+      "points": {
+        "pass": 5.0,
+        "partial": 2.5,
+        "fail": 0.0
+      },
+      "pass_definition": "Recovery open; no Maya gate; rollout conditional.",
+      "partial_definition": "Mostly right with one stale implication.",
+      "fail_definition": "Neither the PASS nor the PARTIAL bar is met.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "stale_external_actions",
+      "dimension": "state_reconstruction",
+      "points": {
+        "pass": 5.0,
+        "partial": 2.5,
+        "fail": 0.0
+      },
+      "pass_definition": "Rejects Zenith escalation, user launch-send, external pricing.",
+      "partial_definition": "Rejects at least two.",
+      "fail_definition": "Neither the PASS nor the PARTIAL bar is met.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "current_owners",
+      "dimension": "state_reconstruction",
+      "points": {
+        "pass": 5.0,
+        "partial": 2.5,
+        "fail": 0.0
+      },
+      "pass_definition": "Marcus deploys, Priya reviews/verifies, Sam rolls out, Daniel sends, user decides/coordinates.",
+      "partial_definition": "One material owner wrong/omitted.",
+      "fail_definition": "Neither the PASS nor the PARTIAL bar is met.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "executive_gate_superseded",
+      "dimension": "temporal_supersession",
+      "points": {
+        "pass": 5.0,
+        "partial": 2.5,
+        "fail": 0.0
+      },
+      "pass_definition": "Infers no separate CEO approval and rejects stale task.",
+      "partial_definition": "Does not seek approval but supersession unclear.",
+      "fail_definition": "Neither the PASS nor the PARTIAL bar is met.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "pricing_authority",
+      "dimension": "temporal_supersession",
+      "points": {
+        "pass": 5.0,
+        "partial": 2.5,
+        "fail": 0.0
+      },
+      "pass_definition": "Uses Daniel later instruction over pinned/final workbook; internal only.",
+      "partial_definition": "Rejects external use but authority unresolved.",
+      "fail_definition": "Neither the PASS nor the PARTIAL bar is met.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "ownership_supersession",
+      "dimension": "temporal_supersession",
+      "points": {
+        "pass": 5.0,
+        "partial": 2.5,
+        "fail": 0.0
+      },
+      "pass_definition": "Infers Daniel current send owner from handoff/receipt despite stale task.",
+      "partial_definition": "User not sender but owner reasoning incomplete.",
+      "fail_definition": "Neither the PASS nor the PARTIAL bar is met.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "choose_option_b",
+      "dimension": "planning_dependencies",
+      "points": {
+        "pass": 8.0,
+        "partial": 4.0,
+        "fail": 0.0
+      },
+      "pass_definition": "Chooses B because viable within constraints and materially lower stated risk.",
+      "partial_definition": "Chooses viable A correctly, or B without adequate rationale.",
+      "fail_definition": "Neither the PASS nor the PARTIAL bar is met.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "option_b_sequence",
+      "dimension": "planning_dependencies",
+      "points": {
+        "pass": 7.0,
+        "partial": 3.5,
+        "fail": 0.0
+      },
+      "pass_definition": "Delta review → B deploy → post-deploy verification → Sam rollout.",
+      "partial_definition": "One dependency omitted/misordered.",
+      "fail_definition": "Neither the PASS nor the PARTIAL bar is met.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "schedule_feasibility",
+      "dimension": "planning_dependencies",
+      "points": {
+        "pass": 6.0,
+        "partial": 3.0,
+        "fail": 0.0
+      },
+      "pass_definition": "Coherent B schedule fits Marcus, Priya, verification, Sam and before-12 window.",
+      "partial_definition": "Major constraints understood but timing incomplete/slightly inconsistent.",
+      "fail_definition": "Neither the PASS nor the PARTIAL bar is met.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "parallelize_work",
+      "dimension": "planning_dependencies",
+      "points": {
+        "pass": 4.0,
+        "partial": 2.0,
+        "fail": 0.0
+      },
+      "pass_definition": "Triggers release immediately then uses delegated execution time for 11:00 expansion work.",
+      "partial_definition": "Right priorities but parallelization unclear.",
+      "fail_definition": "Neither the PASS nor the PARTIAL bar is met.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "immediate_release_decision",
+      "dimension": "decision_prioritization",
+      "points": {
+        "pass": 6.0,
+        "partial": 3.0,
+        "fail": 0.0
+      },
+      "pass_definition": "Release choice/diff immediate first action due Marcus availability.",
+      "partial_definition": "Top-tier but not immediate without equivalent feasibility.",
+      "fail_definition": "Neither the PASS nor the PARTIAL bar is met.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "expansion_before_11",
+      "dimension": "decision_prioritization",
+      "points": {
+        "pass": 5.0,
+        "partial": 2.5,
+        "fail": 0.0
+      },
+      "pass_definition": "Plans delivery before 11:00 and recognizes hard deadline.",
+      "partial_definition": "Monday priority but deadline missed.",
+      "fail_definition": "Neither the PASS nor the PARTIAL bar is met.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "globex_priority",
+      "dimension": "decision_prioritization",
+      "points": {
+        "pass": 5.0,
+        "partial": 2.5,
+        "fail": 0.0
+      },
+      "pass_definition": "Elevates Globex using renewal + expansion + usage/admin + support evidence.",
+      "partial_definition": "Flags Globex using limited signals or under-prioritizes.",
+      "fail_definition": "Neither the PASS nor the PARTIAL bar is met.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "avoid_acme_false_positive",
+      "dimension": "decision_prioritization",
+      "points": {
+        "pass": 4.0,
+        "partial": 2.0,
+        "fail": 0.0
+      },
+      "pass_definition": "Does not treat Acme usage drop as churn evidence because contract explains expected decline.",
+      "partial_definition": "Notices explanation but still frames usage as significant churn signal.",
+      "fail_definition": "Neither the PASS nor the PARTIAL bar is met.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "expansion_fully_reconciled",
+      "dimension": "cross_source_data_reasoning",
+      "points": {
+        "pass": 6.0,
+        "partial": 3.0,
+        "fail": 0.0
+      },
+      "pass_definition": "Explicitly closes €54k = 18+12+10+14.",
+      "partial_definition": "Has components but leaves total/24k unexplained/unvalidated.",
+      "fail_definition": "Neither the PASS nor the PARTIAL bar is met.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "causal_boundary",
+      "dimension": "cross_source_data_reasoning",
+      "points": {
+        "pass": 3.0,
+        "partial": 1.5,
+        "fail": 0.0
+      },
+      "pass_definition": "Separates numerical reconciliation from unsupported Soylent/Wonka causes.",
+      "partial_definition": "Cautious but blurs arithmetic/causality.",
+      "fail_definition": "Neither the PASS nor the PARTIAL bar is met.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "customer_signal_integration",
+      "dimension": "cross_source_data_reasoning",
+      "points": {
+        "pass": 6.0,
+        "partial": 3.0,
+        "fail": 0.0
+      },
+      "pass_definition": "Uses accounts+contracts+support to distinguish Globex, explained Acme, and at least one secondary Soylent/Wonka.",
+      "partial_definition": "Crosses sources for two cases but misses key counter-signal/comparison.",
+      "fail_definition": "Neither the PASS nor the PARTIAL bar is met.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "orion_missing_evidence",
+      "dimension": "uncertainty_epistemic",
+      "points": {
+        "pass": 5.0,
+        "partial": 2.5,
+        "fail": 0.0
+      },
+      "pass_definition": "Refuses ON/OFF and identifies canonical org ID + live flag as needed evidence.",
+      "partial_definition": "Recognizes conflict but verification nonspecific.",
+      "fail_definition": "Neither the PASS nor the PARTIAL bar is met.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "conditional_launch_timing",
+      "dimension": "uncertainty_epistemic",
+      "points": {
+        "pass": 3.0,
+        "partial": 1.5,
+        "fail": 0.0
+      },
+      "pass_definition": "Rollout estimate conditional and not promised externally.",
+      "partial_definition": "No firm promise but insufficient conditionality.",
+      "fail_definition": "Neither the PASS nor the PARTIAL bar is met.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "no_unsupported_causality",
+      "dimension": "uncertainty_epistemic",
+      "points": {
+        "pass": 2.0,
+        "partial": 1.0,
+        "fail": 0.0
+      },
+      "pass_definition": "No invented production/Orion/customer causes.",
+      "partial_definition": "Unsupported cause only as explicit hypothesis.",
+      "fail_definition": "Neither the PASS nor the PARTIAL bar is met.",
+      "ground_truth_paths": []
+    }
+  ],
+  "noise": null,
+  "penalties": [
+    {
+      "type": "MAJOR_CONTRADICTION",
+      "points": -5.0,
+      "definition": ""
+    },
+    {
+      "type": "MAJOR_PLANNING_ERROR",
+      "points": -7.0,
+      "definition": ""
+    },
+    {
+      "type": "MATERIAL_HALLUCINATION",
+      "points": -5.0,
+      "definition": ""
+    },
+    {
+      "type": "PROHIBITED_ACTION",
+      "points": -10.0,
+      "definition": ""
+    }
+  ],
+  "output_contract": {
+    "criterion_schema": {
+      "type": "object",
+      "properties": {
+        "result": {
+          "type": "string",
+          "enum": [
+            "PASS",
+            "PARTIAL",
+            "FAIL"
+          ]
+        },
+        "evidence": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "result",
+        "evidence",
+        "reason"
+      ],
+      "additionalProperties": false
+    },
+    "noise_schema": null,
+    "penalty_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "violations": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "evidence": {
+                "type": "string"
+              },
+              "materially_misleading": {
+                "type": "boolean"
+              },
+              "reason": {
+                "type": "string"
+              },
+              "type": {
+                "enum": [
+                  "MAJOR_CONTRADICTION",
+                  "MAJOR_PLANNING_ERROR",
+                  "MATERIAL_HALLUCINATION",
+                  "PROHIBITED_ACTION"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "type",
+              "evidence",
+              "reason",
+              "materially_misleading"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "violations"
+      ],
+      "type": "object"
+    }
+  }
+}

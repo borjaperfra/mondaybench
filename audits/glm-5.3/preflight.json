@@ -1,0 +1,138 @@
+{
+  "date_utc": "2026-09-03",
+  "scored": false,
+  "prompt_used": "a synthetic non-frozen prompt; no frozen scenario prompt was used for preflight",
+  "checks": {
+    "http_success": {
+      "result": "PASS",
+      "detail": "HTTP 200 on the streaming benchmark-config call"
+    },
+    "requested_model_accepted": {
+      "result": "PASS",
+      "detail": "glm5.3 accepted; no 401/404"
+    },
+    "served_model_identity": {
+      "result": "PASS",
+      "detail": "every SSE frame echoes model=['glm5.3']; requested == served"
+    },
+    "streaming_works": {
+      "result": "PASS",
+      "detail": "31 SSE frames, 16 answer chars"
+    },
+    "finish_reason_available": {
+      "result": "PASS",
+      "detail": "finish_reason=stop"
+    },
+    "usage_available": {
+      "result": "PASS",
+      "detail": "prompt_tokens, completion_tokens and completion_tokens_details all present"
+    },
+    "reasoning_tokens_observable": {
+      "result": "PASS",
+      "detail": "reasoning_tokens=92; reasoning_content streamed in 39 deltas. The model thinks by default"
+    },
+    "no_tool_calls": {
+      "result": "PASS",
+      "detail": "tool_call deltas across the stream: 0"
+    },
+    "no_auxiliary_calls": {
+      "result": "PASS",
+      "detail": "one HTTP request per generation; the adapter makes no other call"
+    },
+    "no_hidden_routing_to_another_model": {
+      "result": "PASS",
+      "detail": "served model id is glm5.3 on every frame and on the non-streaming body"
+    },
+    "temperature_supported": {
+      "result": "PASS",
+      "detail": "temperature=0 accepted; unsupported_parameters is empty"
+    },
+    "top_p_supported": {
+      "result": "PASS",
+      "detail": "top_p=1.0 accepted (HTTP 200). Not pinned in models.yaml, so not sent on official runs"
+    }
+  },
+  "identity_confidence": {
+    "level": "HIGH on the id, MEDIUM on the deployment",
+    "why": "The gateway echoes glm5.3 as the served model on every streaming frame and on the non-streaming body, and reports upstream provider Z.AI, GLM's own vendor. What a client cannot see past the gateway is which deployment answered: /model/info and /model_group/info return 404, as models.yaml's header already records for glm5.2. Separately, glm5.3 and glm5.2 produced different output on an identical prompt at temperature 0, which is weak evidence they are distinct deployments rather than one alias."
+  },
+  "upstream_routing": {
+    "observed": [
+      "Z.AI",
+      "Parasail"
+    ],
+    "detail": "The gateway fans glm5.3 out across upstream vendors. Six calls at or below benchmark prompt size were served by Z.AI; one long-prompt call by Parasail, at double the per-token price. The served model id was glm5.3 on both, so this is an upstream-vendor difference, not routing to another model. Not observable per run: the STREAMING response the runner uses carries neither `provider` nor `cost`."
+  },
+  "route_equivalence": {
+    "verdict": "EQUIVALENT",
+    "evidence": "audits/glm-5.3/wire-capture.json",
+    "per_scenario": {
+      "monday-001": {
+        "messages": [
+          "system",
+          "user"
+        ],
+        "system_prompt": "You are a helpful assistant.",
+        "user_matches_frozen_prompt_hash": true,
+        "tools_key_present": false,
+        "non_standard_body_keys": [
+          "caching"
+        ],
+        "max_tokens": 32000
+      },
+      "monday-002": {
+        "messages": [
+          "system",
+          "user"
+        ],
+        "system_prompt": "You are a helpful assistant.",
+        "user_matches_frozen_prompt_hash": true,
+        "tools_key_present": false,
+        "non_standard_body_keys": [
+          "caching"
+        ],
+        "max_tokens": 32000
+      },
+      "monday-003": {
+        "messages": [
+          "system",
+          "user"
+        ],
+        "system_prompt": "You are a helpful assistant.",
+        "user_matches_frozen_prompt_hash": true,
+        "tools_key_present": false,
+        "non_standard_body_keys": [
+          "caching"
+        ],
+        "max_tokens": 32000
+      },
+      "monday-004": {
+        "messages": [
+          "system",
+          "user"
+        ],
+        "system_prompt": "You are a helpful assistant.",
+        "user_matches_frozen_prompt_hash": true,
+        "tools_key_present": false,
+        "non_standard_body_keys": [
+          "caching"
+        ],
+        "max_tokens": 96000
+      },
+      "monday-005": {
+        "messages": [
+          "system",
+          "user"
+        ],
+        "system_prompt": "You are a helpful assistant.",
+        "user_matches_frozen_prompt_hash": true,
+        "tools_key_present": false,
+        "non_standard_body_keys": [
+          "caching"
+        ],
+        "max_tokens": 131072
+      }
+    },
+    "note": "Exactly two messages reach the wire: the frozen system prompt verbatim and the frozen user prompt, whose sha256 equals the published one. No tools, no conversation history, no injected date, no cwd, no repo metadata, no AGENTS.md, no developer prompt. The only non-standard body key is `caching: false`, which models.yaml's header documents and which changes nothing the model sees."
+  }
+}

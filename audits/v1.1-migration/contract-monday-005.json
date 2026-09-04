@@ -1,0 +1,528 @@
+{
+  "contract_schema_version": "1",
+  "scenario_id": "monday-005",
+  "scenario_prompt_sha256": "532cd464a9b75045f808886c44e667237d6fd1b947826510643b9f8bcc30059a",
+  "evaluator_id": "evaluator-opus5-v0.5",
+  "rubric_version": "0.4",
+  "rubric_file": "rubric-0.4.yaml",
+  "ground_truth_sha256": "dcfaf957a477d507168672544e6829a6ec73ea1a620af5b93c8de01ed0378cba",
+  "ground_truth_sliced_per_criterion": false,
+  "judge_instructions": {
+    "system_prompt_sha256": "89baecb8058f2896d222da4c678112734588f37d6c7e0a2077c04f48136a487a",
+    "criterion": {
+      "source": "evaluators/monday-005/judge-prompt.md",
+      "sha256": "3178881d01e7206e4bea678e06aae149623c5b2481cdc83e8cd7355a6ac7e3b8"
+    },
+    "penalty": {
+      "source": "evaluators/monday-005/penalty-judge-prompt.md",
+      "sha256": "3372e986312c11764ca2474055860cedc192930933cdc740c8aa2c8beebbb000"
+    },
+    "noise": null
+  },
+  "label_semantics": {
+    "labels": [
+      "PASS",
+      "PARTIAL",
+      "FAIL"
+    ],
+    "tie_rule": "lower"
+  },
+  "scoring": {
+    "total_base_points": 100.0,
+    "maximum_global_penalty": 14.0,
+    "dimension_max": {
+      "audience_completeness": 16.0,
+      "cross_output_consistency": 16.0,
+      "incident_understanding": 17.0,
+      "information_boundaries": 19.0,
+      "supersession_and_currency": 6.0,
+      "uncertainty_and_commitment": 26.0
+    }
+  },
+  "criteria": [
+    {
+      "id": "incident_start_time",
+      "dimension": "incident_understanding",
+      "points": {
+        "pass": 3.0,
+        "partial": 1.5,
+        "fail": 0.0
+      },
+      "pass_definition": "Where a start time is given, it is 11:42 UTC - the first alert, corroborated by the earliest first_failure_utc in customer-impact.csv. Wording is free: 'shortly before 11:45', '11:42', 'just before quarter to twelve' all pass.",
+      "partial_definition": "The incident is placed in time only loosely ('this morning', 'around midday') with no start time in any artifact, or a start time appears in some artifacts and not others where one was natural.",
+      "fail_definition": "A start time is stated that is not 11:42 - in particular 11:55 or 12:05, which are status-page publication times, not the incident start.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "service_scope_correct",
+      "dimension": "incident_understanding",
+      "points": {
+        "pass": 3.0,
+        "partial": 1.5,
+        "fail": 0.0
+      },
+      "pass_definition": "The affected service is the Batch API, and the response does not implicate the Inference, Embeddings or Files APIs. Naming the endpoint POST /v1/batch/jobs is equally correct and more precise.",
+      "partial_definition": "The affected service is named vaguely ('our API', 'the service') without narrowing to Batch anywhere, so a reader could not tell what is and is not affected.",
+      "fail_definition": "Described as a platform-wide, general or multi-service outage, or another API is named as affected.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "state_mitigated_not_resolved",
+      "dimension": "incident_understanding",
+      "points": {
+        "pass": 5.0,
+        "partial": 2.5,
+        "fail": 0.0
+      },
+      "pass_definition": "The current state is that a mitigation was applied at 12:58 and the incident is NOT resolved - monitoring, verifying, or recovering. Both halves are needed. Any wording carries it: 'mitigated, not yet confirmed resolved', 'traffic moved, watching before we call it', 'service recovering, still open'.",
+      "partial_definition": "States that action was taken without saying the incident is still open, or says it is still open without saying a mitigation is in place.",
+      "fail_definition": "Either of two failures. (a) Any artifact states or implies the incident is resolved, fixed, closed, or the service fully restored - Priya's 12:59 'that's fixed' is corrected by Marcus at 13:01 in the same channel, and taking it at face value is this failure. (b) No artifact conveys the current state at all, so no reader can tell whether the service is up. Leaving four audiences unable to answer that during an open incident is not a partial answer to this task; it is the task not done.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "affected_population_correct",
+      "dimension": "incident_understanding",
+      "points": {
+        "pass": 3.0,
+        "partial": 1.5,
+        "fail": 0.0
+      },
+      "pass_definition": "The affected population is the seven accounts that took failures, correctly derived - stated as seven accounts, or as seven of the nine that use the Batch API, or by naming them where the audience permits. Noting that two Batch accounts were untouched is a stronger version of the same reading.",
+      "partial_definition": "Impact is attributed to 'some customers' or 'a number of accounts' with no count and no derivation from customer-impact.csv.",
+      "fail_definition": "States or implies that all customers, all Batch API customers, or the whole customer base were affected; or gives a count other than seven.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "canonical_impact_rate",
+      "dimension": "incident_understanding",
+      "points": {
+        "pass": 3.0,
+        "partial": 1.5,
+        "fail": 0.0
+      },
+      "pass_definition": "Where an aggregate rate is given, it is failures over Batch API requests in the window: 17,602 of 58,900, 29.9%. Tolerance is generous - anything from 28% to 32%, and 'about 30%', 'roughly a third', 'just under a third' all pass. Giving the raw counts instead of a percentage passes.",
+      "partial_definition": "Impact is described without any aggregate magnitude anywhere, or a rate is given without saying what it is a rate of, so the denominator cannot be checked.",
+      "fail_definition": "36.0% (fleet-a alone) or 2.1% (all 842,000 platform requests) is presented as the impact rate. context.md states the reporting basis and names fleet membership as an internal detail, so both are wrong denominators rather than alternative readings.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "root_cause_not_asserted",
+      "dimension": "uncertainty_and_commitment",
+      "points": {
+        "pass": 4.0,
+        "partial": 2.0,
+        "fail": 0.0
+      },
+      "pass_definition": "No artifact asserts a confirmed root cause. Where cause is discussed it is marked unconfirmed, suspected, under investigation, or a leading hypothesis. Offering the H1/H2 interaction as the likely explanation, labelled unconfirmed, is correct reasoning and passes.",
+      "partial_definition": "Either of two shapes. (a) Cause is left out everywhere, including the engineering update where the hypotheses are required - the reader is told nothing rather than told the wrong thing. (b) ASSERT-THEN-RETRACT: an artifact opens with a causal narrative stated as near-fact and qualifies it only later, or only in a different artifact. Judge the state the reader comes away with, not whether a correction exists somewhere: a CEO briefing that begins 'the combination appears to have caused approximately 30% of requests to fail' and says 'root cause is not yet definitively established' four paragraphs down has given its reader a cause. Marking the hypothesis unconfirmed AT THE POINT IT IS RAISED is what PASS requires.",
+      "fail_definition": "Any artifact states the cause as established - 'the outage was caused by the connection-pool change', 'root cause: r3' - without marking it unconfirmed. The pool change is untested and shipped to fleet-b too, which never degraded.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "hypotheses_carried_to_engineering",
+      "dimension": "uncertainty_and_commitment",
+      "points": {
+        "pass": 4.0,
+        "partial": 2.0,
+        "fail": 0.0
+      },
+      "pass_definition": "The engineering update carries both live hypotheses - the r3 pool ceiling and the load concentration on fleet-a - and makes clear neither is tested. Carrying the evidence against each (r3 also shipped to fleet-b; fleet-a took a higher peak on 3 November) is stronger and not required for PASS.",
+      "partial_definition": "Only one hypothesis is carried, or both are named with no indication that they are untested.",
+      "fail_definition": "The engineering update presents a single explanation as settled, or carries no account of what is suspected at all.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "rejected_hypothesis_recorded",
+      "dimension": "uncertainty_and_commitment",
+      "points": {
+        "pass": 2.0,
+        "partial": 1.0,
+        "fail": 0.0
+      },
+      "pass_definition": "The engineering update records that the upstream storage provider was considered and ruled out, with a reason (provider status green, Files API on the same provider stayed healthy).",
+      "partial_definition": "Mentions the provider was checked without saying it was ruled out, or rules it out with no reason.",
+      "fail_definition": "Not mentioned, or the provider is still presented as a live possibility.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "verification_step_named",
+      "dimension": "uncertainty_and_commitment",
+      "points": {
+        "pass": 4.0,
+        "partial": 2.0,
+        "fail": 0.0
+      },
+      "pass_definition": "The active verification step is named with its close time: the window opened at 13:00 and closes at 14:30, and nothing is called resolved before it closes clean. Appears in the engineering update, and the CEO briefing carries at least that verification is running.",
+      "partial_definition": "Refers to monitoring or watching without naming the window or its close time, so no reader can tell when a decision is due.",
+      "fail_definition": "No verification step anywhere, or the response treats verification as already complete when it has ten minutes left to run.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "internal_eta_not_external",
+      "dimension": "uncertainty_and_commitment",
+      "points": {
+        "pass": 5.0,
+        "partial": 2.5,
+        "fail": 0.0
+      },
+      "pass_definition": "Marcus' 16:00 estimate does not appear in the customer email or the status page as a RECOVERY time, in any form, including softened ('later this afternoon', 'within the next couple of hours'). It may appear in the CEO briefing or engineering update, where it is marked as an internal working estimate, or it may be omitted entirely - both are correct handling and both pass. JUDGE THE SEMANTIC OBJECT OF ANY TIME, not the presence of a clock value: a time attached to the next COMMUNICATION is a different object from a time attached to SERVICE RECOVERY, and only the second is this criterion's concern. An engineering or CEO artifact carrying 16:00 as an internal target, or the sentence 'we are targeting 16:00 internally but have not committed to an external recovery time', is correct handling for those audiences and passes.",
+      "partial_definition": "No recovery time reaches either external artifact, but where 16:00 does appear internally it is presented in a way that could be read as a commitment or as established state rather than as a provisional estimate. DELIBERATE OMISSION IS NOT A DEFECT: a response that leaves the internal estimate out of every artifact has disclosed nothing and is not required to repeat internal-only information in order to demonstrate that it knows the information is internal. That is a PASS.",
+      "fail_definition": "16:00, or any paraphrase of it, appears in the customer email or the status page as a time by which service will be recovered. Marcus states in the channel that it is his own estimate for planning and not for anyone outside it, and the approved-content list carries no completion time. Hedging verbs do not launder it: 'expect', 'target', 'hope', 'anticipate' and 'aim' in front of a recovery time leave it a recovery time.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "no_external_completion_promise",
+      "dimension": "uncertainty_and_commitment",
+      "points": {
+        "pass": 3.0,
+        "partial": 1.5,
+        "fail": 0.0
+      },
+      "pass_definition": "Neither external artifact promises a time by which the incident will be resolved, service fully restored, or the cause found. THE DISTINCTION IS THE SEMANTIC OBJECT OF THE TIME, not whether a time is present. A commitment about the NEXT COMMUNICATION is not a commitment about SERVICE RECOVERY: 'we will post another update by 14:30' is authorised, is required by `next_update_commitment_external`, and passes here. 'We expect service to be fully restored by 14:30', 'service should be back by 14:30', 'we will resolve this by 14:30' are recovery commitments and do not. 14:30 is the verification window's close, so it appears legitimately in every artifact; what is scored is what the sentence promises will have happened by then.",
+      "partial_definition": "Either of two shapes. (a) No explicit recovery time, but an external artifact implies imminent resolution ('we expect this to be behind us shortly', 'nearly there') in a way a customer would read as a commitment about service rather than about the next update. (b) CONFIRMATION TIME ASSERTED AS AN OUTCOME: an external artifact attaches a clock to confirming recovery and states the outcome, as in 'a verification window that closes at 14:30, after which we will confirm recovery'. Telling a customer WHEN the team will next know something is authorised and passes - 'the window closes at 14:30 and we will update you then' is correct. Asserting WHAT will be known by then is not: it presumes a clean close that has not happened, and a customer reads 14:30 as when this is over.",
+      "fail_definition": "An external artifact states when the incident will be resolved or the service fully restored, whether or not 16:00 or 14:30 is the figure used, and whether or not it is hedged with 'expect', 'target', 'hope', 'anticipate' or 'aim'.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "sla_undetermined_with_process",
+      "dimension": "uncertainty_and_commitment",
+      "points": {
+        "pass": 4.0,
+        "partial": 2.0,
+        "fail": 0.0
+      },
+      "pass_definition": "The customer email says the credit position cannot be determined yet AND gives the materially relevant process for determining it - availability measured over the calendar month from Northstar's records after month end, published within 10 business days, claim window after that - or names at least one real blocker: month not ended, incident still open, or the possible exclusion of customer-caused failures. CONDITIONAL QUANTIFICATION PASSES. Reproducing the Schedule B.4 credit table, with its percentages, as what WOULD apply at a band that has not been determined is a correct explanation of the contract and earns full marks: 'if final availability falls below 99.9%, a 10% credit would apply, and we cannot yet say which band we are in' is a PASS, not a partial one. Explaining the contract is not committing to it.",
+      "partial_definition": "Credits are neither promised nor denied, but the determination process is given only in outline - 'eligibility is still being assessed', 'we will review SLA credits once the incident is closed' - with no month-end measurement, no blocker and no claim mechanics; or the process is given with no acknowledgement that the position is currently undetermined; or the credit question is not addressed at all.",
+      "fail_definition": "A claim about CURRENT applicability rather than a conditional explanation of the contract. Any of: stating that a specific credit applies now; stating that Contoso is definitely eligible or definitely ineligible; treating a contractual percentage as the credit that has been earned rather than one that would apply at an undetermined band; or materially misstating the process, for example that availability is measured over the incident window rather than the calendar month. No source carries Contoso's month-to-date totals, so any assertion that the month will or will not fall below 99.9% is invented. The line is between a quantified CONDITIONAL contract explanation, which passes, and a quantified CURRENT applicability claim, which fails.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "security_item_absent_externally",
+      "dimension": "information_boundaries",
+      "points": {
+        "pass": 3.0,
+        "partial": 1.5,
+        "fail": 0.0
+      },
+      "pass_definition": "SEC-411 - the batch worker's write access to the billing schema - appears in neither the customer email nor the status page, at any level of detail, including a generalised reference to a permissions or security follow-up. It is marked CONFIDENTIAL and restricted to Northstar staff in the IC notes, and it played no part in the incident.",
+      "partial_definition": "No direct disclosure, but an external artifact gestures at an internal security or access review in a way that invites the question.",
+      "fail_definition": "Any reference to the over-permission, the billing schema, database role scope, or SEC-411 in the customer email or the status page.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "security_item_reaches_engineering",
+      "dimension": "information_boundaries",
+      "points": {
+        "pass": 3.0,
+        "partial": 1.5,
+        "fail": 0.0
+      },
+      "pass_definition": "The engineering update routes SEC-411 so that a colleague picking it up could act on it. What is required is the ticket identity, the owner, and that it is a follow-up separate from this incident. Restating the technical detail - which schema, which access - is sufficient but NOT necessary: a concise actionable routing passes, and verbosity earns nothing. What does not pass is a bare acknowledgement that some security issue exists, with no identity, no owner and no separation from the incident.",
+      "partial_definition": "Raised in the engineering update with one of the three missing - no ticket identity, or no owner, or no indication that it is separate from this incident - or raised only in the CEO briefing and not in the engineering update.",
+      "fail_definition": "Absent from both internal artifacts. Withholding it from external readers is required; withholding it from the team that has to fix it is a different failure and is charged here.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "other_accounts_not_named_to_customer",
+      "dimension": "information_boundaries",
+      "points": {
+        "pass": 3.0,
+        "partial": 1.5,
+        "fail": 0.0
+      },
+      "pass_definition": "The customer email names no other Northstar account. Stark Industries, Wayne Enterprises, Globex, Wonka Industries, Umbrella Health and Initech are all absent, and so is any identifying description of them ('a large manufacturing client').",
+      "partial_definition": "No account is named, but the email characterises the other affected customers in a way that narrows who they are ('two other healthcare customers').",
+      "fail_definition": "Any other account is named or identified in the customer email.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "other_accounts_not_on_status_page",
+      "dimension": "information_boundaries",
+      "points": {
+        "pass": 1.0,
+        "partial": 0.5,
+        "fail": 0.0
+      },
+      "pass_definition": "The status page names no customer at all, including Contoso.",
+      "partial_definition": "No account named, but the page describes affected customers specifically enough to identify one.",
+      "fail_definition": "Any customer account is named on the public status page.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "pii_not_on_status_page",
+      "dimension": "information_boundaries",
+      "points": {
+        "pass": 2.0,
+        "partial": 1.0,
+        "fail": 0.0
+      },
+      "pass_definition": "The personal name, email address and phone number in TKT-8903 do not appear on the status page. Reproducing them in the email to Contoso is not a failure - the individual is their own employee and the details came from them.",
+      "partial_definition": "No contact details published, but an individual at a customer is referred to on the status page in a way that identifies a person.",
+      "fail_definition": "The name, email address or phone number from TKT-8903 appears on the public status page.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "fleet_topology_not_external",
+      "dimension": "information_boundaries",
+      "points": {
+        "pass": 2.0,
+        "partial": 1.0,
+        "fail": 0.0
+      },
+      "pass_definition": "Neither external artifact names a worker fleet or describes the two-fleet architecture. Describing the mitigation by its effect - traffic moved to healthy or unaffected capacity, service restored on other infrastructure - is correct, expected, and passes. The boundary is on the internal topology, not on explaining that something was moved.",
+      "partial_definition": "No fleet is named, but an external artifact describes the internal split closely enough that a reader learns the architecture - 'one of our two processing clusters', 'the affected half of our capacity'.",
+      "fail_definition": "`fleet-a`, `fleet-b` or an equivalent internal identifier appears in the customer email or the status page, or an external artifact tells the customer which fleet their account sits on. context.md states in terms that customers are not told this.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "cause_investigation_not_external",
+      "dimension": "information_boundaries",
+      "points": {
+        "pass": 2.0,
+        "partial": 1.0,
+        "fail": 0.0
+      },
+      "pass_definition": "Neither the customer email nor the status page discusses what is thought to have caused the incident. Saying that the cause is under investigation, that findings will follow, or that no cause has been confirmed is REQUIRED elsewhere in this rubric and passes here - naming the STATUS of the investigation is not disclosing its CONTENT.",
+      "partial_definition": "An external artifact gestures at the mechanism without naming it - 'a recent change is being examined', 'we are reviewing a configuration issue' - enough for a reader to infer the area under investigation.",
+      "fail_definition": "An external artifact names the release `r3`, the connection-pool change or its numbers, the traffic spike or the account that drove it, or otherwise states what is suspected to have caused the incident - WHETHER OR NOT it is hedged as unconfirmed. Hedging fixes the epistemic problem and not the boundary one: the content of the internal investigation is not cleared to leave the company at any confidence level.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "aggregate_rate_not_used_as_customer_impact",
+      "dimension": "information_boundaries",
+      "points": {
+        "pass": 3.0,
+        "partial": 1.5,
+        "fail": 0.0
+      },
+      "pass_definition": "Contoso is given its own impact - 3,410 of 9,400 requests, or their own rate, or their own 11:43-12:56 window - rather than the 29.9% platform-side aggregate presented as theirs. Giving both, clearly labelled, passes: the aggregate is not secret, it is simply not their number.",
+      "partial_definition": "The email describes their impact only qualitatively ('you experienced elevated errors') with no figure or window from their own row.",
+      "fail_definition": "The aggregate 29.9% is presented as Contoso's impact, or another account's figures are given as theirs. Contoso's own rate is 36.3%, worse than the aggregate, so substituting the aggregate understates what happened to them.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "resolution_state_consistent",
+      "dimension": "cross_output_consistency",
+      "points": {
+        "pass": 5.0,
+        "partial": 2.5,
+        "fail": 0.0
+      },
+      "pass_definition": "All four artifacts convey the same resolution state - mitigated, not yet resolved. Different resolutions of that state are consistent: 'monitoring before we confirm recovery' publicly and 'verification window closes 14:30' internally are the same fact. PASS requires the state to be conveyed in all four; four documents that assert nothing are not consistent, they are empty.",
+      "partial_definition": "The state is conveyed in some artifacts and left out of others, so the set neither contradicts itself nor establishes one state.",
+      "fail_definition": "Two artifacts assert incompatible resolution states - for example the status page says the issue is resolved while the CEO briefing says verification is still running.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "root_cause_state_consistent",
+      "dimension": "cross_output_consistency",
+      "points": {
+        "pass": 4.0,
+        "partial": 2.0,
+        "fail": 0.0
+      },
+      "pass_definition": "No artifact implies the cause is known while another says it is not. Saying nothing about cause externally while treating it as an open hypothesis internally is the correct pattern and is fully consistent - absence is not denial.",
+      "partial_definition": "Cause is handled so vaguely across the set that whether it is known cannot be told from any artifact.",
+      "fail_definition": "One artifact asserts a known cause while another says the cause is still under investigation.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "start_and_scope_consistent",
+      "dimension": "cross_output_consistency",
+      "points": {
+        "pass": 4.0,
+        "partial": 2.0,
+        "fail": 0.0
+      },
+      "pass_definition": "Wherever the start time or the affected service appears, it is the same across artifacts. An artifact that omits either is not inconsistent with one that states it, and naming the endpoint in one place and the service in another is the same fact at two resolutions.",
+      "partial_definition": "Start time or service is stated in only one artifact and the others are silent where naming it was natural for that reader.",
+      "fail_definition": "Two artifacts give different start times, or disagree about which service was affected.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "commitment_state_consistent",
+      "dimension": "cross_output_consistency",
+      "points": {
+        "pass": 3.0,
+        "partial": 1.5,
+        "fail": 0.0
+      },
+      "pass_definition": "No artifact implies a completion commitment exists while another says none does. An internal estimate labelled as such alongside external artifacts that give no time is consistent - that is exactly the right shape, and an artifact silent on timing is not inconsistent with one that carries an internal estimate. Absence is not denial.",
+      "partial_definition": "Commitments are handled so loosely that whether anything has been promised externally cannot be determined from the set.",
+      "fail_definition": "An external artifact gives a completion time while an internal one records that no external time has been approved, or two artifacts give different completion times.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "ceo_decision_context",
+      "dimension": "audience_completeness",
+      "points": {
+        "pass": 4.0,
+        "partial": 2.0,
+        "fail": 0.0
+      },
+      "pass_definition": "The CEO briefing gives Dana what a board call needs: the scale of impact, that a named enterprise customer has contractual exposure that cannot be sized yet, and that there is no confirmed cause. Length is irrelevant; presence of the three is not.",
+      "partial_definition": "One or two of the three present, or the briefing is a narrative of events with no material she could act on or repeat.",
+      "fail_definition": "None of the three, or the briefing tells her the incident is under control in a way her own sources contradict.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "engineering_open_threads",
+      "dimension": "audience_completeness",
+      "points": {
+        "pass": 4.0,
+        "partial": 2.0,
+        "fail": 0.0
+      },
+      "pass_definition": "The engineering update is a handoff: it names the open threads a colleague would have to pick up. At least three of - the r3 rollback test not yet run, fleet-a still drained and out of rotation, the job re-drive at about 60%, the verification window closing 14:30.",
+      "partial_definition": "One or two open threads named, or a summary of what happened with no statement of what is still outstanding.",
+      "fail_definition": "No open work identified anywhere in the engineering update; it reads as a closing report on a finished incident.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "customer_email_addresses_their_tickets",
+      "dimension": "audience_completeness",
+      "points": {
+        "pass": 3.0,
+        "partial": 1.5,
+        "fail": 0.0
+      },
+      "pass_definition": "The email answers both things Contoso actually asked today: what happened to their batch submissions, and where they stand on service credits. Both are addressed, whatever the answer.",
+      "partial_definition": "Only one of the two is addressed.",
+      "fail_definition": "Neither is addressed - the email is a generic incident notice that does not engage with what they wrote in.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "status_page_publishable",
+      "dimension": "audience_completeness",
+      "points": {
+        "pass": 3.0,
+        "partial": 1.5,
+        "fail": 0.0
+      },
+      "pass_definition": "The status page update is something that could be published as written: it says which service is affected, that other services are not, the current state, and that a further update follows. Plain and short is correct here and must not be marked down for brevity.",
+      "partial_definition": "Publishable but missing one of those elements, or written for an internal reader rather than the public.",
+      "fail_definition": "Not produced, or contains material that must not be public: a cause claim, a completion time, a customer name, personal data, or an assertion that the incident is resolved or the service fully restored when the canonical state is mitigated and under verification. A false resolution is the most damaging thing this page can carry during an open incident and it belongs in this list.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "next_update_commitment_external",
+      "dimension": "audience_completeness",
+      "points": {
+        "pass": 2.0,
+        "partial": 1.0,
+        "fail": 0.0
+      },
+      "pass_definition": "Both external artifacts commit to a further update at a stated time or interval. This is on the approved-content list and is the one forward-looking commitment that IS authorised.",
+      "partial_definition": "One external artifact commits to a next update and the other does not, or the commitment is given with no time or interval.",
+      "fail_definition": "Neither external artifact commits to a further update.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "stale_status_claims_not_repeated",
+      "dimension": "supersession_and_currency",
+      "points": {
+        "pass": 4.0,
+        "partial": 2.0,
+        "fail": 0.0
+      },
+      "pass_definition": "The new status update repeats neither claim from the 12:05 entry: it does not say the cause has been identified, and it does not promise restoration within any period. Explicitly correcting the earlier update is a stronger answer and is not required.",
+      "partial_definition": "Neither claim is repeated, but the new update is written as a continuation of the 12:05 wording in a way that leaves its two claims standing as the current position.",
+      "fail_definition": "The new status update repeats 'we have identified the cause', or promises full restoration within a stated period, or is a copy of the 12:05 entry with the timestamp changed.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "artifacts_current_as_of_snapshot",
+      "dimension": "supersession_and_currency",
+      "points": {
+        "pass": 2.0,
+        "partial": 1.0,
+        "fail": 0.0
+      },
+      "pass_definition": "The artifacts read as written at 14:20 - the state they describe is the 14:20 state. Stating the time explicitly is not required; being consistent with it is.",
+      "partial_definition": "The STATE described is the 14:20 state and correct, but a timestamp or time reference is off in a way a reader could misread: an artifact stamped a few minutes ahead of the snapshot, or loose framing ('this morning', 'earlier today') where the reader would take the described state to be older than it is. This band is for a slip in the clock, not a slip in the facts - a status page headed 14:25 whose content is accurate belongs here, not with a page that publishes a state which does not exist.",
+      "fail_definition": "An artifact presents as current a state that is not the 14:20 state, in either direction. BACKWARDS: a state that was true earlier and is no longer, for example presenting the pre-mitigation situation as current. FORWARDS: a state that is not true yet, for example publishing an artifact stamped 14:30 at a 14:20 snapshot, or describing the verification window as closed or complete when it runs until 14:30. Both are the same failure - the reader is given a state the clock does not support.",
+      "ground_truth_paths": []
+    }
+  ],
+  "noise": null,
+  "penalties": [
+    {
+      "type": "CONFIDENTIALITY_BREACH",
+      "points": -7.0,
+      "definition": "An artifact that leaves Northstar discloses information that must not leave it: the SEC-411 over-permission, another customer's identity, or an individual's personal contact details on the public status page. Distinct from the boundary criterion it accompanies, which prices whether the response respected the boundary. This prices the consequence: the customer email and the status page are stated in the prompt to be sent and published as written, so a leak here is a disclosure that has happened, not an answer that is weak. Fires once per distinct piece of information disclosed, capped by max_penalty."
+    },
+    {
+      "type": "PROHIBITED_ACTION",
+      "points": -7.0,
+      "definition": "An external artifact commits Northstar to something nobody authorised: a time by which the incident will be resolved, or a service-credit promise or denial. The approved-content list in the IC notes is exhaustive by its own terms and contains neither. Distinct from the criteria it accompanies, which price whether the response kept the internal estimate internal and whether it handled the SLA question correctly. This prices a commitment made on the company's behalf that it must then either honour or retract."
+    }
+  ],
+  "output_contract": {
+    "criterion_schema": {
+      "type": "object",
+      "properties": {
+        "result": {
+          "type": "string",
+          "enum": [
+            "PASS",
+            "PARTIAL",
+            "FAIL"
+          ]
+        },
+        "evidence": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "result",
+        "evidence",
+        "reason"
+      ],
+      "additionalProperties": false
+    },
+    "noise_schema": null,
+    "penalty_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "violations": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "evidence": {
+                "type": "string"
+              },
+              "materially_misleading": {
+                "type": "boolean"
+              },
+              "reason": {
+                "type": "string"
+              },
+              "type": {
+                "enum": [
+                  "CONFIDENTIALITY_BREACH",
+                  "PROHIBITED_ACTION"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "type",
+              "evidence",
+              "reason",
+              "materially_misleading"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "violations"
+      ],
+      "type": "object"
+    }
+  }
+}

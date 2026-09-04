@@ -1,0 +1,161 @@
+{
+  "record_type": "off_benchmark_run",
+  "not_a_benchmark_artifact": true,
+  "route": "claude_code_subscription",
+  "route_classification": "PROVISIONAL / OFF-BENCHMARK / CLAUDE CODE ROUTE",
+  "scenario": "monday-004",
+  "run": 3,
+  "requested_model": "claude-opus-5",
+  "generated_at_utc": "2026-09-02T12:00:40Z",
+  "prompt_sha256": "3a0cbb569ca4f711b8907177af9204cec267d26f35f732829df56b03ed23ef99",
+  "system_prompt": "You are a helpful assistant.",
+  "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+  "system_prompt_as_sent_note": "NOT the frozen bytes - the Agent SDK preamble is prepended by the route. See audits/monday-opus5/route-audit.md.",
+  "cli_flags": [
+    "-p",
+    "--model",
+    "claude-opus-5",
+    "--system-prompt",
+    "You are a helpful assistant.",
+    "--tools",
+    "",
+    "--effort",
+    "high",
+    "--output-format",
+    "stream-json",
+    "--include-partial-messages",
+    "--verbose",
+    "--safe-mode",
+    "--setting-sources",
+    "",
+    "--strict-mcp-config",
+    "--disable-slash-commands",
+    "--no-session-persistence"
+  ],
+  "env": {
+    "DISABLE_NON_ESSENTIAL_MODEL_CALLS": "1"
+  },
+  "temperature": null,
+  "top_p": null,
+  "temperature_note": "not settable and not observable on this route; claude-opus-5 is in providers/anthropic_native.NO_TEMPERATURE_MODELS so the official adapter would also drop it",
+  "response_text": "# Northstar — Monday Business Review\n**Prepared by: Product & Growth Lead | 2 Sept 2026 review pack (Sept–Oct 2026 data)**\n\n---\n\n## 1. EXECUTIVE SUMMARY\n\n**The headline October number is wrong, and the direction of travel is worse than it looks.**\n\n1. **October's apparent +12% revenue growth is an artefact.** Raw invoiced revenue goes €797,100 → €892,900 (+12.0%). Three adjustments erase all of it: a **duplicate invoice** (€19,500), an **annual prepayment counted at full value** (€110,000 of deferred revenue), and a **collapse in professional services** (€51,000 → €5,700). Underlying MRR grew **+1.55%** (€746,100 → €757,700), and total economic revenue actually **fell 4.2%**.\n\n2. **October's MRR growth is borrowed from November.** Five customers churned in October (€303,600 ARR) but **all five were invoiced in full on 1 October, before their churn dates**. €25,300 of October MRR is already gone. Projected November MRR ≈ **€750,400** — barely above September.\n\n3. **Contribution margin is deteriorating on every plan.** Company contribution margin fell **35.2% → 32.5%** in one month (€262,900 → €246,500). Costs rose €28,000 on €11,600 of new revenue — **marginal contribution in October was negative**.\n\n4. **The Acme \"usage collapse\" is not a risk signal.** Requests -45%, but tokens only -12% and active users -3%. This matches the documented batch-migration plan (40–50% estimated reduction) almost exactly. Excluding Acme, platform requests grew **+8.8%**.\n\n5. **On the three decisions: one is defensible with modification, one is not supported, one is answerable.** Reducing SMB investment is directionally right but should target the **starter plan specifically**, not the segment. Increasing paid-search spend is **not supported** — 73% of its October attributed revenue is expansion on customers acquired in 2023–24. **Pro** deserves engineering focus.\n\n6. **The most urgent item is not on the agenda.** **Wayne Enterprises renews 2026-11-30** — €1,008,000 ARR, 11.5% of total ARR, four open/pending tickets, and *invisible in every usage report* because of an ID mismatch (`wayne-enterprises` vs `wayne_ent`).\n\n7. **The CFO's request cannot be fulfilled.** CAC payback by channel is **not calculable** — the pack contains no marketing or sales spend data whatsoever.\n\n---\n\n## 2. REVENUE & CUSTOMER HEALTH\n\n### 2.1 Reconciling the headline\n\n| Item | September | October |\n|---|---|---|\n| Raw sum of `revenue.csv` | €797,100 | €892,900 |\n| Less duplicate INV-2026-10-0209 (soylent) | — | (€19,500) |\n| Less deferred portion of gringotts annual invoice | — | (€110,000) |\n| **Recurring revenue (MRR)** | **€746,100** | **€757,700** |\n| Non-recurring (professional services) | €51,000 | €5,700 |\n| **Total economic revenue** | **€797,100** | **€763,400** |\n\n- MRR growth: **+€11,600 (+1.55%)**\n- Total economic revenue: **-€33,700 (-4.2%)**\n- The derived MRR figures reconcile exactly to `plans.csv` (€659,500 + €66,200 + €32,000 = €757,700), which confirms the plans file is the correct MRR source and `revenue.csv` is a cash/invoice ledger, not a revenue ledger.\n\n**The duplicate:** `INV-2026-10-0209` appears twice — same transaction ID, same customer, same amount, dated 10-01 from `stripe` and 10-02 from `billing_sync`. This is a pipeline double-load, not a second payment.\n\n**The annual invoice:** gringotts moved from €10,000/month to a €120,000 12-month prepay. ARR is unchanged (€120,000). This is a **cash-timing event with zero revenue impact** — but it inflates naive monthly revenue by €110,000.\n\n### 2.2 The churn is already in the numbers, just not yet in the invoices\n\n| Customer | Segment / Plan | Churn date | Oct invoice | ARR lost |\n|---|---|---|---|---|\n| nakatomi | Mid-market / pro | 2026-10-19 | €15,000 | €180,000 |\n| buy-n-large | SMB / starter | 2026-10-27 | €3,300 | €39,600 |\n| mega-lo-mart | SMB / starter | 2026-10-15 | €2,700 | €32,400 |\n| dinoco | SMB / starter | 2026-10-22 | €2,300 | €27,600 |\n| slate-rock | SMB / starter | 2026-10-08 | €2,000 | €24,000 |\n| **Total** | | | **€25,300** | **€303,600** |\n\n- Gross MRR churn: €25,300 / €746,100 = **3.4% in one month (~34% annualised)**\n- Logo churn: **5 of 31 = 16.1% in one month**\n- **Starter plan logo churn: 4 of 9 = 44% in one month**\n- All churn is concentrated in SMB/starter plus one mid-market pro account.\n\n**Forward MRR bridge:**\n\n```\nOctober MRR                                     757,700\n– churn landing in November                     (25,300)\n+ October expansions (effective next cycle)      18,000\n  stark 7,000 · umbrella 4,000 · globex 3,500\n  · cyberdyne 2,000 · massive-dynamic 1,500\n= November MRR (before unknown new logos)       750,400\n```\nThat is **+0.6% over September on a two-month view** — effectively flat. Any narrative of acceleration is unsupported.\n\n*Validation of the expansion logic:* hooli's Sept expansion (€36,000 attributed, converted 24 Sept) shows up as €18,000 → €21,000 in the October invoice = +€3,000/mo = €36,000 annualised. The \"effective next billing cycle\" rule holds, so the October expansions are November revenue.\n\n### 2.3 Segment structure (active customers only)\n\n| Segment | Active customers | ARR | Share of ARR | Share of logos |\n|---|---|---|---|---|\n| Enterprise | 8 | €6,780,000 | 77.1% | 25.8% |\n| Mid-market | 9 | €1,530,000 | 17.4% | 29.0% |\n| SMB | 14 | €478,800 | 5.4% | 45.2% |\n| **Total** | **31** | **€8,788,800** | | |\n\nEnterprise average ARR €847,500 vs SMB €34,200 — a **25x** ratio.\n\n### 2.4 Usage: the underlying business is healthier than the aggregate\n\n| | September | October | Change |\n|---|---|---|---|\n| Total requests | 31,035,000 | 31,510,000 | **+1.5%** |\n| Total requests **ex-Acme** | 26,835,000 | 29,200,000 | **+8.8%** |\n| Total tokens (M) | 32,134.5 | 33,937.4 | **+5.6%** |\n\nTokens — the cost driver — grew 5.6% while total infrastructure cost grew 4.6% (€310,000 → €324,300). Unit infra economics are broadly stable in aggregate; the problem is plan mix (§4).\n\n**Acme in detail:** requests 4,200,000 → 2,310,000 (-45.0%); tokens 4,620 → 4,066 (-12.0%); active users 240 → 232 (-3.3%); support tickets 4 (two high-severity) → 3 (all medium/low). Every non-request metric says the account is stable or improving. The request drop sits inside the documented 40–50% batch-migration estimate. **This is a successful migration, not a churn signal.** The genuine risk is commercial, not technical: Acme's Feb-2027 renewal at €936,000 now covers 2.31M of a 3.0M request entitlement (77%), which strengthens their negotiating position. That is a renewal-prep item, not a health alarm.\n\n### 2.5 Real distress signals — and they are not where usage declines are\n\nThe four churned starter accounts show -34% to -37% usage in October, but they churned *during* October, so that decline is **coincident with churn, not predictive of it** — it is largely a partial-month artefact. (Note: slate-rock churned 8 October yet logged 62,000 requests vs 95,000 for a full September — well above pro-rata. Either `churn_date` is a notice date rather than a service-end date, or the usage/billing lifecycle is inconsistent. Flagged in §6.)\n\nThe accounts with genuine leading indicators are:\n\n**soylent — the highest-priority at-risk account (Mid-market, €234,000 ARR):**\n- MRR contracted €22,000 → €19,500 (**-11.4%**) — the only *downgrade* in the book\n- Usage -27.0% (980,000 → 715,400 requests), active users 56 → 41\n- Support tickets 3 → 8, including **the only `critical` ticket in the entire dataset**, plus 3 further `high` api_errors/performance tickets\n- Renewal 2027-05-20, so there is time — but this account is deteriorating on price, usage, and reliability simultaneously.\n\n**wonka-industries — mispriced, not at risk (SMB, €50,400 ARR, pro plan):**\n- 1,020,000 requests against a 600,000 entitlement = **170% of plan**\n- Support tickets 4 → 7, of which **4 are `rate_limits`**\n- This is an upsell opportunity being expressed as a support cost.\n\n**Support load is rising faster than revenue:** 59 → 74 tickets (**+25.4%**) on +1.55% MRR. `rate_limits` tickets more than doubled, 6 → 13, and **all 13 are on the pro plan**.\n\n---\n\n## 3. ACQUISITION\n\n### 3.1 What the funnel data actually measures\n\n`funnel.csv`'s `conversions` column is defined in the pack as *\"the number of those leads that reached a paid trial in the same month.\"* **These are trial starts, not paid customers.** They do not reconcile with `acquisition.csv` (September: 100 \"conversions\" in funnel vs 5 converted leads in acquisition). The pack states explicitly that trial-to-paid \"runs on a longer cycle and is not tracked in this pack.\"\n\n**Therefore no lead-to-customer conversion rate, and no CAC, is calculable from this data.** The only valid funnel metric is lead→trial:\n\n| Channel | Sept leads | Sept trials | Rate | Oct leads | Oct trials | Rate | Rate change |\n|---|---|---|---|---|---|---|---|\n| paid_search | 520 | 44 | 8.5% | 900 | 58 | 6.4% | **-2.0pp** |\n| content | 260 | 31 | 11.9% | 330 | 34 | 10.3% | -1.6pp |\n| partner | 60 | 15 | **25.0%** | 75 | 17 | **22.7%** | -2.3pp |\n| outbound | 160 | 10 | 6.3% | 195 | 11 | 5.6% | -0.6pp |\n\nEvery channel's efficiency declined. **Partner converts leads to trials at 3.5x paid search's rate.**\n\n### 3.2 The paid-search case does not hold up\n\nPaid search's October attributed revenue is €238,800 — by far the largest number in the file. Decomposed:\n\n| Channel | New-logo ACV (Sept+Oct) | New logos | Avg ACV | Expansion ACV | Expansion share |\n|---|---|---|---|---|---|\n| partner | €166,800 | 2 | **€83,400** | €0 | 0% |\n| content | €91,200 | 3 | €30,400 | €18,000 | 16% |\n| paid_search | €64,800 | 2 | €32,400 | **€210,000** | **76%** |\n| outbound | €56,400 | 2 | €28,200 | €24,000 | 30% |\n\nThe expansion attributions are not credible:\n- Campaign `2026-09-28` is credited with €84,000 of expansion at **stark-industries, a customer since 2023-06-02**, converting 2026-10-13.\n- The same campaign is credited with expansions at **umbrella-health (since 2024-01-15)** and **globex (since 2024-03-11)**.\n- A marketing campaign launched three days before the month began did not cause three multi-year enterprise accounts to expand. These are almost certainly **account-management-driven expansions with a last-touch paid-search cookie attached**.\n\nAdditionally, `attributed_revenue_eur` is **annualised ACV credited at conversion** — it cannot be compared to monthly revenue, and `acquisition.csv` contains *only converted leads*, so it provides no denominator for efficiency analysis.\n\n### 3.3 What can and cannot be concluded\n\n**Can be concluded:**\n- Paid search scaled volume aggressively (+73% leads) with **declining marginal lead quality** (8.5% → 6.4% lead→trial).\n- Partner is the highest-quality channel on the one metric available, and produced the largest new logo in the period (vandelay, €132,000 ACV).\n- Paid search produced **zero new logos in September** and two small SMB logos in October (avg €32,400).\n- All new logos in both months landed on 1 September or 1 October with conversion dates identical to their start dates — consistent with a monthly billing-cycle start, but it means **no cohort has more than two months of tenure**.\n\n**Cannot be concluded:**\n- **CAC, by any channel.** There is no spend data.\n- **CAC payback, LTV, or LTV:CAC.** Requires spend and per-customer gross margin; neither exists.\n- **Any channel's true revenue contribution**, because expansion attribution is unreliable and ACV is annualised.\n- **Whether paid search's incremental leads convert to revenue at all**, because trial-to-paid is untracked.\n\n**Verdict on Decision 2: increasing paid-search spend is not supported by this data.** The single largest number supporting the case (€238,800) is 76% mis-attributed expansion, and the one efficiency metric available is deteriorating precisely as spend scaled.\n\n---\n\n## 4. PLAN ECONOMICS\n\n### 4.1 Contribution by plan\n\n| | Plan | Revenue | Infra | Support | Total cost | Contribution | Margin |\n|---|---|---|---|---|---|---|---|\n| **Sept** | enterprise | €659,000 | €288,000 | €159,000 | €447,000 | €212,000 | 32.2% |\n| | pro | €63,000 | €13,600 | €6,900 | €20,500 | **€42,500** | **67.5%** |\n| | starter | €24,100 | €8,400 | €7,300 | €15,700 | €8,400 | 34.9% |\n| | **Total** | **€746,100** | **€310,000** | **€173,200** | **€483,200** | **€262,900** | **35.2%** |\n| **Oct** | enterprise | €659,500 | €296,800 | €168,000 | €464,800 | €194,700 | 29.5% |\n| | pro | €66,200 | €16,100 | €8,600 | €24,700 | €41,500 | **62.7%** |\n| | starter | €32,000 | €11,400 | €10,300 | €21,700 | €10,300 | 32.2% |\n| | **Total** | **€757,700** | **€324,300** | **€186,900** | **€511,200** | **€246,500** | **32.5%** |\n\n**Margin fell on all three plans.** Company-wide contribution declined **€16,400 (-6.2%) on rising revenue**. Marginal economics of October: +€11,600 revenue for +€28,000 cost.\n\nEnterprise generates **79% of all contribution** (€194,700 of €246,500) and is the only plan that matters in absolute euros — but its costs rose €17,800 (+4.0%) against €500 of revenue growth (+0.08%).\n\nPro added a customer (+€3,200 revenue) and **+€4,200 of cost** — the incremental pro customer was contribution-negative in month one.\n\n### 4.2 Unit infrastructure cost — starter is the outlier\n\n| Plan | Sept tokens (M) | €/M tokens | Oct tokens (M) | €/M tokens | Change |\n|---|---|---|---|---|---|\n| enterprise | 29,194 | €9.87 | 30,605 | €9.70 | -1.7% |\n| pro | 2,425.5 | **€5.61** | 2,783.9 | **€5.78** | +3.0% |\n| starter | 515 | €16.31 | 548.5 | **€20.78** | **+27.4%** |\n\nStarter costs **3.6x pro per token processed**, and worsened 27% in a month. Adding four tiny starter accounts (33.5M tokens combined) added €3,000 of infra cost — strong evidence of a **fixed cost floor per starter account** that its €2,462 average monthly revenue barely covers.\n\n### 4.3 Cost intensity per customer\n\n| Plan (Oct) | Rev/cust | Support/cust | Support as % rev | Total cost as % rev |\n|---|---|---|---|---|\n| enterprise | €47,107 | €12,000 | 25.5% | 70.5% |\n| pro | €7,356 | €956 | **13.0%** | **37.3%** |\n| starter | €2,462 | €792 | **32.2%** | **67.8%** |\n\n### 4.4 Starter's post-churn cliff\n\nStarter's October figures include four customers who churned mid-month. Continuing starter revenue = €32,000 − €10,300 = **€21,700**.\n\n- If costs scale fully with customer count (9/13): costs €15,023 → **contribution €6,677 (30.8%)**\n- If costs are largely fixed (consistent with the €/token evidence): costs ~€21,700 → **contribution ≈ €0**\n\n**Starter's November contribution is somewhere between €0 and €6,700** — i.e. between 0% and 4% of total company contribution, on the plan carrying 44% monthly logo churn. This is the strongest quantified argument in the pack, and it points at *starter*, not SMB.\n\n### 4.5 Entitlement utilisation — the \"enterprise underuse\" claim is a segmentation artefact\n\n`plans.csv` shows the enterprise plan averaging 1,888,314 requests against a 3,000,000 entitlement = **63%**, which invites the conclusion that enterprise customers are over-provisioned. But the enterprise *plan* contains 8 Enterprise-segment and 6 Mid-market-segment customers. Splitting them:\n\n| Group (Oct) | Customers | Avg requests | Entitlement | Utilisation |\n|---|---|---|---|---|\n| Enterprise **segment** on enterprise plan | 8 | 2,698,875 | 3,000,000 | **90%** |\n| Enterprise segment **ex-Acme** | 7 | 2,754,429 | 3,000,000 | **92%** (Sept 85%) |\n| Mid-market on enterprise plan | 6 | 807,567 | 3,000,000 | **27%** |\n\nTrue Enterprise-segment utilisation is ~90% and **rising**. The low blended figure is entirely driven by six mid-market accounts sitting on an enterprise plan they use a quarter of — gringotts (700,000 requests, €120,000 ARR) and duff-brewing (815,000 requests, €162,000 ARR) are on the wrong plan.\n\n**Pro, by contrast, is bursting:** wonka 170% of entitlement, aperture 118%, vandelay 115% (in month two of its contract), prestige 91%. All 13 October `rate_limits` tickets are on pro. Pro is the plan where product constraints are actively generating support cost, blocking revenue capture, and — in nakatomi's case — plausibly contributing to the largest churn of the period.\n\n**Verdict on Decision 3:** **pro** should get the next quarter's engineering focus.\n- Best contribution margin (62.7%) and best unit infra cost (€5.78/M tokens)\n- Only plan growing in customer count organically\n- 100% of rate-limit friction, and multiple customers already over entitlement\n- Overage is billed at renewal, so metering/quota/self-serve-upgrade work converts existing usage into revenue with no acquisition cost\n- Lost the single largest churned account (nakatomi, €180,000 ARR)\n\n**Enterprise cannot be ignored** — it is 79% of contribution and its margin is falling fastest. But its need is **reliability engineering, not feature work**: `high`/`critical` api_errors and performance tickets recur across 8 of 14 enterprise-plan accounts in both months, with several still open or pending.\n\n**Starter should be deprioritised for net-new features**, pending the pricing/packaging decision in §5.\n\n---\n\n## 5. RECOMMENDATIONS\n\n### Decision 1 — Reduce investment in a segment: **Modify, don't approve as framed**\n\nDo **not** cut SMB wholesale. Do restructure **starter**.\n\nThe evidence supports action on starter, not SMB:\n- Starter carries 44% monthly logo churn and 100% of the period's SMB churn (all 4 accounts)\n- Starter's unit infra cost is 3.6x pro and deteriorating 27%/month\n- Starter's post-churn contribution is €0–6,700/month\n- But SMB customers **on the pro plan** (wonka, oscorp, pied-piper, planet-express, spacely) sit on the company's *highest-margin* plan, and wonka is at 170% of entitlement — this is under-monetised demand, not a loss-making segment\n\n**Actions:**\n1. **Freeze new starter acquisition for 60 days** pending a pricing review. Do not cut mid-market or SMB-pro investment.\n2. **Reprice or retire starter.** At €2,462/month average revenue and a fixed cost floor, either raise the price floor, reduce the 200,000-request entitlement, or move starter to fully self-serve with no assigned CS. Note starter customers average only 84,385 requests (42% of entitlement) — the entitlement can be cut without affecting most customers.\n3. **Do not decide this without CAC.** Freezing acquisition is reversible and cheap; declaring the segment unprofitable requires spend data we do not have.\n\n### Decision 2 — Increase paid-search spend: **Reject, pending data**\n\n1. **Reject the increase this week.** The supporting number is 76% mis-attributed expansion, and lead→trial efficiency fell 2.0pp as volume rose 73%.\n2. **Require Finance/Growth to supply monthly spend by channel** before any budget decision. Without it, CAC payback — the CFO's actual question — cannot be answered.\n3. **Fix attribution before the next review.** Split reporting into new-logo and expansion, and exclude expansions on accounts older than the campaign start from channel credit. Re-run the paid-search case on new-logo ACV only (€64,800 across two logos).\n4. **Investigate partner capacity, not partner budget.** Partner delivers 22.7% lead→trial (3.5x paid search) and the largest new logo in the period (€132,000), but only 75 leads/month. The constraint is partner supply, so the correct action is partner recruitment, not media spend.\n5. **If paid search is scaled, scale it as a measured test** with a holdout, judged on new-logo ACV and (once tracked) trial-to-paid.\n\n### Decision 3 — Engineering focus: **Pro plan, with a protected enterprise reliability track**\n\n1. **Pro (primary):** usage metering and in-product quota visibility, self-serve upgrade path pro→enterprise, and rate-limit handling. Immediate revenue: aperture, vandelay, wonka and prestige are at or over entitlement today.\n2. **Enterprise (protected reliability track):** api_errors and performance are chronic and unresolved across both months in the plan carrying 79% of contribution. This is not a feature backlog item.\n3. **Starter:** no net-new feature work; self-serve onboarding only, and only after the pricing decision.\n\n### Immediate operational actions (not on the agenda, higher urgency than all three decisions)\n\n1. **Wayne Enterprises renewal — 30 November 2026.** €1,008,000 ARR (11.5% of total), 29 days out, four October tickets including a pending `high` performance issue and an open integration issue. **Assign an exec sponsor today.** This account is also invisible in usage reporting (see below) — nobody has been watching it.\n2. **Reverse the duplicate invoice** (INV-2026-10-0209, €19,500) and re-issue October reporting. Investigate why `billing_sync` re-loaded a `stripe` record.\n3. **Fix the usage-account ID mismatches.** `wayne-enterprises`→`wayne_ent` and `prestige-worldwide`→`prestige_ww`. Any join on `customer_id` silently drops €1,122,000 of ARR and 12.6% of October request volume.\n4. **Escalate soylent** (€234,000 ARR): contracted revenue, -27% usage, -27% active users, 8 tickets including the dataset's only `critical`. Reliability review plus commercial conversation this week.\n5. **Upsell wonka-industries** (170% of pro entitlement, 4 rate-limit tickets) and **replan the six mid-market-on-enterprise-plan accounts** at 27% utilisation — starting with duff-brewing, which renews 5 December 2026.\n6. **Restate the November forecast to €750,400** and brief the board that October's +12% was an artefact.\n\n---\n\n## 6. UNCERTAINTIES / DATA ISSUES\n\n### Errors requiring correction\n\n| # | Issue | Impact |\n|---|---|---|\n| 1 | **Duplicate invoice.** `INV-2026-10-0209` (soylent) appears twice — identical transaction ID and amount, from `stripe` (10-01) and `billing_sync` (10-02). | Overstates October by **€19,500** |\n| 2 | **Annual invoice at full value.** gringotts' €120,000 12-month prepay is recorded entirely in October. | Overstates October revenue by **€110,000** |\n| 3 | **Usage-account ID mismatches.** `wayne-enterprises`→`wayne_ent`, `prestige-worldwide`→`prestige_ww`. | Any `customer_id` join silently drops €1,122,000 ARR and 12.6% of Oct requests, **including the 3rd-largest customer, which renews in 29 days** |\n| 4 | **Non-recurring revenue mixed with recurring.** Professional services (`billing_period_months = 0`) of €51,000 / €5,700 sit in the same file as subscriptions. | Any growth rate computed from raw `revenue.csv` is invalid |\n\n### Metrics that cannot be calculated\n\n| Metric | Blocker |\n|---|---|\n| **CAC (any channel)** | **No marketing or sales spend data exists in the pack.** |\n| **CAC payback (the CFO's explicit request)** | Requires spend **and** per-customer gross margin. Neither exists. |\n| **LTV, LTV:CAC** | Requires CAC and a reliable retention curve; two months of data cannot produce either. |\n| **Lead-to-customer conversion rate** | `funnel.csv` measures lead→**trial**; trial→paid is explicitly \"not tracked in this pack.\" |\n| **Channel-level revenue contribution** | `attributed_revenue_eur` is annualised ACV, includes mis-attributed expansion, and `acquisition.csv` contains only converted leads (no denominator). |\n| **Net revenue retention** | Requires a full cohort period; two months with mid-month churn and next-cycle expansions is insufficient. |\n| **Segment-level contribution margin** | Costs in `plans.csv` are by **plan**, not segment, and plans span segments. Cannot be allocated. |\n| **Professional services margin** | €51,000 / €5,700 of revenue with **no corresponding cost line anywhere**. |\n| **Per-customer profitability** | No customer-level infra or support cost. |\n| **Cash position** | Invoices are recorded when dated; there is no collection or payment data. |\n\n### Unsupported causal claims to reject\n\n1. **\"Paid search drove €238,800 in October.\"** 76% is expansion on accounts held since 2023–24, credited to a campaign that started 28 September. Last-touch attribution artefact, not causation.\n2. **\"Acme is churning / usage is collapsing.\"** -45% requests but -12% tokens, -3% users, and improving ticket severity. Matches the documented 40–50% batch-migration estimate. Planned architectural change.\n3. **\"Aggregate usage is flat (+1.5%), so growth has stalled.\"** Ex-Acme requests +8.8%, tokens +5.6%. One account's planned migration masks broad growth.\n4. **\"Enterprise customers only use 63% of their entitlement.\"** Segmentation artefact — true Enterprise-segment utilisation is 90% and rising; the six mid-market accounts on the enterprise plan sit at 27%.\n5. **\"Declining usage predicted the SMB churn.\"** The four starter churns show -34% to -37% October usage, but they churned *during* October. The decline is coincident and largely a partial-month artefact — it has **no demonstrated predictive value**.\n6. **\"October MRR growth of 1.55% shows momentum.\"** €25,300 of that MRR belongs to customers who had already churned when it was invoiced.\n\n### Structural limitations and open questions\n\n1. **Two months of data.** No seasonality control, no trend, no cohort maturity. Every rate here is a single observation.\n2. **Churn is a single-month event.** Five churns clustered in October (8th–27th). This could be a systemic problem, a billing-migration side effect, or a batch data-entry event. **A one-month, n=5 churn spike cannot be extrapolated to an annualised rate**, and I have deliberately not built a forecast on 34% annualised gross churn.\n3. **Segment vs plan taxonomy conflict.** Six Mid-market customers are on the enterprise plan; several SMB customers are on pro. `plans.csv`'s \"14 enterprise customers\" ≠ 14 Enterprise-segment customers. All plan-level analysis must be read as plan economics, not segment economics.\n4. **October plan customer counts (36) include the 5 mid-month churns**, so October per-customer revenue and cost are computed on an inflated denominator with full-month costs for part-month customers. Post-churn active count is 31.\n5. **Churn-date semantics are ambiguous.** slate-rock churned 8 October but logged 62,000 requests — far above 8 days' pro-rata of its September volume. Either `churn_date` is a notice date, or service continued post-churn. This affects whether the €25,300 October MRR was refunded (no credit notes appear in `revenue.csv`).\n6. **nakatomi and the four starter churns were invoiced in full after/near their churn dates** with no visible credits — either a revenue-recognition error or an unrecorded refund liability.\n7. **`support_cost_eur` is fully-loaded CS staff cost**, i.e. capacity, not marginal cost. Per-ticket figures (enterprise €4,800, starter €936, pro €307) reflect staffing allocation, not effort, and should not be used to price incremental support.\n8. **No ticket resolution times, no CSAT, no reopen rates.** Ticket counts and severity are the only quality signals available; \"open\"/\"pending\" status has no age attached.\n9. **`avg_requests_per_customer` in `plans.csv` uses the inflated customer counts**, so October plan averages (notably starter's 84,385) are depressed by including churned and part-month accounts.\n10. **No pipeline data.** All acquisition analysis is backward-looking on 15 converted leads across two months — too small for any channel-level statistical inference.\n11. **Expansion bookings are unverifiable beyond hooli.** The €216,000 of October expansion ACV is asserted in `acquisition.csv` and has not yet appeared in any invoice; the November MRR bridge assumes it lands as recorded.",
+  "response_chars": 27346,
+  "latency_ms": 304135.6,
+  "ttft_ms": 2762.7,
+  "ttfa_ms": 167869.5,
+  "stderr": "",
+  "served_model": "claude-opus-5",
+  "served_model_key": "claude-opus-5",
+  "provider": "firstParty",
+  "cost_basis": "list",
+  "context_window": 1000000,
+  "max_output_tokens": 64000,
+  "input_tokens": 2,
+  "output_tokens": 24674,
+  "reasoning_tokens": 13654,
+  "cache_read_input_tokens": 12629,
+  "cache_creation_input_tokens": 0,
+  "cost_usd_route_reported": 0.6231745,
+  "model_usage_all": {
+    "claude-haiku-4-5-20251001": {
+      "inputTokens": 11185,
+      "outputTokens": 19,
+      "cacheReadInputTokens": 0,
+      "cacheCreationInputTokens": 0,
+      "webSearchRequests": 0,
+      "costUSD": 0.01128,
+      "contextWindow": 200000,
+      "maxOutputTokens": 32000,
+      "thinkingTokens": 0,
+      "canonicalModel": "claude-haiku-4-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    },
+    "claude-opus-5": {
+      "inputTokens": 2,
+      "outputTokens": 24674,
+      "cacheReadInputTokens": 12629,
+      "cacheCreationInputTokens": 0,
+      "webSearchRequests": 0,
+      "costUSD": 0.6231745,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 64000,
+      "thinkingTokens": 13654,
+      "canonicalModel": "claude-opus-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "auxiliary_models": [
+    "claude-haiku-4-5-20251001"
+  ],
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 12629,
+    "output_tokens": 24674,
+    "output_tokens_details": {
+      "thinking_tokens": 13654
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 24674,
+        "cache_read_input_tokens": 12629,
+        "cache_creation_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "stop_reason": "end_turn",
+  "terminal_reason": "completed",
+  "finish_reason": "end_turn",
+  "is_error": false,
+  "subtype": "success",
+  "api_error_status": null,
+  "num_turns": 1,
+  "route_ttft_ms": 1446,
+  "route_ttfa_ms": 167282,
+  "duration_api_ms": 303818,
+  "total_cost_usd_including_auxiliary": 0.6344544999999999,
+  "session_id": "ff4c3f2e-a10f-4eef-8eb1-a5276e73f5ff",
+  "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+      "background": 0,
+      "foreground": 0,
+      "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+      "parent": 0,
+      "user": 0,
+      "system": 0
+    },
+    "refused": {
+      "depth_limit": 0,
+      "concurrency_limit": 0,
+      "budget": 0
+    },
+    "by_type": {}
+  }
+}

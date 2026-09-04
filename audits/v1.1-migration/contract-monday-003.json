@@ -1,0 +1,410 @@
+{
+  "contract_schema_version": "1",
+  "scenario_id": "monday-003",
+  "scenario_prompt_sha256": "aaf788f309d955d2b427c86fe7d95d2bbf88575fde7306adcfd74b0ec4a4103f",
+  "evaluator_id": "evaluator-opus5-v0.3",
+  "rubric_version": "0.3",
+  "rubric_file": "rubric.yaml",
+  "ground_truth_sha256": "418944e388197fd31e8ef7b8b5cb82e23fc8dfdf363c34ce128a0839521c3063",
+  "ground_truth_sliced_per_criterion": false,
+  "judge_instructions": {
+    "system_prompt_sha256": "89baecb8058f2896d222da4c678112734588f37d6c7e0a2077c04f48136a487a",
+    "criterion": {
+      "source": "evaluators/monday-003/judge-prompt.md",
+      "sha256": "c4736c01e81e5b8ef72c4c9e9861caf1c9dbeb93262a05edc4085565153cda64"
+    },
+    "penalty": {
+      "source": "evaluators/monday-003/penalty-judge-prompt.md",
+      "sha256": "dcc824a7074fbf27d18f6e4350e1d1bcc3187ce88f8f6230712e809654448cdf"
+    },
+    "noise": null
+  },
+  "label_semantics": {
+    "labels": [
+      "PASS",
+      "PARTIAL",
+      "FAIL"
+    ],
+    "tie_rule": "lower"
+  },
+  "scoring": {
+    "total_base_points": 100.0,
+    "maximum_global_penalty": 25.0,
+    "dimension_max": {
+      "accuracy_and_uncertainty": 12.0,
+      "critical_path_and_dependencies": 21.0,
+      "decision_quality": 14.0,
+      "planning_and_parallelization": 18.0,
+      "resource_allocation": 25.0,
+      "state_reconstruction": 10.0
+    }
+  },
+  "criteria": [
+    {
+      "id": "sso_chain",
+      "dimension": "critical_path_and_dependencies",
+      "points": {
+        "pass": 4.0,
+        "partial": 2.0,
+        "fail": 0.0
+      },
+      "pass_definition": "Reconstructs billing schema migration -> API compatibility patch -> QA regression -> production rollout as one dependent sequence, and treats it as what sets the Atlas delivery date.",
+      "partial_definition": "Most of the chain, with one link missing, one owner wrong, or the sequence left ambiguous.",
+      "fail_definition": "Neither the PASS nor the PARTIAL bar is met.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "contoso_blocker_chain",
+      "dimension": "critical_path_and_dependencies",
+      "points": {
+        "pass": 6.0,
+        "partial": 3.0,
+        "fail": 0.0
+      },
+      "pass_definition": "Identifies the tenant export permission fix as a prerequisite of the Q3 compliance export, and keeps the date-format work off that chain. Naming either the SSO chain or this one as the critical path is acceptable provided both are reconstructed.",
+      "partial_definition": "Finds the permission problem but does not connect it to the compliance delivery, or entangles it with the formatting request.",
+      "fail_definition": "Neither the PASS nor the PARTIAL bar is met.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "pricing_dependency",
+      "dimension": "critical_path_and_dependencies",
+      "points": {
+        "pass": 5.0,
+        "partial": 2.5,
+        "fail": 0.0
+      },
+      "pass_definition": "States that packaging approval gates the public pricing page, and that the approval submission does not have to wait for the page because mockups are accepted.",
+      "partial_definition": "Gets the approval gate or the mockup route, not both.",
+      "fail_definition": "Neither the PASS nor the PARTIAL bar is met.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "security_state_stale",
+      "dimension": "critical_path_and_dependencies",
+      "points": {
+        "pass": 3.0,
+        "partial": 1.5,
+        "fail": 0.0
+      },
+      "pass_definition": "Security approval is closed for the current scope; the task-list and checklist entries are out of date and no Security action is required.",
+      "partial_definition": "Notes the approval but still treats Security as something to chase or confirm.",
+      "fail_definition": "Neither the PASS nor the PARTIAL bar is met.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "board_dependency",
+      "dimension": "critical_path_and_dependencies",
+      "points": {
+        "pass": 3.0,
+        "partial": 1.5,
+        "fail": 0.0
+      },
+      "pass_definition": "The board revenue section depends on the migration and the backfill that follows it, not on the migration alone.",
+      "partial_definition": "Sees a billing dependency but omits the backfill or misstates what waits on it.",
+      "fail_definition": "Neither the PASS nor the PARTIAL bar is met.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "scarce_resource_allocation",
+      "dimension": "resource_allocation",
+      "points": {
+        "pass": 10.0,
+        "partial": 5.0,
+        "fail": 0.0
+      },
+      "pass_definition": "Detects that Marcus is claimed by two valuable paths at once and resolves it: Daniel takes the Contoso permission fix with the half-hour walkthrough, or an equivalent allocation that satisfies both commitments while respecting the stated capabilities and durations, with a reason given for the choice.",
+      "partial_definition": "Recognises the contention but resolves it incompletely - no owner chosen, the handoff ignored, or an allocation asserted without reasoning.",
+      "fail_definition": "Neither the PASS nor the PARTIAL bar is met.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "marcus_reserved_for_sso",
+      "dimension": "resource_allocation",
+      "points": {
+        "pass": 6.0,
+        "partial": 3.0,
+        "fail": 0.0
+      },
+      "pass_definition": "Keeps Marcus on the compatibility patch and the rollout, on the stated grounds that this work has no substitute, and releases the instrumentation hours he is holding.",
+      "partial_definition": "Frees Marcus from the instrumentation but does not protect his capacity for the work only he can do.",
+      "fail_definition": "Neither the PASS nor the PARTIAL bar is met.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "formatter_ownership",
+      "dimension": "resource_allocation",
+      "points": {
+        "pass": 4.0,
+        "partial": 2.0,
+        "fail": 0.0
+      },
+      "pass_definition": "The date-format change goes to Julia and costs neither Marcus nor the compliance delivery.",
+      "partial_definition": "Treats it as low priority but leaves the owner or the action unstated.",
+      "fail_definition": "Neither the PASS nor the PARTIAL bar is met.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "elena_migration_fallback",
+      "dimension": "resource_allocation",
+      "points": {
+        "pass": 5.0,
+        "partial": 2.5,
+        "fail": 0.0
+      },
+      "pass_definition": "Schedules the migration on Monday and treats Daniel as a fallback that first needs the production permissions and the runbook transferred, before Elena leaves at Wednesday midday.",
+      "partial_definition": "Mentions the Wednesday absence but misses the transfer, its deadline, or the fallback.",
+      "fail_definition": "Neither the PASS nor the PARTIAL bar is met.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "monday_plan",
+      "dimension": "planning_and_parallelization",
+      "points": {
+        "pass": 7.0,
+        "partial": 3.5,
+        "fail": 0.0
+      },
+      "pass_definition": "Monday starts the migration first and puts the dependent engineering behind it, with the delegable work handed out in the same morning rather than queued.",
+      "partial_definition": "A workable Monday that loses meaningful time or leaves the ordering unclear.",
+      "fail_definition": "Neither the PASS nor the PARTIAL bar is met.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "concurrent_sso_and_contoso",
+      "dimension": "planning_and_parallelization",
+      "points": {
+        "pass": 7.0,
+        "partial": 3.5,
+        "fail": 0.0
+      },
+      "pass_definition": "Runs the SSO chain and the Contoso compliance chain concurrently once the migration lands, so neither commitment waits on the other.",
+      "partial_definition": "Serialises the two paths, or runs them concurrently without saying who does what.",
+      "fail_definition": "Neither the PASS nor the PARTIAL bar is met.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "pricing_board_parallel",
+      "dimension": "planning_and_parallelization",
+      "points": {
+        "pass": 4.0,
+        "partial": 2.0,
+        "fail": 0.0
+      },
+      "pass_definition": "The approval pack, the board narrative and the non-revenue charts all start now, independent of the engineering work.",
+      "partial_definition": "Finds some of this parallelism but not most of it.",
+      "fail_definition": "Neither the PASS nor the PARTIAL bar is met.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "formatting_urgent_not_blocking",
+      "dimension": "decision_quality",
+      "points": {
+        "pass": 5.0,
+        "partial": 2.5,
+        "fail": 0.0
+      },
+      "pass_definition": "The escalated broken-export report is a cosmetic date-format preference for a demo, and it is handled without displacing committed work.",
+      "partial_definition": "Right conclusion, weak or unstated reasoning.",
+      "fail_definition": "Neither the PASS nor the PARTIAL bar is met.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "contoso_compliance_is_urgent",
+      "dimension": "decision_quality",
+      "points": {
+        "pass": 4.0,
+        "partial": 2.0,
+        "fail": 0.0
+      },
+      "pass_definition": "Treats the delegated-admin export failure as a real dated commitment in its own right and commits to the Tuesday 16:00 delivery.",
+      "partial_definition": "Notices the permission failure but leaves it undated, unowned, or lumped in with the formatting request.",
+      "fail_definition": "Neither the PASS nor the PARTIAL bar is met.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "stale_task_list_overridden",
+      "dimension": "decision_quality",
+      "points": {
+        "pass": 5.0,
+        "partial": 2.5,
+        "fail": 0.0
+      },
+      "pass_definition": "Overrides the Friday task list against the newer evidence on at least three of its four stale entries.",
+      "partial_definition": "Overrides some of it.",
+      "fail_definition": "Neither the PASS nor the PARTIAL bar is met.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "sso_state_reconstructed",
+      "dimension": "state_reconstruction",
+      "points": {
+        "pass": 4.0,
+        "partial": 2.0,
+        "fail": 0.0
+      },
+      "pass_definition": "The engineering chain is still outstanding, Security is closed, and Wednesday EOD still stands.",
+      "partial_definition": "Two of the three.",
+      "fail_definition": "Neither the PASS nor the PARTIAL bar is met.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "onboarding_state_reconstructed",
+      "dimension": "state_reconstruction",
+      "points": {
+        "pass": 3.0,
+        "partial": 1.5,
+        "fail": 0.0
+      },
+      "pass_definition": "Core flow is launch-ready, instrumentation is not required for it, and launch support now sits with Julia.",
+      "partial_definition": "Partly right.",
+      "fail_definition": "Neither the PASS nor the PARTIAL bar is met.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "contoso_state_separated",
+      "dimension": "state_reconstruction",
+      "points": {
+        "pass": 3.0,
+        "partial": 1.5,
+        "fail": 0.0
+      },
+      "pass_definition": "Makes it unambiguous that the date-format request is not what blocks the production or contractual delivery, and that the delegated-admin permission defect is what puts the Tuesday commitment at risk. Demonstrating this through the plan - separate owners, only the permission item gating the dated delivery - counts in full; no particular phrasing is required.",
+      "partial_definition": "Partly conflates the two, or leaves it ambiguous which one blocks the Tuesday commitment.",
+      "fail_definition": "Treats the formatting request as the real blocker, claims Contoso has no blocker at all, or merges the two into a single problem.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "factual_plan_accuracy",
+      "dimension": "accuracy_and_uncertainty",
+      "points": {
+        "pass": 5.0,
+        "partial": 2.5,
+        "fail": 0.0
+      },
+      "pass_definition": "The plan and the current-state summary carry the supplied deadlines, durations, owners, availability windows and customer commitments through without substituting different values for them.",
+      "partial_definition": "One minor factual substitution that does not materially alter the plan.",
+      "fail_definition": "Several factual substitutions, or one that materially distorts the plan.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "earliest_feasible_delivery",
+      "dimension": "accuracy_and_uncertainty",
+      "points": {
+        "pass": 3.0,
+        "partial": 1.5,
+        "fail": 0.0
+      },
+      "pass_definition": "Gives an earliest SSO completion that its own plan supports: dependencies in order, the stated durations used, and the Tuesday-morning absence respected. Tuesday afternoon is canonical; a plan that is demonstrably earlier is equally correct provided it breaks neither a dependency nor an availability window.",
+      "partial_definition": "Correct day and dependency order, but the timing ignores an availability constraint or is asserted with no schedule behind it.",
+      "fail_definition": "Neither the PASS nor the PARTIAL bar is met.",
+      "ground_truth_paths": []
+    },
+    {
+      "id": "uncertainty_discipline",
+      "dimension": "accuracy_and_uncertainty",
+      "points": {
+        "pass": 4.0,
+        "partial": 2.0,
+        "fail": 0.0
+      },
+      "pass_definition": "Invents no approvals, owners, durations or blockers, and flags what genuinely cannot be settled from the sources.",
+      "partial_definition": "One unsupported item, or an item flagged as a hypothesis and then relied on anyway.",
+      "fail_definition": "Neither the PASS nor the PARTIAL bar is met.",
+      "ground_truth_paths": []
+    }
+  ],
+  "noise": null,
+  "penalties": [
+    {
+      "type": "MAJOR_CONTRADICTION",
+      "points": -5.0,
+      "definition": ""
+    },
+    {
+      "type": "MAJOR_PLANNING_ERROR",
+      "points": -7.0,
+      "definition": ""
+    },
+    {
+      "type": "MATERIAL_HALLUCINATION",
+      "points": -5.0,
+      "definition": ""
+    },
+    {
+      "type": "PROHIBITED_ACTION",
+      "points": -7.0,
+      "definition": ""
+    }
+  ],
+  "output_contract": {
+    "criterion_schema": {
+      "type": "object",
+      "properties": {
+        "result": {
+          "type": "string",
+          "enum": [
+            "PASS",
+            "PARTIAL",
+            "FAIL"
+          ]
+        },
+        "evidence": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "result",
+        "evidence",
+        "reason"
+      ],
+      "additionalProperties": false
+    },
+    "noise_schema": null,
+    "penalty_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "violations": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "evidence": {
+                "type": "string"
+              },
+              "materially_misleading": {
+                "type": "boolean"
+              },
+              "reason": {
+                "type": "string"
+              },
+              "type": {
+                "enum": [
+                  "MAJOR_CONTRADICTION",
+                  "MAJOR_PLANNING_ERROR",
+                  "MATERIAL_HALLUCINATION",
+                  "PROHIBITED_ACTION"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "type",
+              "evidence",
+              "reason",
+              "materially_misleading"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "violations"
+      ],
+      "type": "object"
+    }
+  }
+}

@@ -1,0 +1,502 @@
+{
+  "contract_schema_version": "1",
+  "scenario_id": "monday-001",
+  "scenario_prompt_sha256": "ed4d7beb1d7d1029c36eb8533e449027e0dc1a1047f8a38951a91781a0a5e398",
+  "evaluator_id": "evaluator-opus5-v0.1",
+  "rubric_version": "0.2",
+  "rubric_file": "rubric-0.2.yaml",
+  "ground_truth_sha256": "a6319643597f5bfadd2d1eec920fa343df1455ae69bdb6e85e1d572a1afea3f9",
+  "ground_truth_sliced_per_criterion": true,
+  "judge_instructions": {
+    "system_prompt_sha256": "89baecb8058f2896d222da4c678112734588f37d6c7e0a2077c04f48136a487a",
+    "criterion": {
+      "source": "builtin",
+      "sha256": "4e31a1674343f28ab574bfe6cdb16dd0ff4d60fd077f0c5890bdbac84be270bc"
+    },
+    "penalty": {
+      "source": "builtin",
+      "sha256": "f614814ab523cccf30e17f9f4122386e1cf31f7139a5d8501a97b89063597bdb"
+    },
+    "noise": {
+      "source": "builtin",
+      "sha256": "fd232fccb9e9f88c5534d19de79f8516b53430e25d251b990df2a30e7c54219a"
+    }
+  },
+  "label_semantics": {
+    "labels": [
+      "PASS",
+      "PARTIAL",
+      "FAIL"
+    ],
+    "tie_rule": "lower"
+  },
+  "scoring": {
+    "total_base_points": 100.0,
+    "maximum_global_penalty": 20.0,
+    "dimension_max": {
+      "action_detection": 25.0,
+      "data_reasoning": 15.0,
+      "noise_resistance": 10.0,
+      "prioritization": 15.0,
+      "state_reconstruction": 25.0,
+      "uncertainty": 10.0
+    }
+  },
+  "criteria": [
+    {
+      "id": "contoso_action",
+      "dimension": "action_detection",
+      "points": {
+        "pass": 8.0,
+        "partial": 4.0,
+        "fail": 0.0
+      },
+      "pass_definition": "Clearly identifies resolving the Contoso data-retention question before 11:00 Monday as the highest-priority action, and recognizes that the renewal/signature may be delayed if it is not resolved.",
+      "partial_definition": "Identifies Contoso as requiring action today but misses either the 11:00 deadline, the renewal-blocking consequence, or fails to treat it as the top priority.",
+      "fail_definition": "Does not identify the action, materially misunderstands it, or treats the renewal as already fully completed.",
+      "ground_truth_paths": [
+        "critical_actions.contoso",
+        "current_state.contoso_renewal"
+      ]
+    },
+    {
+      "id": "umbrella_action",
+      "dimension": "action_detection",
+      "points": {
+        "pass": 7.0,
+        "partial": 3.5,
+        "fail": 0.0
+      },
+      "pass_definition": "Identifies Umbrella's metrics as a serious unexplained anomaly that should be investigated today without claiming a root cause.",
+      "partial_definition": "Notices the anomaly but under-prioritizes it or describes the need for investigation incompletely.",
+      "fail_definition": "Misses Umbrella entirely or presents an unsupported root cause as established.",
+      "ground_truth_paths": [
+        "critical_actions.umbrella",
+        "current_state.umbrella_status"
+      ]
+    },
+    {
+      "id": "churn_action",
+      "dimension": "action_detection",
+      "points": {
+        "pass": 6.0,
+        "partial": 3.0,
+        "fail": 0.0
+      },
+      "pass_definition": "Identifies that enterprise churn should be investigated or broken down today ahead of Tuesday's board meeting.",
+      "partial_definition": "Notes churn as important but does not connect it to work required before the board meeting.",
+      "fail_definition": "Misses the churn issue or claims the known cancellations fully explain the increase.",
+      "ground_truth_paths": [
+        "critical_actions.enterprise_churn",
+        "current_state.board_meeting",
+        "current_state.enterprise_churn"
+      ]
+    },
+    {
+      "id": "analytics_action",
+      "dimension": "action_detection",
+      "points": {
+        "pass": 4.0,
+        "partial": 2.0,
+        "fail": 0.0
+      },
+      "pass_definition": "Correctly treats Wednesday as the release date and any readiness check as lower priority than today's critical items.",
+      "partial_definition": "Correctly understands Wednesday but gives disproportionate priority to the release.",
+      "fail_definition": "Treats Analytics v2 as launching Monday or assigns the launch email to the user.",
+      "ground_truth_paths": [
+        "critical_actions.analytics_release",
+        "current_state.analytics_launch_email_owner",
+        "current_state.analytics_v2_release"
+      ]
+    },
+    {
+      "id": "acme_resolved",
+      "dimension": "state_reconstruction",
+      "points": {
+        "pass": 5.0,
+        "partial": 2.5,
+        "fail": 0.0
+      },
+      "pass_definition": "Clearly states that the Acme incident is resolved or recovered and does not frame it as an active operational problem.",
+      "partial_definition": "Mentions recovery but still suggests light monitoring or follow-up as if the incident may remain active.",
+      "fail_definition": "Treats Acme as an active incident or a Monday investigation priority.",
+      "ground_truth_paths": [
+        "current_state.acme_incident"
+      ]
+    },
+    {
+      "id": "release_wednesday",
+      "dimension": "state_reconstruction",
+      "points": {
+        "pass": 5.0,
+        "partial": 2.5,
+        "fail": 0.0
+      },
+      "pass_definition": "States that Analytics v2 is now scheduled for Wednesday.",
+      "partial_definition": "Correctly states that the Monday release was delayed but does not identify Wednesday.",
+      "fail_definition": "Says or implies that the release is still Monday.",
+      "ground_truth_paths": [
+        "critical_actions.analytics_release",
+        "current_state.analytics_v2_release"
+      ]
+    },
+    {
+      "id": "contoso_blocked",
+      "dimension": "state_reconstruction",
+      "points": {
+        "pass": 5.0,
+        "partial": 2.5,
+        "fail": 0.0
+      },
+      "pass_definition": "Correctly states that renewal/signature can be delayed or blocked pending the data-retention confirmation.",
+      "partial_definition": "Identifies the outstanding legal question but misses the approval or signature consequence.",
+      "fail_definition": "Treats the renewal as fully completed or materially misstates the blocker.",
+      "ground_truth_paths": [
+        "critical_actions.contoso",
+        "current_state.contoso_renewal"
+      ]
+    },
+    {
+      "id": "launch_email_julia",
+      "dimension": "state_reconstruction",
+      "points": {
+        "pass": 5.0,
+        "partial": 2.5,
+        "fail": 0.0
+      },
+      "pass_definition": "States that Julia owns the launch email or that no launch-email action is required from the user.",
+      "partial_definition": "Does not assign the launch email to the user but misses Julia's ownership.",
+      "fail_definition": "Tells the user to prepare or write the launch email.",
+      "ground_truth_paths": [
+        "critical_actions.analytics_release",
+        "current_state.analytics_launch_email_owner"
+      ]
+    },
+    {
+      "id": "pricing_confidential",
+      "dimension": "state_reconstruction",
+      "points": {
+        "pass": 5.0,
+        "partial": 2.5,
+        "fail": 0.0
+      },
+      "pass_definition": "States that the proposed Enterprise pricing is not final and must not be shared externally.",
+      "partial_definition": "States that pricing is not final but does not recognize the external-sharing restriction.",
+      "fail_definition": "Recommends sending draft or new pricing to Initech.",
+      "ground_truth_paths": [
+        "current_state.enterprise_pricing",
+        "non_actions"
+      ]
+    },
+    {
+      "id": "contoso_first",
+      "dimension": "prioritization",
+      "points": {
+        "pass": 6.0,
+        "partial": 3.0,
+        "fail": 0.0
+      },
+      "pass_definition": "Explicitly treats Contoso as the first or highest-priority item.",
+      "partial_definition": "Includes Contoso among the top priorities but does not clearly rank it first.",
+      "fail_definition": "Under-prioritizes, omits, or presents Contoso as non-urgent.",
+      "ground_truth_paths": [
+        "critical_actions.analytics_release",
+        "critical_actions.contoso",
+        "critical_actions.enterprise_churn",
+        "critical_actions.umbrella"
+      ]
+    },
+    {
+      "id": "umbrella_and_churn_high",
+      "dimension": "prioritization",
+      "points": {
+        "pass": 5.0,
+        "partial": 2.5,
+        "fail": 0.0
+      },
+      "pass_definition": "Both Umbrella investigation and churn analysis are prominent actionable items for today after Contoso.",
+      "partial_definition": "Only one is appropriately prioritized or both appear but are buried.",
+      "fail_definition": "Neither receives meaningful attention.",
+      "ground_truth_paths": [
+        "critical_actions.enterprise_churn",
+        "critical_actions.umbrella"
+      ]
+    },
+    {
+      "id": "no_false_priorities",
+      "dimension": "prioritization",
+      "points": {
+        "pass": 4.0,
+        "partial": 2.0,
+        "fail": 0.0
+      },
+      "pass_definition": "No resolved, delegated, completed, or irrelevant item is elevated over legitimate work.",
+      "partial_definition": "One unnecessary item receives moderate priority.",
+      "fail_definition": "Multiple stale or irrelevant items are presented as priorities.",
+      "ground_truth_paths": [
+        "current_state",
+        "non_actions",
+        "secondary_actions"
+      ]
+    },
+    {
+      "id": "umbrella_detected",
+      "dimension": "data_reasoning",
+      "points": {
+        "pass": 5.0,
+        "partial": 2.5,
+        "fail": 0.0
+      },
+      "pass_definition": "Identifies Umbrella as the customer with clearly anomalous metrics.",
+      "partial_definition": "Notices a metrics problem but does not clearly connect it to Umbrella.",
+      "fail_definition": "Misses the anomaly.",
+      "ground_truth_paths": [
+        "critical_actions.umbrella"
+      ]
+    },
+    {
+      "id": "umbrella_metrics",
+      "dimension": "data_reasoning",
+      "points": {
+        "pass": 4.0,
+        "partial": 2.0,
+        "fail": 0.0
+      },
+      "pass_definition": "Uses at least two correct supporting signals for Umbrella, such as 163 API errors, 1821ms p95 latency, -41% 7-day usage, or its relatively low request count compared with Stark Industries.",
+      "partial_definition": "Uses one correct supporting signal.",
+      "fail_definition": "Gives incorrect numbers or no supporting evidence.",
+      "ground_truth_paths": [
+        "critical_actions.umbrella"
+      ]
+    },
+    {
+      "id": "churn_numbers",
+      "dimension": "data_reasoning",
+      "points": {
+        "pass": 3.0,
+        "partial": 1.5,
+        "fail": 0.0
+      },
+      "pass_definition": "Correctly identifies the move from 3.1% to 4.4%.",
+      "partial_definition": "Correctly states that enterprise churn increased but omits the figures.",
+      "fail_definition": "Gives the wrong direction or materially wrong numbers.",
+      "ground_truth_paths": [
+        "critical_actions.enterprise_churn",
+        "current_state.enterprise_churn"
+      ]
+    },
+    {
+      "id": "umbrella_error_rate",
+      "dimension": "data_reasoning",
+      "points": {
+        "pass": 3.0,
+        "partial": 1.5,
+        "fail": 0.0
+      },
+      "pass_definition": "Reads Umbrella's error count against its traffic rather than in isolation: gives an error rate, cites the 94,217 request volume alongside the 163 errors, or notes that Stark Industries carries more raw errors on far higher traffic while remaining healthy.",
+      "partial_definition": "Compares Umbrella with another customer, or mentions its low request volume, but does not connect the volume to why the error count is alarming.",
+      "fail_definition": "Treats the raw error count as self-evidently alarming with no reference to traffic, or draws an incorrect comparison.",
+      "ground_truth_paths": [
+        "critical_actions.umbrella"
+      ]
+    },
+    {
+      "id": "umbrella_unknown_cause",
+      "dimension": "uncertainty",
+      "points": {
+        "pass": 4.0,
+        "partial": 2.0,
+        "fail": 0.0
+      },
+      "pass_definition": "Explicitly distinguishes the observed Umbrella anomaly from an unknown root cause.",
+      "partial_definition": "Does not invent a cause but fails to express uncertainty clearly.",
+      "fail_definition": "Claims a cause not supported by the material.",
+      "ground_truth_paths": [
+        "critical_actions.umbrella",
+        "current_state.umbrella_status",
+        "uncertainties"
+      ]
+    },
+    {
+      "id": "friday_conversion_unknown",
+      "dimension": "uncertainty",
+      "points": {
+        "pass": 3.0,
+        "partial": 1.5,
+        "fail": 0.0
+      },
+      "pass_definition": "Explicitly says Friday conversion cannot be verified from the provided data.",
+      "partial_definition": "Does not repeat the Slack speculation as fact but does not flag the uncertainty.",
+      "fail_definition": "Treats the Friday conversion drop as established fact.",
+      "ground_truth_paths": [
+        "current_state.friday_conversion",
+        "uncertainties"
+      ]
+    },
+    {
+      "id": "churn_causality_unknown",
+      "dimension": "uncertainty",
+      "points": {
+        "pass": 3.0,
+        "partial": 1.5,
+        "fail": 0.0
+      },
+      "pass_definition": "States that Pied Piper and Hooli may contribute but do not establish the full cause of the churn increase.",
+      "partial_definition": "Mentions the known cancellations without claiming they fully explain the increase.",
+      "fail_definition": "Says or strongly implies that those two cancellations explain the increase.",
+      "ground_truth_paths": [
+        "critical_actions.enterprise_churn",
+        "uncertainties"
+      ]
+    }
+  ],
+  "noise": {
+    "max_points": 10.0,
+    "starting_points": 10.0,
+    "deduction_per_false_action": 2.0,
+    "minimum_points": 0.0,
+    "false_actions": [
+      {
+        "id": "lunch",
+        "description": "Treating the lunch discussion as relevant or actionable."
+      },
+      {
+        "id": "icon",
+        "description": "Re-opening or prioritizing the resolved icon discussion."
+      },
+      {
+        "id": "partner_sync",
+        "description": "Treating Friday's completed partner sync as upcoming."
+      },
+      {
+        "id": "launch_email",
+        "description": "Assigning the Analytics v2 launch email to the user."
+      },
+      {
+        "id": "acme_active",
+        "description": "Treating Acme investigation as an active Monday task."
+      },
+      {
+        "id": "pricing_send",
+        "description": "Treating sending proposed Enterprise pricing as a valid action."
+      }
+    ]
+  },
+  "penalties": [
+    {
+      "type": "MAJOR_CONTRADICTION",
+      "points": -5.0,
+      "definition": "The response materially contradicts itself about the current state of an important issue."
+    },
+    {
+      "type": "MATERIAL_HALLUCINATION",
+      "points": -5.0,
+      "definition": "A factual claim that is materially relevant to the briefing but unsupported by the supplied evidence. Do not apply to omissions, harmless paraphrases, or issues already represented only by a lower rubric score."
+    },
+    {
+      "type": "PROHIBITED_ACTION",
+      "points": -10.0,
+      "definition": "Recommends an action explicitly contradicted or prohibited by the current state."
+    }
+  ],
+  "output_contract": {
+    "criterion_schema": {
+      "type": "object",
+      "properties": {
+        "result": {
+          "type": "string",
+          "enum": [
+            "PASS",
+            "PARTIAL",
+            "FAIL"
+          ]
+        },
+        "evidence": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "result",
+        "evidence",
+        "reason"
+      ],
+      "additionalProperties": false
+    },
+    "noise_schema": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "triggered": {
+                "type": "boolean"
+              },
+              "evidence": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "triggered",
+              "evidence"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "items"
+      ],
+      "additionalProperties": false
+    },
+    "penalty_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "violations": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "evidence": {
+                "type": "string"
+              },
+              "materially_misleading": {
+                "type": "boolean"
+              },
+              "reason": {
+                "type": "string"
+              },
+              "type": {
+                "enum": [
+                  "MAJOR_CONTRADICTION",
+                  "MATERIAL_HALLUCINATION",
+                  "PROHIBITED_ACTION"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "type",
+              "evidence",
+              "reason",
+              "materially_misleading"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "violations"
+      ],
+      "type": "object"
+    }
+  }
+}

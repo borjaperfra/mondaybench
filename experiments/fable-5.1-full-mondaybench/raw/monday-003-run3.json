@@ -1,0 +1,764 @@
+{
+  "record_type": "off_benchmark_sensitivity_run",
+  "not_a_benchmark_artifact": true,
+  "label": "M003_RUN3",
+  "scenario_id": "monday-002",
+  "rubric_version": "0.2",
+  "prompt_file": "monday-003.txt",
+  "prompt_sha256": "aaf788f309d955d2b427c86fe7d95d2bbf88575fde7306adcfd74b0ec4a4103f",
+  "route": "claude -p (Claude Code CLI 2.1.258), OAuth subscription",
+  "model": {
+    "requested": "claude-fable-5-1",
+    "served": "claude-fable-5-1",
+    "provider": "firstParty"
+  },
+  "generation": {
+    "system_prompt_requested": "You are a helpful assistant.",
+    "effort_requested": "high",
+    "temperature": null,
+    "top_p": null,
+    "route_max_output_tokens": 64000,
+    "tools": []
+  },
+  "timestamp_utc": "2026-09-02T08:17:26Z",
+  "usage": {
+    "input_tokens": 2,
+    "output_tokens": 7485,
+    "thinking_tokens": 4394,
+    "cache_read_input_tokens": 5227,
+    "cache_creation_input_tokens": 0
+  },
+  "performance": {
+    "ttft_ms": 5882.5,
+    "ttfa_ms": 62596.3,
+    "total_latency_ms": 101582.8,
+    "duration_api_ms": 101630
+  },
+  "economics": {
+    "cost_usd_route_reported": 0.37557675000000007,
+    "cost_basis": "list",
+    "models_billed": [
+      "claude-fable-5-1",
+      "claude-haiku-4-5-20251001"
+    ]
+  },
+  "finish_reason": "end_turn",
+  "is_error": false,
+  "num_turns": 1,
+  "response": "# Northstar — Monday 21 Sept, 09:10 execution plan\n\n## First: what's stale (correct before acting)\n\n| Tracker says | Reality (evidence) |\n|---|---|\n| \"Unblock Security review for SSO\" (Urgent) | **Done.** Maya closed SEC-4471 Friday 16:48, approved. Permission-check fixes inside scope need no re-review. Remove from checklist. |\n| \"Marcus — finish onboarding instrumentation before launch\" (Urgent) | **Not a blocker.** Julia confirmed Friday. Frees 3h of Marcus's week. |\n| \"Investigate broken Contoso exports\" | Friday's issue is a **cosmetic date-format request** for a Tuesday demo (Peter: not blocking). A **separate, real bug** appeared Monday 07:40: delegated admins get a scope error — this one is **contractual** (Anja, Tue 22 Sept 16:00 CET). |\n| \"Finish pricing page before packaging approval meeting\" | Committee accepts **mockups** and clears same-day if submitted **before 12:00**; no meeting to wait for. The page does not gate the submission. |\n| `contoso_permission_patch` → Marcus | Should move to **Daniel** (see below). |\n| Marcus — onboarding launch support | Moved to **Julia** on Friday. |\n\n---\n\n## 1. CRITICAL PATH\n\nEverything important this week hangs off **one item: Elena's billing schema migration**. It gates SSO, the Contoso compliance export, and the board revenue charts.\n\n**Main chain (Atlas SSO, due Wed 17:00):**\n\n```\nElena  schema migration     3h   Mon 09:30 → 12:30\nMarcus compat patch         4h   Mon 12:30 → 16:30   (nobody else can do this)\nQA     regression           2h   Mon 16:30 → 17:30 + Tue 09:00 → 10:00\nMarcus prod rollout         1h   Tue 13:00 → 14:00   (Marcus in Atlas session 09:00–13:00)\n```\n\n**Contoso contractual chain (due Tue 16:00 CET):**\n\n```\nElena  schema migration           Mon → 12:30\nDaniel permission patch     3.5h  Mon 12:30 → 16:00  (+0.5h Marcus walkthrough, done this morning)\nJulia  compliance export    1h    Mon 16:00 → 17:00\n```\n\nWhy Daniel, not Marcus: Marcus is the single point of failure on SSO. Using Daniel costs Marcus 30 minutes *during the morning he's idle anyway* instead of 2h off the SSO chain, and Daniel already knows the permission model from SCIM. Maya's ruling means no security re-review.\n\n---\n\n## 2. MY PLAN FOR TODAY (in order)\n\n| When | Action | Owner |\n|---|---|---|\n| 09:10 | **Tell Elena to start the migration now.** Nothing else matters more. | Elena |\n| 09:15 | Reassign `contoso_permission_patch` Marcus → Daniel in Rachel's log. Marcus + Daniel do the 30-min delegated-admin walkthrough **now**, while Marcus is waiting on schema. | Me / Marcus / Daniel |\n| 09:20 | Reply to **Anja** (cc CEO): confirm delivery Monday EOD, ahead of Tuesday 16:00 CET. Reply to **Peter**: DD/MM format ships today, before Tuesday's demo. | Me (or Noah) |\n| 09:25 | Clear the tracker: mark security review done, remove instrumentation from \"launch blocker,\" move onboarding support to Julia. Tell Marcus his 3h instrumentation hold is released — it goes *after* SSO rollout. | Me |\n| 09:30 | **Sarah: build packaging approval pack from mockups and submit before 12:00** (1.5h). Do not wait for the pricing page. | Sarah |\n| 09:30 | Julia: date-format change + fixtures (2h). Then hold 16:00–17:00 for the compliance export. | Julia |\n| 12:30 | Schema lands → Elena kicks off backfill (auto, done ~14:00) → Marcus starts compat patch → Daniel starts permission patch. | Elena / Marcus / Daniel |\n| 16:00 | Daniel's fix verified on staging by Sam → Julia produces and sends Contoso compliance file. | Sam / Julia |\n| 16:30 | Compat patch to QA. | Marcus → Sam |\n| EOD | Confirm to Laura/Noah: SSO tracking to Tuesday afternoon, a day ahead of commitment. | Me |\n\n---\n\n## 3. PARALLEL WORK (no waiting needed)\n\n- **Sarah**: packaging pack (before 12:00 today) → pricing page (3h, today/tomorrow; publish once Priya clears) → board pack non-revenue (4h). Revenue charts (2h) any time after ~14:00 today once backfill completes — no need to wait until Wednesday.\n- **Julia**: date-format fix (today AM), onboarding launch prep (2h, due Thu 12:00), compliance export (today 16:00).\n- **Marcus this morning**: Daniel walkthrough, prep Tuesday's Atlas session, read-only prep on the compat patch.\n- **Daniel**: 30-min runbook/permissions handover with Elena — schedule **Tuesday** as insurance in case anything needs re-running after she leaves Wednesday noon.\n\n---\n\n## 4. BLOCKERS & DEPENDENCIES\n\n| Blocked item | Blocked by | Status |\n|---|---|---|\n| SSO compat patch, Contoso permission patch, board revenue charts | Elena's schema migration | Real. Clears ~12:30 today if she starts now. |\n| SSO rollout | Marcus in Atlas session Tue 09–13 | Real, fixed. Costs ~3h of slack; still lands Tuesday. |\n| Security review | — | **Not a blocker** (stale). |\n| Onboarding launch | Instrumentation | **Not a blocker** (stale). |\n| Pricing page going public | Priya's committee | Unblock by submitting mockup-based pack before 12:00 today. |\n| Contoso permission patch owner | Marcus's load | Unblock by reassigning to Daniel. |\n\n---\n\n## 5. EARLIEST DELIVERY\n\n- **Enterprise SSO in production: Tuesday ~14:00** — roughly a full working day ahead of the Wednesday 17:00 commitment. Slack absorbs a QA surprise or a longer migration.\n- **Contoso compliance export: Monday ~17:00** — ~23h ahead of Tue 16:00 CET.\n- **Contoso date format: Monday AM** — a day ahead of the Tuesday demo.\n- **Pricing page public: Tuesday** (Monday if Sarah has bandwidth after the pack).\n- **Board pack: complete Tue/Wed**, well before Thu 10:00 / Friday board.\n\nEverything depends on the migration starting by ~09:30 today. Each hour of delay pushes both critical chains one-for-one.\n\n---\n\n## 6. RISKS / UNKNOWNS\n\n1. **Deploying the permission patch.** Nobody has said how it reaches production (separate deploy vs. bundled into the SSO rollout) or how long staging verification takes. If it can only ship with the SSO rollout, Contoso delivery slides to Tue ~14:00 — still inside the deadline, but tight. Confirm with Sam/Marcus this morning.\n2. **Merge conflicts.** Daniel's patch and Marcus's compat branch both sit on the account-mapping layer Elena is changing. Agree ordering/rebase before 12:30.\n3. **Compliance export format.** Julia's DD/MM change touches the same exporter. Nobody has said which format the auditor file should use. Ask Anja before producing it.\n4. **Can Northstar produce the file internally without the patch?** Julia ran the export on Friday. If she can generate the Contoso file from our side today, Anja's deadline is de-risked completely. Unverified — ask.\n5. **Elena's estimate is \"roughly\" 3h**, with no fallback for a migration failure before Wednesday noon other than the 30-min Daniel handover. Do the handover Tuesday regardless.\n6. **Daniel's 3.5h estimate** is on a module he touched two weeks ago, not his own. If he stalls, Marcus's fallback (2h) eats directly into SSO slack.\n7. **Sarah's inputs**: assumes mockups and a margin-impact summary exist or can be produced in 1.5h. Not confirmed.\n8. **\"16:00 CET\"** vs. our +02:00 timestamps — a possible one-hour ambiguity; the Monday delivery makes it moot but note it.\n9. **Who replies to Anja.** The CEO owns the account; Noah is on the ticket. Agree a single voice before 10:00 so Contoso gets one confirmation, not three.",
+  "event_trace": [
+    {
+      "t_ms": 672.0,
+      "type": "system",
+      "subtype": "init"
+    },
+    {
+      "t_ms": 675.1,
+      "type": "system",
+      "subtype": "status"
+    },
+    {
+      "t_ms": 1948.9,
+      "type": "rate_limit_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 5053.6,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 5882.3,
+      "type": "stream_event",
+      "subtype": null,
+      "block": "thinking"
+    },
+    {
+      "t_ms": 5882.5,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 5882.5,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 8173.7,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 8173.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 9676.4,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 9676.5,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 11185.1,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 11185.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 12691.0,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 12691.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 14211.7,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 14211.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 15700.0,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 15700.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 17199.3,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 17199.4,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 18696.9,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 18697.0,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 20199.3,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 20199.5,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 21825.0,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 21825.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 23324.8,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 23324.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 24872.3,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 24872.6,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 27079.1,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 27079.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 28578.9,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 28579.0,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 30077.1,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 30077.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 31615.7,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 31615.9,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 33075.2,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 33075.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 34579.0,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 34579.1,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 36084.2,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 36084.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 37572.5,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 37572.7,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 39154.8,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 39154.9,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 41108.6,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 41108.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 42251.6,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 42251.7,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 43636.8,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 43636.9,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 45266.6,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 45267.0,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 46638.9,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 46639.1,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 48139.2,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 48139.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 49699.2,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 49726.5,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 51199.4,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 51199.5,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 52867.9,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 52868.1,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 54951.0,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 54951.1,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 56450.9,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 56451.0,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 57949.6,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 57949.7,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 59513.0,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 59513.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 61012.5,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 61012.6,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 62589.9,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 62590.0,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 62591.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 62592.5,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 62595.6,
+      "type": "assistant",
+      "subtype": null
+    },
+    {
+      "t_ms": 62595.7,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 62595.9,
+      "type": "stream_event",
+      "subtype": null,
+      "block": "text"
+    },
+    {
+      "t_ms": 62596.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 63346.9,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 64101.7,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 64823.9,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 65574.4,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 66324.9,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 67076.9,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 67828.7,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 68575.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 69325.1,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 70080.6,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 70832.0,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 71646.0,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 72452.0,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 73269.4,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 73951.6,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 74703.7,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 75452.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 76202.9,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 76955.9,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 77703.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 78461.6,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 79278.0,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 79951.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 80703.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 81453.0,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 82206.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 82954.9,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 83704.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 84452.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 85203.0,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 86014.5,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 86765.4,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 87515.4,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 88267.7,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 89014.7,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 89766.4,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 90579.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 91328.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 92101.9,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 92832.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 93692.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 94413.5,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 95140.7,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 95896.5,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 96658.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 97394.4,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 98141.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 98896.9,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 99641.7,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 100514.7,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 101044.9,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 101055.5,
+      "type": "assistant",
+      "subtype": null
+    },
+    {
+      "t_ms": 101055.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 101103.5,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 101106.6,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 101108.5,
+      "type": "rate_limit_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 101114.3,
+      "type": "result",
+      "subtype": "success"
+    }
+  ],
+  "stderr_tail": ""
+}

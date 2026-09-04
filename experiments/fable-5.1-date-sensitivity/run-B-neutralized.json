@@ -1,0 +1,744 @@
+{
+  "record_type": "off_benchmark_sensitivity_run",
+  "not_a_benchmark_artifact": true,
+  "label": "RUN_B_NEUTRALIZED",
+  "scenario_id": "monday-002",
+  "rubric_version": "0.2",
+  "prompt_file": "monday002_neutralized.txt",
+  "prompt_sha256": "31e9a9d2a25d1dcbd08a97c6dd18aab61268f34f03c24f5b6bb923918d7a98d1",
+  "route": "claude -p (Claude Code CLI 2.1.258), OAuth subscription",
+  "model": {
+    "requested": "claude-fable-5-1",
+    "served": "claude-fable-5-1",
+    "provider": "firstParty"
+  },
+  "generation": {
+    "system_prompt_requested": "You are a helpful assistant.",
+    "effort_requested": "high",
+    "temperature": null,
+    "top_p": null,
+    "route_max_output_tokens": 64000,
+    "tools": []
+  },
+  "timestamp_utc": "2026-09-02T07:26:28Z",
+  "usage": {
+    "input_tokens": 2,
+    "output_tokens": 7649,
+    "thinking_tokens": 4195,
+    "cache_read_input_tokens": 0,
+    "cache_creation_input_tokens": 3852
+  },
+  "performance": {
+    "ttft_ms": 4995.5,
+    "ttfa_ms": 58256.0,
+    "total_latency_ms": 98614.4,
+    "duration_api_ms": 98681
+  },
+  "economics": {
+    "cost_usd_route_reported": 0.45951000000000003,
+    "cost_basis": "list",
+    "models_billed": [
+      "claude-fable-5-1",
+      "claude-haiku-4-5-20251001"
+    ]
+  },
+  "finish_reason": "end_turn",
+  "is_error": false,
+  "num_turns": 1,
+  "response": "# Monday 14 Sept, 09:07 — Enterprise Controls / Atlas week\n\n## 1. CURRENT STATE\n\n**Enterprise Controls release**\n- Build 2.9.4 passed staging (session-preservation test + Priya's Security verification, Fri 09:37). Friday production attempt failed on shard eu-03 before rollout opened; no customer impact.\n- Two recovery options on the table, Product (me) must choose by ~09:15:\n  - **A** — retry 2.9.4 with shard precheck, no code change, 20-min deploy, 8% session-reset risk. Policy path: deploy → 20-min Priya post-deploy check → 15-min Sam rollout open.\n  - **B** — 2.9.5-patch, code change, 45-min deploy, <1% risk. Policy path: 25-min Priya delta review → deploy → 20-min post-deploy check → 15-min Sam.\n- Hard constraints: Atlas rollout must **begin before 12:00**; Marcus (only deployer) 09:15–10:20; Priya 09:00–09:35 and 10:25–12:30; Sam and Daniel 09:00–12:30.\n- **No Maya approval gate** — she explicitly declined one (Thu 16:52) and deferred to Priya's policy + Sam's process. The \"Get Maya approval\" task is superseded.\n- Customer announcement: Sarah is out; **Daniel** holds Julia's final draft + Atlas recipient list and sends only after Sam confirms rollout is open.\n\n**Atlas** — renewal signed. Missing today's window is not a renewal risk, but pushes migration to Thursday and creates exec noise. The \"confirm launch at 10:30\" task is stale: no path delivers rollout at 10:30 (Priya is unavailable 09:35–10:25, so verification can't start before 10:25).\n\n**Zenith** — fully resolved: fix validated, €96k ARR / 24 months countersigned Fri. Back to normal cadence. \"Call Zenith about renewal risk\" task is stale.\n\n**Pricing** — Thursday's numbers obsolete; pinned `enterprise-pricing-v4-final.xlsx` is **not authoritative**. Internal scenario only: €2,500 platform / 40 seats / €55 extra seat. Nothing external; no announcement date exists.\n\n**Orion** — SCIM status unconfirmed: admin says it works, Rollout Bot shows `org_71A scim_enabled=false`, but ticket cites `org_17A`. Sam: no further status to customer until org ID confirmed and live flag read.\n\n**Board pack / expansion** — Maya needs the September expansion reconciliation by 11:00 (pack locks 11:30). Target €180k, expected €126k, gap €54k. Arithmetic vs. causes must be separated.\n\n## 2. MY PLAN FOR TODAY\n\n**Decision: Option A (2.9.4 retry with shard precheck).** Reasoning: Option B is not viable today — the 25-min delta review cannot complete before Priya goes offline at 09:35 (Marcus can't even submit the diff before 09:15), finishes at 10:30 at the earliest, and Marcus (sole deployer) leaves at 10:20, so the 45-min deploy has no one to run it. Option A needs no delta review (exact staging-verified build), keeps Marcus online 45 min past deploy completion as a safety margin, and opens rollout ~1 hour inside the 12:00 window. Accept the 8% session-reset risk explicitly and surface it to Sam/Laura.\n\n| Time | Action | Owner |\n|---|---|---|\n| **09:07–09:15** | Post decision in #enterprise-launch: Option A, no delta review required per Priya's policy, confirm Priya's post-deploy verification slot 10:25. Ping Marcus, Priya, Sam, Daniel. | Me |\n| **09:15–09:35** | Shard precheck (eu-03) + production deploy 2.9.4. I monitor. | Marcus |\n| **09:35–10:20** | Marcus on standby for any deploy issues (last chance to fix today). If deploy failed and isn't recoverable by ~10:00 → call it: migration slips to Thursday, Laura tells Atlas immediately. | Marcus / me |\n| **~09:40** | Once deploy confirmed healthy: correct the Atlas expectation via Laura — rollout starts **~11:00** (not 10:30), inside their window; mention the session-reset possibility. | Me → Laura |\n| **09:40–10:40** | Draft and send expansion reconciliation to Maya (arithmetic only, see §3). Send by **10:45**, ahead of 11:00. | Me |\n| **09:40–10:20 (parallel)** | Ask Laura/Sam to confirm Orion's org ID from the ticket and read the live SCIM flag for that org. No customer reply until done. | Laura / Sam |\n| **10:25–10:45** | Post-deploy verification. | Priya |\n| **10:45–11:00** | Open rollout + sanity check; Sam posts confirmation in rollout channel. | Sam |\n| **~11:00** | On Sam's confirmation, Daniel sends Atlas customer announcement. I do not send it. | Daniel |\n| **11:00–12:00** | Buffer. Confirm Atlas migration has begun. | Sam / Laura |\n| **Afternoon** | Globex escalation (G-441), Wonka/Soylent CS discovery asks, Acme renewal status check, Orion reply once flag confirmed. | Me + Laura |\n\n## 3. CUSTOMER / REVENUE PRIORITIES\n\n**Expansion reconciliation for Maya (data-established arithmetic, €54k gap fully accounted):**\n- Wayne −€18k (18k→0): moved to October by **signed amendment**. Not lost.\n- Globex −€12k (12k→0): **pending procurement** (contract note).\n- Soylent −€10k (28k→18k): **no stated cause** in contract data.\n- Wonka −€14k (24k→10k): **no stated cause** in contract data.\n- Stark: on plan (32k→32k). Acme: 0→0, no expansion in play.\n- Total: 18+12+10+14 = **€54k**. Wayne + Globex = €30k (as previously reported); Soylent + Wonka = the remaining €24k.\n- Label separately as *hypotheses, not established*: Soylent/Wonka usage and admin-login declines and Soylent's \"slower onboarding\" ticket coincide with the reductions but no customer has stated a cause.\n\n**Accounts needing attention today:**\n1. **Atlas** — execution of today's migration (above).\n2. **Globex** — the genuine risk: renewal in **18 days**, €12k expansion stuck in procurement, **three open tickets** including high-sev **G-441 (admins can't complete SSO setup)**, admin logins −61%. Metrics + tickets + near renewal align. Escalate G-441 with engineering today; ask Laura for procurement status.\n3. **Wonka** — renewal 31 days, expansion more than halved, usage −35%, logins −49%, **no tickets and no explanation**. Needs a CS discovery call this week — not a board-pack narrative.\n4. **Soylent** — renewal 44 days, expansion −€10k, usage −22%, SO-19 (slower onboarding). Discovery + resolve SO-19.\n5. **Acme** — usage −45% is **explained** (approved shift to annual batch processing, expected 40–50% interactive drop) → not a problem. Only action: confirm renewal paperwork is progressing given **9 days** to renewal.\n\n**Not a priority:** Zenith (closed, normal cadence), Stark (on plan, low-sev doc question), Wayne (signed amendment).\n\n## 4. DO NOT DO\n\n- **Do not seek Maya's approval** for Enterprise Controls — she refused an executive gate; follow Priya's policy and Sam's process.\n- **Do not choose Option B today** — infeasible within Priya/Marcus availability; would force Thursday.\n- **Do not skip Priya's post-deploy verification** or let Sam open rollout before it completes.\n- **Do not confirm 10:30 to Atlas** — stale; correct time ~11:00.\n- **Do not call Zenith about renewal risk** — signed €96k/24 months, resolved.\n- **Do not send the customer announcement myself** — Daniel owns it, only after Sam confirms rollout is open; not before rollout begins.\n- **Do not send pricing to Initech procurement** or any external party — workbook under revision, pinned v4-final not authoritative, no announcement date.\n- **Do not reply to Orion** on SCIM status until org ID (71A vs 17A) is confirmed and the live flag read.\n- **Do not invent causes for Soylent/Wonka** in the board pack; don't treat Acme's usage drop or Wayne's zero as problems.\n- **Do not quote Thursday's or Daniel's internal scenario pricing** externally.\n\n## 5. UNCLEAR / MUST VERIFY\n\n- **Orion org ID** — is it org_71A or org_17A, and what is the live `scim_enabled` flag for the correct org? (Ticket vs CRM disagreement.)\n- **Whether Atlas has already been told 10:30** — task implied I'd say so at 09:45; confirm with Laura nothing went out and that they're fine with a ~11:00 start.\n- **Should Atlas be warned about the 8% session-reset risk** in Option A? Ask Sam/Laura before the migration begins.\n- **Globex procurement** — expected sign-off date for the €12k, and whether G-441 is blocking it. No evidence either way.\n- **Acme renewal (9 days)** — contract shows \"active,\" not \"renewed\"; is the paperwork actually in motion?\n- **Soylent/Wonka reductions** — causes genuinely unknown; requires direct customer conversation, not inference.\n- **Fallback if Option A fails before 10:20** — no evidence of a second deployer; confirm with Sam whether anyone besides Marcus can deploy, otherwise Thursday is the only fallback.",
+  "event_trace": [
+    {
+      "t_ms": 672.4,
+      "type": "system",
+      "subtype": "init"
+    },
+    {
+      "t_ms": 675.3,
+      "type": "system",
+      "subtype": "status"
+    },
+    {
+      "t_ms": 2030.2,
+      "type": "rate_limit_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 4164.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 4994.3,
+      "type": "stream_event",
+      "subtype": null,
+      "block": "thinking"
+    },
+    {
+      "t_ms": 4995.1,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 4995.5,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 6607.7,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 6607.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 8073.4,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 8073.6,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 9636.7,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 9636.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 11889.8,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 11890.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 13396.1,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 13396.6,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 14890.0,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 14890.1,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 16463.0,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 16463.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 18710.7,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 18710.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 20948.9,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 20949.0,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 22510.7,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 22510.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 24071.1,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 24071.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 25571.5,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 25571.6,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 27071.2,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 27071.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 28571.4,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 28571.6,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 30071.0,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 30071.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 31573.5,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 31573.6,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 33071.6,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 33072.1,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 34570.0,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 34570.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 36070.6,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 36071.1,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 37568.8,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 37569.0,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 39098.2,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 39098.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 40578.5,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 40578.6,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 42818.8,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 42819.0,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 44320.0,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 44320.1,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 45818.9,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 45819.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 47382.1,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 47382.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 48944.9,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 48970.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 50506.9,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 50507.0,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 52011.9,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 52012.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 53506.4,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 53506.9,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 55007.1,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 55007.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 56569.6,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 56569.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 58204.9,
+      "type": "system",
+      "subtype": "thinking_tokens"
+    },
+    {
+      "t_ms": 58205.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 58211.5,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 58244.1,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 58254.8,
+      "type": "assistant",
+      "subtype": null
+    },
+    {
+      "t_ms": 58255.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 58255.6,
+      "type": "stream_event",
+      "subtype": null,
+      "block": "text"
+    },
+    {
+      "t_ms": 58256.0,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 59007.9,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 59808.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 60509.9,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 61261.5,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 62010.7,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 62758.0,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 63511.5,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 64271.7,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 65009.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 65759.5,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 66508.9,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 67285.6,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 68011.9,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 68760.7,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 69508.9,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 70258.7,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 71014.6,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 71761.7,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 72510.4,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 73260.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 74009.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 74759.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 75511.4,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 76281.9,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 77029.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 77759.9,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 78509.7,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 79260.4,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 80019.1,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 80760.4,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 81512.7,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 82290.5,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 83074.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 83823.9,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 84574.9,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 85324.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 86074.9,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 86824.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 87574.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 88323.6,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 89075.7,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 89824.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 90594.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 91323.7,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 92073.2,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 92824.4,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 93573.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 94393.8,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 95138.4,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 95887.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 96637.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 97387.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 97966.0,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 97976.2,
+      "type": "assistant",
+      "subtype": null
+    },
+    {
+      "t_ms": 97976.3,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 97980.0,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 97980.1,
+      "type": "stream_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 97981.2,
+      "type": "rate_limit_event",
+      "subtype": null
+    },
+    {
+      "t_ms": 97986.7,
+      "type": "result",
+      "subtype": "success"
+    }
+  ],
+  "stderr_tail": ""
+}

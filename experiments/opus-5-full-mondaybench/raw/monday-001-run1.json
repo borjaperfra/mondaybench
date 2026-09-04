@@ -1,0 +1,161 @@
+{
+  "record_type": "off_benchmark_run",
+  "not_a_benchmark_artifact": true,
+  "route": "claude_code_subscription",
+  "route_classification": "PROVISIONAL / OFF-BENCHMARK / CLAUDE CODE ROUTE",
+  "scenario": "monday-001",
+  "run": 1,
+  "requested_model": "claude-opus-5",
+  "generated_at_utc": "2026-09-02T11:32:38Z",
+  "prompt_sha256": "ed4d7beb1d7d1029c36eb8533e449027e0dc1a1047f8a38951a91781a0a5e398",
+  "system_prompt": "You are a helpful assistant.",
+  "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+  "system_prompt_as_sent_note": "NOT the frozen bytes - the Agent SDK preamble is prepended by the route. See audits/monday-opus5/route-audit.md.",
+  "cli_flags": [
+    "-p",
+    "--model",
+    "claude-opus-5",
+    "--system-prompt",
+    "You are a helpful assistant.",
+    "--tools",
+    "",
+    "--effort",
+    "high",
+    "--output-format",
+    "stream-json",
+    "--include-partial-messages",
+    "--verbose",
+    "--safe-mode",
+    "--setting-sources",
+    "",
+    "--strict-mcp-config",
+    "--disable-slash-commands",
+    "--no-session-persistence"
+  ],
+  "env": {
+    "DISABLE_NON_ESSENTIAL_MODEL_CALLS": "1"
+  },
+  "temperature": null,
+  "top_p": null,
+  "temperature_note": "not settable and not observable on this route; claude-opus-5 is in providers/anthropic_native.NO_TEMPERATURE_MODELS so the official adapter would also drop it",
+  "response_text": "## Monday Briefing — 09:07\n\n---\n\n### 1. What happened while you were away\n\n**Thursday**\n- **Acme P1 incident:** `/v2/events` returning intermittent 500s after the 2.18.0 deploy. Cause: a new worker config exhausting the connection pool under concurrency. Marcus rolled it back by 09:48; error rates back to baseline and stable by 11:57. Rachel Kim (Acme) confirmed recovery by email at 12:37. Marcus owns the incident write-up.\n- QA found two regressions in Analytics v2 saved reports (one affecting exports, no data loss).\n\n**Friday**\n- **Analytics v2 release moved from Monday → Wednesday.** Decided in Product & Eng weekly, approved by Daniel (\"ship Wednesday cleanly\"). Sam owns release coordination; **Julia has taken full ownership of the launch email — nothing needed from you** (confirmed in Slack and by email).\n- **Contoso renewal (€72k ARR):** commercial terms agreed. One blocker remains — legal needs written confirmation that admin-deleted data is also removed from disaster-recovery backups within the DPA retention period. **Requested by 11:00 today**, otherwise signature slips to their next approval window. Noah escalated it to you and suggests Marcus has the answer.\n- **Enterprise churn:** moved 3.1% → 4.4%. Known cancellations: Pied Piper (vendor consolidation post-acquisition) and Hooli (low adoption). It was *not* established whether these fully explain the movement. Daniel wants a clearer breakdown before Tuesday's board meeting.\n- **Enterprise pricing:** new tiers reviewed but still a proposal, numbers being modeled. Explicitly confidential — not to be shared with customers. Next review Wednesday.\n- Design settled on keeping the existing outlined \"spark\" icon for this release.\n- Partner sync: nothing major, still targeting the October integration.\n- Julia and Noah both thought conversion looked bad on Friday; neither verified it.\n- Finance weekly snapshot: New ARR €31k, Expansion €18k, Churned €27k, Pipeline created €214k, cash in line with plan.\n\n---\n\n### 2. Requires your attention today (in order)\n\n1. **Contoso data-retention confirmation — deadline 11:00 (under 2 hours).** Highest-value, hardest-deadline item. Ping Marcus now for the actual backup deletion behaviour, then get a written answer to Sarah Mitchell via Noah. If Marcus can't confirm in time, reply to Sarah before 11:00 with a concrete commitment time rather than going silent. Do not guess at the behaviour.\n2. **Umbrella looks like it's in trouble — nobody has raised it.** In the 2026-08-31 metrics: 163 API errors (vs. single digits for most accounts), p95 latency 1,821ms (~6x everyone else), and usage down 41% over 7 days, on €54k ARR. This is the largest unflagged signal in the data and directly relevant to the churn question. Get engineering to look at the latency/errors and Customer Success to check the account today.\n3. **Enterprise churn breakdown for Daniel — board meeting is Tuesday.** Task is due Tuesday, so today is the working day. Need: which enterprise logos churned in the period, their ARR, and whether Pied Piper + Hooli account for the full 3.1 → 4.4 move or whether there's a broader pattern (Umbrella's usage drop is a candidate). Send Daniel a draft today so he isn't reading it for the first time tomorrow.\n4. **Reply to Mark Benson (Initech).** He's asking for the new Enterprise tiers, \"even a rough version,\" for his quarterly budgeting. Pricing is confidential and unapproved — decline to share numbers, tell him when a decision is expected, and loop in Noah. Worth doing today so he isn't left waiting mid-budget cycle.\n5. **Analytics v2 launch readiness** — your task said \"Monday\" but the release is now Wednesday. Reduced to: confirm with Sam that the export fix and second regression have cleared the new QA pass. Do *not* re-open the launch email; Julia owns it.\n6. **Housekeeping (5 minutes):** close \"Investigate Acme API failures\" (resolved by Marcus) and \"Prepare Analytics v2 launch email\" (reassigned to Julia). Both are still showing open/urgent and distorting your list.\n7. **Confirm Globex Q3 session with Elena** — she asked to move Tuesday → Thursday afternoon; low effort, and Tuesday is tomorrow, so answer today even though the task is due Wednesday. Propose a specific Thursday time.\n8. **Review Q3 research survey** — overdue from Friday, lowest priority. Push to later in the week if today fills up.\n\n---\n\n### 3. Important to know, no action needed\n\n- Acme incident is closed and the customer has confirmed recovery. Marcus owns documentation.\n- Analytics v2 launch email is fully Julia's; she'll have a draft before Tuesday.\n- Release date change is decided and approved — no need to reopen it.\n- Icon decision made (outlined, existing).\n- Contoso commercial terms are agreed; only the legal/data-retention point is open.\n- Next pricing review is Wednesday; Daniel owns the pricing task.\n- Partner integration still on track for October.\n- Finance snapshot: net new ARR positive (+€22k before pipeline), cash on plan.\n- Website customer logos is Julia's task.\n\n---\n\n### 4. Unclear / needs more information\n\n- **The actual answer to Contoso's question.** Nobody in the material states how deletion propagates to DR backups. This must come from Marcus — it can't be inferred from anything provided.\n- **Whether Pied Piper + Hooli explain the churn move.** No ARR figures or logo counts for the churned accounts, and no denominator, so the 3.1 → 4.4 shift can't be reconciled from what's here. The €27k churned ARR in the Finance snapshot is a weekly figure and may or may not relate to these two accounts.\n- **Umbrella's situation is completely unexplained.** The metrics are a single day (2026-08-31) with no history, so I can't tell whether this is a new failure, a migration, an outage, or a customer that has already partially left.\n- **The Friday conversion drop is unverified.** No conversion or funnel data was provided — only two people's impressions. Needs an actual look at the dashboard before treating it as real or as noise.\n- **Status of the second Analytics v2 regression.** Only the export fix is described as \"in progress\"; the other regression's state isn't stated.\n- **Globex:** Elena said \"Thursday afternoon\" with no specific time, and didn't say which Thursday beyond \"early next week is fine for confirming.\"\n- **Launch email screenshot:** Thursday's open question about old vs. new dashboard navigation was never resolved in writing. Julia owns it, but worth a one-line check since the extra time may change the answer.",
+  "response_chars": 6513,
+  "latency_ms": 43345.7,
+  "ttft_ms": 3944.1,
+  "ttfa_ms": 12436.7,
+  "stderr": "",
+  "served_model": "claude-opus-5",
+  "served_model_key": "claude-opus-5",
+  "provider": "firstParty",
+  "cost_basis": "list",
+  "context_window": 1000000,
+  "max_output_tokens": 64000,
+  "input_tokens": 2,
+  "output_tokens": 3118,
+  "reasoning_tokens": 734,
+  "cache_read_input_tokens": 0,
+  "cache_creation_input_tokens": 4831,
+  "cost_usd_route_reported": 0.12627,
+  "model_usage_all": {
+    "claude-haiku-4-5-20251001": {
+      "inputTokens": 4045,
+      "outputTokens": 15,
+      "cacheReadInputTokens": 0,
+      "cacheCreationInputTokens": 0,
+      "webSearchRequests": 0,
+      "costUSD": 0.00412,
+      "contextWindow": 200000,
+      "maxOutputTokens": 32000,
+      "thinkingTokens": 0,
+      "canonicalModel": "claude-haiku-4-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    },
+    "claude-opus-5": {
+      "inputTokens": 2,
+      "outputTokens": 3118,
+      "cacheReadInputTokens": 0,
+      "cacheCreationInputTokens": 4831,
+      "webSearchRequests": 0,
+      "costUSD": 0.12627,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 64000,
+      "thinkingTokens": 734,
+      "canonicalModel": "claude-opus-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "auxiliary_models": [
+    "claude-haiku-4-5-20251001"
+  ],
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 4831,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 3118,
+    "output_tokens_details": {
+      "thinking_tokens": 734
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 4831,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 3118,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 4831,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 4831
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "stop_reason": "end_turn",
+  "terminal_reason": "completed",
+  "finish_reason": "end_turn",
+  "is_error": false,
+  "subtype": "success",
+  "api_error_status": null,
+  "num_turns": 1,
+  "route_ttft_ms": 2475,
+  "route_ttfa_ms": 11723,
+  "duration_api_ms": 43020,
+  "total_cost_usd_including_auxiliary": 0.13039,
+  "session_id": "5e0e0d1b-ce13-457f-a4a1-3fd6085b82e3",
+  "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+      "background": 0,
+      "foreground": 0,
+      "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+      "parent": 0,
+      "user": 0,
+      "system": 0
+    },
+    "refused": {
+      "depth_limit": 0,
+      "concurrency_limit": 0,
+      "budget": 0
+    },
+    "by_type": {}
+  }
+}

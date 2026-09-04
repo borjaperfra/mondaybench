@@ -1,0 +1,111 @@
+{
+  "record_type": "route_resolution_preflight",
+  "not_a_benchmark_artifact": true,
+  "scenario": "monday-002",
+  "requested_model": "Claude Fable 5.1",
+  "requested_model_id_official": "claude-fable-5-1",
+  "probed_at_utc": "2026-09-02T06:45:00Z",
+  "note": "Second preflight pass. The first pass tested only the OpenAI-compatible gateways. This pass tests the Claude Code subscription route, which is the only route that reaches Fable 5.1 at all.",
+
+  "gateway_reverification": {
+    "probed_at_utc": "2026-09-02T06:45:50Z",
+    "client": "mondaybench.providers.openai_compatible.OpenAICompatibleProvider (the harness's own adapter, httpx)",
+    "note": "A raw urllib probe of the same endpoints returns Cloudflare 403 'error code: 1010' and is not valid evidence. Only the harness adapter's client is used here.",
+    "helmcode": {
+      "claude-fable-5-1":          {"http": 401, "type": "team_model_access_denied"},
+      "claude-fable-5.1":          {"http": 401, "type": "team_model_access_denied"},
+      "claude-fable-5-1-20260501": {"http": 401, "type": "team_model_access_denied"},
+      "claude-fable-51":           {"http": 401, "type": "team_model_access_denied"},
+      "fable-5.1":                 {"http": 401, "type": "team_model_access_denied"},
+      "claude-fable-5":            {"http": 500, "type": "credits_exhausted"}
+    },
+    "nan": {
+      "claude-fable-5-1": {"http": 401, "type": "auth_error"},
+      "claude-fable-5":   {"http": 401, "type": "auth_error"}
+    },
+    "conclusion": "Unchanged from the first pass. No Fable 5.1 on either gateway under any of five spellings; the allowlist the 401 enumerates contains claude-fable-5 and no 5.1. claude-fable-5 itself is blocked by credit exhaustion."
+  },
+
+  "subscription_route": {
+    "transport": "claude -p (Claude Code CLI 2.1.258), OAuth subscription auth, no ANTHROPIC_API_KEY",
+    "probes": [
+      {
+        "probe": "agent-tool subagent, model=fable",
+        "self_reported_model_id": "claude-fable-5-1",
+        "self_reported_system_prompt": "Claude Code agent system prompt (Agent SDK subagent variant) with tool definitions, environment info, scratchpad directory, git status, and injected user memory/CLAUDE.md context",
+        "tools_available": true,
+        "sampling_params_visible": false,
+        "usage_visible": false,
+        "self_reported_effort": "reasoning-effort hint of 25 present in context (low-to-moderate), NOT the canonical default of high",
+        "smoke_answer_correct": true,
+        "subagent_tokens": 35221,
+        "verdict": "unusable: wrong effort, wrong system prompt, tool access to the scenario's own ground truth, nothing observable"
+      },
+      {
+        "probe": "claude -p, hardened flags, trivial arithmetic",
+        "command_flags": ["-p", "--model claude-fable-5-1", "--system-prompt \"You are a helpful assistant.\"", "--tools \"\"", "--effort high", "--output-format json", "--safe-mode", "--setting-sources \"\"", "--strict-mcp-config", "--disable-slash-commands", "--no-session-persistence"],
+        "prompt": "What is 17 * 23? Reply with just the number.",
+        "result": "391",
+        "correct": true,
+        "stop_reason": "end_turn",
+        "usage": {"input_tokens": 277, "output_tokens": 3, "cache_creation_input_tokens": 0, "cache_read_input_tokens": 0, "thinking_tokens": 0},
+        "modelUsage": {
+          "claude-fable-5-1": {"inputTokens": 277, "outputTokens": 3, "costUSD": 0.00292, "contextWindow": 1000000, "maxOutputTokens": 64000, "thinkingTokens": 0, "canonicalModel": "claude-fable-5-1", "provider": "firstParty", "costBasis": "list"},
+          "claude-haiku-4-5-20251001": {"inputTokens": 907, "outputTokens": 11, "costUSD": 0.000962, "note": "harness auxiliary call, not part of the answer; removed by DISABLE_NON_ESSENTIAL_MODEL_CALLS=1"}
+        },
+        "total_cost_usd": 0.003882,
+        "ttft_ms": 5081,
+        "duration_api_ms": 5944
+      },
+      {
+        "probe": "claude -p, same flags + DISABLE_NON_ESSENTIAL_MODEL_CALLS=1, one-character prompt",
+        "prompt": "X",
+        "usage": {"input_tokens": 261, "output_tokens": 43, "thinking_tokens": 0},
+        "modelUsage_keys": ["claude-fable-5-1"],
+        "finding": "auxiliary haiku call eliminated. 261 input tokens for a 6-token system prompt plus a 1-token user turn establishes a fixed residual context of roughly 254 tokens that --system-prompt does not replace."
+      },
+      {
+        "probe": "claude -p, same flags, verbatim-echo of all injected context",
+        "usage": {"input_tokens": 363, "thinking_tokens": 152},
+        "system_prompt_actually_sent": "You are a Claude agent, built on Anthropic's Claude Agent SDK.You are a helpful assistant.",
+        "injected_into_first_user_turn": "<system-reminder> block carrying: # userEmail (bperez@helmcode.com) and # currentDate 'Today's date is 2026-09-02.'",
+        "finding": "The frozen system prompt is prefixed by an unremovable Agent SDK preamble, and a system-reminder carrying the REAL date is injected into the user turn. monday-002 sets current_time 2026-09-14T09:07:00+02:00."
+      },
+      {
+        "probe": "claude -p with CLAUDE_CODE_SIMPLE=1 (the --bare mode that would strip the injected context)",
+        "result": "Not logged in - Please run /login",
+        "usage": {"input_tokens": 0},
+        "finding": "--bare / CLAUDE_CODE_SIMPLE=1 refuses OAuth by design and requires ANTHROPIC_API_KEY. That key is empty and spending Anthropic API credit is a hard project rule violation. So the injected context cannot be removed on any route that reaches the model."
+      }
+    ],
+    "observability_summary": {
+      "model_identity": "OBSERVABLE - modelUsage echoes served model claude-fable-5-1, canonicalModel claude-fable-5-1, provider firstParty",
+      "input_tokens": "OBSERVABLE",
+      "output_tokens": "OBSERVABLE",
+      "cache_read_tokens": "OBSERVABLE",
+      "cache_write_tokens": "OBSERVABLE",
+      "thinking_tokens": "OBSERVABLE - output_tokens_details.thinking_tokens; 152 on the echo probe, 0 on trivial arithmetic, consistent with adaptive thinking",
+      "finish_reason": "OBSERVABLE - stop_reason end_turn",
+      "cost": "OBSERVABLE - costUSD per model, costBasis list",
+      "max_output_tokens": "OBSERVABLE - 64000 (route ceiling; the model's API maximum is 128000)",
+      "effort": "SETTABLE (--effort high) but NOT echoed back",
+      "temperature": "NOT SETTABLE, NOT OBSERVABLE",
+      "top_p": "NOT SETTABLE, NOT OBSERVABLE",
+      "system_prompt": "NOT CONTROLLABLE - Agent SDK preamble is prepended and cannot be removed",
+      "user_turn_bytes": "NOT CONTROLLABLE - a system-reminder is injected, carrying the real date"
+    }
+  },
+
+  "pricing_verified": {
+    "source": "claude-api skill, Current Models table (cached 2026-06-24); cross-checked against the route's own costUSD",
+    "input_per_million_usd": 10.0,
+    "output_per_million_usd": 50.0,
+    "check": "277/1e6*10 + 3/1e6*50 = 0.00292, exactly the costUSD the route reported for that call"
+  },
+
+  "preflight_spend_usd": {
+    "claude_cli_probes": 0.0095,
+    "note": "approximate; the agent-tool probe reported 35221 subagent tokens without a USD figure. Gateway probes cost nothing - every one was refused.",
+    "not_charged_to_the_benchmark": true
+  }
+}
