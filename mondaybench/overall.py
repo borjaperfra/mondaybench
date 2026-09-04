@@ -47,6 +47,11 @@ STATUS_DRAFT = "draft"
 STATUS_RELEASED = "released"
 
 
+# CSV rows are terminated with LF, not the csv module's default CRLF, so a
+# board written on Windows hashes the same as one written anywhere else.
+LF = "\n"
+
+
 class OverallError(Exception):
     """The Overall leaderboard cannot be built from what is on disk.
 
@@ -89,6 +94,12 @@ class OverallRelease:
     # eight-model board is published as v2.1. Same scenarios, same arithmetic,
     # more competitors.
     revision: int = 0
+    # Which SUITE release this Overall aggregates. None means v1.0, whose
+    # scenario boards sit at their original paths. A later suite publishes its
+    # boards under `leaderboard/v<version>/`, and an Overall that named the same
+    # scenarios but read a different suite's boards would be a different claim
+    # wearing the same number - so the version travels with the release.
+    suite_version: str | None = None
 
     @property
     def scenario_ids(self) -> list[str]:
@@ -205,6 +216,8 @@ def load_releases(
             revision=revision,
             scenarios=scenarios,
             aggregation=str(raw.get("aggregation", AGGREGATION_ARITHMETIC_MEAN)),
+            suite_version=(str(raw["suite_version"]) if raw.get("suite_version") is not None
+                           else None),
             status=str(raw.get("status", STATUS_DRAFT)),
             label=raw.get("label"),
             note=raw.get("note"),
@@ -263,13 +276,15 @@ def validate_release(release: OverallRelease) -> list[str]:
 # --------------------------------------------------------------------------
 
 
-def load_scenario_leaderboard(scenario_id: str, root: Path | None = None) -> dict[str, Any] | None:
+def load_scenario_leaderboard(
+    scenario_id: str, root: Path | None = None, suite_version: str | None = None
+) -> dict[str, Any] | None:
     """The published leaderboard payload for one scenario, or None if absent.
 
     Reads the canonical JSON, never the Markdown: the Markdown is a rendering
     and parsing it would make the Overall score depend on a presentation choice.
     """
-    path = leaderboard_dir(scenario_id, root) / "leaderboard.json"
+    path = leaderboard_dir(scenario_id, root, suite_version) / "leaderboard.json"
     if not path.is_file():
         return None
     return json.loads(path.read_text(encoding="utf-8"))
@@ -364,7 +379,7 @@ def build_overall(
 
     payloads: dict[str, dict[str, Any]] = {}
     for pin in release.scenarios:
-        payload = load_scenario_leaderboard(pin.id, root)
+        payload = load_scenario_leaderboard(pin.id, root, release.suite_version)
         problems = check_scenario_payload(pin, payload)
         blockers.extend(problems)
         if payload is not None and not problems:
@@ -416,6 +431,9 @@ def build_overall(
         # v0/v1/v2 stay byte-reproducible from this code.
         **({"overall_revision": release.revision, "overall_slug": release.slug}
            if release.revision else {}),
+        # Emitted only when the release names one, so v0/v1/v2 stay
+        # byte-reproducible from this code.
+        **({"suite_version": release.suite_version} if release.suite_version else {}),
         "label": release.label,
         "status": release.status,
         "aggregation": release.aggregation,
@@ -509,8 +527,15 @@ def write_overall(
     )
 
     csv_path = directory / f"{stem}.csv"
+    # newline="" stops the file object translating; the explicit LF line
+    # terminator stops csv.writer emitting its default CRLF. Both are needed:
+    # without the second, a CSV written on Windows carries CRLF, hashes
+    # differently from the same file written on Linux, and trips the
+    # repository's own released-artifact invariant. The v1.0 CSVs read as LF
+    # only because .gitattributes normalises them on checkout, which does
+    # nothing for a file that has not been committed yet.
     with csv_path.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.writer(handle)
+        writer = csv.writer(handle, lineterminator=LF)
         header = ["Rank", "Model", "Monday Score"]
         header += [s.replace("monday-", "#") for s in release.scenario_ids]
         header += ["Scenario mean", "Scenario min", "Scenario max", "Scenario range",

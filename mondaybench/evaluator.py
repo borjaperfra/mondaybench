@@ -13,16 +13,37 @@ from typing import Any
 
 from .config import EvaluatorConfig, repo_root
 from .deterministic import find_disagreements, run_checks
+from .contract import (
+    CONTRACT_SCHEMA_VERSION,
+    judge_contract,
+    judge_contract_fingerprint,
+)
 from .judge import Judge, judge_prompt_fingerprint
 from .scenarios import Scenario
 from .schemas import Evaluation, JudgeRecord
 from .scoring import build_breakdown
 
 
+def evaluations_root(root: Path | None = None, suite_version: str | None = None) -> Path:
+    """Where evaluations for a suite version live.
+
+    v1.0 has no version segment - its paths are what the release manifest pins,
+    and adding one would move every file it hashes. Every later release gets its
+    own subtree, so a re-stamp is additive and can never overwrite what came
+    before.
+    """
+    base = (root or repo_root()) / "evaluations"
+    return base if suite_version in (None, "1.0") else base / f"v{suite_version}"
+
+
 def evaluations_dir(
-    evaluator_id: str, scenario_id: str, model_slug: str, root: Path | None = None
+    evaluator_id: str,
+    scenario_id: str,
+    model_slug: str,
+    root: Path | None = None,
+    suite_version: str | None = None,
 ) -> Path:
-    return (root or repo_root()) / "evaluations" / evaluator_id / scenario_id / model_slug
+    return evaluations_root(root, suite_version) / evaluator_id / scenario_id / model_slug
 
 
 def evaluation_path(
@@ -31,8 +52,9 @@ def evaluation_path(
     model_slug: str,
     run_number: int,
     root: Path | None = None,
+    suite_version: str | None = None,
 ) -> Path:
-    directory = evaluations_dir(evaluator_id, scenario_id, model_slug, root)
+    directory = evaluations_dir(evaluator_id, scenario_id, model_slug, root, suite_version)
     return directory / f"run-{run_number:03d}.json"
 
 
@@ -61,9 +83,12 @@ def evaluate_run(
     judge: Judge | None = None,
     root: Path | None = None,
     write: bool = True,
+    suite_version: str | None = None,
+    judge_session_id: str | None = None,
+    migrated_from: str | None = None,
 ) -> Evaluation:
     """Evaluate one `BenchmarkRun` and (by default) persist the result."""
-    judge = judge or Judge(evaluator)
+    judge = judge or Judge(evaluator, scenario_id=scenario.id, rubric=scenario.rubric)
     rubric = scenario.rubric
     response = run.response
 
@@ -118,6 +143,11 @@ def evaluate_run(
         scenario.ground_truth, response, source_material=source_material
     )
 
+    # The contract this evaluation was produced under. Computed from the
+    # scenario as loaded (against this evaluator's rubric file) rather than from
+    # global module state, which is the whole point of the v1.1 change.
+    contract_fingerprint = judge_contract_fingerprint(judge_contract(scenario, evaluator))
+
     breakdown = build_breakdown(
         rubric,
         criterion_verdicts=criterion_verdicts,
@@ -143,7 +173,12 @@ def evaluate_run(
             prompt_fingerprint=judge_prompt_fingerprint(),
             route="recorded" if getattr(judge, "verdict_source", None) else "api",
             verdict_source=getattr(judge, "verdict_source", None),
+            contract_fingerprint=contract_fingerprint,
+            contract_schema_version=CONTRACT_SCHEMA_VERSION,
+            judge_session_id=judge_session_id,
         ),
+        suite_version=suite_version,
+        migrated_from=migrated_from,
         dimensions=breakdown.dimensions,
         criteria=breakdown.criteria,
         false_actions=breakdown.false_actions,
@@ -168,7 +203,15 @@ def write_evaluation(
         evaluation.model_slug,
         run_number,
         root,
+        evaluation.suite_version,
     )
+    # A re-stamp is create-new by construction. Refusing here rather than in the
+    # caller means no code path can overwrite an evaluation that already exists,
+    # which is the guarantee the whole migration rests on.
+    if evaluation.suite_version and target.exists():
+        raise FileExistsError(
+            f"{target} already exists; a versioned evaluation is never overwritten"
+        )
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(
         json.dumps(evaluation.model_dump(), indent=2, ensure_ascii=False) + "\n",
@@ -182,18 +225,25 @@ def load_evaluation(path: Path) -> Evaluation:
 
 
 def find_evaluations(
-    evaluator_id: str, scenario_id: str, model_slug: str, root: Path | None = None
+    evaluator_id: str,
+    scenario_id: str,
+    model_slug: str,
+    root: Path | None = None,
+    suite_version: str | None = None,
 ) -> list[Path]:
-    directory = evaluations_dir(evaluator_id, scenario_id, model_slug, root)
+    directory = evaluations_dir(evaluator_id, scenario_id, model_slug, root, suite_version)
     if not directory.is_dir():
         return []
     return sorted(directory.glob("run-*.json"))
 
 
 def models_with_evaluations(
-    evaluator_id: str, scenario_id: str, root: Path | None = None
+    evaluator_id: str,
+    scenario_id: str,
+    root: Path | None = None,
+    suite_version: str | None = None,
 ) -> list[str]:
-    directory = (root or repo_root()) / "evaluations" / evaluator_id / scenario_id
+    directory = evaluations_root(root, suite_version) / evaluator_id / scenario_id
     if not directory.is_dir():
         return []
     return sorted(p.name for p in directory.iterdir() if p.is_dir() and any(p.glob("run-*.json")))

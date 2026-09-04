@@ -154,3 +154,60 @@ releases:
       - id: monday-005
         prompt_sha256: 532cd464a9b75045f808886c44e667237d6fd1b947826510643b9f8bcc30059a
         rubric_version: "0.4"
+
+  # ---------------------------------------------------------------------------
+  - overall_version: 3
+    label: "Overall v3 — the v1.1 evaluator contract"
+    status: released
+    suite_version: "1.1"
+    aggregation: arithmetic_mean
+    note: >
+      A NEW VERSION, NOT A REVISION OF v2, AND THE DISTINCTION IS THE POINT.
+
+      A revision adds MODELS to a fixed scenario set - that is what `revision`
+      means here and what `load_releases` enforces. v3 keeps the same five
+      scenarios, the same frozen prompts, the same rubric versions and the same
+      arithmetic, and it does add a model. But it also reads a different suite's
+      scenario boards: the v1.1 boards, built from evaluations carrying the
+      scenario-specific judge contract fingerprint. `scenario_provenance` would
+      therefore differ from v2's, and a decimal point cannot carry that.
+
+      WHAT v1.1 CHANGED, AND WHAT IT DID NOT. It changed how a judge contract is
+      identified. `judge_prompt_fingerprint()` hashed global repository state,
+      including the shared penalty vocabulary - which grew as scenarios were
+      added, so a model judged after monday-005 could not share a board with
+      incumbents judged before it, despite byte-identical rubrics. v1.1 hashes a
+      scenario-specific rendered contract instead.
+
+      It changed NO candidate generation, NO rubric, NO ground truth and NO
+      judgment. Every v1.1 evaluation replays the same recorded verdict file
+      through the same deterministic scoring code; the migration gate proves,
+      for all 121 migrated evaluations, that zero criterion labels, zero
+      false-action judgments, zero penalty verdicts and zero scores moved. Every
+      incumbent's Monday Score in v3 is identical to its v2 score.
+
+      This is a provenance and comparability fix. It is not a score correction,
+      and nobody should read it as one.
+
+      GLM 5.3 is the first model published under the v1.1 contract. Its
+      generation predates the migration and cleared every official gate at the
+      time; what it could not clear was a fingerprint comparison that described
+      the repository rather than the scenario.
+
+      v2 stays byte-frozen and remains the citable v1.0 artifact.
+    scenarios:
+      - id: monday-001
+        prompt_sha256: ed4d7beb1d7d1029c36eb8533e449027e0dc1a1047f8a38951a91781a0a5e398
+        rubric_version: "0.2"
+      - id: monday-002
+        prompt_sha256: 740e627cbc7413c321ede0d54000504de54821d34ff4677f82731b89600423a8
+        rubric_version: "0.2"
+      - id: monday-003
+        prompt_sha256: aaf788f309d955d2b427c86fe7d95d2bbf88575fde7306adcfd74b0ec4a4103f
+        rubric_version: "0.3"
+      - id: monday-004
+        prompt_sha256: 3a0cbb569ca4f711b8907177af9204cec267d26f35f732829df56b03ed23ef99
+        rubric_version: "0.3"
+      - id: monday-005
+        prompt_sha256: 532cd464a9b75045f808886c44e667237d6fd1b947826510643b9f8bcc30059a
+        rubric_version: "0.4"

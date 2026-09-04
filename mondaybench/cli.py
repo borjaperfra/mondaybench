@@ -34,7 +34,7 @@ from .discovery import endpoints_from_models, list_models
 from .freeze import check_drift, load_manifest
 from .official import plan_battery
 from .evaluator import evaluate_run, find_evaluations, load_evaluation, resolve_ground_truth
-from .judge import Judge, JudgeError
+from .judge import Judge, JudgeError, judge_prompt_fingerprint
 from .recorded_judge import RecordedJudge, VerdictStore, build_worksheet
 from .leaderboard import build_leaderboard, write_leaderboard
 from .prompt_builder import PLACEHOLDER_PATTERN, build_prompt, placeholder_for
@@ -847,11 +847,17 @@ def leaderboard(
         "--calibration",
         help="Rank a calibration draft into analysis/leaderboards/ instead of leaderboard/",
     ),
+    suite_version: str | None = typer.Option(
+        None,
+        "--suite-version",
+        help="Publish a later suite release, e.g. 1.1. Reads evaluations/v<version>/ and "
+        "writes leaderboard/v<version>/. Omit for v1.0, whose paths never move.",
+    ),
 ) -> None:
     """Aggregate evaluations into the published ranking."""
     evaluator = _evaluator_for(scenario, evaluator, fallback=DEFAULT_EVALUATOR)
     if official:
-        cmd_publish(scenario, evaluator, models_csv, runs)
+        cmd_publish(scenario, evaluator, models_csv, runs, suite_version)
         return
     try:
         loaded = load_scenario(scenario)
@@ -883,6 +889,7 @@ def leaderboard(
         scenario_status=loaded.status,
         expected_max_output_tokens=loaded.safety_ceiling_tokens,
         endpoint_overrides=endpoint_overrides_for(loaded.id),
+        suite_version=suite_version,
     )
     if not summaries:
         _fail(f"no evaluations found under evaluations/{evaluator}/{loaded.id}/")
@@ -1060,6 +1067,12 @@ def overall(
 @app.command()
 def capabilities(
     taxonomy_version: str = typer.Option("0.1", "--taxonomy", help="Taxonomy version"),
+    suite_version: str | None = typer.Option(
+        None,
+        "--suite-version",
+        help="Profile a later suite release, e.g. 1.1. Reads that release's official "
+        "scenario boards and its evaluations, and writes its own artifact.",
+    ),
 ) -> None:
     """Publish capability profiles from the official scenario results.
 
@@ -1094,7 +1107,7 @@ def capabilities(
     display: dict[str, str] = {}
     skipped: list[str] = []
     for scenario_id in taxonomy.scenarios:
-        payload = load_scenario_leaderboard(scenario_id)
+        payload = load_scenario_leaderboard(scenario_id, None, suite_version)
         if payload is None or not payload.get("official"):
             skipped.append(scenario_id)
             continue
@@ -1105,7 +1118,9 @@ def capabilities(
         except (ConfigError, ScenarioError) as exc:
             _fail(str(exc))
             return
-        results[scenario_id] = official_criterion_results(evaluator_id, scenario_id)
+        results[scenario_id] = official_criterion_results(
+            evaluator_id, scenario_id, suite_version=suite_version
+        )
         for row in payload.get("models") or []:
             display[row["model_slug"]] = row.get("display_name") or row["model_slug"]
 
@@ -1114,7 +1129,10 @@ def capabilities(
         return
 
     payload = profiles_payload(taxonomy, results, rubric_points(rubrics), display)
-    target = repo_root() / "analysis" / f"capability-profiles-v{taxonomy.version}.json"
+    stem = f"capability-profiles-v{taxonomy.version}"
+    if suite_version:
+        stem = f"capability-profiles-suite-v{suite_version}-taxonomy-v{taxonomy.version}"
+    target = repo_root() / "analysis" / f"{stem}.json"
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(
         _json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n"
@@ -1526,6 +1544,173 @@ def verify_release(
         if total > shown:
             console.print(f"  ... and {total - shown} more")
     _fail(f"suite v{version} does not verify")
+
+
+# --------------------------------------------------------------------------
+# judge contract (utility: see exactly what a scenario's scoring semantics are)
+# --------------------------------------------------------------------------
+
+
+@app.command(name="explain-judge-contract")
+def explain_judge_contract(
+    scenario: str = typer.Option(..., "--scenario"),
+    evaluator: str | None = typer.Option(None, "--evaluator", help=EVALUATOR_HELP),
+    compare: str | None = typer.Option(
+        None, "--compare", help="A second scenario id to diff against --scenario"
+    ),
+    show_json: bool = typer.Option(False, "--json", help="Print the whole contract object"),
+) -> None:
+    """What a scenario's judge contract contains, and why two of them differ.
+
+    Opaque hashes are what turned a one-line defect into a full audit: the
+    leaderboard could say two fingerprints differed and nothing could say why.
+    This names the component that moved.
+    """
+    from .contract import contract_for, diff_contracts
+
+    evaluator_id = _evaluator_for(scenario, evaluator, fallback=DEFAULT_EVALUATOR)
+    try:
+        contract, fingerprint = contract_for(scenario, evaluator_id)
+    except (ConfigError, ScenarioError) as exc:
+        _fail(str(exc))
+        return
+
+    if compare:
+        other_id = _evaluator_for(compare, None, fallback=DEFAULT_EVALUATOR)
+        other, other_fp = contract_for(compare, other_id)
+        console.print(
+            f"[bold]{scenario}[/bold] {fingerprint}   vs   [bold]{compare}[/bold] {other_fp}"
+        )
+        differences = diff_contracts(contract, other)
+        if not differences:
+            console.print("\n[green]identical contracts[/green]")
+            return
+        console.print(f"\ndiffers in {len(differences)} components:\n")
+        for entry in differences:
+            console.print(f"  [yellow]{entry['component']}[/yellow]")
+            console.print(f"    {scenario}: {entry['left']}")
+            console.print(f"    {compare}: {entry['right']}")
+            if entry.get("detail"):
+                console.print(f"    [dim]{entry['detail']}[/dim]")
+        return
+
+    if show_json:
+        print(json.dumps(contract, indent=2, ensure_ascii=False))
+        return
+
+    instructions = contract["judge_instructions"]
+    console.print(f"[bold]scenario[/bold]            {contract['scenario_id']}")
+    console.print(f"[bold]evaluator[/bold]           {contract['evaluator_id']}")
+    console.print(f"[bold]judge model[/bold]         {contract['judge_model_id']}")
+    console.print(
+        f"[bold]rubric[/bold]              {contract['rubric_file']}  "
+        f"version {contract['rubric_version']}"
+    )
+    console.print(
+        f"[bold]contract[/bold]            [green]{fingerprint}[/green]  "
+        f"(schema {contract['contract_schema_version']})"
+    )
+    console.print(
+        f"[bold]legacy fingerprint[/bold]  {judge_prompt_fingerprint()}  "
+        f"[dim](judge_prompt_fingerprint, v1.0)[/dim]"
+    )
+    console.print("\n[bold]components[/bold]")
+    console.print(f"  scenario_prompt_sha256   {contract['scenario_prompt_sha256'][:16]}...")
+    console.print(
+        f"  ground_truth_sha256      {contract['ground_truth_sha256'][:16]}...  "
+        f"sliced per criterion: {contract['ground_truth_sliced_per_criterion']}"
+    )
+    for key in ("criterion", "penalty"):
+        block = instructions.get(key)
+        if block:
+            console.print(
+                f"  judge_prompt.{key:<11} {block['source']}  "
+                f"{(block['sha256'] or '-')[:16]}..."
+            )
+    console.print(
+        f"  label_semantics          {'/'.join(contract['label_semantics']['labels'])}, "
+        f"tie_rule={contract['label_semantics']['tie_rule']}"
+    )
+    console.print(f"  criteria                 {len(contract['criteria'])}, in rubric order")
+    noise = contract["noise"]
+    console.print(
+        "  noise                    "
+        + ("absent" if noise is None else f"{len(noise['false_actions'])} false actions")
+    )
+    penalties = contract["penalties"]
+    console.print(
+        f"  penalties                {len(penalties)}  "
+        + ", ".join(p["type"] for p in penalties)
+    )
+    console.print(f"  penalty cap              {contract['scoring']['maximum_global_penalty']}")
+    console.print("  output_contract          penalty enum scoped to this scenario")
+
+
+# --------------------------------------------------------------------------
+# migrate (re-stamp recorded evaluations under a later suite release)
+# --------------------------------------------------------------------------
+
+
+@app.command()
+def migrate(
+    target: str = typer.Option(..., "--to", help="Target suite version, e.g. 1.1"),
+    scenario: str | None = typer.Option(None, "--scenario", help="One scenario, or all"),
+    dry_run: bool = typer.Option(False, "--dry-run", help="Verify without writing anything"),
+) -> None:
+    """Re-stamp recorded evaluations under a later suite's judge contract.
+
+    A RE-SCORE, not a re-judge: the same recorded verdicts are replayed through
+    the same deterministic scoring code, so no label and no score can move. The
+    migration is refused unless that is proved for every evaluation.
+    """
+    from .migrate import MigrationError, migrate_scenario, verify_migration
+    from .overall import load_scenario_leaderboard
+    from .scenarios import scenarios_dir
+
+    scenario_ids = (
+        [scenario]
+        if scenario
+        else sorted(p.name for p in scenarios_dir().iterdir() if p.is_dir())
+    )
+    everything = []
+    for scenario_id in scenario_ids:
+        payload = load_scenario_leaderboard(scenario_id)
+        if payload is None or not payload.get("official"):
+            console.print(f"[yellow]skip[/yellow] {scenario_id}: no official v1.0 board")
+            continue
+        evaluator_id = payload["evaluator"]
+        try:
+            results = migrate_scenario(
+                scenario_id=scenario_id,
+                evaluator_id=evaluator_id,
+                target_suite_version=target,
+                write=not dry_run,
+            )
+        except MigrationError as exc:
+            _fail(str(exc))
+            return
+        report = verify_migration(results)
+        everything.extend(results)
+        status = "[green]clean[/green]" if report["clean"] else "[bold red]CHANGED[/bold red]"
+        console.print(
+            f"{scenario_id}  {report['evaluations_migrated']} evaluations  "
+            f"labels changed {report['criterion_labels_changed']}  "
+            f"scores changed {report['run_scores_changed']}  {status}"
+        )
+        if not report["clean"]:
+            for offender in report["offenders"]:
+                console.print(f"  [red]-[/red] {offender}")
+
+    overall = verify_migration(everything)
+    console.print(
+        f"\n{overall['evaluations_migrated']} evaluations, "
+        f"{overall['criterion_labels_changed']} criterion labels changed, "
+        f"{overall['run_scores_changed']} scores changed"
+    )
+    if not overall["clean"]:
+        _fail("migration changed judgments - nothing about a re-stamp may do that")
+    if dry_run:
+        console.print("[yellow]dry run - nothing was written[/yellow]")
 
 
 # --------------------------------------------------------------------------

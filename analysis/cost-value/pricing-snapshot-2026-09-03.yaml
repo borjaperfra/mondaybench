@@ -1,0 +1,106 @@
+# MondayBench pricing snapshot - ADDENDUM to pricing-2026-09-02
+#
+# snapshot_id:    pricing-2026-09-03
+# effective_date: 2026-09-03
+# status:         FROZEN
+# supersedes:     nothing
+# inherits:       pricing-snapshot-2026-09-02.yaml, unchanged, in full
+#
+# WHY AN ADDENDUM AND NOT A REPLACEMENT. Not one price in the 2026-09-02
+# snapshot moved. This snapshot exists to add ONE model - glm5.3 - and to record
+# why that model could not be published on the same basis as its siblings. The
+# previous snapshot and its sha256 are untouched and remain the source for every
+# model it covers.
+#
+# SAME SOURCE POLICY. First-party only: the vendor's own pricing page or API
+# documentation. Aggregators locate a page and justify nothing.
+#
+# CURRENCY. USD per 1,000,000 tokens.
+
+snapshot_id: pricing-2026-09-03
+effective_date: 2026-09-03
+status: FROZEN
+currency: USD
+unit: per_1M_tokens
+source_policy: first_party_only
+inherits:
+  snapshot_id: pricing-2026-09-02
+  file: pricing-snapshot-2026-09-02.yaml
+  sha256: ec4dcc8537bf4af5a8944f7cc15cda5b55f789826a535b8b665b0c256f389598
+  models_unchanged: true
+
+models:
+
+  # =========================================================================
+  glm5.3:
+    model: GLM 5.3
+    provider: served to MondayBench via the Helmcode gateway
+    run_model_id: glm5.3
+    pricing_sku: GLM-5.3
+    identity_confidence: CONTESTED
+    input_per_million: 1.40
+    output_per_million: 4.40
+    cache_read_per_million: 0.26
+    cache_write_per_million: 0.0
+    pricing_mode: flat
+    effective_date: 2026-09-03
+    promotion: null
+    source_url: https://docs.z.ai/guides/overview/pricing
+    source_type: vendor_pricing_page
+    retrieved_at: 2026-09-03
+    pricing_confidence: HIGH
+    publishable: false
+    publishable_reason: >
+      The PRICE is first-party and high confidence. What is not established is
+      that this price describes the route the benchmark ran on, and the gate's
+      own rule - point figures only for EXACT or justified STRONG_MATCH - is
+      therefore not satisfied.
+    notes: >
+      Z.AI's own pricing table lists GLM-5.3 at input $1.4, output $4.4, cached
+      input $0.26, cache storage "Limited-time Free" - the same trio as GLM-5.1
+      and GLM-5.2. Read from the same vendor page the 2026-09-02 snapshot cites
+      for GLM-5.2 and GLM-5.3-Flash.
+
+      IDENTITY IS CONTESTED, AND THE EVIDENCE AGAINST IS QUANTITATIVE. The
+      Helmcode gateway metered the 15 scored runs at $0.075 input / $0.25
+      output, solved from each run's own `economics` block. That is 5.4% of the
+      list above. Two facts make that implausible as a gateway discount:
+
+        * For GLM-5.2, the same gateway on the same key metered $0.70 / $2.20 -
+          EXACTLY 50% of that model's $1.4 / $4.4 list. The 2026-09-02 gate
+          documents this and it is why GLM 5.2's reported and normalized costs
+          differ by 1.87x.
+        * $0.075 / $0.25 is EXACTLY GLM-5.3-Flash's promotional price, and
+          exactly 50% of GLM-5.3-Flash's $0.15 / $0.50 list.
+
+      So the metered rate is consistent with a 50% gateway discount applied to
+      GLM-5.3-FLASH's list, not to GLM-5.3's. Either the route is not
+      GLM-5.3-as-listed, or the gateway prices this route on a basis unrelated
+      to Z.AI list. A client cannot tell which: /model/info and
+      /model_group/info return 404, and the streaming response carries no
+      provider field.
+
+      WHAT IS NOT IN DOUBT. The served model id echoes `glm5.3` on every frame,
+      it is not `glm5.3-flash`, and its behaviour differs measurably from
+      GLM 5.3 Flash's - different scores on four of five scenarios and a
+      different output-token profile. This is a question about which PRICE
+      applies, not about which model answered.
+
+# The measured alternative, recorded so it is not lost and not promoted.
+# NOT a list price. Every other Z.AI row in the published table is a list price,
+# so this cannot enter the same column without mixing two bases in one number.
+metered_observations:
+  glm5.3:
+    basis: GATEWAY_METERED
+    source: each scored run's own `economics` block, all 15 runs
+    input_per_million: 0.075
+    output_per_million: 0.25
+    implied_per_1k_tasks: 5.67
+    upstream_providers_seen: [Z.AI, Parasail]
+    note: >
+      The gateway fans this model out across upstream vendors. Non-streaming
+      probes returned `provider: Z.AI` at $0.075/$0.25 and `provider: Parasail`
+      at $0.15/$0.50 - a 2x spread on the same served model id. The scored runs
+      are streaming and carry no provider field, so which upstream served each
+      one is not determinable. $11.24/1k is what the Parasail rates would imply
+      for the same token usage.

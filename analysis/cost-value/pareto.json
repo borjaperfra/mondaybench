@@ -1,0 +1,160 @@
+{
+  "record_type": "pareto_dual",
+  "first_party_snapshot_sha256": "ec4dcc8537bf4af5a8944f7cc15cda5b55f789826a535b8b665b0c256f389598",
+  "provider_snapshot_sha256": "3da1aa54ad4ecb6244802b3668471acbc6bdc12ed4de55d7201ae47df4d043f7",
+  "definition": "A dominates B iff A.score >= B.score AND A.cost <= B.cost with at least one strict. No statistical tolerance inside the definition.",
+  "frontier_is_not_a_ranking": "Being on the frontier means no model is both better and cheaper. It does not mean 'best model' - the cheapest frontier point is the lowest-scoring model in the field.",
+  "primary": {
+    "basis": "FIRST_PARTY_LIST only - unchanged",
+    "cost_basis": "conservative (upper) end of every published range",
+    "excluded_no_first_party_price": [
+      "gemma4",
+      "mimo-v2.5",
+      "qwen3.6"
+    ],
+    "frontier": [
+      {
+        "model": "glm5.3-flash",
+        "score": 94.93,
+        "cost_per_1k": 10.71,
+        "dominated_by": []
+      },
+      {
+        "model": "qwen3.8-flash",
+        "score": 95.07,
+        "cost_per_1k": 15.56,
+        "dominated_by": []
+      }
+    ],
+    "dominated": [
+      {
+        "model": "deepseek-v4-flash",
+        "score": 91.7,
+        "cost_per_1k": 25.88,
+        "dominated_by": [
+          "glm5.3-flash",
+          "qwen3.8-flash"
+        ]
+      },
+      {
+        "model": "glm5.2",
+        "score": 86.5,
+        "cost_per_1k": 39.5,
+        "dominated_by": [
+          "deepseek-v4-flash",
+          "glm5.3-flash",
+          "qwen3.8-flash"
+        ]
+      },
+      {
+        "model": "glm5.3",
+        "score": 93.73,
+        "cost_per_1k": 99.2,
+        "dominated_by": [
+          "glm5.3-flash",
+          "qwen3.8-flash"
+        ]
+      },
+      {
+        "model": "claude-fable-5-1",
+        "score": 94.9,
+        "cost_per_1k": 456.27,
+        "dominated_by": [
+          "glm5.3-flash",
+          "qwen3.8-flash"
+        ]
+      }
+    ],
+    "frontier_without_provisional": [
+      "glm5.3-flash",
+      "qwen3.8-flash"
+    ]
+  },
+  "extended_provider": {
+    "basis": "FIRST_PARTY_LIST + PROVIDER_PUBLIC (v2) + observed route cost (glm5.3)",
+    "warning": "MIXES COST CLASSES. Vendor list prices are compared against third-party route prices, and two of those routes are owner-chosen references rather than resolved run identities. Indicative only; does not change the primary frontier.",
+    "excluded_no_price": [],
+    "frontier": [
+      {
+        "model": "gemma4",
+        "score": 63.0,
+        "cost_per_1k": 0.44,
+        "dominated_by": []
+      },
+      {
+        "model": "mimo-v2.5",
+        "score": 86.67,
+        "cost_per_1k": 3.33,
+        "dominated_by": []
+      },
+      {
+        "model": "glm5.3",
+        "score": 93.73,
+        "cost_per_1k": 5.67,
+        "dominated_by": []
+      },
+      {
+        "model": "glm5.3-flash",
+        "score": 94.93,
+        "cost_per_1k": 10.71,
+        "dominated_by": []
+      },
+      {
+        "model": "qwen3.8-flash",
+        "score": 95.07,
+        "cost_per_1k": 15.56,
+        "dominated_by": []
+      }
+    ],
+    "dominated": [
+      {
+        "model": "qwen3.6",
+        "score": 68.77,
+        "cost_per_1k": 7.7,
+        "dominated_by": [
+          "glm5.3",
+          "mimo-v2.5"
+        ]
+      },
+      {
+        "model": "deepseek-v4-flash",
+        "score": 91.7,
+        "cost_per_1k": 25.88,
+        "dominated_by": [
+          "glm5.3",
+          "glm5.3-flash",
+          "qwen3.8-flash"
+        ]
+      },
+      {
+        "model": "glm5.2",
+        "score": 86.5,
+        "cost_per_1k": 39.5,
+        "dominated_by": [
+          "deepseek-v4-flash",
+          "glm5.3",
+          "glm5.3-flash",
+          "mimo-v2.5",
+          "qwen3.8-flash"
+        ]
+      },
+      {
+        "model": "claude-fable-5-1",
+        "score": 94.9,
+        "cost_per_1k": 456.27,
+        "dominated_by": [
+          "glm5.3-flash",
+          "qwen3.8-flash"
+        ]
+      }
+    ],
+    "frontier_without_provisional": [
+      "gemma4",
+      "mimo-v2.5",
+      "glm5.3",
+      "glm5.3-flash",
+      "qwen3.8-flash"
+    ]
+  },
+  "first_party_snapshot_addendum_sha256": "9b1db0cb61b8b50e84221cc6d2ef4baad819fedaff73bac2ca2de24c2d92d81c"
+}

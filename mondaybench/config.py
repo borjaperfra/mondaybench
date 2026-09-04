@@ -222,6 +222,50 @@ class EvaluatorConfig:
         return resolve_env(self.api_key_env, required=True)
 
 
+# Which evaluator field names each external judge instruction file.
+JUDGE_INSTRUCTION_FIELDS = {"criterion": "prompt_file", "penalty": "penalty_prompt_file"}
+
+
+def judge_instruction_path(
+    evaluator: EvaluatorConfig, scenario_id: str, which: str
+) -> Path | None:
+    """Where an evaluator's external judge instruction lives, if it declares one.
+
+    Resolved under `evaluators/<scenario>/`, using the evaluator's own declared
+    scenario when it has one. Returns None when the evaluator uses the built-in
+    templates in `judge.py`.
+    """
+    field = JUDGE_INSTRUCTION_FIELDS.get(which)
+    if field is None:
+        raise ConfigError(f"unknown judge instruction {which!r}")
+    relative = getattr(evaluator, field, None)
+    if not relative:
+        return None
+    folder = evaluator.scenario or scenario_id
+    return repo_root() / "evaluators" / folder / relative
+
+
+def judge_instruction_text(
+    evaluator: EvaluatorConfig, scenario_id: str, which: str
+) -> str | None:
+    """The external judge instruction text, or None when there is no override.
+
+    A declared file that does not exist is an error, not a silent fallback to
+    the built-in template: the evaluator is asserting that its judging was done
+    under those instructions, and scoring against different ones would be a
+    different evaluator.
+    """
+    path = judge_instruction_path(evaluator, scenario_id, which)
+    if path is None:
+        return None
+    if not path.exists():
+        raise ConfigError(
+            f"evaluator {evaluator.id} declares {which} prompt {path.name!r} "
+            f"but {path} does not exist"
+        )
+    return path.read_text(encoding="utf-8")
+
+
 def load_evaluator(evaluator_id: str, path: Path | None = None) -> EvaluatorConfig:
     path = path or repo_root() / "evaluators" / f"{evaluator_id}.yaml"
     data = load_yaml(path) or {}

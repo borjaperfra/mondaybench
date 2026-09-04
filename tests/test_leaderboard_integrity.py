@@ -74,7 +74,13 @@ def test_mixed_fingerprints_across_models_are_flagged(tmp_path):
     warning = payload["integrity_warning"]
     assert warning is not None
     assert "MIXED JUDGE VERSIONS" in warning
-    assert "re-evaluate every run" in warning
+    # The invariant is that the mix is REPORTED, not that a particular remedy is
+    # suggested. v1.1 dropped "re-evaluate every run with --overwrite": the
+    # migration audit established that following it would rewrite incumbent
+    # evidence in an append_only group, which the benchmarking docs forbid
+    # twice. See audits/v1.1-migration/.
+    assert "not valid" in warning
+    assert "aaaaaaaaaaaaaaaa" in warning and "bbbbbbbbbbbbbbbb" in warning
 
 
 def test_an_unfingerprinted_evaluation_counts_as_a_distinct_version(tmp_path):

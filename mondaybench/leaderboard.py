@@ -17,10 +17,16 @@ from typing import Any
 
 from .config import repo_root
 from .config import ConfigError, apply_endpoint_overrides, load_models
+from .contract import comparability_key
 from .evaluator import find_evaluations, load_evaluation, models_with_evaluations
 from .official import qualify_run, reasoning_status
 from .runner import find_runs, load_run
 from .schemas import Evaluation
+
+
+# CSV rows are terminated with LF, not the csv module's default CRLF, so a
+# board written on Windows hashes the same as one written anywhere else.
+LF = "\n"
 
 
 @dataclass
@@ -103,9 +109,12 @@ def summarize_model(
     root: Path | None = None,
     expected_max_output_tokens: int | None = None,
     endpoint_overrides: dict[str, str] | None = None,
+    suite_version: str | None = None,
 ) -> ModelSummary | None:
     """Collect one model's evaluations plus the run metadata they point at."""
-    evaluation_paths = find_evaluations(evaluator_id, scenario_id, model_slug, root)
+    evaluation_paths = find_evaluations(
+        evaluator_id, scenario_id, model_slug, root, suite_version
+    )
     if not evaluation_paths:
         return None
 
@@ -223,12 +232,11 @@ def summarize_model(
             + ", ".join(sorted(h[:12] for h in prompt_hashes))
         )
 
-    fingerprints = {e.judge.prompt_fingerprint for e in evaluations}
+    fingerprints = {comparability_key(e) for e in evaluations}
     if len(fingerprints) > 1:
         warnings.append(
-            "evaluations came from more than one judge prompt version - not comparable: "
+            "evaluations came from more than one judge contract - not comparable: "
             + ", ".join(sorted(str(f) for f in fingerprints))
-            + " (re-evaluate all runs with --overwrite)"
         )
 
     # Cost is only meaningful when every run priced; a partial figure would lie.
@@ -338,9 +346,10 @@ def build_leaderboard(
     root: Path | None = None,
     expected_max_output_tokens: int | None = None,
     endpoint_overrides: dict[str, str] | None = None,
+    suite_version: str | None = None,
 ) -> tuple[dict[str, Any], list[ModelSummary]]:
     summaries: list[ModelSummary] = []
-    for model_slug in models_with_evaluations(evaluator_id, scenario_id, root):
+    for model_slug in models_with_evaluations(evaluator_id, scenario_id, root, suite_version):
         summary = summarize_model(
             endpoint_overrides=endpoint_overrides,
             scenario_id=scenario_id,
@@ -348,6 +357,7 @@ def build_leaderboard(
             model_slug=model_slug,
             root=root,
             expected_max_output_tokens=expected_max_output_tokens,
+            suite_version=suite_version,
         )
         if summary is not None:
             summaries.append(summary)
@@ -362,25 +372,27 @@ def build_leaderboard(
     # Detected here, across models, because a single model can be internally
     # consistent while the field as a whole is not.
     all_fingerprints: set[str] = set()
-    for model_slug in models_with_evaluations(evaluator_id, scenario_id, root):
-        for path in find_evaluations(evaluator_id, scenario_id, model_slug, root):
+    for model_slug in models_with_evaluations(evaluator_id, scenario_id, root, suite_version):
+        for path in find_evaluations(evaluator_id, scenario_id, model_slug, root, suite_version):
             evaluation = load_evaluation(path)
-            # Rubric version and judge instructions both change what a score
-            # means, so they form one comparability key.
-            all_fingerprints.add(
-                f"rubric={evaluation.rubric_version}/"
-                f"judge={evaluation.judge.prompt_fingerprint}"
-            )
+            # One key per distinct judge contract. From v1.1 that is the
+            # scenario-specific contract fingerprint; a v1.0 evaluation carries
+            # none, so `comparability_key` falls back to the legacy pair and a
+            # v1.0 board rebuilt today reaches exactly the verdict it reached
+            # when it was published.
+            all_fingerprints.add(comparability_key(evaluation))
     cross_model_warning = (
         f"MIXED JUDGE VERSIONS across models ({len(all_fingerprints)} distinct): "
         + ", ".join(sorted(all_fingerprints))
-        + " - this ranking is not valid; re-evaluate every run with --overwrite"
+        + " - this ranking is not valid; the evaluations were not produced under "
+        "one judge contract"
         if len(all_fingerprints) > 1
         else None
     )
 
     payload = {
         "benchmark_version": benchmark_version,
+        "suite_version": suite_version,
         "scenario": scenario_id,
         "evaluator": evaluator_id,
         "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -463,7 +475,9 @@ def rubric_dimension_order(scenario_id: str, evaluator_id: str) -> list[str]:
         return []
 
 
-def leaderboard_dir(scenario_id: str | None, root: Path | None = None) -> Path:
+def leaderboard_dir(
+    scenario_id: str | None, root: Path | None = None, suite_version: str | None = None
+) -> Path:
     """Where a scenario's published leaderboard lives.
 
     monday-001 was published when the repository held one scenario, straight
@@ -473,6 +487,12 @@ def leaderboard_dir(scenario_id: str | None, root: Path | None = None) -> Path:
     overwriting the first.
     """
     base = (root or repo_root()) / "leaderboard"
+    # A later suite release publishes into its own subtree. v1.0's paths are
+    # what its manifest pins and what the site links to, so they stay exactly
+    # where they are - including monday-001's, which sits at the root because it
+    # was published when the repository held one scenario.
+    if suite_version not in (None, "1.0"):
+        return base / f"v{suite_version}" / (scenario_id or "unknown")
     if scenario_id in (None, "", "monday-001"):
         return base
     return base / scenario_id
@@ -520,7 +540,7 @@ def write_leaderboard(
     if calibration:
         directory = calibration_leaderboard_dir(scenario_id, root)
     else:
-        directory = leaderboard_dir(scenario_id, root)
+        directory = leaderboard_dir(scenario_id, root, payload.get("suite_version"))
         # A published leaderboard must not be silently downgraded. A plain
         # rebuild carries the "NOT AN OFFICIAL RESULT" banner, so writing it
         # over a file that passed the gates replaces a published result with an
@@ -567,8 +587,15 @@ def write_leaderboard(
         "judge_model_id",
         "scenario_prompt_sha256",
     ]
+    # newline="" stops the file object translating; the explicit LF line
+    # terminator stops csv.writer emitting its default CRLF. Both are needed:
+    # without the second, a CSV written on Windows carries CRLF, hashes
+    # differently from the same file written on Linux, and trips the
+    # repository's own released-artifact invariant. The v1.0 CSVs read as LF
+    # only because .gitattributes normalises them on checkout, which does
+    # nothing for a file that has not been committed yet.
     with csv_path.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=columns)
+        writer = csv.DictWriter(handle, fieldnames=columns, lineterminator=LF)
         writer.writeheader()
         for s in summaries:
             row: dict[str, Any] = {
@@ -883,7 +910,10 @@ def official_blockers(
 
 
 def check_scoring_arithmetic(
-    evaluator_id: str, scenario_id: str, root: Path | None = None
+    evaluator_id: str,
+    scenario_id: str,
+    root: Path | None = None,
+    suite_version: str | None = None,
 ) -> list[str]:
     """Re-derive every published score from its own parts.
 
@@ -892,8 +922,8 @@ def check_scoring_arithmetic(
     be negative.
     """
     problems: list[str] = []
-    for model_slug in models_with_evaluations(evaluator_id, scenario_id, root):
-        for path in find_evaluations(evaluator_id, scenario_id, model_slug, root):
+    for model_slug in models_with_evaluations(evaluator_id, scenario_id, root, suite_version):
+        for path in find_evaluations(evaluator_id, scenario_id, model_slug, root, suite_version):
             evaluation = load_evaluation(path)
             dimension_total = sum(d.score for d in evaluation.dimensions.values())
             if abs(dimension_total - evaluation.base_score) > 0.01:

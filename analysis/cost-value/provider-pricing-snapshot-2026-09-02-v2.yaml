@@ -1,0 +1,226 @@
+# MondayBench PROVIDER-PUBLIC pricing snapshot — v2
+#
+# snapshot_id:    provider-pricing-2026-09-02-v2
+# effective_date: 2026-09-02
+# pricing_class:  PROVIDER_PUBLIC
+# status:         FROZEN
+# supersedes:     provider-pricing-2026-09-02 (v1), sha256
+#                 6cb250f3dbbcf7043d63fa50f188184326388dd0e5f9132524cd9c4ebe503fac
+#                 v1 is PRESERVED on disk unchanged, with its own .sha256.
+#
+# WHAT CHANGED IN v2. Two models move from UNKNOWN to a published
+# PROVIDER_PUBLIC price on an explicit publication decision by the project
+# owner: Qwen 3.6 and Gemma 4. MIMO v2.5 is carried forward unchanged.
+#
+# THE NATURE OF THAT DECISION MATTERS AND IS RECORDED PER MODEL. For Qwen 3.6
+# and Gemma 4 the benchmark run identity remains AMBIGUOUS - the bare gateway id
+# never identified a commercial variant, and v1 declined to guess. v2 does not
+# claim to have solved that. What v2 records is a *publication reference*: a
+# named, verifiable OpenRouter route chosen by the owner to stand in for the
+# model's cost. The distinction is preserved in three separate fields:
+#
+#   benchmark_run_identity:      AMBIGUOUS            (unchanged, never upgraded)
+#   publication_pricing_ref:     USER_CONFIRMED_REFERENCE
+#   provider_route_identity:     EXACT                (the route itself is exact)
+#
+# This is the claim being made:
+#   "To represent the cost of Qwen 3.6 / Gemma 4 we use this public OpenRouter
+#    variant as the reference."
+# This is NOT the claim being made:
+#   "We have shown the run was served by OpenRouter on this variant."
+#
+# STILL NOT FIRST-PARTY. No first-party price was replaced or reclassified. The
+# first-party snapshot (pricing-snapshot-2026-09-02.yaml, sha256
+# ec4dcc85...f389598) is untouched and remains authoritative for the five models
+# it covers.
+#
+# PRICES ARE AS RETURNED BY THE SOURCE AT VERIFICATION TIME, not as quoted in
+# the decision. Both diverged; see `quoted_at_decision` on each entry.
+#
+# CURRENCY. USD per 1,000,000 tokens.
+
+snapshot_id: provider-pricing-2026-09-02-v2
+effective_date: 2026-09-02
+pricing_class: PROVIDER_PUBLIC
+status: FROZEN
+currency: USD
+unit: per_1M_tokens
+supersedes: provider-pricing-2026-09-02
+supersedes_sha256: 6cb250f3dbbcf7043d63fa50f188184326388dd0e5f9132524cd9c4ebe503fac
+first_party_snapshot_ref: pricing-snapshot-2026-09-02.yaml
+first_party_snapshot_sha256: ec4dcc8537bf4af5a8944f7cc15cda5b55f789826a535b8b665b0c256f389598
+
+models:
+
+  # =========================================================================
+  mimo-v2.5:
+    model: MIMO v2.5
+    run_model_id: mimo-v2.5
+    run_provider: nan
+    pricing_class: PROVIDER_PUBLIC
+    provider_name: OpenRouter
+    provider_model_id: xiaomi/mimo-v2.5
+    benchmark_run_identity: EXACT
+    publication_pricing_ref: DERIVED_FROM_RUN_IDENTITY
+    provider_route_identity: EXACT
+    identity_confidence: EXACT
+    input_per_million: 0.119
+    output_per_million: 0.238
+    cache_read_per_million: 0.00255
+    cache_write_per_million: null
+    request_per_million: null
+    image_per_million: null
+    reasoning_per_million: null
+    pricing_mode: flat
+    context_length: 1050000
+    effective_date: 2026-09-02
+    source: https://openrouter.ai/xiaomi/mimo-v2.5
+    source_type: provider_public_model_page
+    retrieved_at: 2026-09-02
+    first_party_status: UNKNOWN
+    cost_per_1k_tasks: 3.33
+    notes: >
+      CARRIED FORWARD FROM v1 UNCHANGED. Identity EXACT on three independent
+      signals: slug character-identical to the run model_id, route context
+      1,050,000 against the recorded 1M, and one non-Pro route only
+      (mimo-v2.5-pro is a distinct SKU at ~3.7x). This is the one model of the
+      three whose provider identity was derived from the run itself rather than
+      chosen.
+
+      ROUTING LIMITATION: five upstream providers (GMICloud, DeepInfra, Xiaomi,
+      StreamLake, NovitaAI) with differing prices; OpenRouter publishes one
+      consolidated route price described as the average customers actually pay.
+      Blended route price, not a fixed contractual rate.
+
+      Xiaomi first-party rate remains UNKNOWN.
+
+  # =========================================================================
+  qwen3.6:
+    model: Qwen 3.6
+    run_model_id: qwen3.6
+    run_provider: helmcode (and nan for the monday-004 battery)
+    pricing_class: PROVIDER_PUBLIC
+    provider_name: OpenRouter
+    provider_model_id: qwen/qwen3.6-27b
+    benchmark_run_identity: AMBIGUOUS          # UNCHANGED from v1. Never upgraded.
+    publication_pricing_ref: USER_CONFIRMED_REFERENCE
+    provider_route_identity: EXACT
+    identity_confidence: PROVIDER_ROUTE_EXACT_RUN_AMBIGUOUS
+    input_per_million: 0.30
+    output_per_million: 2.00
+    cache_read_per_million: 0.03
+    cache_write_per_million: null              # not published for this route
+    request_per_million: null                  # no per-request charge published
+    image_per_million: null                    # multimodal input, no separate price published
+    reasoning_per_million: null                # no reasoning rate published
+    pricing_mode: flat
+    context_length: 262144
+    max_output_tokens: 65536
+    effective_date: 2026-09-02
+    source: https://openrouter.ai/qwen/qwen3.6-27b
+    source_type: provider_public_model_page
+    retrieved_at: 2026-09-02
+    quoted_at_decision: {input: 0.289, output: 2.40}
+    first_party_status: UNKNOWN
+    cost_per_1k_tasks: 7.70
+    notes: >
+      PUBLICATION REFERENCE, EXPLICITLY CHOSEN. v1 left this UNKNOWN because
+      three OpenRouter routes matched the recorded 256K context and spanned 9.7x
+      in cost, with nothing in the run records to choose between them. That
+      ambiguity is NOT resolved. The project owner has selected
+      `qwen/qwen3.6-27b` as the public reference variant, and this snapshot
+      records that choice rather than a discovery.
+
+      benchmark_run_identity stays AMBIGUOUS. Do not read this entry as evidence
+      that the MondayBench runs were served by this variant.
+
+      CONSISTENCY CHECK (does not establish identity, but the reference is at
+      least not contradicted): route context 262,144 matches the 256K recorded
+      in models.yaml, and the route's 65,536 max output comfortably covers the
+      32,000 ceiling the runs were generated under.
+
+      PRICE DIVERGENCE FROM THE DECISION, RECORDED. The decision quoted
+      $0.289 input / $2.40 output; the live page returned $0.30 / $2.00 on
+      2026-09-02. Per instruction the source values are used. The difference is
+      material to the figure: live gives $7.70/1k, the quoted pair would give
+      $8.96/1k - a 16% gap. Re-verify before publication if the page has moved.
+
+      BILLING COMPONENTS INSPECTED. Published: input, output, cache read
+      ($0.03). Absent: cache write, per-request, image/multimodal, reasoning.
+      Cache write is immaterial here - the runs record zero cache-write tokens.
+      Reasoning tokens (17,338 across 15 runs) sit INSIDE output_tokens (48,842)
+      and OpenRouter publishes no reasoning rate, so no reasoning line is added
+      and no double-counting occurs.
+
+  # =========================================================================
+  gemma4:
+    model: Gemma 4
+    run_model_id: gemma4
+    run_provider: helmcode
+    pricing_class: PROVIDER_PUBLIC
+    provider_name: OpenRouter
+    provider_model_id: google/gemma-4-26b-a4b-it
+    benchmark_run_identity: AMBIGUOUS          # UNCHANGED from v1. Never upgraded.
+    publication_pricing_ref: USER_CONFIRMED_REFERENCE
+    provider_route_identity: EXACT
+    identity_confidence: PROVIDER_ROUTE_EXACT_RUN_AMBIGUOUS
+    input_per_million: 0.042
+    output_per_million: 0.22
+    cache_read_per_million: null               # not published for this route
+    cache_write_per_million: null
+    request_per_million: null
+    image_per_million: null                    # multimodal input, no separate price published
+    reasoning_per_million: null
+    pricing_mode: flat
+    context_length: 262144
+    max_output_tokens: 32768
+    effective_date: 2026-09-02
+    source: https://openrouter.ai/google/gemma-4-26b-a4b-it
+    source_type: provider_public_model_page
+    retrieved_at: 2026-09-02
+    quoted_at_decision: {input: 0.07, output: 0.34}
+    first_party_status: UNKNOWN
+    cost_per_1k_tasks: 0.44
+    notes: >
+      PUBLICATION REFERENCE, EXPLICITLY CHOSEN. v1 left this UNKNOWN because two
+      architecturally distinct routes matched the recorded 256K context -
+      `gemma-4-26b-a4b-it` (25.2B total / 3.8B active, sparse) and
+      `gemma-4-31b-it` (30.7B dense) - with no disambiguating evidence. That
+      ambiguity is NOT resolved. The owner has selected the 26B-A4B route as the
+      public reference.
+
+      benchmark_run_identity stays AMBIGUOUS.
+
+      CONSISTENCY CHECK: route context 262,144 matches the recorded 256K, and
+      the 32,768 max output covers the runs' 32,000 ceiling - just. Gemma 4's
+      observed outputs on MondayBench are small (926 tokens mean), so the
+      ceiling was never approached.
+
+      PRICE DIVERGENCE FROM THE DECISION, RECORDED. The decision quoted
+      $0.07 / $0.34; the live page returned $0.042 / $0.22 on 2026-09-02. Per
+      instruction the source values are used. Live gives $0.44/1k against
+      $0.72/1k for the quoted pair - a 64% gap. The quoted pair matches the
+      stale models.dev catalogue entry, which the live page supersedes.
+      Note $0.09 / $0.34 belongs to the OTHER candidate, `gemma-4-31b-it`.
+
+      BILLING COMPONENTS INSPECTED. Published: input, output only. Absent: cache
+      read, cache write, per-request, image/multimodal, reasoning. NO
+      LIMITATION IN PRACTICE: the runs record zero cache-read and zero
+      cache-write tokens for this model (0/16 coverage - a non-caching
+      deployment) and zero reasoning tokens, so every absent component has a
+      zero quantity. The two published rates cover the whole workload.
+
+# ---------------------------------------------------------------------------
+coverage:
+  provider_priced: [mimo-v2.5, qwen3.6, gemma4]
+  still_unknown: []
+  identity_summary:
+    run_identity_exact: [mimo-v2.5]
+    run_identity_ambiguous_with_confirmed_reference: [qwen3.6, gemma4]
+  models_untouched_because_first_party_exists:
+    [claude-fable-5-1, glm5.3-flash, glm5.2, deepseek-v4-flash, qwen3.8-flash]
+  note: >
+    All three previously-UNKNOWN models now carry a publishable PROVIDER_PUBLIC
+    price. No pricing UNKNOWN remains in the public table. Two of the three rest
+    on an owner-chosen reference variant rather than a resolved run identity,
+    and that caveat must travel with their figures.

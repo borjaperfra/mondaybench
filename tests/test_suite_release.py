@@ -20,6 +20,7 @@ import yaml
 from mondaybench.suite import (
     EXCLUDED_PARTS,
     FORBIDDEN_NAMES,
+    GROUP_EXCLUDES,
     GROUP_POLICY,
     GROUPS,
     SuiteError,
@@ -101,7 +102,15 @@ def test_the_release_records_every_overall_release(manifest):
 
 
 def test_every_group_is_populated_and_has_a_policy(manifest):
-    assert set(manifest["groups"]) == set(GROUPS)
+    """A release declares a subset of the groups the code knows about.
+
+    Not equality: groups are added over time - `pricing` was split out of
+    `analysis` after v1.0 was cut - and an older manifest must not fail because
+    a later release drew a new boundary. What must hold is that every group it
+    DID declare is a real group with a policy.
+    """
+    assert set(manifest["groups"]) <= set(GROUPS)
+    assert set(manifest["groups"]), "a release that declares no group claims nothing"
     for name, group in manifest["groups"].items():
         assert group["file_count"] > 0, name
         assert group["policy"] == GROUP_POLICY[name], name
@@ -162,22 +171,42 @@ def test_archive_is_excluded_deliberately(index):
 
 
 FROZEN_GROUPS = [n for n, p in GROUP_POLICY.items() if p != "mutable"]
+IMMUTABLE_GROUPS = [n for n, p in GROUP_POLICY.items() if p == "immutable"]
+APPEND_ONLY_GROUPS = [n for n, p in GROUP_POLICY.items() if p == "append_only"]
 
 
 def test_the_manifest_digests_match_the_working_tree(manifest, index):
-    """Byte-identity for every group the release actually freezes.
+    """Byte-identity for every group the release freezes ABSOLUTELY.
 
-    Scoped to non-mutable groups on purpose. `config`, `docs`, `harness` and
-    `tests` are declared `mutable` precisely so they can be edited after the
-    release - a README gains a section, a runbook is added - and a test that
-    demanded byte-identity across all twelve groups would contradict the policy
-    it is meant to verify, failing on exactly the legitimate edits the policy
-    permits.
+    `config`, `docs`, `harness` and `tests` are `mutable` precisely so they can
+    be edited after the release, and a test demanding byte-identity across all
+    twelve groups would contradict the policy it verifies.
+
+    So are `append_only` groups, for the same reason one layer down. That policy
+    exists because benchmarking a NEW model against a frozen suite necessarily
+    writes new runs, new verdicts, new evaluations and a new board - the
+    `GROUP_POLICY` comment says so in as many words. A digest comparison cannot
+    express "existing files unchanged, new ones expected", so this test asserts
+    byte-identity only for `immutable`, and the append-only invariant is
+    asserted separately below against the same index.
     """
-    for name in FROZEN_GROUPS:
-        actual = collect_group(GROUPS[name], REPO_ROOT)
+    for name in IMMUTABLE_GROUPS:
+        actual = collect_group(GROUPS[name], REPO_ROOT, GROUP_EXCLUDES.get(name, ()))
         assert actual == index[name], name
         assert group_digest(actual) == manifest["groups"][name]["content_digest"], name
+
+
+def test_append_only_groups_may_gain_files_but_never_lose_or_rewrite_one(index):
+    """The invariant a digest cannot express.
+
+    Every file the release pinned must still be present and byte-identical.
+    Additions are the whole point of the policy and are not failures.
+    """
+    for name in APPEND_ONLY_GROUPS:
+        actual = collect_group(GROUPS[name], REPO_ROOT, GROUP_EXCLUDES.get(name, ()))
+        for path, digest in index[name].items():
+            assert path in actual, f"{name}: {path} was removed"
+            assert actual[path] == digest, f"{name}: {path} was rewritten"
 
 
 def test_the_suite_digest_is_a_function_of_the_group_digests(manifest):

@@ -1,0 +1,167 @@
+{
+  "read_only": true,
+  "model_calls": 0,
+  "published_nothing": true,
+  "bases": {
+    "FIRST_PARTY_LIST": {
+      "glm5.3_per_1k": 99.2,
+      "what_it_is": "Z.AI's published list price for GLM-5.3, the same basis every other non-provisional row in this table uses."
+    },
+    "GATEWAY_METERED": {
+      "glm5.3_per_1k": 5.67,
+      "what_it_is": "What the Helmcode gateway actually charged, read from each scored run's own `economics` block. Not a list price, and no other Z.AI row in this table is on this basis."
+    }
+  },
+  "pareto": {
+    "FIRST_PARTY_LIST": {
+      "official_frontier_before": [
+        "qwen3.8-flash",
+        "glm5.3-flash",
+        "mimo-v2.5",
+        "gemma4"
+      ],
+      "official_frontier_after": [
+        "qwen3.8-flash",
+        "glm5.3-flash",
+        "mimo-v2.5",
+        "gemma4"
+      ],
+      "glm5.3_on_frontier": false,
+      "displaced": [],
+      "note": "RANGE models are placed at the conservative (expensive) end, as the 2026-09-02 gate specifies, so no model is flattered.",
+      "extended_frontier_with_provisional": [
+        "qwen3.8-flash",
+        "glm5.3-flash",
+        "mimo-v2.5",
+        "gemma4"
+      ]
+    },
+    "GATEWAY_METERED": {
+      "official_frontier_before": [
+        "qwen3.8-flash",
+        "glm5.3-flash",
+        "mimo-v2.5",
+        "gemma4"
+      ],
+      "official_frontier_after": [
+        "qwen3.8-flash",
+        "glm5.3-flash",
+        "glm5.3",
+        "mimo-v2.5",
+        "gemma4"
+      ],
+      "glm5.3_on_frontier": true,
+      "displaced": [],
+      "note": "RANGE models are placed at the conservative (expensive) end, as the 2026-09-02 gate specifies, so no model is flattered.",
+      "extended_frontier_with_provisional": [
+        "qwen3.8-flash",
+        "glm5.3-flash",
+        "glm5.3",
+        "mimo-v2.5",
+        "gemma4"
+      ]
+    }
+  },
+  "comparisons": {
+    "glm5.3-flash": {
+      "score_delta_glm5_3_minus_other": -1.2,
+      "other_cost_per_1k": 10.71,
+      "other_basis": "First-party",
+      "ttfa_delta_s": -24.9,
+      "output_token_delta": 1226.2,
+      "cost_delta_per_1k__FIRST_PARTY_LIST": 88.49,
+      "cost_multiple__FIRST_PARTY_LIST": 9.26,
+      "like_for_like__FIRST_PARTY_LIST": true,
+      "cost_delta_per_1k__GATEWAY_METERED": -5.04,
+      "cost_multiple__GATEWAY_METERED": 0.53,
+      "like_for_like__GATEWAY_METERED": false
+    },
+    "qwen3.8-flash": {
+      "score_delta_glm5_3_minus_other": -1.34,
+      "other_cost_per_1k": [
+        12.61,
+        15.56
+      ],
+      "other_basis": "First-party",
+      "ttfa_delta_s": -5.6,
+      "output_token_delta": -8545.1,
+      "cost_delta_per_1k__FIRST_PARTY_LIST": 83.64,
+      "cost_multiple__FIRST_PARTY_LIST": 6.38,
+      "like_for_like__FIRST_PARTY_LIST": true,
+      "cost_delta_per_1k__GATEWAY_METERED": -9.89,
+      "cost_multiple__GATEWAY_METERED": 0.36,
+      "like_for_like__GATEWAY_METERED": false
+    },
+    "deepseek-v4-flash": {
+      "score_delta_glm5_3_minus_other": 2.03,
+      "other_cost_per_1k": [
+        12.94,
+        25.88
+      ],
+      "other_basis": "First-party",
+      "ttfa_delta_s": 131.9,
+      "output_token_delta": 3073.9,
+      "cost_delta_per_1k__FIRST_PARTY_LIST": 73.32,
+      "cost_multiple__FIRST_PARTY_LIST": 3.83,
+      "like_for_like__FIRST_PARTY_LIST": true,
+      "cost_delta_per_1k__GATEWAY_METERED": -20.21,
+      "cost_multiple__GATEWAY_METERED": 0.22,
+      "like_for_like__GATEWAY_METERED": false
+    },
+    "glm5.2": {
+      "score_delta_glm5_3_minus_other": 7.23,
+      "other_cost_per_1k": 39.5,
+      "other_basis": "First-party",
+      "ttfa_delta_s": 209.2,
+      "output_token_delta": 13184.3,
+      "cost_delta_per_1k__FIRST_PARTY_LIST": 59.7,
+      "cost_multiple__FIRST_PARTY_LIST": 2.51,
+      "like_for_like__FIRST_PARTY_LIST": true,
+      "cost_delta_per_1k__GATEWAY_METERED": -33.83,
+      "cost_multiple__GATEWAY_METERED": 0.14,
+      "like_for_like__GATEWAY_METERED": false
+    }
+  },
+  "editorial_claims": {
+    "half_the_cost_of_flash": {
+      "claim": "GLM 5.3 gives up ~1.2 Monday Score points versus GLM 5.3 Flash while costing roughly half as much.",
+      "score_delta": -1.2,
+      "on_first_party_list": {
+        "glm5.3": 99.2,
+        "flash": 10.71,
+        "multiple": 9.26,
+        "supported": false
+      },
+      "on_mixed_basis": {
+        "glm5.3_metered": 5.67,
+        "flash_list": 10.71,
+        "multiple": 0.53,
+        "supported_but_invalid": true,
+        "why_invalid": "compares a metered gateway invoice against a public list price; the 2026-09-02 gate forbids mixing two pricing bases in one canonical number"
+      },
+      "verdict": "NOT SUPPORTED on any consistent basis - inverted on the like-for-like one"
+    },
+    "cheapest_above_90": {
+      "claim": "GLM 5.3 is one of the cheapest ways to get above 90 Monday Score.",
+      "field_above_90_first_party_basis": {
+        "glm5.3-flash": 10.71,
+        "qwen3.8-flash": 15.56,
+        "deepseek-v4-flash": 25.88
+      },
+      "glm5.3_first_party": 99.2,
+      "rank_on_first_party": 4,
+      "of": 4,
+      "verdict": "NOT SUPPORTED on the first-party basis - it would be the most expensive"
+    }
+  },
+  "gate": {
+    "usage_reconstruction": "PASS",
+    "method_validated_against_published_figures": "PASS",
+    "billing_semantics": "PASS",
+    "reasoning_double_count": "NONE",
+    "pricing_identity": "FAIL",
+    "pricing_identity_detail": "Z.AI lists GLM-5.3 at $1.4/$4.4. The gateway metered $0.075/$0.25 - which is exactly GLM-5.3-Flash's promotional price, and exactly 50% of GLM-5.3-Flash's list. For GLM-5.2 the same gateway metered exactly 50% of ITS list. So either the route is not GLM-5.3-as-listed, or the gateway prices it on a basis unrelated to Z.AI list. A client cannot tell which.",
+    "publishable": false,
+    "consequence": "No cost figure for GLM 5.3 is published, and the website Cost and Efficiency tabs are not changed."
+  }
+}

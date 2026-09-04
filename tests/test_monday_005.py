@@ -801,12 +801,14 @@ def test_the_scenario_is_frozen_and_official(scenario):
     # Overall is never updated as a side effect of publishing a scenario - it is
     # a separate deliberate release. v2 exists because it was released on its
     # own terms afterwards, and v0 and v1 were untouched when it was.
+    #
+    # Asserted as a superset, not an exact list: a later deliberate release -
+    # v3 under the v1.1 evaluator contract - is legitimate and must not make
+    # this test fail. What matters is that publishing a SCENARIO created none
+    # of them and destroyed none of them.
     overall = REPO_ROOT / "leaderboard" / "overall"
-    assert sorted(p.name for p in overall.glob("overall-v*.json")) == [
-        "overall-v0.json",
-        "overall-v1.json",
-        "overall-v2.json",
-    ]
+    present = {p.name for p in overall.glob("overall-v*.json")}
+    assert {"overall-v0.json", "overall-v1.json", "overall-v2.json"} <= present
     assert json.loads((overall / "overall-v0.json").read_text(encoding="utf-8"))[
         "scenarios"
     ] == ["monday-001", "monday-002", "monday-003"]

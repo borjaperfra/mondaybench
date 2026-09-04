@@ -128,11 +128,29 @@ def test_C3_duplicate_inside_the_official_battery_is_rejected(tmp_path):
 # --------------------------------------------------------------------------
 
 
+def _official_monday_005_runs():
+    """The runs that were actually judged, per model, three per model.
+
+    Reading every file under runs/monday-005/ counts rejected attempts too, and
+    pinning a total headcount made this test fail for any new model rather than
+    for any real defect. The battery is defined by what earned an evaluation.
+    """
+    evaluated = REPO_ROOT / "evaluations" / "evaluator-opus5-v0.5" / "monday-005"
+    paths = []
+    for model_dir in sorted(p for p in evaluated.iterdir() if p.is_dir()):
+        for evaluation in sorted(model_dir.glob("run-*.json")):
+            run = REPO_ROOT / "runs" / "monday-005" / model_dir.name / evaluation.name
+            assert run.is_file(), f"{evaluation} has no raw output at {run}"
+            paths.append(run)
+    return paths
+
+
 def test_D_monday_005_official_has_zero_overlap_with_its_calibration_archive():
     archived = archived_run_paths("monday-005", REPO_ROOT)
-    live = sorted((REPO_ROOT / "runs" / "monday-005").glob("*/run-*.json"))
+    live = _official_monday_005_runs()
     assert len(archived) == 21, f"expected the archived calibration battery, found {len(archived)}"
-    assert len(live) == 21, f"expected the official battery, found {len(live)}"
+    assert live, "no official monday-005 battery found"
+    assert len(live) % 3 == 0, f"the battery is not three runs per model: {len(live)}"
 
     dev = {sample_identity(read_run_record(p))[0] for p in archived}
     off = [sample_identity(read_run_record(p))[0] for p in live]
@@ -140,9 +158,9 @@ def test_D_monday_005_official_has_zero_overlap_with_its_calibration_archive():
 
 
 def test_E_monday_005_official_samples_are_mutually_distinct():
-    live = sorted((REPO_ROOT / "runs" / "monday-005").glob("*/run-*.json"))
+    live = _official_monday_005_runs()
     ids = [sample_identity(read_run_record(p))[0] for p in live]
-    assert len(ids) == len(set(ids)) == 21
+    assert len(ids) == len(set(ids)), "two official monday-005 samples are the same response"
 
 
 def test_E2_every_monday_005_run_carries_a_provider_request_id():

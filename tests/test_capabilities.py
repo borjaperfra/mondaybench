@@ -156,8 +156,18 @@ def test_profiles_use_official_scenarios_only(taxonomy, official_results):
 
 
 def test_every_model_gets_a_profile(taxonomy, official_results):
+    """The invariant is coverage, not a headcount.
+
+    This asserted `len(profiles) == 7` until v1.1, which made it fail for any
+    eighth model - by construction, and for no methodological reason. What the
+    test is actually for is that no model with official results is silently
+    left without a profile, and that no percentage escapes its range.
+    """
     profiles, _ = build_profiles(taxonomy, official_results)
-    assert len(profiles) == 7
+    expected = {slug for results in official_results.values() for slug in results}
+    assert set(profiles) == expected
+    assert len(profiles) == len(set(profiles)), "a model slug is profiled twice"
+    assert profiles, "no model was profiled at all"
     for model, profile in profiles.items():
         assert profile, model
         for score in profile.values():

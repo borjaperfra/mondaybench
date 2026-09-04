@@ -193,7 +193,10 @@ class CapabilityScore:
 
 
 def official_criterion_results(
-    evaluator_id: str, scenario_id: str, root: Path | None = None
+    evaluator_id: str,
+    scenario_id: str,
+    root: Path | None = None,
+    suite_version: str | None = None,
 ) -> dict[str, dict[str, tuple[float, float]]]:
     """model -> criterion -> (mean earned across official runs, points possible).
 
@@ -208,7 +211,9 @@ def official_criterion_results(
     recorded per run, but the deduction arithmetic that turns them into a
     dimension score belongs to the scoring module, not here.
     """
-    base = (root or repo_root()) / "evaluations" / evaluator_id / scenario_id
+    from .evaluator import evaluations_root
+
+    base = evaluations_root(root, suite_version) / evaluator_id / scenario_id
     out: dict[str, dict[str, list[tuple[float, float]]]] = {}
     if not base.is_dir():
         return {}

@@ -244,6 +244,23 @@ class JudgeRecord(Strict):
     route: str | None = None
     verdict_source: str | None = None
 
+    # --- v1.1 ---------------------------------------------------------------
+    # The scenario-specific judge contract this evaluation was produced under.
+    # `prompt_fingerprint` above answers "did the repository hold identical
+    # global schemas?"; this answers "were the scoring semantics applicable to
+    # THIS scenario the same?", which is the question a ranking needs. Optional
+    # so every v1.0 evaluation still loads unchanged, and the legacy field is
+    # kept rather than replaced so a v1.0 board stays independently readable.
+    contract_fingerprint: str | None = None
+    contract_schema_version: str | None = None
+    # Provenance only. A recorded judge is a session of a model reading rubrics,
+    # and which session produced a label was never recorded - so contract
+    # equivalence is NOT session identity, and no fingerprint design can recover
+    # the difference retroactively. Recorded from v1.1 onwards for new judging;
+    # null on migrated records, because inventing one would be a fabrication.
+    # It never enters score arithmetic.
+    judge_session_id: str | None = None
+
 
 class DimensionScore(Strict):
     score: float
@@ -312,6 +329,15 @@ class Evaluation(Strict):
     timestamp_utc: str
 
     judge: JudgeRecord
+
+    # --- v1.1 ---------------------------------------------------------------
+    # Which suite release this evaluation belongs to. None means v1.0, where the
+    # question had no answer because there was only one.
+    suite_version: str | None = None
+    # For a re-stamped evaluation: the v1.0 evaluation whose recorded verdicts
+    # it replays. The labels are identical by construction; this is the pointer
+    # that lets a reader check that for themselves.
+    migrated_from: str | None = None
 
     dimensions: dict[str, DimensionScore]
     criteria: dict[str, CriterionResult]

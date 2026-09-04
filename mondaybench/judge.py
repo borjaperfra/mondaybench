@@ -19,7 +19,7 @@ from typing import Any
 
 import yaml
 
-from .config import EvaluatorConfig
+from .config import EvaluatorConfig, judge_instruction_text
 from .providers import ModelProvider, ProviderError, build_judge_provider
 from .scenarios import Criterion, FalseAction
 from .schemas import PENALTY_TYPE_VALUES, CriterionVerdict, NoiseVerdict, PenaltyVerdict
@@ -181,14 +181,31 @@ def format_ground_truth(excerpt: dict[str, Any]) -> str:
     return yaml.safe_dump(excerpt, sort_keys=False, allow_unicode=True).strip()
 
 
-def criterion_prompt(
-    criterion: Criterion, ground_truth_excerpt: dict[str, Any], response: str
-) -> str:
-    return f"""You are evaluating a model response for MondayBench.
+# The built-in instruction header. Kept as a named constant so an external
+# override replaces exactly this and nothing else - the data block below it is
+# the same either way.
+BUILTIN_CRITERION_INSTRUCTIONS = """You are evaluating a model response for MondayBench.
 
 Your job is NOT to judge writing quality and NOT to assign a numeric score.
 
-Evaluate only the criterion below.
+Evaluate only the criterion below."""
+
+
+def criterion_prompt(
+    criterion: Criterion,
+    ground_truth_excerpt: dict[str, Any],
+    response: str,
+    instructions: str | None = None,
+) -> str:
+    """The criterion judge prompt.
+
+    `instructions` replaces the built-in header with the evaluator's own
+    `judge-prompt.md` when it declares one. Passing None reproduces the previous
+    output byte for byte, which is what keeps the legacy
+    `judge_prompt_fingerprint()` value stable for v1.0 evaluations.
+    """
+    header = (instructions.strip() if instructions else BUILTIN_CRITERION_INSTRUCTIONS)
+    return f"""{header}
 
 SCENARIO GROUND TRUTH RELEVANT TO THIS CRITERION:
 {format_ground_truth(ground_truth_excerpt)}
@@ -254,8 +271,19 @@ Return JSON only, with one entry for every category listed above:
 }}"""
 
 
-def penalty_prompt(ground_truth: dict[str, Any], source_material: str, response: str) -> str:
+def penalty_prompt(
+    ground_truth: dict[str, Any],
+    source_material: str,
+    response: str,
+    instructions: str | None = None,
+) -> str:
     """Penalty prompt.
+
+    `instructions`, when given, replaces the built-in header with the
+    evaluator's own `penalty-judge-prompt.md`. Those files enumerate the
+    scenario's own penalty types - monday-004's names four where the global enum
+    listed seven - so honouring them is what makes the prose and the schema
+    agree. Passing None reproduces the previous output byte for byte.
 
     IMPLEMENTATION.md s22 shows only the ground truth here. That is not
     answerable: MATERIAL_HALLUCINATION is defined as a claim "unsupported by the
@@ -268,7 +296,11 @@ def penalty_prompt(ground_truth: dict[str, Any], source_material: str, response:
     So the judge gets both: the source material is the authority on whether a
     claim is supported, the ground truth on whether it is materially relevant.
     """
-    return f"""You are checking a MondayBench response for serious factual failures.
+    header = (
+        instructions.strip() if instructions
+        else "You are checking a MondayBench response for serious factual failures."
+    )
+    return f"""{header}
 
 SOURCE MATERIAL THE MODEL WAS GIVEN. This is the authority on what is
 supported. Any claim traceable to this material is NOT a hallucination, even if
@@ -355,11 +387,26 @@ class JudgeCallStats:
 class Judge:
     """Wraps one judge model and the evaluator's generation settings."""
 
-    def __init__(self, evaluator: EvaluatorConfig, provider: ModelProvider | None = None):
+    def __init__(
+        self,
+        evaluator: EvaluatorConfig,
+        provider: ModelProvider | None = None,
+        scenario_id: str | None = None,
+        rubric: Any | None = None,
+    ):
         self.evaluator = evaluator
         self.provider = provider or build_judge_provider(evaluator)
         self.model_id = evaluator.resolved_model_id()
         self.stats = JudgeCallStats(unsupported_parameters=[])
+        # An evaluator may override the built-in templates with scenario-specific
+        # files under `evaluators/<scenario>/`. Every evaluator from v0.2 onwards
+        # declares both, and until v1.1 nothing loaded them: the recorded judge
+        # read them, the code did not. Knowing the scenario is what lets the
+        # override be resolved at all.
+        self.scenario_id = scenario_id
+        # Carried so the penalty enum can be narrowed to the penalties this
+        # scenario's rubric actually declares.
+        self.rubric = rubric
 
     def _generation_config(self, schema: dict[str, Any]) -> dict[str, Any]:
         return {
@@ -368,6 +415,32 @@ class Judge:
             "max_output_tokens": self.evaluator.max_output_tokens,
             "response_json_schema": schema,
         }
+
+    def _instruction_override(self, which: str) -> str | None:
+        """The evaluator's external judge instruction for this scenario, if any."""
+        scenario_id = getattr(self, "scenario_id", None)
+        evaluator = getattr(self, "evaluator", None)
+        if scenario_id is None or evaluator is None:
+            return None
+        return judge_instruction_text(evaluator, scenario_id, which)
+
+    def _penalty_schema(self) -> dict[str, Any]:
+        """The penalty schema, narrowed to this scenario's penalties when known.
+
+        On the API route the schema reaches the model as
+        `response_format.json_schema`, so a global enum tells monday-001's judge
+        it may return a type monday-001's rubric does not define. Falls back to
+        the global schema when the rubric is not known, which is what a caller
+        constructing a bare Judge gets.
+        """
+        rubric = getattr(self, "rubric", None)
+        if rubric is None or not getattr(rubric, "penalties", None):
+            return PENALTY_SCHEMA
+        schema = json.loads(json.dumps(PENALTY_SCHEMA, sort_keys=True))
+        schema["properties"]["violations"]["items"]["properties"]["type"]["enum"] = sorted(
+            rubric.penalties
+        )
+        return schema
 
     def _ask(self, prompt: str, schema: dict[str, Any]) -> dict[str, Any]:
         """One judge call, with a single JSON-repair retry."""
@@ -406,7 +479,9 @@ class Judge:
     def judge_criterion(
         self, criterion: Criterion, ground_truth_excerpt: dict[str, Any], response: str
     ) -> CriterionVerdict:
-        raw = self._ask(criterion_prompt(criterion, ground_truth_excerpt, response), CRITERION_SCHEMA)
+        override = self._instruction_override("criterion")
+        prompt = criterion_prompt(criterion, ground_truth_excerpt, response, instructions=override)
+        raw = self._ask(prompt, CRITERION_SCHEMA)
         result = str(raw.get("result", "")).strip().upper()
         if result not in {"PASS", "PARTIAL", "FAIL"}:
             raise JudgeError(
@@ -447,8 +522,10 @@ class Judge:
     def judge_penalties(
         self, ground_truth: dict[str, Any], response: str, source_material: str = ""
     ) -> PenaltyVerdict:
+        override = self._instruction_override("penalty")
         raw = self._ask(
-            penalty_prompt(ground_truth, source_material, response), PENALTY_SCHEMA
+            penalty_prompt(ground_truth, source_material, response, instructions=override),
+            self._penalty_schema(),
         )
         violations = raw.get("violations")
         if violations is None:

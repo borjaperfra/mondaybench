@@ -204,7 +204,13 @@ def cmd_plan(scenario: str, models_csv: str | None, runs: int, evaluator: str) -
 # --------------------------------------------------------------------------
 
 
-def cmd_publish(scenario: str, evaluator: str, models_csv: str | None, runs: int) -> None:
+def cmd_publish(
+    scenario: str,
+    evaluator: str,
+    models_csv: str | None,
+    runs: int,
+    suite_version: str | None = None,
+) -> None:
     """Build the official leaderboard, refusing to publish anything unsound."""
     try:
         evaluator_cfg = load_evaluator(evaluator)
@@ -251,6 +257,7 @@ def cmd_publish(scenario: str, evaluator: str, models_csv: str | None, runs: int
         expected_max_output_tokens=loaded.safety_ceiling_tokens,
         endpoint_overrides=endpoint_overrides_for(loaded.id),
         root=None,
+        suite_version=suite_version,
     )
     blockers.extend(
         official_blockers(
@@ -263,7 +270,7 @@ def cmd_publish(scenario: str, evaluator: str, models_csv: str | None, runs: int
             required_runs=runs,
         )
     )
-    blockers.extend(check_scoring_arithmetic(evaluator, loaded.id))
+    blockers.extend(check_scoring_arithmetic(evaluator, loaded.id, suite_version=suite_version))
     blockers.extend(check_calibration_overlap(evaluator, loaded.id))
 
     if blockers:

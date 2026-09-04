@@ -20,11 +20,23 @@ runner = CliRunner()
 
 @pytest.fixture
 def stub_endpoints(monkeypatch):
-    """Answer the discovery calls locally so no HTTP is attempted."""
-    served = {
-        "helmcode": ["deepseek-v4-flash", "gemma4", "glm5.2", "qwen3.6"],
-        "nan": ["glm5.3-flash", "mimo-v2.5", "qwen3.6", "qwen3.8-flash"],
-    }
+    """Answer the discovery calls locally so no HTTP is attempted.
+
+    The served list is DERIVED from models.yaml rather than hardcoded. It was a
+    literal list of the seven original slugs, which meant onboarding an eighth
+    model made `endpoints` report it MISSING and these tests fail - for a
+    fixture's staleness, not for anything about the command. The invariant is
+    that an endpoint serving exactly what the registry declares produces no
+    MISSING line.
+    """
+    from mondaybench.config import load_models
+
+    served: dict[str, list[str]] = {"helmcode": [], "nan": []}
+    for model in load_models().values():
+        if model.provider in served:
+            served[model.provider].append(model.model_id)
+    for provider in served:
+        served[provider] = sorted(set(served[provider]))
     probed: list[Endpoint] = []
 
     def fake_list_models(endpoint: Endpoint) -> list[str]:

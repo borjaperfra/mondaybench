@@ -1,0 +1,347 @@
+# MondayBench pricing snapshot - FROZEN after first-party verification gate
+#
+# snapshot_id:    pricing-2026-09-02
+# effective_date: 2026-09-02
+# status:         FROZEN
+#
+# PURPOSE. Reproducible NORMALIZED API COST: what each MondayBench workload
+# would cost at the model's PUBLIC LIST PRICE, independent of the gateway deal,
+# plan or quota the benchmark actually ran under.
+#
+# THIS IS NOT WHAT THE BENCHMARK PAID. Reported cost stays in each run's
+# `economics` block and is never overwritten.
+#
+# SOURCE POLICY, tightened at this gate. Every published price now comes from a
+# FIRST-PARTY vendor source: the vendor's own pricing page or API documentation.
+# OpenRouter, models.dev, Artificial Analysis, resellers, aggregators and blogs
+# were used ONLY to locate those pages and are cited nowhere as justification.
+# Two prices previously resting on third-party sources were re-sourced at this
+# gate, and one identity was downgraded as a result.
+#
+# LIST PRICE ONLY. Promotions are recorded in a separate `promotion` block and
+# are never used for the headline comparison, so the main table stays valid
+# after a promotion ends.
+#
+# CURRENCY. USD per 1,000,000 tokens.
+
+snapshot_id: pricing-2026-09-02
+effective_date: 2026-09-02
+status: FROZEN
+currency: USD
+unit: per_1M_tokens
+source_policy: first_party_only
+
+models:
+
+  # =========================================================================
+  claude-fable-5-1:
+    model: Claude Fable 5.1
+    provider: Anthropic (Claude API, first party)
+    run_model_id: claude-fable-5-1
+    pricing_sku: Claude Fable 5.1
+    identity_confidence: EXACT
+    input_per_million: 10.00
+    output_per_million: 50.00
+    cache_read_per_million: 0.25
+    cache_write_per_million: 20.00
+    cache_write_5m_per_million: 12.50
+    pricing_mode: flat
+    effective_date: 2026-09-02
+    promotion: null
+    source_url: https://platform.claude.com/docs/en/about-claude/pricing
+    source_type: vendor_pricing_page
+    retrieved_at: 2026-09-02
+    pricing_confidence: HIGH
+    notes: >
+      ALL FIVE RATES CONFIRMED ON ANTHROPIC'S OWN PRICING PAGE. The model table
+      row reads: base input $10/MTok, 5m cache writes $12.50/MTok, 1h cache
+      writes $20/MTok, cache hits and refreshes $0.25/MTok, output $50/MTok. A
+      footnote states cache hits on Fable 5.1 and Mythos 5.1 are priced at
+      0.025x base input, against the 0.1x used by every other model - which is
+      why $0.25 rather than $1.00.
+
+      1-HOUR CACHE SEMANTICS CONFIRMED. The prompt-caching table gives
+      "1-hour cache write | 2x base input price | Cache valid for 1 hour",
+      i.e. $20/MTok, and notes the 1h write pays off after two cache reads.
+      $20.00 is therefore the published rate, not an inference.
+
+      THIS WAS THE MODALITY CLAUDE CODE USED. Independently established from the
+      meter: solving the provider-reported costUSD for the cache-write rate
+      returns $20.000/MTok on every cache-writing run (A1, monday-001 run 1,
+      monday-004 run 1 all agree to three decimals). The harness documents a
+      1-hour prompt-cache TTL for this session.
+
+      STRONGEST END-TO-END VALIDATION IN THE SET, PRESERVED: with these five
+      rates, normalized list cost equals provider-reported cost on ALL 15 RUNS
+      at 0.00% error. Identity is EXACT because the served route and the
+      list-price vendor are the same party.
+
+      NOT the Claude subscription price - explicitly excluded. Batch (-50%),
+      fast mode and the inference_geo 1.1x multiplier are all published but none
+      applies to these runs.
+
+  # =========================================================================
+  glm5.3-flash:
+    model: GLM 5.3 Flash
+    provider: Z.AI (served to MondayBench via the NaN gateway)
+    run_model_id: glm5.3-flash
+    pricing_sku: GLM-5.3-Flash
+    identity_confidence: STRONG_MATCH
+    input_per_million: 0.15
+    output_per_million: 0.50
+    cache_read_per_million: 0.03
+    cache_write_per_million: 0.0
+    pricing_mode: flat
+    effective_date: 2026-09-02
+    promotion:
+      input_per_million: 0.075
+      output_per_million: 0.25
+      cache_read_per_million: 0.015
+      discount: 50%
+      start_date: unknown
+      end_date: "2026-09-09T24:00+08:00"
+      source_url: https://docs.z.ai/guides/overview/pricing
+      note: >
+        Live at snapshot time; the vendor page displays it as the headline with
+        list struck through. NOT used for the headline comparison. At promo
+        rates this model costs $5.36/1k tasks, which widens rather than narrows
+        its cost advantage.
+    source_url: https://docs.z.ai/guides/overview/pricing
+    source_type: vendor_pricing_page
+    retrieved_at: 2026-09-02
+    pricing_confidence: HIGH
+    notes: >
+      Z.AI's own pricing page. List input $0.15, output $0.50, cached input
+      $0.03, cache storage "Limited-time Free" (hence cache_write 0.0). The
+      promotional trio is exactly 50% of list, which corroborates the list
+      figures.
+
+      STRONG_MATCH not EXACT: the SKU name maps unambiguously
+      (`glm5.3-flash` -> `GLM-5.3-Flash`), Z.AI publishes a single global price
+      with no regional variants, and no other GLM SKU carries these numbers -
+      but the runs went through the NaN gateway rather than to Z.AI directly.
+
+  # =========================================================================
+  qwen3.8-flash:
+    model: Qwen 3.8 Flash
+    provider: Alibaba Cloud Model Studio (served to MondayBench via the NaN gateway)
+    run_model_id: qwen3.8-flash
+    pricing_sku: qwen3.8-flash
+    identity_confidence: AMBIGUOUS      # region not determinable - publish a RANGE
+    pricing_mode: regional_range
+    input_per_million: {low: 0.113, high: 0.15}
+    output_per_million: {low: 0.382, high: 0.47}
+    cache_read_per_million: UNPUBLISHED
+    cache_write_per_million: UNPUBLISHED
+    effective_date: 2026-09-02
+    promotion: null
+    source_url: https://www.alibabacloud.com/help/en/model-studio/model-pricing
+    source_type: vendor_pricing_page
+    retrieved_at: 2026-09-02
+    pricing_confidence: MEDIUM
+    notes: >
+      DOWNGRADED AT THIS GATE, from HIGH/point to MEDIUM/range. The previous
+      figure ($0.15 / $0.47 / cache read $0.016 / cache write $0.20) came from
+      OpenRouter, which the tightened source policy disallows. Alibaba's own
+      pricing page shows two things the aggregator did not:
+
+      1. PRICING IS REGIONAL. Singapore (International) is $0.15 / $0.47;
+         China (Beijing), Hong Kong, Germany (Frankfurt), US (Virginia) and
+         Japan (Tokyo) are all $0.113 / $0.382 - a 23% spread. MondayBench
+         served this model through the NaN gateway and nothing in the run
+         records identifies which region NaN uses, or whether NaN fronts
+         Alibaba at all. Identity is therefore AMBIGUOUS on region and the
+         cost is published as a RANGE, per the identity gate.
+      2. CACHE PRICES ARE NOT PUBLISHED for this model. Alibaba's context-cache
+         documentation states explicitly that the explicit-cache hit price for
+         qwen3.8-flash "is not 10% of the standard input token price. For
+         specific pricing, see the Model Studio console", and the same for the
+         implicit cache. Cache creation is given only as "typically 125% of the
+         standard input token price". No first-party number exists, so the
+         cache rates are UNPUBLISHED.
+
+      MATERIALITY, MEASURED. Cache lines are 0.14% of this model's total
+      normalized cost (output alone is 95.7%), so the unpublished cache rates
+      are immaterial - the calculator keeps $0.016 read / $0.20 write as a
+      documented non-first-party placeholder whose removal changes the total by
+      under 0.2%. The REGION is what matters: $12.61/1k to $15.56/1k.
+      No tiering by context length applies (flat to 1M tokens).
+
+  # =========================================================================
+  glm5.2:
+    model: GLM 5.2
+    provider: Z.AI (served to MondayBench via the Helmcode gateway)
+    run_model_id: glm5.2
+    pricing_sku: GLM-5.2
+    identity_confidence: STRONG_MATCH
+    input_per_million: 1.40
+    output_per_million: 4.40
+    cache_read_per_million: 0.26
+    cache_write_per_million: 0.0
+    pricing_mode: flat
+    effective_date: 2026-09-02
+    promotion: null
+    source_url: https://docs.z.ai/guides/overview/pricing
+    source_type: vendor_pricing_page
+    retrieved_at: 2026-09-02
+    pricing_confidence: HIGH
+    notes: >
+      UPGRADED MEDIUM -> HIGH at this gate. The previous figure rested on a web
+      search summary plus reseller catalogue corroboration; it is now read
+      directly from Z.AI's own pricing table, which lists GLM-5.2 at input
+      $1.4, output $4.4, cached input $0.26, cache storage "Limited-time Free".
+      The numbers are unchanged - only the provenance improved.
+
+      NO PROMOTION on GLM-5.2. The 50% discount on the vendor page applies to
+      GLM-5.3-Flash only.
+
+      ROBUST TO A VERSION MIX-UP: GLM-5.1 carries the identical trio
+      ($1.4 / $4.4 / $0.26) on the same page, so even confusing 5.1 and 5.2
+      would not move the figure. The neighbouring SKUs that differ (GLM-5 at
+      $1.0/$3.2, GLM-4.7 at $0.6/$2.2) are not plausible matches for a run id
+      of `glm5.2`.
+
+      STRONG_MATCH not EXACT: served through Helmcode, not Z.AI directly.
+      Helmcode's gateway-measured rate was exactly 50% of this list price on
+      both input and output.
+
+  # =========================================================================
+  deepseek-v4-flash:
+    model: DeepSeek V4 Flash
+    provider: DeepSeek Platform (served to MondayBench via the Helmcode gateway)
+    run_model_id: deepseek-v4-flash
+    pricing_sku: deepseek-v4-flash
+    identity_confidence: STRONG_MATCH
+    pricing_mode: time_of_day
+    off_peak:
+      input_per_million: 0.22          # cache miss
+      output_per_million: 0.66
+      cache_read_per_million: 0.007
+      cache_write_per_million: null    # not published; DeepSeek bills cache hit/miss only
+    peak:
+      input_per_million: 0.44
+      output_per_million: 1.32
+      cache_read_per_million: 0.014
+      cache_write_per_million: null
+      window_utc: ["01:00-04:00", "06:00-10:00"]
+      days: Monday-Friday
+      timezone: UTC
+    effective_date: null               # vendor publishes none
+    promotion: null
+    source_url: https://api-docs.deepseek.com/quick_start/pricing
+    source_type: vendor_api_documentation
+    retrieved_at: 2026-09-02
+    pricing_confidence: HIGH
+    notes: >
+      UPGRADED MEDIUM -> HIGH at this gate, re-sourced from DeepSeek's own API
+      documentation in place of the third-party page used before. Numbers
+      unchanged: off-peak cache-hit $0.007, cache-miss $0.22, output $0.66;
+      peak exactly double. The page lists `deepseek-v4-flash`,
+      `deepseek-v4-pro` and `deepseek-v4-flash-vision-exp`; the run model id is
+      character-identical to the first.
+
+      ONE NEW CONSTRAINT FOUND AND APPLIED: peak is 01:00-04:00 and 06:00-10:00
+      UTC **Monday through Friday**. The previous calculator applied the hour
+      windows without the weekday condition. Re-checked: all three
+      peak-window runs fell on Friday 2026-08-28, so the band assignment is
+      unchanged (3 peak / 12 off-peak) - but the formula is now correct.
+
+      Timezone is UTC, matching the runs' own `timestamp_utc`, so band
+      assignment is unambiguous per run. DeepSeek states "Product prices may
+      vary and DeepSeek reserves the right to adjust them" and publishes no
+      effective date.
+
+      PUBLISHED AS A RANGE. Because the price depends on when the task runs,
+      $/1k is given as off-peak to peak, $12.94-$25.88. Pareto placement uses
+      the conservative (peak) end so the figure cannot flatter this model.
+
+  # =========================================================================
+  # UNKNOWN - excluded from normalized cost, not estimated
+  # =========================================================================
+
+  mimo-v2.5:
+    model: MIMO v2.5
+    provider: Xiaomi (served to MondayBench via the NaN gateway)
+    run_model_id: mimo-v2.5
+    pricing_sku: UNKNOWN
+    identity_confidence: UNKNOWN
+    input_per_million: UNKNOWN
+    output_per_million: UNKNOWN
+    cache_read_per_million: UNKNOWN
+    cache_write_per_million: UNKNOWN
+    pricing_mode: null
+    effective_date: null
+    promotion: null
+    source_url: null
+    source_type: none_first_party_found
+    retrieved_at: 2026-09-02
+    pricing_confidence: UNKNOWN
+    notes: >
+      No first-party Xiaomi pricing page was located. Non-first-party candidates
+      span roughly 8x on input ($0.119/$0.238 on OpenRouter; $0.14/$0.28 in the
+      models.dev catalogue; a search summary asserting a permanent move to
+      $1/$3 in May 2026). Under the tightened source policy none of these can
+      justify a published figure. UNKNOWN.
+
+  qwen3.6:
+    model: Qwen 3.6
+    provider: open-weight; served variant not identified
+    run_model_id: qwen3.6
+    pricing_sku: UNKNOWN
+    identity_confidence: UNKNOWN
+    input_per_million: UNKNOWN
+    output_per_million: UNKNOWN
+    cache_read_per_million: UNKNOWN
+    cache_write_per_million: UNKNOWN
+    pricing_mode: null
+    effective_date: null
+    promotion: null
+    source_url: null
+    source_type: sku_not_resolvable
+    retrieved_at: 2026-09-02
+    pricing_confidence: UNKNOWN
+    notes: >
+      No single first-party price exists for a bare `qwen3.6`. Alibaba publishes
+      per variant (Qwen3.6-35B-A3B, Qwen3.6-Plus, Qwen3.6-Flash and others) with
+      further regional tiers, and the run records carry only the gateway id, so
+      the served variant is unidentified. Two compounding unknowns - variant and
+      region. UNKNOWN.
+
+  gemma4:
+    model: Gemma 4
+    provider: open-weight (Apache 2.0); served variant not identified
+    run_model_id: gemma4
+    pricing_sku: UNKNOWN
+    identity_confidence: UNKNOWN
+    input_per_million: UNKNOWN
+    output_per_million: UNKNOWN
+    cache_read_per_million: UNKNOWN
+    cache_write_per_million: UNKNOWN
+    pricing_mode: null
+    effective_date: null
+    promotion: null
+    source_url: null
+    source_type: no_first_party_api
+    retrieved_at: 2026-09-02
+    pricing_confidence: UNKNOWN
+    notes: >
+      Gemma 4 has open weights and no first-party API list price - Google
+      publishes no per-token rate for it. Host rates vary by variant (31B,
+      26B-A4B, E2B, E4B) and by host. The run records carry only `gemma4`, so
+      neither the variant nor a reference host is determinable. UNKNOWN.
+
+# ---------------------------------------------------------------------------
+coverage:
+  point_price_publishable: [claude-fable-5-1, glm5.3-flash, glm5.2]
+  range_only: [qwen3.8-flash, deepseek-v4-flash]
+  unknown: [mimo-v2.5, qwen3.6, gemma4]
+  identity:
+    EXACT: [claude-fable-5-1]
+    STRONG_MATCH: [glm5.3-flash, glm5.2, deepseek-v4-flash]
+    AMBIGUOUS: [qwen3.8-flash]
+    UNKNOWN: [mimo-v2.5, qwen3.6, gemma4]
+  note: >
+    All three top-band models are priced from first-party sources. Two of them
+    publish a point price (Fable 5.1 EXACT, GLM 5.3 Flash STRONG_MATCH); Qwen
+    3.8 Flash is a region range. The cheapest-top-band conclusion holds across
+    the whole of every range.

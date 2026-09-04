@@ -132,7 +132,20 @@ def test_monday_001_resolves_without_relying_on_a_fallback_constant():
 
 def test_the_next_revision_extends_the_latest_release():
     version, revision = next_overall_revision()
-    assert (version, revision) == (2, 1)
+    # The invariant is that it extends the LATEST base release with the next
+    # unused revision - not that the latest happens to be v2. Pinning the
+    # number made this fail the moment a legitimate v3 was released.
+    from mondaybench.overall import load_releases
+
+    releases = load_releases()
+    latest = max(k for k in releases if isinstance(k, int))
+    used = {
+        releases[k].revision
+        for k in releases
+        if getattr(releases[k], "version", None) == latest
+    }
+    assert version == latest
+    assert revision == max(used) + 1
 
 
 def test_a_revision_slug_names_the_artifact():
@@ -148,10 +161,19 @@ def test_a_revision_slug_names_the_artifact():
 
 def test_base_releases_are_still_keyed_by_integer():
     """Existing callers index `load_releases()[2]`. A revision must not break
-    that, and must not shadow the release it extends."""
+    that, and must not shadow the release it extends.
+
+    The invariant is the KEY TYPE and the absence of shadowing, not how many
+    releases exist. Pinning `{0, 1, 2}` made this fail the moment a fourth was
+    released, which is a thing releases are supposed to be able to do.
+    """
     releases = load_releases()
-    assert set(releases) == {0, 1, 2}
+    assert all(isinstance(key, int) for key in releases), releases.keys()
     assert all(r.revision == 0 for r in releases.values())
+    # every declared base release is reachable by its own integer
+    for key, release in releases.items():
+        assert release.version == key
+    assert {0, 1, 2} <= set(releases)
 
 
 def test_a_revision_must_keep_the_scenario_set_of_what_it_extends(tmp_path):
@@ -186,8 +208,11 @@ def test_the_generated_revision_block_pins_the_same_scenarios_as_the_base():
     """Generated rather than hand-written: five prompt hashes retyped by hand is
     how a release ends up unreproducible."""
     block = yaml.safe_load(draft_revision_block("kimi-k3"))[0]
-    base = load_releases()[2]
-    assert block["overall_version"] == 2
+    releases = load_releases()
+    # The block extends the LATEST base release. Deriving it keeps this test
+    # about the pinning behaviour rather than about which release is newest.
+    base = releases[max(k for k in releases if isinstance(k, int))]
+    assert block["overall_version"] == base.version
     assert block["revision"] == 1
     assert block["status"] == "draft"
     assert block["aggregation"] == base.aggregation
@@ -205,9 +230,13 @@ def test_a_generated_revision_block_actually_loads(tmp_path):
     path.write_text(yaml.safe_dump({"releases": source["releases"] + [block]}), encoding="utf-8")
 
     releases = load_releases(path=path)
-    assert "2.1" in releases
-    assert releases["2.1"].revision == 1
-    assert releases["2.1"].scenario_ids == releases[2].scenario_ids
+    # The block extends whatever the latest base release is, so derive the slug
+    # rather than pinning "2.1".
+    base = max(k for k in releases if isinstance(k, int))
+    slug = f"{base}.1"
+    assert slug in releases
+    assert releases[slug].revision == 1
+    assert releases[slug].scenario_ids == releases[base].scenario_ids
 
 
 # ------------------------------------------------------- incumbents unmoved

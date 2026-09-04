@@ -85,6 +85,8 @@ GROUPS: dict[str, tuple[str, ...]] = {
     # Analysis released alongside, including the derivation scripts.
     "taxonomy": ("taxonomy/*.yaml",),
     "analysis": ("analysis/**/*",),
+    # Pricing research, kept OUT of `analysis` on purpose - see GROUP_POLICY.
+    "pricing": ("analysis/cost-value/**/*",),
     "docs": ("docs/**/*", "audits/**/*", "*.md"),
     # The code that produced all of the above.
     "harness": ("mondaybench/**/*.py", "tools/**/*.py"),
@@ -93,6 +95,18 @@ GROUPS: dict[str, tuple[str, ...]] = {
     # tests can be quietly weakened is not frozen.
     "tests": ("tests/**/*.py", "tests/**/*.json"),
 }
+
+# Paths a group must NOT claim, even though its own patterns match them.
+#
+# A file belongs to exactly one group, because two groups claiming it would
+# hash it twice and make the suite digest depend on an ordering nobody chose.
+# `analysis/**/*` would otherwise swallow the pricing subtree, and those two
+# things have opposite integrity requirements: a calibration record must never
+# change, while a price is a fact about the world that vendors move.
+GROUP_EXCLUDES: dict[str, tuple[str, ...]] = {
+    "analysis": ("analysis/cost-value/",),
+}
+
 
 # What each group is allowed to do after the release is cut.
 #
@@ -116,6 +130,23 @@ GROUP_POLICY: dict[str, str] = {
     "evaluations": "append_only",
     "leaderboards": "append_only",
     "analysis": "append_only",
+    # MUTABLE, and this is the whole point of separating it.
+    #
+    # No official MondayBench score depends on a price. Monday Score is quality
+    # only; the cost layer reads the same frozen runs and multiplies their token
+    # counts by a published price. Pinning that research append_only made a
+    # vendor changing a rate - or this repository re-sourcing one - break the
+    # QUALITY release, which is a claim the release was never trying to make.
+    #
+    # Pricing has its own integrity anchor and does not need this one: each
+    # snapshot is immutable, versioned by date, and carries its own sha256
+    # beside it (`pricing-snapshot-<date>.yaml` + `.sha256`). That is the
+    # architecture - suite release + pricing snapshot, pinned separately - and
+    # it is why the suite digest must not move when a price does.
+    #
+    # Tracked rather than excluded: drift is still reported, it just is not a
+    # failure, exactly as for `docs` and `harness`.
+    "pricing": "mutable",
     # models.yaml gains a row when a model is onboarded; overall-releases.yaml
     # gains a revision. Both are registries, and a registry that cannot grow is
     # a registry that cannot describe a new model.
@@ -152,8 +183,16 @@ def _excluded(relative: Path) -> bool:
     return any(part in EXCLUDED_PARTS for part in relative.parts)
 
 
-def collect_group(patterns: Iterable[str], root: Path) -> dict[str, str]:
-    """Hash every file matching any pattern, keyed by POSIX-relative path."""
+def collect_group(
+    patterns: Iterable[str], root: Path, excludes: Iterable[str] = ()
+) -> dict[str, str]:
+    """Hash every file matching any pattern, keyed by POSIX-relative path.
+
+    `excludes` are path prefixes this group does not claim, so a broad pattern
+    can hand a subtree to a group with a different policy without either group
+    hashing it twice.
+    """
+    prefixes = tuple(excludes)
     found: dict[str, str] = {}
     for pattern in patterns:
         for path in root.glob(pattern):
@@ -162,7 +201,10 @@ def collect_group(patterns: Iterable[str], root: Path) -> dict[str, str]:
             relative = path.relative_to(root)
             if _excluded(relative):
                 continue
-            found[relative.as_posix()] = file_sha256(path)
+            posix = relative.as_posix()
+            if any(posix.startswith(prefix) for prefix in prefixes):
+                continue
+            found[posix] = file_sha256(path)
     return dict(sorted(found.items()))
 
 
@@ -308,7 +350,7 @@ def build_suite_manifest(
     groups: dict[str, dict[str, Any]] = {}
 
     for name, patterns in GROUPS.items():
-        files = collect_group(patterns, root)
+        files = collect_group(patterns, root, GROUP_EXCLUDES.get(name, ()))
         if not files:
             raise SuiteError(f"release group {name!r} matched no files - refusing to freeze it")
         index[name] = files
@@ -414,8 +456,14 @@ def verify_suite(version: str, root: Path | None = None) -> dict[str, SuiteDrift
 
     drift: dict[str, SuiteDrift] = {}
     for name, patterns in GROUPS.items():
-        recorded = index.get(name, {})
-        actual = collect_group(patterns, root)
+        if name not in index:
+            # A release that did not declare this group makes no claim about it.
+            # Groups are added over time - `pricing` was split out of `analysis`
+            # after v1.0 - and an older manifest must not start failing, or even
+            # reporting, because a later release drew a new boundary.
+            continue
+        recorded = index[name]
+        actual = collect_group(patterns, root, GROUP_EXCLUDES.get(name, ()))
         changed = [
             (path, sha, actual[path])
             for path, sha in recorded.items()
