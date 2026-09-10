@@ -1,0 +1,78 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.2",
+  "scenario_id": "monday-002",
+  "scenario_prompt_sha256": "740e627cbc7413c321ede0d54000504de54821d34ff4677f82731b89600423a8",
+  "run_id": "monday-002__deepseek-v4.1-flash__002",
+  "run_number": 2,
+  "model": {
+    "slug": "deepseek-v4.1-flash",
+    "display_name": "DeepSeek V4.1 Flash",
+    "provider": "helmcode",
+    "model_id": "deepseek-v4-flash"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 32000,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+    "extra_body": {
+      "caching": false
+    },
+    "config_sha256": "d24799fcff2f34662116bbdd15e21e7a97007b32c3a128ac7b5227fdedc6f2aa",
+    "safety_ceiling_tokens": 32000,
+    "ceiling_semantics": "provider_specific"
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "DELIVERED",
+    "tokens": 5183,
+    "evidence": "explicit_reasoning_tokens",
+    "stream_observed": true,
+    "stream_event_count": 5183
+  },
+  "timestamp_utc": "2026-09-10T17:59:12Z",
+  "usage": {
+    "input_tokens": 2335,
+    "output_tokens": 6360,
+    "reasoning_tokens": 5183
+  },
+  "performance": {
+    "ttft_ms": 866.9,
+    "ttfa_ms": 34855.7,
+    "total_latency_ms": 41040.8,
+    "tokens_per_second": 158.3
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "## 1. CURRENT STATE\n\n- **Enterprise Controls release**: Staging build 2.9.4 passed Security verification. Production attempt failed on shard eu-03 before rollout opened (no customer impact). Two recovery options exist:  \n  - **A**: retry 2.9.4 with shard precheck (no code change, 20 min deploy, 8% session reset risk)  \n  - **B**: deploy 2.9.5-patch (code change, 45 min deploy, <1% risk)  \n  Priya’s release policy: code change requires 25-min delta review before production deploy + 20-min post-deploy verification; no code change requires only 20-min post-deploy verification. Sam needs 15 min after verification to open rollout. Atlas migration must begin before 12:00 Monday; otherwise next window is Thursday.  \n  Marcus available 09:15–10:20; Priya available 09:00–09:35 and 10:25–12:30; Sam available 09:00–12:30.\n\n- **Expansion reconciliation**: September target €180k, expected €126k, gap €54k. Wayne (expansion moved to Oct) and Globex (pending procurement) explain €30k. Remaining €24k from Soylent (expected 18k vs previous 28k) and Wonka (expected 10k vs previous 24k) with no contract explanation. Maya needs explanation by 11:00; board pack locks 11:30.\n\n- **Zenith**: Contract signed (€96k ARR, 24 months), all issues resolved, no escalation needed.\n\n- **Orion**: Admin reported SCIM provisioning worked, but support ticket lists org_17A while Rollout Bot shows org_71A with scim_enabled=false. Sam instructed not to send another status until correct org ID is confirmed and live flag read.\n\n- **Pricing**: Enterprise pricing workbook is not authoritative; internal scenario planning only (€2,500 platform / 40 seats / €55 extra seat). No external quoting or announcement date.\n\n## 2. MY PLAN FOR TODAY\n\n1. **09:07–09:15** – Choose recovery path **B** (2.9.5-patch) due to lower risk and sufficient time. Submit diff to Priya for delta review.\n2. **09:15–09:32** – Priya reviews diff asynchronously (25 min). Meanwhile, draft expansion explanation for Maya.\n3. **09:32–10:17** – Marcus deploys 2.9.5-patch (45 min). (Marcus leaves at 10:20, so this fits.)\n4. **10:17–10:25** – Wait for Priya’s availability (she is unavailable until 10:25).\n5. **10:25–10:45** – Priya performs post-deploy verification (20 min).\n6. **10:45–11:00** – Sam opens and sanity-checks rollout (15 min). After confirmation, Daniel sends customer announcement.\n7. **11:00** – Send expansion explanation to Maya (before deadline).\n8. **After 11:00** – Verify Orion SCIM: confirm correct org ID (likely org_17A from support ticket) and read live flag for that org. Then respond to Orion.\n9. **Throughout** – Monitor Globex support tickets (SSO, SCIM, audit export) and Soylent issues; prepare to address if needed.\n\n## 3. CUSTOMER / REVENUE PRIORITIES\n\n- **Globex** – High-priority support tickets (SSO setup, SCIM sync, audit export) and usage down 18% / admin logins down 61%. Expansion pending procurement; resolving support issues is critical to close the deal.\n- **Soylent** – Reduced expansion (€10k) and open support tickets (slower onboarding). Investigate if support issues are driving the reduction.\n- **Wonka** – Reduced expansion (€14k) but no tickets or contract explanation. Needs investigation, but no immediate action.\n- **Acme** – Usage reduction expected due to approved shift to annual batch-processing; not a problem.\n- **Wayne** – Expansion moved to October; no action.\n- **Stark** – On plan; no action.\n- **Zenith** – Resolved; no action.\n\n## 4. DO NOT DO\n\n- Do **not** ask Maya for approval – she explicitly said no additional executive gate.\n- Do **not** send Enterprise pricing to Initech – workbook is not authoritative and no announcement date exists.\n- Do **not** call Zenith – contract signed, all resolved.\n- Do **not** send customer announcement until Sam confirms rollout is open.\n- Do **not** send another status to Orion until correct org ID is confirmed and live flag read.\n- Do **not** invent causes for Soylent/Wonka reductions – state only what data establishes.\n\n## 5. UNCLEAR / MUST VERIFY\n\n- **Orion org ID**: Which is correct – org_71A or org_17A? Need to confirm from CRM or support ticket.\n- **Orion live SCIM flag**: What is the actual value for the correct org? Need to read it.\n- **Expansion gap**: Are Soylent and Wonka the only accounts contributing to the remaining €24k? Confirm no other accounts are involved.\n- **2.9.5-patch diff**: Is the diff ready and submitted to Priya? Confirm with Marcus.",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "chatcmpl-1789063100-3UiCwt17Ma2HImKt92T0",
+    "raw_usage": {
+      "completion_tokens": 6360,
+      "prompt_tokens": 2335,
+      "total_tokens": 8695,
+      "completion_tokens_details": {
+        "audio_tokens": 0,
+        "reasoning_tokens": 5183,
+        "image_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 0,
+        "video_tokens": 0,
+        "cache_write_tokens": 0
+      }
+    }
+  }
+}

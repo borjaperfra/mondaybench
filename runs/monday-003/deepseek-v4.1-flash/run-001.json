@@ -1,0 +1,78 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.3",
+  "scenario_id": "monday-003",
+  "scenario_prompt_sha256": "aaf788f309d955d2b427c86fe7d95d2bbf88575fde7306adcfd74b0ec4a4103f",
+  "run_id": "monday-003__deepseek-v4.1-flash__001",
+  "run_number": 1,
+  "model": {
+    "slug": "deepseek-v4.1-flash",
+    "display_name": "DeepSeek V4.1 Flash",
+    "provider": "helmcode",
+    "model_id": "deepseek-v4-flash"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 32000,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+    "extra_body": {
+      "caching": false
+    },
+    "config_sha256": "d24799fcff2f34662116bbdd15e21e7a97007b32c3a128ac7b5227fdedc6f2aa",
+    "safety_ceiling_tokens": 32000,
+    "ceiling_semantics": "provider_specific"
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "DELIVERED",
+    "tokens": 7202,
+    "evidence": "explicit_reasoning_tokens",
+    "stream_observed": true,
+    "stream_event_count": 2239
+  },
+  "timestamp_utc": "2026-09-10T18:01:02Z",
+  "usage": {
+    "input_tokens": 3306,
+    "output_tokens": 8128,
+    "reasoning_tokens": 7202
+  },
+  "performance": {
+    "ttft_ms": 1439.0,
+    "ttfa_ms": 35978.2,
+    "total_latency_ms": 42076.1,
+    "tokens_per_second": 200.0
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "## 1. CRITICAL PATH\n\n**Enterprise SSO (Atlas commitment, Wed EOD):**  \n`billing_schema_migration` (Elena, 3h) → `api_compatibility_patch` (Marcus, 4h) → `sso_regression` (QA, 2h) → `sso_production_rollout` (Marcus, 1h)\n\n**Contoso Compliance Export (hard deadline Tue 16:00 CET):**  \n`billing_schema_migration` (Elena, 3h) → `contoso_permission_patch` (Marcus, 2h) → `contoso_compliance_export` (Julia, 1h)\n\nBoth paths share the first step: **billing_schema_migration**. This is the single most critical dependency.\n\n---\n\n## 2. MY PLAN FOR TODAY (Monday)\n\n| Time | Action | Owner |\n|------|--------|-------|\n| 09:10 | Confirm Elena starts **billing_schema_migration** immediately (3h, finish ~12:00). | Elena |\n| 09:10 | Sarah starts **packaging_approval_pack** using mockups (1.5h, submit before 12:00 for same-day approval). | Sarah |\n| 09:10 | Julia starts **contoso_export_formatter** (2h, independent, needed for Tue demo). | Julia |\n| 12:00 | After migration lands, Marcus starts **contoso_permission_patch** (2h, finish ~14:00). | Marcus |\n| 14:00 | Julia runs **contoso_compliance_export** (1h, finish ~15:00) – meets Tue deadline early. | Julia |\n| 15:00 | Marcus starts **api_compatibility_patch** (4h) – works 15:00–17:30 (3.5h), leaves 0.5h for Tue 13:00–13:30. | Marcus |\n| Afternoon | Sarah builds **pricing_page** (3h) after approval is granted (or starts **board_pack_non_revenue** if time permits). | Sarah |\n| Afternoon | Sarah can also start **board_pack_non_revenue** (4h) in parallel with pricing work. | Sarah |\n| All day | Drop **onboarding_instrumentation** – not a launch blocker (confirmed by Julia). Inform Marcus. | Marcus |\n\n**Delegate/unblock:**  \n- No need to involve Daniel unless Elena cannot complete migration.  \n- Security review is already approved (email from Maya) – mark task as done.  \n- Ensure QA is on standby for regression once compatibility patch is ready (Tue afternoon).\n\n---\n\n## 3. PARALLEL WORK\n\nCan proceed without waiting for the critical path:\n\n- **contoso_export_formatter** (Julia) – independent, done Monday.  \n- **packaging_approval_pack** (Sarah) – independent, done Monday morning.  \n- **board_pack_non_revenue** (Sarah) – independent, can be done any time.  \n- **onboarding_launch** (Julia) – independent, can be done later in the week.  \n- **pricing_page** (Sarah) – can be built after approval, but approval is independent, so she can start once pack is submitted.\n\n---\n\n## 4. BLOCKERS & DEPENDENCIES\n\n**Actual blockers:**  \n- **billing_schema_migration** – blocks both SSO and Contoso permission patch. Must be done first.  \n- **Marcus’s Tuesday morning** – blocked by Atlas technical session (09:00–13:00), so no patch work then.  \n- **Elena’s availability** – out from Wed noon, so migration must be done by Tue EOD (we’re doing it Mon).  \n- **Contoso compliance export** – hard deadline Tue 16:00, so permission patch must be done by then (we’re doing it Mon).  \n\n**Unblocked:**  \n- Security review – already approved, no action needed.  \n- Onboarding instrumentation – no longer a blocker, can be deprioritized.  \n- Contoso export formatting – independent, being fixed Monday.\n\n---\n\n## 5. EARLIEST DELIVERY\n\n**Main critical path (Enterprise SSO):**  \n- Migration done Mon 12:00  \n- Compatibility patch done Tue 13:30 (Mon 15:00–17:30 + Tue 13:00–13:30)  \n- Regression done Tue 15:30  \n- Rollout done Tue 16:30  \n\n**Earliest SSO delivery: Tuesday 16:30** – well before Wednesday EOD.\n\n**Contoso compliance export:** delivered Monday 15:00 – well before Tuesday 16:00 deadline.\n\n---\n\n## 6. RISKS / UNKNOWNS\n\n- **Migration slippage** – if Elena’s 3h estimate is off, everything shifts.  \n- **Compatibility patch complexity** – Marcus may need more than 4h; could push regression/rollout.  \n- **QA regression findings** – if issues arise, rollout could be delayed past Wed EOD.  \n- **Packaging approval** – committee may not clear same day; could delay pricing page launch.  \n- **Contoso export acceptance** – we assume the file will be accepted, but no confirmation from Anja.  \n- **Onboarding launch** – unknown if any hidden dependencies exist (e.g., final sign-off).  \n- **Board pack revenue** – depends on backfill completing without errors; if backfill fails, revenue charts delayed.",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "chatcmpl-1789063210-mxXX2d6MzKkfg3faMTMj",
+    "raw_usage": {
+      "completion_tokens": 8128,
+      "prompt_tokens": 3306,
+      "total_tokens": 11434,
+      "completion_tokens_details": {
+        "audio_tokens": 0,
+        "reasoning_tokens": 7202,
+        "image_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 0,
+        "video_tokens": 0,
+        "cache_write_tokens": 0
+      }
+    }
+  }
+}

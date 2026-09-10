@@ -211,3 +211,67 @@ releases:
       - id: monday-005
         prompt_sha256: 532cd464a9b75045f808886c44e667237d6fd1b947826510643b9f8bcc30059a
         rubric_version: "0.4"
+
+  # ---------------------------------------------------------------------------
+  - overall_version: 3
+    revision: 1
+    label: "Overall v3.1 - DeepSeek V4.1 Flash added"
+    status: released
+    suite_version: "1.2"
+    aggregation: arithmetic_mean
+    note: >
+      A REVISION OF v3, NOT A NEW VERSION. Same five scenarios, same frozen
+      prompts, same rubric versions, same arithmetic, same judge contract. One
+      model is added and nothing else moves: every incumbent Monday Score here
+      is identical to its v3 score. v3 stays byte-frozen and remains the
+      citable eight-model artifact.
+
+      WHY IT READS SUITE v1.2 AND NOT v1.1. The suite CONTENT is byte-identical
+      to v1.1 - the same scenarios, rubrics, evaluators and taxonomy, all
+      verified `immutable` against the v1.1 manifest. What v1.2 adds is
+      evidence: fifteen runs, 354 criterion verdicts, fifteen evaluations and a
+      ninth column on each scenario board. A scenario board is a ranking of N
+      models, so it cannot gain a row without changing, and the v1.1 manifest
+      hashes `leaderboard/**/*` as append_only. Writing the nine-model boards
+      into v1.1 would therefore have stopped v1.1 verifying - so they are
+      written to `leaderboard/v1.2/` and v1.1 keeps its eight-model boards
+      byte-frozen. Nothing about the suite got harder or different; a release
+      is how this repository records that more evidence exists.
+
+      WHY THE NEW MODEL HAS ITS OWN SLUG. Helmcode replaced the deployment
+      behind the model id `deepseek-v4-flash` with V4.1 in place, so the id the
+      harness calls is the same one the incumbent `deepseek-v4-flash` was
+      generated against in August. The incumbent's fifteen runs are untouched
+      and its Monday Score is identical to its v3 score; the challenger is a
+      separate slug with its own fifteen generations and its own 354 criterion
+      verdicts. Averaging the two into one row would put two different models
+      behind one number, which is the failure a frozen suite exists to prevent.
+
+      WHAT A CLIENT COULD AND COULD NOT VERIFY. The version change is an
+      operator statement, not something this repository proved: the gateway
+      exposes no version field anywhere a client can read. What IS observable,
+      and is recorded in models.yaml, is that the deployment behind that id
+      changed - the request-id format moved from OpenRouter-style `gen-...` to
+      `chatcmpl-...`, and `cost_details` stopped being returned. Neither says
+      "4.1"; together they say "not the same deployment".
+
+      SPEED IS THE STANDOUT AND IT IS NOT IN THE SCORE. The challenger's median
+      TTFA is between two and five times faster than the incumbent's on every
+      one of the five scenarios. Latency has never been a term in a Monday
+      Score and is not one here; it is published beside it.
+    scenarios:
+      - id: monday-001
+        prompt_sha256: ed4d7beb1d7d1029c36eb8533e449027e0dc1a1047f8a38951a91781a0a5e398
+        rubric_version: "0.2"
+      - id: monday-002
+        prompt_sha256: 740e627cbc7413c321ede0d54000504de54821d34ff4677f82731b89600423a8
+        rubric_version: "0.2"
+      - id: monday-003
+        prompt_sha256: aaf788f309d955d2b427c86fe7d95d2bbf88575fde7306adcfd74b0ec4a4103f
+        rubric_version: "0.3"
+      - id: monday-004
+        prompt_sha256: 3a0cbb569ca4f711b8907177af9204cec267d26f35f732829df56b03ed23ef99
+        rubric_version: "0.3"
+      - id: monday-005
+        prompt_sha256: 532cd464a9b75045f808886c44e667237d6fd1b947826510643b9f8bcc30059a
+        rubric_version: "0.4"

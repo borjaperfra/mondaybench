@@ -258,7 +258,65 @@ models:
       source: "measured from gateway cost_details, 2026-08-27"
     notes: >
       1M context. Reports reasoning_tokens in usage, so it thinks by default -
-      capabilities.reasoning is true accordingly.
+      capabilities.reasoning is true accordingly. THE INCUMBENT ENTRY: its 15
+      official runs were generated 2026-08-28..09-03, when this id served V4.
+      See deepseek-v4.1-flash below - the id now serves a different deployment,
+      so this entry must not be regenerated against it.
+
+  # ---------------------------------------------------------------------------
+  # SAME model_id AS THE ENTRY ABOVE, DELIBERATELY, AND A DIFFERENT SLUG.
+  #
+  # Helmcode moved the deployment behind `deepseek-v4-flash` to V4.1 in place.
+  # Borja states this; the gateway does not expose a version anywhere a client
+  # can read, so it is recorded as an operator statement and not as something
+  # this repo verified. What the repo CAN show is that the deployment changed
+  # on that id, and it is worth writing down because it is the only client-side
+  # evidence there is:
+  #
+  #                        official runs, 2026-08-28      probed 2026-09-10
+  #   request id           gen-1787905126-pZD1QrEG...     chatcmpl-1789062913-...
+  #   cost_details         present (economics recorded)   absent
+  #
+  # `gen-...` is the OpenRouter-style id that models.yaml's header notes for
+  # this model and for glm5.2; `chatcmpl-...` is what the plan-covered models
+  # return. So both the routing fingerprint and the billing shape flipped.
+  # Neither says "4.1" - together they say "not the same deployment".
+  #
+  # WHY A NEW SLUG AND NOT AN EDIT. A Monday Score is the mean of a model's own
+  # runs. Pointing the incumbent slug at a new deployment and adding runs would
+  # average two models into one number, which is the one thing a frozen suite
+  # exists to prevent. The incumbent's 15 runs stay exactly as published; this
+  # slug starts from zero and needs its own 15.
+  # ---------------------------------------------------------------------------
+  deepseek-v4.1-flash:
+    display_name: "DeepSeek V4.1 Flash"
+    provider: helmcode
+    api_style: openai_compatible
+    # Not a typo. The gateway serves 4.1 under the 4 id; there is no 4.1 id.
+    # `mondaybench endpoints` verifies this one resolves, which is all a client
+    # can check.
+    model_id: "deepseek-v4-flash"
+    base_url_env: HELMCODE_BASE_URL
+    api_key_env: HELMCODE_API_KEY
+    generation:
+      temperature: 0
+      max_output_tokens: 32000
+    extra_body:
+      # See the cache note in the header. Not part of the prompt.
+      caching: false
+    capabilities:
+      reasoning: true
+    # No pricing block. The deployment stopped returning cost_details, so there
+    # is nothing measured to record - and copying the incumbent's figures would
+    # price this battery off a tariff that demonstrably no longer applies to it.
+    # Null is "not measured", never "free"; see the header note.
+    notes: >
+      1M context. Reports reasoning_tokens in usage, so it thinks by default.
+      Shares its model_id with deepseek-v4-flash because Helmcode replaced the
+      deployment in place rather than publishing a second id - see the block
+      above for what was observed and what is only stated. Its runs are
+      therefore distinguishable from the incumbent's by date and by
+      provider_metadata.request_id, not by the id that was called.
 
   glm5.2:
     display_name: "GLM 5.2"

@@ -1,0 +1,78 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.4",
+  "scenario_id": "monday-004",
+  "scenario_prompt_sha256": "3a0cbb569ca4f711b8907177af9204cec267d26f35f732829df56b03ed23ef99",
+  "run_id": "monday-004__deepseek-v4.1-flash__002",
+  "run_number": 2,
+  "model": {
+    "slug": "deepseek-v4.1-flash",
+    "display_name": "DeepSeek V4.1 Flash",
+    "provider": "helmcode",
+    "model_id": "deepseek-v4-flash"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 96000,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+    "extra_body": {
+      "caching": false
+    },
+    "config_sha256": "4369225ce32e2470d5687bec6742596f02c1305f486b600a199685f5f2dd3682",
+    "safety_ceiling_tokens": 96000,
+    "ceiling_semantics": "provider_specific"
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "DELIVERED",
+    "tokens": 18666,
+    "evidence": "explicit_reasoning_tokens",
+    "stream_observed": true,
+    "stream_event_count": 20620
+  },
+  "timestamp_utc": "2026-09-10T18:06:49Z",
+  "usage": {
+    "input_tokens": 10302,
+    "output_tokens": 22321,
+    "reasoning_tokens": 18666
+  },
+  "performance": {
+    "ttft_ms": 1821.6,
+    "ttfa_ms": 120684.4,
+    "total_latency_ms": 133654.6,
+    "tokens_per_second": 169.3
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "## 1. EXECUTIVE SUMMARY\n\n- **SMB segment is the weakest**: 4 of 18 SMB customers churned in October (22% monthly churn), the highest of any segment. While SMB is profitable on a monthly basis, the high churn rate implies a very short customer lifetime and low LTV.\n- **Mid-market is barely profitable** after allocating costs based on usage and support tickets (profit margin ~7.6%). This is driven by several mid-market customers on the enterprise plan whose revenue is far below the average enterprise-plan customer.\n- **Acquisition channel efficiency cannot be fully assessed** because marketing spend data is missing. However, partner leads show the highest conversion-to-paid rate and highest revenue per conversion, while paid search generates the most total attributed revenue.\n- **Starter plan has the worst economics**: support cost is 32% of revenue (vs 13% for pro, 25% for enterprise), and it has the highest churn. It deserves engineering attention to improve retention and reduce support burden.\n- **Data quality issues**: duplicate invoice for soylent in October, missing acquisition cost data, and usage_account_id mismatches (e.g., wayne_ent vs wayne-enterprises) complicate precise analysis.\n\n---\n\n## 2. REVENUE & CUSTOMER HEALTH\n\n**Headline MRR** (from plans data):  \n- Sep: €746,100  \n- Oct: €757,700 (+1.6%)\n\n**What drives the change**:  \n- New logos added €11.1k MRR (5 SMB customers).  \n- Hooli expansion added €3k MRR.  \n- Soylent downgrade reduced MRR by €2.5k.  \n- Churned customers (nakatomi, slate, mega, dinoco, buy-n-large) still paid for October, so they are included in Oct MRR but will drop out in November.\n\n**Segment MRR (active customers, Oct)**:\n- Enterprise: €565,000 (8 customers)\n- Mid-market: €127,500 (9 customers)\n- SMB: €39,900 (14 customers)\n\n**Churn**:\n- SMB: 4 churns (22% of 18 SMB customers at start of month)\n- Mid-market: 1 churn (nakatomi, 10% of 10)\n- Enterprise: 0 churns\n\n**Support intensity** (Oct tickets per €1k MRR):\n- Enterprise: 25 tickets / €565k = 0.044 per €1k\n- Mid-market: 21 tickets / €127.5k = 0.165 per €1k\n- SMB: 24 tickets / €39.9k = 0.601 per €1k\n\nSMB generates disproportionately more support tickets relative to revenue, indicating high service cost per euro.\n\n---\n\n## 3. ACQUISITION\n\n**Attributed revenue by channel (Sep+Oct)**:\n- Paid search: €274,800 (6 conversions)\n- Partner: €166,800 (2 conversions)\n- Content: €109,200 (4 conversions)\n- Outbound: €80,400 (3 conversions)\n\n**Conversion rates (paid conversions / leads)**:\n- Partner: 2/135 = 1.48%\n- Content: 4/590 = 0.68%\n- Outbound: 3/355 = 0.85%\n- Paid search: 6/1420 = 0.42%\n\n**Revenue per paid conversion**:\n- Partner: €83,400\n- Paid search: €45,800\n- Content: €27,300\n- Outbound: €26,800\n\n**What can be concluded**:\n- Partner leads convert to paid at the highest rate and yield the highest revenue per conversion, but volume is very low (only 2 conversions in two months).\n- Paid search delivers the most total revenue and a solid revenue per conversion, but has the lowest conversion rate.\n- **CAC payback cannot be calculated** because marketing spend per channel is not provided. Without cost data, we cannot determine which channel is most efficient in terms of payback.\n\n**Recommendation**: Do not increase spend on any channel yet. First, obtain cost data to compute CAC payback. If forced to choose, partner shows the best quality signals, but scalability is unknown.\n\n---\n\n## 4. PLAN ECONOMICS\n\nUsing plan-level data (Oct) and allocating costs based on usage (infra) and weighted support tickets (support):\n\n| Plan | Revenue | Infra Cost | Support Cost | Total Cost | Profit | Margin |\n|------|---------|------------|--------------|------------|--------|--------|\n| Enterprise | €659,500 | €296,800 | €168,000 | €464,800 | €194,700 | 29.5% |\n| Pro | €66,200 | €16,100 | €8,600 | €24,700 | €41,500 | 62.7% |\n| Starter | €32,000 | €11,400 | €10,300 | €21,700 | €10,300 | 32.2% |\n\n**Per-customer economics** (using plan averages):\n- Enterprise: profit €13,907/customer\n- Pro: profit €4,611/customer\n- Starter: profit €792/customer\n\n**Support cost as % of revenue**:\n- Enterprise: 25.5%\n- Pro: 13.0%\n- Starter: 32.2%\n\n**Starter plan is the weakest**: lowest profit per customer, highest support cost ratio, and highest churn (all churned customers were on starter). Pro plan is the most efficient and growing (+5% MRR). Enterprise is stable but has high absolute costs.\n\n---\n\n## 5. RECOMMENDATIONS\n\n1. **Reduce investment in the SMB segment** – The 22% monthly churn rate and low LTV (estimated ~€5k per customer) make SMB unattractive. While they are profitable on a monthly basis, the churn erodes lifetime value. Focus sales and marketing efforts on Mid-market and Enterprise, where churn is lower and LTV is higher.\n\n2. **Do not increase spend on any acquisition channel yet** – Without marketing cost data, CAC payback cannot be computed. Obtain spend per channel and then evaluate. Partner shows the best quality signals, but volume is too low to justify scaling without more data.\n\n3. **Focus engineering on the Starter plan** – It has the highest support cost per revenue and the highest churn. Improving product stability, reducing rate-limit issues, and simplifying onboarding could reduce support tickets and improve retention. This is the highest-leverage area for product investment.\n\n---\n\n## 6. UNCERTAINTIES / DATA ISSUES\n\n- **Duplicate invoice**: `INV-2026-10-0209` for soylent appears twice (stripe and billing_sync). We treated it as one invoice; if both are real, October revenue is overstated by €19,500.\n- **Missing acquisition cost data**: CAC payback cannot be calculated. Only attributed revenue and lead counts are available.\n- **Usage account ID mismatches**: `wayne_ent` vs `wayne-enterprises`, `prestige_ww` vs `prestige-worldwide` – we mapped these correctly, but any future joins must be careful.\n- **Churn data limited to one month**: The 22% SMB churn is based on a single month; it may not be representative. However, it is a strong signal.\n- **Cost allocation assumptions**: We allocated plan-level costs to customers using usage (requests) and weighted support tickets. This is an approximation; actual per-customer costs may differ.\n- **Expansion revenue timing**: Attributed expansion revenue in acquisition may not yet be reflected in MRR (takes effect from following billing cycle). This could understate the impact of expansions.\n- **Trial-to-paid conversion not tracked**: Funnel data only shows leads to trial, not trial to paid. This limits our ability to assess full-funnel efficiency.",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "chatcmpl-1789063465-q0tbl7srqhXKrirE0WUe",
+    "raw_usage": {
+      "completion_tokens": 22321,
+      "prompt_tokens": 10302,
+      "total_tokens": 32623,
+      "completion_tokens_details": {
+        "audio_tokens": 0,
+        "reasoning_tokens": 18666,
+        "image_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 0,
+        "video_tokens": 0,
+        "cache_write_tokens": 0
+      }
+    }
+  }
+}

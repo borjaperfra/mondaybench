@@ -1,0 +1,78 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.3",
+  "scenario_id": "monday-003",
+  "scenario_prompt_sha256": "aaf788f309d955d2b427c86fe7d95d2bbf88575fde7306adcfd74b0ec4a4103f",
+  "run_id": "monday-003__deepseek-v4.1-flash__003",
+  "run_number": 3,
+  "model": {
+    "slug": "deepseek-v4.1-flash",
+    "display_name": "DeepSeek V4.1 Flash",
+    "provider": "helmcode",
+    "model_id": "deepseek-v4-flash"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 32000,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+    "extra_body": {
+      "caching": false
+    },
+    "config_sha256": "d24799fcff2f34662116bbdd15e21e7a97007b32c3a128ac7b5227fdedc6f2aa",
+    "safety_ceiling_tokens": 32000,
+    "ceiling_semantics": "provider_specific"
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "DELIVERED",
+    "tokens": 11987,
+    "evidence": "explicit_reasoning_tokens",
+    "stream_observed": true,
+    "stream_event_count": 11987
+  },
+  "timestamp_utc": "2026-09-10T18:03:01Z",
+  "usage": {
+    "input_tokens": 3332,
+    "output_tokens": 13221,
+    "reasoning_tokens": 11987
+  },
+  "performance": {
+    "ttft_ms": 2025.0,
+    "ttfa_ms": 60041.5,
+    "total_latency_ms": 65916.5,
+    "tokens_per_second": 206.9
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "## 1. CRITICAL PATH\n**Enterprise SSO / Atlas is the true critical path.**\n1. **Elena** — `billing_schema_migration` — 3h — must start first.\n2. **Marcus** — `api_compatibility_patch` — 4h — waits on schema migration.\n3. **QA** — `sso_regression` — 2h — waits on compatibility patch.\n4. **Marcus** — `sso_production_rollout` — 1h — waits on QA green light and Marcus’s Tuesday Atlas session.\n\n**Contoso compliance export is the second hard path:**\n- Same schema migration → `contoso_permission_patch` (reassign to Daniel) → Julia produces/sends export.\n- Due **Tue 16:00 CET**, but can finish Monday if we reassign and start immediately after migration.\n\n## 2. MY PLAN FOR TODAY\nIn order:\n1. **09:10 — Me:** Reply to Anja/CEO confirming Contoso compliance export will be delivered before Tue 16:00 CET. State delegated-admin permission bug is identified and being patched today.\n2. **09:00 — Elena:** Start `billing_schema_migration`. At 12:00, kick off `billing_backfill` (automated, ~90 min).\n3. **09:10–09:40 — Marcus + Daniel:** Do the 30-min delegated-admin walkthrough. **Reassign `contoso_permission_patch` from Marcus to Daniel** in the ticket.\n4. **09:10–10:40 — Sarah:** Assemble `packaging_approval_pack` using mockups. Priya confirmed mockups are acceptable. Submit before 12:00 to get same-day committee clearance.\n5. **12:00–16:00 — Marcus:** Start `api_compatibility_patch` as soon as schema migration lands.\n6. **12:00–15:30 — Daniel:** Execute `contoso_permission_patch` after schema migration lands.\n7. **15:30–16:30 — Julia:** Run `contoso_compliance_export` and send to Contoso.\n8. **16:00–17:30 — QA:** Start `sso_regression`; finish any remaining 0.5h Tuesday 09:00–09:30, or run Tue 09:00–11:00.\n9. **Update stale tasks:** Security review is closed/approved per Maya. Onboarding instrumentation is not a launch blocker per Friday thread. Remove both from release blockers.\n\n## 3. PARALLEL WORK\n- **Sarah:** `pricing_page` and `board_pack_non_revenue` can proceed around approval pack. `board_pack_revenue` waits only on billing backfill, expected Mon 13:30.\n- **Julia:** `onboarding_launch` (2h) and `contoso_export_formatter` (2h) can run after compliance export. Do formatter before Tuesday afternoon demo, but after compliance export to avoid exporter risk.\n- **QA:** Prepare SSO regression environment while waiting for compatibility patch.\n- **Elena:** After migration/backfill kickoff, available for contingency handoff to Daniel if needed.\n\n## 4. BLOCKERS & DEPENDENCIES\n- **Real blocker:** `billing_schema_migration` gates SSO compatibility patch, Contoso permission patch, and board revenue charts.\n- **Contoso permission bug is real.** Formatting request is not production-blocking, only a Tuesday demo preference.\n- **Security review is not a blocker.** Maya approved current scope.\n- **Onboarding instrumentation is not a launch blocker.** Marcus’s 3h hold can be released.\n- **Marcus is a single point of failure** on SSO compatibility/rollout. Reassigning Contoso to Daniel protects the SSO path.\n- **Elena out Wed noon.** If migration slips, Daniel needs 30 min handoff before Wed noon. Since we plan migration Monday, risk is low, but consider a contingency handoff today.\n- **Board revenue charts** blocked until `billing_backfill` completes.\n\n## 5. EARLIEST DELIVERY\n- **SSO production rollout:** **Tuesday ~14:00** local, after Marcus’s Atlas session, assuming QA passes. Ahead of Wed EOD.\n- **Contoso compliance export:** **Monday ~16:30–17:00**, ahead of Tue 16:00 CET.\n- **Billing backfill:** **Monday ~13:30**.\n- **Board revenue charts:** earliest **Tuesday 11:00** if Sarah prioritizes it.\n- **Pricing approval:** can clear **today** if Sarah submits before 12:00; page can be ready before Thu 17:00.\n- **Onboarding launch:** can be done by Fri 12:00 with Julia’s 2h.\n\n## 6. RISKS / UNKNOWNS\n- QA regression may reveal surprises and slip SSO.\n- Daniel and Marcus may touch the same account-mapping layer; parallel work could create merge/conflict risk. If so, serialize Contoso first, but SSO likely still lands Tuesday afternoon.\n- Daniel’s 3.5h estimate is longer than Marcus’s 2h; if it overruns, Contoso export may move later Monday but still before Tue 16:00.\n- Packaging approval pack may need margin impact/tier data not confirmed available.\n- Elena’s migration/backfill could fail; Daniel needs production migration permissions before Elena leaves Wed noon.\n- Marcus’s Tuesday Atlas session 09:00–13:00 is immovable; any SSO slip pushes rollout after 13:00.\n- Julia’s exporter formatting change could affect compliance export if sequenced before it; do compliance export first.",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "chatcmpl-1789063304-JC4wvOalMO1dQFvqLZgQ",
+    "raw_usage": {
+      "completion_tokens": 13221,
+      "prompt_tokens": 3332,
+      "total_tokens": 16553,
+      "completion_tokens_details": {
+        "audio_tokens": 0,
+        "reasoning_tokens": 11987,
+        "image_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 0,
+        "video_tokens": 0,
+        "cache_write_tokens": 0
+      }
+    }
+  }
+}

@@ -168,12 +168,20 @@ def test_base_releases_are_still_keyed_by_integer():
     released, which is a thing releases are supposed to be able to do.
     """
     releases = load_releases()
-    assert all(isinstance(key, int) for key in releases), releases.keys()
-    assert all(r.revision == 0 for r in releases.values())
-    # every declared base release is reachable by its own integer
+    # A BASE release is keyed by its integer; a REVISION is keyed by "V.R" and
+    # must not take the key of the release it extends. Asserting that every key
+    # is an integer said something stronger and different - that no revision
+    # exists - which is a state releases are supposed to be able to leave.
     for key, release in releases.items():
-        assert release.version == key
-    assert {0, 1, 2} <= set(releases)
+        if release.revision:
+            assert key == f"{release.version}.{release.revision}", key
+            assert release.version in releases, (
+                f"revision {key} shadows or replaces base v{release.version}"
+            )
+        else:
+            assert isinstance(key, int), key
+            assert release.version == key
+    assert {0, 1, 2} <= {k for k in releases if isinstance(k, int)}
 
 
 def test_a_revision_must_keep_the_scenario_set_of_what_it_extends(tmp_path):
@@ -213,7 +221,10 @@ def test_the_generated_revision_block_pins_the_same_scenarios_as_the_base():
     # about the pinning behaviour rather than about which release is newest.
     base = releases[max(k for k in releases if isinstance(k, int))]
     assert block["overall_version"] == base.version
-    assert block["revision"] == 1
+    # The next unused revision of that base, not literally 1: once a revision
+    # is published the generator has to offer the one after it.
+    taken = {r.revision for r in releases.values() if r.version == base.version}
+    assert block["revision"] == max(taken) + 1
     assert block["status"] == "draft"
     assert block["aggregation"] == base.aggregation
     assert [s["id"] for s in block["scenarios"]] == base.scenario_ids

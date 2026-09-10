@@ -1,0 +1,78 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.5",
+  "scenario_id": "monday-005",
+  "scenario_prompt_sha256": "532cd464a9b75045f808886c44e667237d6fd1b947826510643b9f8bcc30059a",
+  "run_id": "monday-005__deepseek-v4.1-flash__001",
+  "run_number": 1,
+  "model": {
+    "slug": "deepseek-v4.1-flash",
+    "display_name": "DeepSeek V4.1 Flash",
+    "provider": "helmcode",
+    "model_id": "deepseek-v4-flash"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 131072,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+    "extra_body": {
+      "caching": false
+    },
+    "config_sha256": "fc165158970f6db8c60eb2b6422c612d987a3fc8994d7ac1adbd5b360ee4a8ff",
+    "safety_ceiling_tokens": 131072,
+    "ceiling_semantics": "provider_specific"
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "DELIVERED",
+    "tokens": 10811,
+    "evidence": "explicit_reasoning_tokens",
+    "stream_observed": true,
+    "stream_event_count": 10811
+  },
+  "timestamp_utc": "2026-09-10T18:09:26Z",
+  "usage": {
+    "input_tokens": 4863,
+    "output_tokens": 12316,
+    "reasoning_tokens": 10811
+  },
+  "performance": {
+    "ttft_ms": 1717.9,
+    "ttfa_ms": 50131.2,
+    "total_latency_ms": 55600.4,
+    "tokens_per_second": 228.6
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "## CEO BRIEFING\n\nDana — state of play for the 15:00 board call, as of 14:20 UTC.\n\n**Incident:** INC-2026-1109-01, Batch API. Started 11:42 UTC on 2026-11-09. Other API surfaces are not part of this incident.\n\n**Current status:** Mitigated at 12:58 by cutting all Batch API traffic to fleet-b; fleet-a is drained and out of rotation. Error rate on `POST /v1/batch/jobs` was 0.3% at 14:12 (baseline 0.2%). The verification window is open until 14:30; policy requires 90 minutes of continuous normal error rate before we can declare resolved. Root cause is not established. fleet-a has not been returned to service. Re-drive of failed jobs is ~60% complete, with no failures on re-drive.\n\n**Impact:** 7 customer accounts affected, all on fleet-a. Headline figure: 17,602 failed Batch API requests out of 58,900 Batch API requests in the window = 29.9%. Across all Northstar API surfaces, those failures were 17,602 of 842,000 requests = 2.1%.\n\n**Customer exposure:** Contoso is affected and is the only affected account on a contract with service-level credits. Contoso’s Batch impact: 9,400 requests, 3,410 failures, first 11:43, last 12:56. Contoso has asked about Schedule B credits (TKT-8907). We cannot confirm a breach or credit amount now. Monthly Availability is determined after month end across the Covered Services; also note Contoso’s known retry behaviour flagged in TKT-8841 could be relevant to B.2(b) exclusions, but that has not been assessed. The other six affected accounts are on standard terms with no credit clause.\n\n**Root cause candidates:** H1 connection-pool change in `r3` (max pool 80→24) is leading but untested; it also shipped to fleet-b, which did not degrade. H2 concentrated load on fleet-a (~3x morning average from the wonka-industries scheduled job) is still live but untested; fleet-a absorbed a higher peak on 2026-11-03. H3 upstream object-storage provider is ruled out. Rollback test for `r3` has not been run.\n\n**Planning:** Marcus’s internal estimate is that if the 14:30 verification window closes clean and the re-drive finishes, we are fully wrapped up and fleet-a back in rotation around 16:00. That is internal only and not for external use.\n\n**If it comes up:** Say the Batch API incident was mitigated, service is recovering, we are monitoring before confirming recovery, root cause is still under investigation, and impact was limited to Batch API and 7 accounts. Do not confirm service credits. Do not give the 16:00 estimate externally. Next public update after 14:30.\n\n## ENGINEERING UPDATE\n\nHandoff for INC-2026-1109-01. Current as of 14:20 UTC.\n\n**State:** Batch API incident, started 11:42. Mitigated at 12:58 by cutover of all Batch traffic to fleet-b. fleet-a drained and out of rotation. Error rate on `POST /v1/batch/jobs` 0.3% at 14:12, baseline 0.2%. Verification window open until 14:30. Do not call resolved before 14:30.\n\n**Impact:** 7 accounts, all fleet-a. Totals from `customer-impact.csv`: 58,900 Batch requests, 17,602 failures = 29.9%. Re-drive ~60% complete, no failures on re-drive.\n\n**Root cause:** Not established.\n- H1 — `r3` connection-pool change (80→24 per worker). Leading. For: shipped 11:31, 11 minutes before first page; fleet-a workers observed queueing on DB connections. Against: `r3` also on fleet-b, which stayed healthy. Untested.\n- H2 — concentrated load on fleet-a (~3x morning average, driven by wonka-industries scheduled job at 11:38). Still live. For: high concurrency on fleet-a. Against: fleet-a absorbed a higher peak on 2026-11-03. Untested.\n- H3 — upstream object-storage provider. Ruled out at 11:47 (provider status green; Files API healthy on same provider).\n- H1/H2 may interact, but that is untested too.\n\n**Open actions:**\n1. Hold until 14:30 verification window. If clean, determine whether to declare resolved. Root cause and fleet-a state still open.\n2. Complete re-drive (Priya on it; ~60% done).\n3. Plan/run `r3` rollback test to discriminate H1 vs H2. The 12:31 decision was not to roll back yet, to preserve fleet-a evidence. Do not disrupt fleet-b.\n4. Decide how/when to return fleet-a to rotation.\n5. Messaging: no cause statements until Marcus confirms. The 12:05 status page was incorrect on cause; Ruth has held further cause updates.\n\n**Internal planning:** Marcus’s estimate: if window closes clean at 14:30 and re-drive finishes, fully wrapped and fleet-a back in rotation around 16:00. Internal only.\n\n## CUSTOMER EMAIL\n\nTo: Contoso  \nSubject: Batch API incident and your service-level question\n\nHello,\n\nThank you for your tickets TKT-8903 and TKT-8907. I am writing with an update on the Batch API incident and your account.\n\nThe incident began at 11:42 UTC on 2026-11-09. A mitigation has been applied and the service is recovering. We are monitoring before confirming recovery. We will provide a further update after 14:30 UTC.\n\nYour account’s Batch API impact during the incident window (11:42–12:58 UTC) was:\n- 9,400 Batch API requests\n- 3,410 failed requests\n- First failure: 11:43 UTC\n- Last failure: 12:56 UTC\n\nOn your question about Schedule B service credits: I am not able to confirm a breach or a credit amount today. Monthly Availability under Schedule B is calculated across the Covered Services for the calendar month and is determined after the end of the calendar month from Northstar’s service records. The figure is published within 10 business days of month end, and any credit claim follows that process.\n\nWe are sorry for the disruption. We will follow up after 14:30 UTC.\n\nNorthstar Support\n\n## STATUS PAGE UPDATE\n\n**Update — 2026-11-09 14:20 UTC**\n\nWe are continuing to respond to an incident affecting the Batch API that began at 11:42 UTC. A mitigation has been applied and the service is recovering. We are monitoring before confirming recovery.\n\nWe will post another update by 14:30 UTC.\n\n*Monitoring.*",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "chatcmpl-1789063700-sGLJZ72hscYWHlcly5dK",
+    "raw_usage": {
+      "completion_tokens": 12316,
+      "prompt_tokens": 4863,
+      "total_tokens": 17179,
+      "completion_tokens_details": {
+        "audio_tokens": 0,
+        "reasoning_tokens": 10811,
+        "image_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 0,
+        "video_tokens": 0,
+        "cache_write_tokens": 0
+      }
+    }
+  }
+}
