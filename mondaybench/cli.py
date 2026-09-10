@@ -984,7 +984,11 @@ def results(
 
 @app.command()
 def overall(
-    version: int = typer.Option(..., "--version", help="Overall release version from overall-releases.yaml"),
+    version: str = typer.Option(
+        ...,
+        "--version",
+        help="Overall release version from overall-releases.yaml, e.g. 3 or 3.1",
+    ),
     preview: bool = typer.Option(
         False,
         "--preview",
@@ -999,11 +1003,21 @@ def overall(
     except OverallError as exc:
         _fail(str(exc))
         return
-    release = releases.get(version)
+    # `load_releases` keys a plain release by int and a model-set revision by
+    # the string "3.1", which is what docs/benchmarking-a-new-model.md tells a
+    # challenger to publish. This option was typed `int`, so the documented
+    # command could not be run at all - a revision was unreachable from the CLI
+    # while the library supported it. Accept both spellings and resolve here.
+    key: int | str = version
+    if version.isdigit():
+        key = int(version)
+    release = releases.get(key)
     if release is None:
         _fail(
             f"no overall release v{version}; declared: "
-            + ", ".join(f"v{v}" for v in sorted(releases))
+            # Keys are a mix of int and str once a revision exists, so sort on
+            # the string. `sorted` on the raw keys raises TypeError.
+            + ", ".join(f"v{v}" for v in sorted(releases, key=str))
         )
         return
 
@@ -1021,7 +1035,7 @@ def overall(
 
     ids = release.scenario_ids
     table = Table(
-        title=f"MondayBench Overall v{release.version}"
+        title=f"MondayBench Overall v{release.slug}"
         + ("  [PREVIEW - NOT OFFICIAL]" if preview else ""),
         box=None,
     )

@@ -322,7 +322,13 @@ def _overall_entries(root: Path) -> list[dict[str, Any]]:
     from .overall import load_releases
 
     entries: list[dict[str, Any]] = []
-    for version, release in sorted(load_releases().items()):
+    # `load_releases` keys a plain release by int and a model-set revision by
+    # the string "3.1", so the keys are a mixed type the moment a revision
+    # exists and `sorted` on them raises TypeError. Sorting on the string keeps
+    # the order stable and readable ("0", "1", "2", "3", "3.1"), which is what
+    # a manifest wants; the version written into the entry is the key itself,
+    # so a revision is recorded under the name its artifact carries.
+    for version, release in sorted(load_releases().items(), key=lambda kv: str(kv[0])):
         artifact = root / "leaderboard" / "overall" / f"overall-v{version}.json"
         entries.append(
             {
