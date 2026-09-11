@@ -1,0 +1,73 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.3",
+  "scenario_id": "monday-003",
+  "scenario_prompt_sha256": "aaf788f309d955d2b427c86fe7d95d2bbf88575fde7306adcfd74b0ec4a4103f",
+  "run_id": "monday-003__deepseek-v4.1-flash-rerun-v1__002",
+  "run_number": 2,
+  "model": {
+    "slug": "deepseek-v4.1-flash-rerun-v1",
+    "display_name": "DeepSeek V4.1 Flash (rerun 2026-09-11)",
+    "provider": "helmcode",
+    "model_id": "deepseek-v4-flash"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 32000,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+    "extra_body": {
+      "caching": false
+    },
+    "config_sha256": "d24799fcff2f34662116bbdd15e21e7a97007b32c3a128ac7b5227fdedc6f2aa",
+    "safety_ceiling_tokens": 32000,
+    "ceiling_semantics": "provider_specific"
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "DELIVERED",
+    "tokens": 17860,
+    "evidence": "explicit_reasoning_tokens",
+    "stream_observed": true,
+    "stream_event_count": 17860
+  },
+  "timestamp_utc": "2026-09-11T17:48:40Z",
+  "usage": {
+    "input_tokens": 3332,
+    "output_tokens": 19556,
+    "reasoning_tokens": 17860
+  },
+  "performance": {
+    "ttft_ms": 1356.8,
+    "ttfa_ms": 81440.0,
+    "total_latency_ms": 89242.5,
+    "tokens_per_second": 222.5
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "**Bottom line:** The week is recoverable. The root dependency is Elena’s **billing schema migration**. Reassign **Contoso permission patch to Daniel** so Marcus can stay on SSO. Security review and onboarding instrumentation are stale blockers. Enterprise SSO can realistically ship **Tuesday ~14:00**; Contoso compliance can ship **Monday 17:10 or Tuesday AM**, both before their deadlines.\n\n---\n\n## 1. CRITICAL PATH\n\n**Main path — Enterprise SSO / Atlas (Wed 17:00 deadline):**\n- Elena: `billing_schema_migration` — 3h\n- Marcus: `api_compatibility_patch` — 4h, after schema lands\n- QA: `sso_regression` — 2h, after compatibility patch\n- Marcus: `sso_production_rollout` — 1h, after QA green light\n\n**Shared prerequisite:** Elena’s schema migration also gates `contoso_permission_patch`.\n\n**Practical sequence:**\n- Mon 09:10–12:10 — Elena: schema migration\n- Mon 12:10–12:40 — Marcus handoff to Daniel on Contoso permission patch\n- Mon 12:40–16:40 — Marcus: compatibility patch\n- Mon 16:40–17:30 — QA can start regression if available; otherwise Tue 09:00–11:00\n- Tue 13:00–14:00 — Marcus: SSO production rollout, after Atlas session 09:00–13:00\n\n**Contoso path:**\n- Schema → Daniel: `contoso_permission_patch` (3.5h after 0.5h handoff) → Julia: `contoso_compliance_export` (1h). Deadline Tue 16:00.\n\n---\n\n## 2. MY PLAN FOR TODAY\n\n1. **09:10 — Confirm Contoso delivery.** Reply to Anja/Contoso, cc Noah/CEO: delegated-admin compliance export will be delivered before Tue 16:00; we will send as soon as the permission patch lands.  \n   **Owner:** me, with Noah for account comms.\n2. **09:10 — Unblock Elena.** Start `billing_schema_migration` immediately.  \n   **Owner:** Elena.\n3. **09:15 — Reassign Contoso permission patch.** Move `contoso_permission_patch` from Marcus to Daniel in ticket/task list.  \n   **Owner:** me/Rachel.\n4. **09:15 — Reset Marcus’s priorities.** Security review is closed; onboarding instrumentation is not a launch blocker. Marcus does 12:10 handoff to Daniel, then `api_compatibility_patch`.  \n   **Owner:** Marcus.\n5. **09:15 — Reset Julia’s priorities.** Be ready for compliance export after Daniel’s patch. Contoso formatter can move to Tue AM. Onboarding launch is not blocked by instrumentation.  \n   **Owner:** Julia.\n6. **09:15 — Reset Sarah’s priorities.** Security review is closed. Use mockups for packaging approval if available and submit before 12:00 if possible. Board revenue charts only after backfill ~13:40.  \n   **Owner:** Sarah.\n7. **09:20 — Update stale task list.** Remove Security review blocker. Remove onboarding instrumentation as launch blocker. Reassign Contoso permission patch to Daniel. Move onboarding launch support to Julia.  \n   **Owner:** me.\n8. **12:10 — Checkpoint.** Elena kicks off `billing_backfill`; Marcus/Daniel handoff; Marcus starts compatibility patch; Daniel starts permission patch.  \n   **Owner:** me.\n9. **16:10 — Checkpoint.** Daniel done → Julia starts `contoso_compliance_export`.  \n   **Owner:** me/Julia.\n10. **16:40 — Checkpoint.** Marcus done → QA can start regression.  \n   **Owner:** me/QA.\n\n---\n\n## 3. PARALLEL WORK\n\n- **Elena:** `billing_backfill` runs automated 12:10–13:40 after schema.\n- **Sarah:** `board_pack_non_revenue`, `pricing_page`, `packaging_approval_pack` can proceed independently. `board_pack_revenue` waits for backfill.\n- **Julia:** `contoso_export_formatter` (2h) and `onboarding_launch` (2h) can proceed; schedule formatter Tue AM if compliance export is done Monday.\n- **QA:** Prepare SSO regression; execute once compatibility patch is ready.\n- **Marcus:** After SSO patch, `onboarding_instrumentation` can proceed — but it is not launch blocking.\n- **Daniel:** After Contoso patch, available for other work.\n\n---\n\n## 4. BLOCKERS & DEPENDENCIES\n\n**Actual blockers:**\n- `billing_schema_migration` blocks both `api_compatibility_patch` and `contoso_permission_patch`.\n- `api_compatibility_patch` blocks `sso_regression`, which blocks `sso_production_rollout`.\n- `contoso_permission_patch` blocks `contoso_compliance_export`.\n- `billing_backfill` blocks `board_pack_revenue`.\n- `packaging_approval_pack` blocks public `pricing_page`.\n\n**Not blockers:**\n- Security review — closed/approved by Maya.\n- Onboarding instrumentation — Julia says existing analytics are enough for launch.\n- Contoso date format — not production blocking; demo preference only.\n- Marcus onboarding launch support — already moved to Julia.\n\n**Can unblock:**\n- Daniel taking Contoso permission patch frees Marcus for SSO.\n- Use mockups for packaging approval instead of waiting for live page.\n- QA can start as soon as compatibility patch is ready.\n\n---\n\n## 5. EARLIEST DELIVERY\n\n- **Billing schema migration:** Mon 12:10; backfill Mon 13:40.\n- **Contoso compliance export:** Mon 17:10 if Daniel finishes by 16:10 and Julia sends by 17:10; otherwise Tue AM, still before Tue 16:00.\n- **Enterprise SSO / Atlas:** compatibility patch Mon 16:40; QA finish Tue 10:10–11:00; rollout Tue 13:00–14:00. **Earliest SSO production rollout complete: Tue ~14:00**, well before Wed 17:00.\n- **Pricing page public:** after packaging approval. If submitted before Mon 12:00, clears Mon; if after, clears Tue AM. Public by Tue/Wed, before Thu 17:00.\n- **Board pack:** revenue after Mon 13:40; Sarah can finish by Tue/Wed, before Fri 10:00.\n- **Onboarding launch:** Julia 2h; can finish Tue/Wed, before Fri 12:00.\n\n---\n\n## 6. RISKS / UNKNOWNS\n\n- QA may find SSO defects. No contingency duration is provided; if defects appear, SSO critical path extends. Wednesday buffer exists but is not unlimited.\n- Marcus’s Atlas session Tue 09:00–13:00 may overrun, delaying rollout. Can move to Wed if needed.\n- Daniel’s Contoso permission patch is estimated at 3.5h. Small slip still meets Tue 16:00; larger slip risks the compliance deadline.\n- Elena’s schema migration may exceed 3h. If it is not done before Wed noon, Daniel needs the 30-min handoff and production migration permissions.\n- Sarah’s packaging approval: unknown whether acceptable mockups are ready. If not, approval pack waits for page build, but likely still meets Thu 17:00.\n- Onboarding instrumentation: Julia says it is not a launch blocker. If that assessment is wrong, Marcus has 3h of work that could interfere.\n- Time zones/deadlines: using the provided +02:00 deadlines and assuming local working hours match the availability table.",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "chatcmpl-14e43bb6-f236-4930-a929-58e0268bc056",
+    "raw_usage": {
+      "completion_tokens": 19556,
+      "prompt_tokens": 3332,
+      "total_tokens": 22888,
+      "completion_tokens_details": {
+        "reasoning_tokens": 17860
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 3198
+      }
+    }
+  }
+}

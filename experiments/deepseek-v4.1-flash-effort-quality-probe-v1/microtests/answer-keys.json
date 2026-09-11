@@ -1,0 +1,173 @@
+{
+  "mt-01-schedule": {
+    "prompt_file": "microtests/mt-01-schedule.txt",
+    "prompt_sha256": "319b054c66cc3eaa16705e84c047f3fd9092e1a88fa76d4dfc0eefcd3b589374",
+    "prompt_bytes": 882,
+    "answer_type": "time",
+    "answer": "12:45",
+    "verification": {
+      "method": "exhaustive search on a 15-minute grid, limits scanned upward",
+      "earliest_feasible_makespan": "12:45",
+      "nothing_feasible_15min_earlier": true,
+      "witness_schedule": {
+        "P1": [
+          "Ada",
+          "08:00",
+          "09:30"
+        ],
+        "P2": [
+          "Ada",
+          "09:30",
+          "10:30"
+        ],
+        "P3": [
+          "Bo",
+          "10:00",
+          "12:00"
+        ],
+        "P4": [
+          "Ada",
+          "10:30",
+          "11:00"
+        ],
+        "P5": [
+          "Ada",
+          "12:00",
+          "12:45"
+        ]
+      }
+    }
+  },
+  "mt-02-supersession": {
+    "prompt_file": "microtests/mt-02-supersession.txt",
+    "prompt_sha256": "ffaa88c4990358a40a5e083ebac051ba52bcdd1afa1a51178c52f2f0107f3d84",
+    "prompt_bytes": 1131,
+    "answer_type": "choice",
+    "answer": "D",
+    "verification": {
+      "method": "supersessions applied in log order, then each option evaluated",
+      "effective_state": {
+        "freeze_window": "13:00-17:00 (10:15 supersedes 09:05)",
+        "freeze_covers_cache_layer": true,
+        "assignee": "Ravi (11:00 supersedes 09:40)",
+        "blocker_cleared": "True (12:10 clears 11:30)",
+        "soak_rule_minutes": 60
+      },
+      "options": {
+        "A": {
+          "supported": false,
+          "why": "15:00 is inside the freeze and Ravi is not in Ops"
+        },
+        "B": {
+          "supported": false,
+          "why": "15:00 is inside the freeze and Dana is not in Ops"
+        },
+        "C": {
+          "supported": false,
+          "why": "a 60-minute soak started at 12:30 ends at 13:30, after the freeze begins at 13:00"
+        },
+        "D": {
+          "supported": true,
+          "why": "holds exactly when A, B and C are all unsupported"
+        }
+      }
+    }
+  },
+  "mt-03-plan-trap": {
+    "prompt_file": "microtests/mt-03-plan-trap.txt",
+    "prompt_sha256": "0ac7f9ba0ce1792c8e5f8fc19d5f014aaf8b231491e7941193f5090b3fdf32a8",
+    "prompt_bytes": 844,
+    "answer_type": "choice",
+    "answer": "D",
+    "verification": {
+      "method": "each plan checked against each written rule",
+      "rule_violations": {
+        "Plan 1": [
+          "snapshot 19:45-20:30 is not entirely inside the maintenance window",
+          "nightly job N at 01:00 writes to S during the rebuild"
+        ],
+        "Plan 2": [
+          "nightly job N at 01:00 writes to S during the rebuild"
+        ]
+      },
+      "executable_plans": []
+    }
+  },
+  "mt-04-supported-claim": {
+    "prompt_file": "microtests/mt-04-supported-claim.txt",
+    "prompt_sha256": "3cc987d2837729a00371157381c306ba176198a2888ec64b54ff689fd823639e",
+    "prompt_bytes": 745,
+    "answer_type": "choice",
+    "answer": "B",
+    "verification": {
+      "method": "arithmetic checked; the discrimination between options is a design assertion about causal claims, not an arithmetic result",
+      "arithmetic": {
+        "week1_rate_pct": 8.0,
+        "week2_rate_pct": 9.0,
+        "signup_difference": 24
+      },
+      "why_each_option": {
+        "A": "asserts the video caused the change; two confounded changes occurred at once, so attribution is not available",
+        "B": "states the rate change, which the arithmetic gives, and declines the attribution the data cannot support",
+        "C": "the 24-signup drop is real, but 'reduced' is a causal claim about the campaign ending, which is equally confounded",
+        "D": "a forecast; nothing in two weeks of totals establishes it"
+      },
+      "design_assertion": true
+    }
+  },
+  "mt-05-allocation": {
+    "prompt_file": "microtests/mt-05-allocation.txt",
+    "prompt_sha256": "ef14a17d472ba32e703a2daef465bd162119638f803f19c13f8b2634867f0d01",
+    "prompt_bytes": 1034,
+    "answer_type": "idset",
+    "answer": [
+      "R1",
+      "R2",
+      "R4"
+    ],
+    "verification": {
+      "method": "exhaustive over all 32 subsets, objective applied as written",
+      "valid_sets": 10,
+      "best_space": 9,
+      "sets_tied_on_space": [
+        [
+          "R1",
+          "R2",
+          "R4"
+        ]
+      ],
+      "unique_winner": true,
+      "runner_up_sets": [
+        [
+          [
+            "R2",
+            "R4",
+            "R5"
+          ],
+          8
+        ],
+        [
+          [
+            "R3",
+            "R4"
+          ],
+          7
+        ],
+        [
+          [
+            "R1",
+            "R4"
+          ],
+          6
+        ],
+        [
+          [
+            "R2",
+            "R5"
+          ],
+          6
+        ]
+      ]
+    }
+  }
+}

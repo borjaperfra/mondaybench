@@ -90,6 +90,38 @@
       "publication_pricing_ref": "FIRST_PARTY_LIST"
     },
     {
+      "model": "deepseek-v4.1-flash",
+      "display_name": "DeepSeek V4.1 Flash",
+      "score": 94.53,
+      "quality_band": "TOP_BAND",
+      "median_ttfa_ms": 69198.1,
+      "mean_output_tokens": 17541.1,
+      "mean_reasoning_tokens": 15602.5,
+      "pricing_confidence": "MEDIUM",
+      "identity_confidence": "EXACT",
+      "provisional": false,
+      "notes": "Cost is a RANGE for two reasons that both widen it upward, so the low end is what this battery actually incurred and the high end is what the same battery costs under the worst applicable conditions. First, DeepSeek's rate doubles during peak hours (Mon-Fri 01:00-04:00 and 06:00-10:00 UTC); all fifteen runs are stamped Friday 17:40-18:00 UTC, so they paid off-peak. Second, 73% of input tokens came back marked cache-hit at $0.003/1M against $0.15/1M for a miss - even though the requests set caching:false, which the gateway did not honour - so a caller who does get caching off pays the all-miss figure. Low = off-peak with the cache split observed; high = peak with no cache. Rate is the vendor's published list price, not a gateway reading: this deployment returns no cost_details.",
+      "normalized_cost_per_task": [
+        0.010725,
+        0.02247
+      ],
+      "normalized_cost_per_1k": [
+        10.72,
+        22.47
+      ],
+      "cost_kind": "RANGE",
+      "pricing_class": "FIRST_PARTY_LIST",
+      "price_basis": "First-party",
+      "pricing_snapshot": "first-party-2026-09-11",
+      "normalized_first_party_cost_per_1k": [
+        10.72,
+        22.47
+      ],
+      "provider_public_cost_per_1k": null,
+      "benchmark_run_identity": "STRONG_MATCH",
+      "publication_pricing_ref": "FIRST_PARTY_LIST"
+    },
+    {
       "model": "glm5.3",
       "display_name": "GLM 5.3",
       "score": 93.73,
@@ -292,6 +324,16 @@
         "glm5.3"
       ],
       "inherits": "pricing-2026-09-02"
+    },
+    "first_party_v41_flash": {
+      "id": "first-party-2026-09-11",
+      "inherits": "pricing-2026-09-02",
+      "adds": [
+        "deepseek-v4.1-flash"
+      ],
+      "sha256": "798100a97bf445c76f8504f583fc673624fbaea1127c54fa0d30e380063aafc1",
+      "pricing_class": "FIRST_PARTY_LIST",
+      "note": "Vendor list price, not a gateway reading: this deployment returns no cost_details and exposes no pricing metadata. Rate is time-of-day dependent; the battery ran off-peak."
     }
   },
   "price_basis_labels": {
@@ -300,6 +342,13 @@
     "Unknown": "No sufficiently identified price source.",
     "Helmcode route": "Cost metered by the Helmcode gateway on the benchmark runs themselves. An observed route cost, not a vendor list price."
   },
-  "unknown_pricing_remaining": [],
+  "unknown_pricing_remaining": [
+    {
+      "model": "gpt-6-astra",
+      "display_name": "GPT-6 Astra",
+      "reason": "NO_TOKEN_COUNTS",
+      "detail": "A published rate exists ($10/1M input, $50/1M output, $1/1M cached input) but there is nothing to multiply it by: the Codex CLI route reports no usage, and input_tokens, output_tokens and reasoning_tokens are null in all fifteen run artefacts. Cost per task stays UNKNOWN until a run of this model reports tokens."
+    }
+  ],
   "provider_reference_caveat": "Pricing reference chosen explicitly for publication. The original gateway run id did not identify a commercial variant, so the benchmark run identity remains AMBIGUOUS; this OpenRouter route is a public reference for cost, not evidence of how the run was served."
 }

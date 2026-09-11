@@ -1,0 +1,73 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.3",
+  "scenario_id": "monday-003",
+  "scenario_prompt_sha256": "aaf788f309d955d2b427c86fe7d95d2bbf88575fde7306adcfd74b0ec4a4103f",
+  "run_id": "monday-003__deepseek-v4.1-flash-rerun-guardrail-v1__003",
+  "run_number": 3,
+  "model": {
+    "slug": "deepseek-v4.1-flash-rerun-guardrail-v1",
+    "display_name": "DeepSeek V4.1 Flash (rerun + guardrail 2026-09-11)",
+    "provider": "helmcode",
+    "model_id": "deepseek-v4-flash"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 32000,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "eb136804970c72fa214521a341fdde95294393990fae0a5e86bd15614794653d",
+    "extra_body": {
+      "caching": false
+    },
+    "config_sha256": "6294ee5067cb70d6ecf399c2008e6df51d5e14fd811ce324f3223595bfdb9d04",
+    "safety_ceiling_tokens": 32000,
+    "ceiling_semantics": "provider_specific"
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "DELIVERED",
+    "tokens": 10931,
+    "evidence": "explicit_reasoning_tokens",
+    "stream_observed": true,
+    "stream_event_count": 10931
+  },
+  "timestamp_utc": "2026-09-11T19:15:50Z",
+  "usage": {
+    "input_tokens": 3735,
+    "output_tokens": 12296,
+    "reasoning_tokens": 10931
+  },
+  "performance": {
+    "ttft_ms": 1821.9,
+    "ttfa_ms": 50250.5,
+    "total_latency_ms": 56562.9,
+    "tokens_per_second": 224.6
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "## What's actually going on\n\nEverything real gates on **Elena's billing schema migration (3h)**. Two of this week's commitments sit behind it:\n- **Enterprise SSO** (Wed EOD, Atlas) — Marcus's compat patch can't finish on the old account mapping.\n- **Contoso delegated-admin compliance export** (Tue 16:00 CET, contractual) — the permission fix \"can only go in after that lands.\"\n\nFriday's task list (14:20) is stale on four counts — discard it:\n- **Security review is closed/approved** (Maya, Fri 16:48) — covers the account-mapping rewrite and tenant permission model; no re-review needed.\n- **Onboarding instrumentation is NOT a launch blocker** (Julia, Fri 17:06).\n- **Contoso exports are not broken** — it's a date-format preference (Julia/Peter); imports work.\n- **Onboarding launch support moved from Marcus to Julia** (Fri 14:00 meeting).\n\n---\n\n## 1. CRITICAL PATH\n\n**Gate:** Elena — `billing_schema_migration` (3h) → backfill kicked off (1.5h automated).\n\nThen two branches, run in parallel:\n- **SSO (longest chain):** Marcus `api_compatibility_patch` (4h) → QA `sso_regression` (2h) → Marcus `sso_production_rollout` (1h). *Constraint: Marcus is in the Atlas session Tue 09:00–13:00.*\n- **Contoso compliance:** Daniel `contoso_permission_patch` (3.5h + 0.5h handoff) → Julia `contoso_compliance_export` (1h).\n\nEverything else this week is off the critical path.\n\n---\n\n## 2. MY PLAN FOR TODAY (Mon)\n\n1. **09:10–09:30 — Triage + comms (me).** Update the release checklist (security done). Reply to **Anja today** confirming the Tue 16:00 CET export will be delivered; brief the **CEO** that Contoso is a format request + a delegated-admin fix, both in hand.\n2. **09:15 — Start the gate (Elena).** `billing_schema_migration`, ~3h. Nothing downstream moves until this lands.\n3. **09:30–10:00 — Delegate Contoso permission (Marcus → Daniel).** Reassign `contoso_permission_patch` to **Daniel** (Rachel flagged reassignment; Daniel has the SCIM permission-model context, Marcus doesn't). Marcus gives the 0.5h delegated-admin walkthrough now so Daniel starts the moment the schema lands.\n4. **10:00–12:15 — Use the blocked window (Marcus).** Start `onboarding_instrumentation` (3h, non-blocking, still his).\n5. **12:15 — Schema lands (Elena); kick off backfill** → done ~13:45 (automated).\n6. **12:15–16:15 — SSO patch (Marcus).** `api_compatibility_patch`.\n7. **12:15–15:45 — Contoso permission patch (Daniel).**\n8. **15:45–16:45 — Produce/send export (Julia).** `contoso_compliance_export` → Contoso.\n9. **Standing:** **QA** on standby for Tue 09:00 regression. **Julia** schedules the 2h formatter for the Tue demo. **Sarah** starts the pricing page.\n\n---\n\n## 3. PARALLEL WORK (no dependency on the schema)\n\n- **Onboarding launch** — Julia, 2h; not blocked (analytics are enough).\n- **Contoso export formatter** — Julia, 2h; independent; needed before Tue afternoon.\n- **Pricing page → packaging approval pack** — Sarah, 3h + 1.5h; independent of billing.\n- **Board pack non-revenue** — Sarah, 4h; independent. Revenue charts (2h) only after the backfill (~13:45 Mon), per Sarah.\n- **Onboarding instrumentation** — Marcus, 3h; low priority, fills his blocked Monday morning.\n\n---\n\n## 4. BLOCKERS & DEPENDENCIES\n\n- **Schema blocks both patches.** Neither the SSO compat patch nor the permission patch can merge before it lands — this is the single master dependency.\n- **Patch → QA → rollout** for SSO. **Permission patch → export** for Contoso (delegated admins are currently rejected; the only working account-holder is on leave until October).\n- **Marcus unavailable Tue 09:00–13:00** — rollout can't start before 13:00.\n- **Elena out Wed noon–Fri.** Not a problem if the migration lands Monday. Contingency only: 30-min Daniel handoff (prod permissions + runbook) before Wed noon if it slips. Daniel lacks prod migration permissions today — irrelevant unless it slips.\n- **Unblockable now:** security review (done), onboarding blocker (non-issue), Contoso \"broken export\" (mis-scoped).\n\n---\n\n## 5. EARLIEST DELIVERY\n\n- **Contoso compliance export:** Monday ~16:45 — comfortably inside the **Tue 22 Sep 16:00 CET** contractual deadline.\n- **Enterprise SSO:** patch done Mon 16:15 → QA Tue 09:00–11:00 → rollout Tue 13:00–14:00 (after Marcus's session) → **complete Tue ~14:00**, a day inside the **Wed EOD** commitment.\n\nBoth hard commitments can be met if the schema lands Monday morning.\n\n---\n\n## 6. RISKS / UNKNOWNS\n\n- QA's 2h holds only \"if nothing surprising appears.\"\n- No deploy/merge task is listed for the permission patch — real production deploy time is unverified.\n- The permission issue was reproduced **on staging only**; production behaviour unconfirmed.\n- Timezone: deadlines are `+02:00`; \"CET\" wording — I'm assuming all times are the same local zone.\n- Packaging approval clears same-day only if submitted before 12:00, else next morning — Sarah controls this.\n- Atlas session could overrun and push the rollout into Tue afternoon/later.\n- Julia's formatter change has no stated side-effect testing.",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "chatcmpl-c3713ffc-3902-4e3a-a97b-d4c3289796ee",
+    "raw_usage": {
+      "completion_tokens": 12296,
+      "prompt_tokens": 3735,
+      "total_tokens": 16031,
+      "completion_tokens_details": {
+        "reasoning_tokens": 10931
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 3584
+      }
+    }
+  }
+}

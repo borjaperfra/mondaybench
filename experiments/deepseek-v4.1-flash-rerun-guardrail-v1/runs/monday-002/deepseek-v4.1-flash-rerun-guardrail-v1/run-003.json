@@ -1,0 +1,73 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.2",
+  "scenario_id": "monday-002",
+  "scenario_prompt_sha256": "740e627cbc7413c321ede0d54000504de54821d34ff4677f82731b89600423a8",
+  "run_id": "monday-002__deepseek-v4.1-flash-rerun-guardrail-v1__003",
+  "run_number": 3,
+  "model": {
+    "slug": "deepseek-v4.1-flash-rerun-guardrail-v1",
+    "display_name": "DeepSeek V4.1 Flash (rerun + guardrail 2026-09-11)",
+    "provider": "helmcode",
+    "model_id": "deepseek-v4-flash"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 32000,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "eb136804970c72fa214521a341fdde95294393990fae0a5e86bd15614794653d",
+    "extra_body": {
+      "caching": false
+    },
+    "config_sha256": "6294ee5067cb70d6ecf399c2008e6df51d5e14fd811ce324f3223595bfdb9d04",
+    "safety_ceiling_tokens": 32000,
+    "ceiling_semantics": "provider_specific"
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "DELIVERED",
+    "tokens": 16870,
+    "evidence": "explicit_reasoning_tokens",
+    "stream_observed": true,
+    "stream_event_count": 16870
+  },
+  "timestamp_utc": "2026-09-11T19:12:46Z",
+  "usage": {
+    "input_tokens": 2764,
+    "output_tokens": 18472,
+    "reasoning_tokens": 16870
+  },
+  "performance": {
+    "ttft_ms": 1410.3,
+    "ttfa_ms": 78931.4,
+    "total_latency_ms": 86553.7,
+    "tokens_per_second": 217.0
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "1. CURRENT STATE\n- Enterprise Controls/Atlas is still unopened. Build 2.9.4 passed staging Security verification, but the Friday production attempt failed on shard eu-03 before rollout; no customer impact. Two recovery options are ready:\n  - Option A: 2.9.4, no code change, 20m deploy, 8% session-reset risk, shard precheck.\n  - Option B: 2.9.5-patch, code change, 45m deploy, <1% session-reset risk, avoids the failing migration path.\n- Release policy is the controlling gate. Option A needs production deploy + 20m post-deploy verification. Option B needs Priya’s 25m delta review before production, then deploy + 20m post-deploy verification. Priya can do the delta review asynchronously from the submitted diff; post-deploy verification requires her. Sam needs 15m after verification to open/sanity-check rollout.\n- Hard constraints: Marcus is available 09:15–10:20 only; Priya is available 09:00–09:35, then after 10:25; Sam is available until 12:30. Atlas rollout must BEGIN before 12:00 or it slips to Thursday. Atlas renewal is signed and not at risk; missing the window creates executive noise.\n- Maya has not added an executive approval gate. Follow Security policy and Sam’s rollout process. The task to get Maya approval is superseded.\n- Board/revenue: Maya needs the September enterprise expansion reconciliation before 11:00; board pack locks 11:30. Target €180k, expected €126k, gap €54k. Wayne explains €18k via signed amendment moving expansion to October. Globex explains €12k via pending procurement. Soylent explains €10k and Wonka €14k, but contracts give no cause. Acme’s usage/admin decline is explained by the approved shift to annual batch-processing, not a problem. Stark is on plan.\n- Pricing: the pinned workbook is not authoritative. Daniel’s 09:07 internal scenario (€2,500 / 40 seats / €55 extra seat) is internal only. Nothing goes to procurement/customers until a public announcement, and there is no announcement date.\n- Customer announcement: Sarah is out Monday. Daniel has the final draft and Atlas recipient list and will send after Sam confirms rollout is open. You do not send it.\n- Orion: SCIM status is unresolved. Laura says it worked, Rollout Bot says org_71A has scim_enabled=false, and the support ticket lists org_17A. No further status should go out until the correct org ID and live flag are confirmed.\n- Stale/superseded tasks: Maya approval, Zenith renewal-risk call, 10:30 Atlas launch confirmation, and Enterprise pricing to Initech procurement.\n\n2. MY PLAN FOR TODAY\n- 09:07–09:12: Choose Option B as primary: 2.9.5-patch. Submit the diff to Priya immediately for the 25m async delta review; ask her to confirm by 09:35. Tell Marcus to stand by for a 09:32 deploy. No Maya approval needed.\n- 09:12–09:32: Priya reviews. In parallel, verify the Orion org ID/live SCIM flag and prepare the Maya expansion reconciliation.\n- 09:32: Decision point. If Priya confirms the delta review, Marcus deploys Option B 09:32–10:17, finishing before Marcus’s 10:20 hard stop. If Priya cannot confirm by 09:35, fall back to Option A: Marcus deploys 2.9.4 with shard precheck 09:35–09:55.\n- 10:17–10:25: Hold production. Priya is unavailable until 10:25.\n- 10:25–10:45: Priya performs required post-deploy verification.\n- 10:45–11:00: Sam opens and sanity-checks rollout. Target Atlas rollout begins 11:00, before the 12:00 deadline. Daniel sends the customer announcement only after Sam confirms rollout is open.\n- 10:45–10:55: Send Maya the September enterprise expansion reconciliation before 11:00. Separate established data from hypotheses.\n- 11:00–11:30: Monitor Atlas rollout and announcement. Do not open Enterprise Controls broadly.\n- Orion: once the correct org ID and live scim_enabled flag are confirmed, reply/update. Until then, hold.\n\n3. CUSTOMER / REVENUE PRIORITIES\n- Atlas: today’s execution priority. Renewal is signed, but the migration window before 12:00 is hard; avoid the Thursday slip and executive noise.\n- Globex: highest revenue/customer risk. Renewal in 18 days, September expansion pending procurement, 3 open tickets (SSO setup high, SCIM sync, audit export) and negative usage/admin. Escalate support and confirm procurement status. Do not assume the support tickets caused the €12k expansion gap.\n- Soylent: €10k expansion reduction, renewal in 44 days, medium/low onboarding/reporting tickets. Needs a documented commercial reason; contract provides none.\n- Wonka: €14k expansion reduction, renewal in 31 days, steep usage/admin declines, no support tickets. Needs a documented commercial reason; contract provides none.\n- Acme: negative usage/admin is expected from the approved annual batch shift. No usage escalation. The 9-day renewal is a routine check, not a fire.\n- Wayne: no action. Signed amendment moves expansion to October.\n- Stark: on plan; low documentation ticket only.\n- Zenith: resolved; no Monday escalation.\n\n4. DO NOT DO\n- Do not seek or wait for separate Maya approval for Enterprise Controls.\n- Do not deploy the code-changing Option B without Priya’s delta review.\n- Do not open Enterprise Controls broadly without Security being comfortable.\n- Do not let Marcus deploy past his 10:20 hard stop.\n- Do not confirm a 10:30 Atlas launch; wait for Sam’s rollout opening.\n- Do not send the customer announcement yourself; Daniel owns it after Sam confirms.\n- Do not call Zenith about renewal risk.\n- Do not send Enterprise pricing to Initech procurement or anyone external; the workbook is not authoritative and there is no public announcement date.\n- Do not reply/status Orion until the correct org ID and live SCIM flag are confirmed.\n- Do not attribute Soylent or Wonka reductions to support tickets or usage declines; no cause is stated.\n- Do not treat Acme’s usage/admin decline as a problem.\n\n5. UNCLEAR / MUST VERIFY\n- Can Priya complete the Option B delta review by 09:35? If not, use Option A.\n- Orion: which org ID is correct, org_17A or org_71A, and what is the live scim_enabled flag for that org?\n- Soylent and Wonka: is there any documented commercial cause for the reduced expansions? Current evidence says no.\n- Globex: when is procurement expected to close, and do the open support tickets threaten renewal or expansion?\n- Account table vs revenue prep totals: the table’s expected column sums to €60k while revenue prep says expected €126k. The €54k gap reconciles to the four reductions, but confirm table completeness before presenting totals beyond the gap.\n- Acme: confirm the 9-day renewal is routine and owned, even though the usage decline itself is explained.",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "chatcmpl-648c6009-1f3c-4692-afc0-66d81f39aa0b",
+    "raw_usage": {
+      "completion_tokens": 18472,
+      "prompt_tokens": 2764,
+      "total_tokens": 21236,
+      "completion_tokens_details": {
+        "reasoning_tokens": 16870
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 2560
+      }
+    }
+  }
+}

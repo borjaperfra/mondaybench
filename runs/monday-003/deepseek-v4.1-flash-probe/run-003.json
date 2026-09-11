@@ -1,0 +1,78 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.3",
+  "scenario_id": "monday-003",
+  "scenario_prompt_sha256": "aaf788f309d955d2b427c86fe7d95d2bbf88575fde7306adcfd74b0ec4a4103f",
+  "run_id": "monday-003__deepseek-v4.1-flash-probe__003",
+  "run_number": 3,
+  "model": {
+    "slug": "deepseek-v4.1-flash-probe",
+    "display_name": "DeepSeek V4.1 Flash (variance probe)",
+    "provider": "helmcode",
+    "model_id": "deepseek-v4-flash"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 32000,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+    "extra_body": {
+      "caching": false
+    },
+    "config_sha256": "d24799fcff2f34662116bbdd15e21e7a97007b32c3a128ac7b5227fdedc6f2aa",
+    "safety_ceiling_tokens": 32000,
+    "ceiling_semantics": "provider_specific"
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "DELIVERED",
+    "tokens": 13655,
+    "evidence": "explicit_reasoning_tokens",
+    "stream_observed": true,
+    "stream_event_count": 13655
+  },
+  "timestamp_utc": "2026-09-10T19:40:34Z",
+  "usage": {
+    "input_tokens": 3332,
+    "output_tokens": 15005,
+    "reasoning_tokens": 13655
+  },
+  "performance": {
+    "ttft_ms": 1698.9,
+    "ttfa_ms": 65268.4,
+    "total_latency_ms": 71003.6,
+    "tokens_per_second": 216.5
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "**Bottom line:** Security review is already approved; onboarding instrumentation is not a launch blocker; Contoso’s “broken export” is mostly a date-format demo request. The real urgent item is the delegated-admin Contoso compliance export due Tue 16:00. Delegate the Contoso permission patch to Daniel after a Marcus handoff so Marcus stays on the Enterprise SSO critical path.\n\n## 1. CRITICAL PATH\n- **Shared gate:** Elena’s `billing_schema_migration` (3h). It blocks Marcus’s SSO compatibility patch, the Contoso permission patch, and the billing backfill.\n- **Enterprise SSO / Atlas:** Elena migration → Marcus `api_compatibility_patch` (4h) → QA `sso_regression` (2h) → Marcus `sso_production_rollout` (1h). Marcus is unavailable Tue 09:00-13:00.\n- **Contoso compliance:** Elena migration → Marcus 0.5h handoff → Daniel `contoso_permission_patch` (3.5h) → Julia `contoso_compliance_export` (1h). Due Tue 16:00 +02.\n- **Board revenue charts:** Elena migration → `billing_backfill` (1.5h automated) → Sarah `board_pack_revenue` (2h).\n\n## 2. MY PLAN FOR TODAY\n1. **09:15 — Elena:** Confirm she has started `billing_schema_migration`; target land by 12:00, then kick off backfill 12:00-13:30. Owner: Elena.\n2. **09:15 — Reassign Contoso permission patch:** Move `contoso_permission_patch` from Marcus to Daniel; update Rachel/ticket. Owner: me/Rachel.\n3. **09:20 — Marcus:** SSO is top priority. Ignore the stale 3h onboarding-instrumentation hold. Do 11:30-12:00 handoff to Daniel, then `api_compatibility_patch` 12:00-16:00. Owner: Marcus.\n4. **09:20 — Daniel:** Take Marcus handoff 11:30-12:00, then `contoso_permission_patch` 12:00-15:30. Owner: Daniel.\n5. **09:20 — QA:** Pre-book SSO regression 16:00-17:30 Mon, then 09:00-09:30 Tue. Owner: Sam/QA.\n6. **09:30 — Julia:** Run `contoso_compliance_export` 15:30-16:30 Mon. Then Contoso formatter 16:30-17:30 Mon + 09:00-10:00 Tue. Onboarding launch Tue 10:00-12:00. Owner: Julia.\n7. **09:30 — Sarah:** Board non-revenue 09:00-13:00. Board revenue 13:30-15:30 after backfill. Pricing page 15:30-17:30 + Tue 09:00-10:00. Approval pack Tue 10:00-11:30, submit before 12:00. Owner: Sarah.\n8. **10:00 — Contoso comms:** Reply to Anja/Contoso: confirm delegated-admin fix and compliance export will be delivered before Tue 16:00; date format handled before Tue afternoon. Owner: me.\n9. **Update stale tracker:** Security review approved; onboarding instrumentation not launch blocker; onboarding launch support is Julia’s, not Marcus’s. Owner: me.\n\n## 3. PARALLEL WORK\n- After Elena’s schema lands: Marcus’s SSO patch and Daniel’s Contoso patch run in parallel.\n- Board non-revenue, pricing page, onboarding launch, and Contoso date-format work do not wait on SSO.\n- QA can start regression as soon as Marcus’s SSO patch is done.\n- Elena’s backfill runs automatically; Sarah can do revenue charts after 13:30.\n\n## 4. BLOCKERS & DEPENDENCIES\n- **Actual blockers:**\n  - `billing_schema_migration` blocks both patches and backfill.\n  - `api_compatibility_patch` blocks QA and SSO rollout.\n  - `contoso_permission_patch` blocks Contoso compliance export.\n  - `billing_backfill` blocks board revenue charts.\n  - Packaging approval blocks public pricing page.\n- **Not blockers:**\n  - Security review — approved Friday.\n  - Onboarding instrumentation — not needed for launch.\n  - Contoso date format — demo preference, not production-blocking.\n- **Unblock now:** reassign Contoso patch to Daniel, do Marcus handoff, pre-book QA, confirm Anja, update stale tracker.\n\n## 5. EARLIEST DELIVERY\n- **Contoso compliance export:** Monday 16:30 — due Tue 16:00.\n- **Enterprise SSO rollout:** Tuesday 13:30 — QA done Tue 09:30; Marcus free after Atlas session at 13:00. Atlas Wed EOD commitment met.\n- **Billing migration/backfill:** Monday 12:00 / 13:30.\n- **Board revenue:** Monday 15:30.\n- **Pricing approval:** Submit Tue 11:30; committee clears same day if before 12:00.\n- **Onboarding launch:** Tuesday 12:00 at earliest.\n\n## 6. RISKS / UNKNOWNS\n- If Elena’s migration slips, Daniel backup needs a 30-min handoff before Elena leaves Wed noon; SSO, Contoso, and board revenue all slip.\n- SSO compatibility cannot be delegated; any QA surprise can push rollout into Wednesday, though Wed EOD is still likely achievable.\n- Marcus’s Atlas session Tue 09:00-13:00 blocks rollout only; QA can finish before.\n- Daniel’s Contoso patch estimate is 3.5h plus handoff; if harder, the Tue 16:00 compliance deadline gets tight.\n- Timezones assumed +02 for deadlines/availability; verify if any team uses different hours.\n- Packaging approval must arrive before 12:00 to clear same day; otherwise it rolls to the next morning.\n- No evidence of other hidden Contoso export defects beyond date format and delegated-admin permission.",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "chatcmpl-1789069153-9H9c3PdhMGhehbF5a0Re",
+    "raw_usage": {
+      "completion_tokens": 15005,
+      "prompt_tokens": 3332,
+      "total_tokens": 18337,
+      "completion_tokens_details": {
+        "audio_tokens": 0,
+        "reasoning_tokens": 13655,
+        "image_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 3198,
+        "video_tokens": 0,
+        "cache_write_tokens": 0
+      }
+    }
+  }
+}

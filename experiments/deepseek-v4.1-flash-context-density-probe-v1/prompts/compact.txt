@@ -1,0 +1,59 @@
+PLATFORM CUTOVER - PLANNING NOTE
+
+All times are on a 24-hour clock. Everything happens on the same day.
+
+SEVEN PIECES OF WORK
+
+The export snapshot takes 60 minutes.
+The schema upgrade takes 90 minutes.
+The index rebuild takes 120 minutes.
+The permissions sync takes 45 minutes.
+The smoke checks take 30 minutes.
+The consumer replay takes 75 minutes.
+The final verification takes 60 minutes.
+
+ORDER
+
+The schema upgrade cannot start until the export snapshot has finished.
+The index rebuild cannot start until the schema upgrade has finished.
+The smoke checks cannot start until both the index rebuild and the permissions sync have finished.
+The consumer replay cannot start until the smoke checks have finished.
+The final verification cannot start until the consumer replay has finished.
+
+PEOPLE
+
+Nadia is available from 07:00 to 12:00.
+Priya is available from 09:00 to 12:00.
+Owen is available from 11:00 to 21:00.
+Only Priya may run the schema upgrade.
+Nadia will run the index rebuild.
+Any of Nadia, Priya and Owen may run any task that is not restricted to a named person.
+
+SHARED EQUIPMENT
+
+The index rebuild and the permissions sync each need exclusive use of the staging cluster, so they cannot overlap.
+An optional cache warm of 50 minutes can be run on the staging cluster, but it is not required for the cutover.
+
+GROUND RULES
+
+Work on the cutover may begin no earlier than 07:00.
+One person performs one task at a time, no task may be paused once it has started, and a task must fit entirely inside the availability window of the person performing it.
+The whole cutover must be complete by 19:00.
+The permissions sync runs before the schema upgrade.
+
+UPDATES RECEIVED SINCE THE NOTE ABOVE WAS DRAFTED
+
+Update: the index rebuild is now Owen's, not Nadia's.
+Update: Nadia is out from 10:00 today.
+Update: the permissions sync must now run after the schema upgrade.
+
+OTHER NOTES
+
+The schema upgrade failed during last week's rehearsal.
+Update: the rehearsal failure was traced to an expired credential, which has since been replaced.
+Nobody has confirmed whether the consumer replay can run at double speed, so use the stated duration.
+
+Question: with every task scheduled as early as the rules allow, at what clock time does the final verification finish?
+
+End your reply with a single final line in exactly this form:
+ANSWER: HH:MM

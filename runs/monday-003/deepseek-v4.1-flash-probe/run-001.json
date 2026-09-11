@@ -1,0 +1,78 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.3",
+  "scenario_id": "monday-003",
+  "scenario_prompt_sha256": "aaf788f309d955d2b427c86fe7d95d2bbf88575fde7306adcfd74b0ec4a4103f",
+  "run_id": "monday-003__deepseek-v4.1-flash-probe__001",
+  "run_number": 1,
+  "model": {
+    "slug": "deepseek-v4.1-flash-probe",
+    "display_name": "DeepSeek V4.1 Flash (variance probe)",
+    "provider": "helmcode",
+    "model_id": "deepseek-v4-flash"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 32000,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+    "extra_body": {
+      "caching": false
+    },
+    "config_sha256": "d24799fcff2f34662116bbdd15e21e7a97007b32c3a128ac7b5227fdedc6f2aa",
+    "safety_ceiling_tokens": 32000,
+    "ceiling_semantics": "provider_specific"
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "DELIVERED",
+    "tokens": 11632,
+    "evidence": "explicit_reasoning_tokens",
+    "stream_observed": true,
+    "stream_event_count": 11632
+  },
+  "timestamp_utc": "2026-09-10T19:38:31Z",
+  "usage": {
+    "input_tokens": 3332,
+    "output_tokens": 12873,
+    "reasoning_tokens": 11632
+  },
+  "performance": {
+    "ttft_ms": 2048.9,
+    "ttfa_ms": 55697.1,
+    "total_latency_ms": 62149.4,
+    "tokens_per_second": 214.2
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "## 1. CRITICAL PATH\n\nTwo interlocking paths share one gate: **Elena’s billing schema migration must land first**.\n\n**A. Contoso compliance export — hard deadline Tue 22 Sep 16:00 CET**\n`billing_schema_migration (Elena)` → `contoso_permission_patch (Daniel, after 30m Marcus handoff)` → `contoso_compliance_export (Julia)`\n\n**B. Enterprise SSO / Atlas — committed Wed EOD**\n`billing_schema_migration (Elena)` → `api_compatibility_patch (Marcus)` → `sso_regression (QA)` → `sso_production_rollout (Marcus)`\n\nSecurity review is already closed — it is not on the critical path.\n\n---\n\n## 2. MY PLAN FOR TODAY\n\n**In order:**\n\n1. **Confirm Elena starts billing schema migration immediately.**  \n   Owner: Elena. 09:10–12:10. Then she kicks off automated reconciliation backfill 12:10–13:40.\n\n2. **Tell Marcus to ignore onboarding instrumentation as a launch blocker.**  \n   Owner: me. Friday 17:06 confirms it is not blocking launch. Task list is stale.\n\n3. **Confirm Security review is closed and remove it from SSO blockers.**  \n   Owner: me. Maya’s Friday email approved the current scope.\n\n4. **Reassign `contoso_permission_patch` from Marcus to Daniel.**  \n   Owner: me / Rachel. Daniel needs 30m with Marcus first. Schedule 16:10–16:40 today.\n\n5. **Have Marcus start SSO compatibility patch as soon as migration lands.**  \n   Owner: Marcus. 12:10–16:10. Then 16:10–16:40 handoff to Daniel.\n\n6. **Book QA regression on the SSO patch as soon as it is complete.**  \n   Owner: QA / Sam. Start 16:10 today; finish Tue morning. If it must be contiguous, QA Tue 09:00–11:00.\n\n7. **Tell Sarah to build pricing page, then submit approval pack after 12:00.**  \n   Owner: Sarah. Pricing page 09:10–12:10; approval pack 12:10–13:40. Submission rolls to Tuesday morning clearance.\n\n8. **Reply to Anja Weber / Contoso today confirming the compliance export will be delivered by Tue 16:00 CET.**  \n   Owner: me. Only after Daniel/Marcus handoff and plan are confirmed.\n\n9. **Update CEO/Noah/Rachel: Contoso “broken export” is not broken.**  \n   Owner: me. Formatting is a non-blocking demo preference; the real blocker is delegated-admin export permission.\n\n---\n\n## 3. PARALLEL WORK\n\n- **Elena:** billing backfill 12:10–13:40, automated.\n- **Sarah:** pricing page, approval pack, board non-revenue charts. Board revenue waits for backfill.\n- **Julia:** Tuesday 09:00–11:00 Contoso formatter; Tuesday 12:30–13:30 compliance export if Daniel finishes at 12:30.\n- **Daniel:** Contoso permission patch Tue 09:00–12:30, assuming Marcus handoff today.\n- **Onboarding launch:** Julia can do 2h by Friday. Marcus instrumentation can ship post-launch.\n- **Board non-revenue:** independent; Sarah can progress without billing.\n\n---\n\n## 4. BLOCKERS & DEPENDENCIES\n\n**Actual blockers:**\n- `contoso_permission_patch` depends on `billing_schema_migration`.\n- `api_compatibility_patch` depends on `billing_schema_migration`.\n- `contoso_compliance_export` depends on `contoso_permission_patch`.\n- `sso_regression` depends on `api_compatibility_patch`.\n- `sso_production_rollout` depends on `sso_regression`.\n- Board revenue charts depend on `billing_backfill`.\n- Pricing page public launch depends on packaging approval.\n\n**Stale / non-blockers:**\n- Security review is closed.\n- Onboarding instrumentation is not a launch blocker.\n- Contoso export is not broken; date format is a demo preference.\n- Task list still has stale urgent items.\n\n**People constraints:**\n- Marcus unavailable Tue 09:00–13:00 for Atlas session.\n- Marcus is the only person who can do SSO compatibility patch.\n- Elena leaves Wed noon and is out Thu/Fri. If migration slips, Daniel needs 30m transfer plus production migration permissions.\n- Daniel can take Contoso permission patch, but needs Marcus handoff.\n\n---\n\n## 5. EARLIEST DELIVERY\n\n- **Contoso compliance export:** Tue ~13:30 CET, with buffer to 16:00.\n- **Enterprise SSO production rollout:** Tue 13:00–14:00. Atlas Wed EOD is met.\n- **Billing backfill:** Mon 13:40.\n- **Board revenue charts:** Tue ~11:10.\n- **Pricing approval:** clears Tuesday morning; page can go public Tuesday after approval.\n- **Onboarding launch:** can ship by Thu/Fri; instrumentation not required.\n\n---\n\n## 6. RISKS / UNKNOWNS\n\n- If Elena’s migration slips, Daniel needs production migration permissions and a 30m runbook handoff before Wed noon.\n- QA regression could find surprises; no buffer stated beyond Tue afternoon.\n- Marcus is a single point of failure on SSO compatibility.\n- Atlas session could overrun or consume Marcus after 13:00.\n- Packaging approval may need margin impact summary; unclear if that is ready.\n- Contoso compliance timezone assumed CET based on deadline; plan has ~2.5h buffer.\n- Board revenue data quality depends on backfill completing cleanly.",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "chatcmpl-1789069038-DFV9Wqx9QmdxBv07Lw6a",
+    "raw_usage": {
+      "completion_tokens": 12873,
+      "prompt_tokens": 3332,
+      "total_tokens": 16205,
+      "completion_tokens_details": {
+        "audio_tokens": 0,
+        "reasoning_tokens": 11632,
+        "image_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 0,
+        "video_tokens": 0,
+        "cache_write_tokens": 0
+      }
+    }
+  }
+}

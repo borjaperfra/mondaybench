@@ -1,0 +1,62 @@
+{
+  "problem": "single-day platform cutover, seven tasks",
+  "question": "at what clock time does the final verification finish, with every task scheduled as early as the rules allow",
+  "answer_type": "time",
+  "answer": "16:00",
+  "uniqueness": {
+    "method": "exhaustive search on a 15-minute grid, limits scanned upward",
+    "earliest_feasible_finish": "16:00",
+    "nothing_feasible_15_minutes_earlier": true,
+    "within_stated_deadline": true
+  },
+  "witness_schedule": {
+    "export snapshot": [
+      "Nadia",
+      "07:00",
+      "08:00"
+    ],
+    "schema upgrade": [
+      "Priya",
+      "09:00",
+      "10:30"
+    ],
+    "permissions sync": [
+      "Priya",
+      "10:30",
+      "11:15"
+    ],
+    "index rebuild": [
+      "Owen",
+      "11:15",
+      "13:15"
+    ],
+    "smoke checks": [
+      "Owen",
+      "13:15",
+      "13:45"
+    ],
+    "consumer replay": [
+      "Owen",
+      "13:45",
+      "15:00"
+    ],
+    "final verification": [
+      "Owen",
+      "15:00",
+      "16:00"
+    ]
+  },
+  "effective_state_after_supersession": {
+    "index rebuild owner": "Owen (superseding Nadia)",
+    "Nadia availability": "07:00-10:00 (superseding 07:00-12:00)",
+    "permissions sync ordering": "after the schema upgrade (superseding before)"
+  },
+  "wrong_answers_reachable_by_dropping_one_constraint": {
+    "if_the_superseded_dependency_is_missed": "15:45",
+    "if_the_cluster_exclusivity_is_missed": "15:45",
+    "if_the_schema_owner_restriction_is_missed": "15:45",
+    "if_the_stale_index_owner_is_used": "no feasible schedule",
+    "if_the_stale_nadia_window_is_used": "16:00"
+  },
+  "identical_across_all_three_density_levels": true
+}

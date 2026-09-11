@@ -1,0 +1,73 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.2",
+  "scenario_id": "monday-002",
+  "scenario_prompt_sha256": "740e627cbc7413c321ede0d54000504de54821d34ff4677f82731b89600423a8",
+  "run_id": "monday-002__deepseek-v4.1-flash-rerun-v1__002",
+  "run_number": 2,
+  "model": {
+    "slug": "deepseek-v4.1-flash-rerun-v1",
+    "display_name": "DeepSeek V4.1 Flash (rerun 2026-09-11)",
+    "provider": "helmcode",
+    "model_id": "deepseek-v4-flash"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 32000,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+    "extra_body": {
+      "caching": false
+    },
+    "config_sha256": "d24799fcff2f34662116bbdd15e21e7a97007b32c3a128ac7b5227fdedc6f2aa",
+    "safety_ceiling_tokens": 32000,
+    "ceiling_semantics": "provider_specific"
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "DELIVERED",
+    "tokens": 15266,
+    "evidence": "explicit_reasoning_tokens",
+    "stream_observed": true,
+    "stream_event_count": 15266
+  },
+  "timestamp_utc": "2026-09-11T17:44:44Z",
+  "usage": {
+    "input_tokens": 2361,
+    "output_tokens": 16559,
+    "reasoning_tokens": 15266
+  },
+  "performance": {
+    "ttft_ms": 1221.7,
+    "ttfa_ms": 70669.7,
+    "total_latency_ms": 77367.4,
+    "tokens_per_second": 217.5
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "1. CURRENT STATE\n- Enterprise Controls is not launched. 2.9.4 passed staging Security verification, but the production attempt failed on shard eu-03 before rollout opened; no customer impact.\n- Two Monday recovery paths: A = retry verified 2.9.4, no code change, 20m deploy, 8% session-reset risk. B = 2.9.5-patch, code change, 45m deploy, <1% risk; requires Priya’s 25m delta review before production.\n- Maya has removed the exec approval gate: follow Priya’s release policy and Sam’s rollout process. Atlas rollout must BEGIN before 12:00 Monday; missing it pushes to Thursday and creates exec noise, not renewal risk.\n- Staffing: Marcus 09:15–10:20; Priya 09:00–09:35 and 10:25–12:30; Sam and Daniel available 09:00–12:30.\n- Stale/superseded: Maya approval task is not required. Zenith renewal-risk call is unnecessary; Zenith is resolved at €96k ARR / 24 months. Pricing cannot go to Initech/procurement externally. The 10:30 Atlas launch confirmation is not accurate under the viable path. Daniel owns the customer announcement after Sam confirms rollout is open.\n- Board pack: September expansion gap is €54k: Wayne -€18k (signed amendment moved to October), Globex -€12k (procurement pending), Soylent -€10k, Wonka -€14k. Soylent/Wonka have no stated cause; do not invent one. Due to Maya by 11:00.\n- Orion SCIM: org ID conflict and flag mismatch; do not reply/status until the correct org is confirmed and live flag read.\n\n2. MY PLAN FOR TODAY\n- 09:07–09:15: Choose Option B as primary path. Submit diff to Priya immediately for 25m delta review. Do not wait for Maya approval.\n- 09:07–~09:32: Priya async delta review. Marcus stands by. Option B does not delay rollout vs A because Priya cannot post-deploy verify until 10:25 either way.\n- 09:32–09:35: Go/no-go. If delta review is complete, Marcus deploys 2.9.5-patch ~09:32–10:17. If not complete by 09:35, fallback to Option A: Marcus deploys 2.9.4 ~09:35–09:55.\n- 10:25–10:45: Priya post-deploy verification, ~20m.\n- 10:45–11:00: Sam opens and sanity-checks rollout, 15m. After Sam confirms open, Daniel sends the customer announcement. I coordinate Atlas confirmation once open; at 09:45 send Atlas an updated heads-up: target open 11:00, pending verification, not confirmed.\n- By 11:00: Send Maya the September expansion reconciliation: €54k gap = Wayne €18k + Globex €12k + Soylent €10k + Wonka €14k; separate established facts from causal hypotheses.\n- 11:00–11:30: Verify Orion NCIM org ID and live SCIM flag before any reply. Then handle rollout issues.\n- Later Monday: Globex support/procurement follow-up; Wonka/Soylent expansion-cause checks.\n\n3. CUSTOMER / REVENUE PRIORITIES\n- Atlas: top priority today due migration deadline. Renewal is signed; missing window is exec noise, not renewal risk.\n- Globex: highest combined revenue risk. Renewal in 18 days, €12k September expansion pending procurement, 3 open support tickets including high SSO setup plus SCIM/audit issues, admin logins -61%. Escalate support and procurement today.\n- Wonka: renewal in 31 days, €14k unexplained expansion reduction, usage/admin declines. Investigate cause; no tickets, so likely account/CS issue.\n- Soylent: renewal in 44 days, €10k unexplained expansion reduction, 2 open tickets. Investigate onboarding/reporting and cause.\n- Acme: renewal in 9 days, but usage decline is expected from approved annual batch-processing shift. Do not treat usage/admin decline as an adoption problem; only check renewal logistics if needed.\n- Stark: on plan, low-priority doc question. Wayne: expansion moved to October by amendment; no action beyond board arithmetic. Zenith: resolved; no escalation.\n\n4. DO NOT DO\n- Do not call Zenith about renewal risk; it is resolved.\n- Do not seek Maya approval or create another exec gate for Enterprise Controls.\n- Do not send Enterprise pricing to Initech/procurement or quote it externally.\n- Do not send the customer announcement before Sam confirms rollout is open; Daniel owns send.\n- Do not confirm Atlas launch at 10:30 if rollout is not open; do not claim success before production is healthy, Priya verifies, and Sam opens.\n- Do not deploy a code-changing patch before Priya’s delta review; do not skip post-deploy verification.\n- Do not reply/status Orion until the correct org ID and live SCIM flag are verified.\n- Do not invent causes for Soylent/Wonka reductions; do not treat Acme’s usage decline as a problem.\n\n5. UNCLEAR / MUST VERIFY\n- Orion: correct org ID (org_71A vs org_17A) and live SCIM flag for that org. Missing authoritative CRM/support mapping and live flag evidence.\n- Soylent/Wonka: no contract explanation for reduced expansion. Missing account/CS/customer evidence before any causal claim.\n- Initech pricing: no public announcement date or authoritative external pricing. Missing Daniel-approved public pricing/announcement.\n- Option B timing: Priya must complete delta review by 09:35 or we must fallback to A before Marcus’s 10:20 cutoff. This is a live dependency, not a missing fact.",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "chatcmpl-51c96750-d5fb-4354-a1f9-5039c7803d1c",
+    "raw_usage": {
+      "completion_tokens": 16559,
+      "prompt_tokens": 2361,
+      "total_tokens": 18920,
+      "completion_tokens_details": {
+        "reasoning_tokens": 15266
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 2176
+      }
+    }
+  }
+}

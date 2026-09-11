@@ -1,0 +1,79 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.4",
+  "scenario_id": "monday-004",
+  "scenario_prompt_sha256": "3a0cbb569ca4f711b8907177af9204cec267d26f35f732829df56b03ed23ef99",
+  "run_id": "monday-004__deepseek-v4.1-flash-max__001",
+  "run_number": 1,
+  "model": {
+    "slug": "deepseek-v4.1-flash-max",
+    "display_name": "DeepSeek V4.1 Flash (reasoning effort max)",
+    "provider": "helmcode",
+    "model_id": "deepseek-v4-flash"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 96000,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+    "extra_body": {
+      "caching": false,
+      "reasoning_effort": "max"
+    },
+    "config_sha256": "44db136914ddb8da992e1b90921915f60c4f2c105da4cf8c0c30482f6bdd2282",
+    "safety_ceiling_tokens": 96000,
+    "ceiling_semantics": "provider_specific"
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "DELIVERED",
+    "tokens": 25206,
+    "evidence": "explicit_reasoning_tokens",
+    "stream_observed": true,
+    "stream_event_count": 26249
+  },
+  "timestamp_utc": "2026-09-11T13:14:34Z",
+  "usage": {
+    "input_tokens": 10394,
+    "output_tokens": 29477,
+    "reasoning_tokens": 25206
+  },
+  "performance": {
+    "ttft_ms": 1685.5,
+    "ttfa_ms": 165966.1,
+    "total_latency_ms": 186902.8,
+    "tokens_per_second": 159.1
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "## 1. EXECUTIVE SUMMARY\n\n- **Headline MRR is misleading.** Plans.csv shows MRR up from **€746.1k → €757.7k (+1.6%)**, but that includes **€25.3k of MRR from customers who churned in October**. Active MRR actually fell from **€746.1k → €732.4k (-1.8%)**.\n- **Invoiced revenue rose, but not from recurring growth.** September invoiced revenue was **€797.1k**; October was **€873.4k** (treating the duplicate Soylent invoice as one record). The increase is mostly the **€120k annual Gringotts prepayment** and **€5.7k professional services**, not new recurring revenue.\n- **Churn is the main customer-health problem.** Five customers churned in October with **€303.6k ARR**: Nakatomi (€180k) plus four SMB starter customers (€123.6k). New logos added **€133.2k ARR**, all SMB. Net active ARR declined by **~€170k** before expansion bookings take effect.\n- **SMB is the weakest segment.** 4 of 18 SMB customers active at the start of October churned — **22% monthly churn**. SMB support tickets rose from **16 → 26**. SMB is also the only source of new logos, so cutting support would be risky; cutting acquisition spend is the more supported lever.\n- **Pro is the strongest plan by margin but is deteriorating.** Pro contribution margin is **62.7%** in October, the highest of any plan. However, Pro support tickets rose **19 → 28 (+47%)**, rate-limit tickets rose **5 → 13**, and support cost rose **+25%**. This is the plan that deserves engineering focus.\n- **CAC payback cannot be calculated.** There is no marketing spend or cost data in the pack. Any channel ROI or payback conclusion would be unsupported.\n\n---\n\n## 2. REVENUE & CUSTOMER HEALTH\n\n### Headline revenue reconciliation\n\n| Metric | September | October |\n|---|---:|---:|\n| Invoiced revenue (unique invoices) | €797.1k | €873.4k |\n| MRR as reported in plans.csv | €746.1k | €757.7k |\n| Active MRR (current active ARR ÷ 12) | €746.1k | €732.4k |\n\nOctober invoiced revenue includes:\n\n- **€120k annual Gringotts subscription** — this is a 12-month prepayment, not €120k of new monthly recurring revenue.\n- **€5.7k professional services** for Aperture Labs.\n- **€25.3k from customers who churned during October** but were still invoiced on 1 October: Nakatomi, Slate Rock, Mega-lo-Mart, Dinoco, and Buy n Large.\n\nSo the “growth” in invoiced revenue is largely timing and non-recurring.\n\n### Customer health by segment\n\n| Segment | Active ARR | October churn | New logos | Key signal |\n|---|---:|---:|---:|---|\n| Enterprise | €6.78M | 0 | 0 | Healthy. Usage mostly +5–10%. Acme requests fell -45%, but that is consistent with the planned batch migration; tokens only fell -12%. |\n| Mid-market | €1.53M | 1 (Nakatomi, €180k) | 0 | Mixed. Soylent is a red flag: usage -27%, revenue -€2.5k, support tickets 3 → 8 including a critical API error. Hooli expanded +€36k annualised. |\n| SMB | €478.8k | 4 (€123.6k) | 5 (€133.2k) | High churn, high support load, but new logos are replacing churn. |\n\n### Key customer-level observations\n\n- **Acme’s usage drop is not a churn signal.** Requests fell -45%, but tokens fell only -12% and active users fell only -3%. This matches the operational note about moving from interactive API calls to scheduled batch runs.\n- **Soylent is the most concerning active customer.** Usage fell -27%, monthly invoice fell from €22k to €19.5k, and support tickets jumped from 3 to 8, including a critical API error.\n- **Nakatomi churned after usage decline.** October usage was -16.1% before churn on 19 October. This is consistent with usage decline preceding churn, but the data does not prove causation.\n- **SMB churn is severe.** 4 of 18 SMB customers active at the start of October churned. The four churned SMB customers all had usage declines of roughly -35% in October before churn.\n\n---\n\n## 3. ACQUISITION\n\n### Channel performance summary\n\n| Channel | Sep leads | Sep trial conv. | Sep new logos | Sep attributed rev. | Oct leads | Oct trial conv. | Oct new logos | Oct attributed rev. |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|\n| Paid search | 520 | 44 (8.5%) | 0 | €36k (expansion) | 900 | 58 (6.4%) | 2 | €238.8k (€64.8k new + €174k expansion) |\n| Content | 260 | 31 (11.9%) | 1 | €45.6k | 330 | 34 (10.3%) | 2 | €63.6k (€45.6k new + €18k expansion) |\n| Partner | 60 | 15 (25.0%) | 2 | €166.8k | 75 | 17 (22.7%) | 0 | €0 |\n| Outbound | 160 | 10 (6.3%) | 1 | €33.6k | 195 | 11 (5.6%) | 1 | €46.8k (€22.8k new + €24k expansion) |\n\n### What can be concluded\n\n- **Partner has the highest lead-to-trial conversion** in both months: 25.0% in September and 22.7% in October. But it produced **zero converted customers in October** and only 2 in September. The sample is too small to justify scaling spend.\n- **Content is the most consistent new-logo channel.** It produced 1 new logo in September and 2 in October, with stable trial conversion around 10–12%. Its new-logo revenue was €45.6k in both months.\n- **Paid search is expansion-heavy, not new-logo-heavy.** In October, paid search generated €238.8k of attributed revenue, but **€174k of that was expansion revenue** from existing customers (Stark, Umbrella, Globex). Only €64.8k came from new logos.\n- **Outbound has the lowest conversion** and low volume. It is not supported as a channel to increase.\n\n### What cannot be concluded\n\n- **CAC payback cannot be calculated.** There is no marketing spend, cost per lead, cost per conversion, or CAC data in the pack. The CFO’s request cannot be answered from this data.\n- **Funnel conversions are paid trials, not paying customers.** Trial-to-paid conversion is not tracked in this pack, so we cannot infer customer acquisition cost or channel payback from funnel conversion rates.\n- **Attributed revenue is not cash revenue.** It is annualised contract value credited at conversion. Expansion revenue also takes effect from the following billing cycle, so October attributed expansion revenue is not yet in October invoices.\n- **No incrementality can be proven.** There is no control group or spend experiment data, so we cannot say that increasing spend on any channel would produce the same results.\n\n---\n\n## 4. PLAN ECONOMICS\n\n### October plan economics after cost\n\n| Plan | Revenue | Infra cost | Support cost | Total cost | Contribution | Margin | Contribution per customer |\n|---|---:|---:|---:|---:|---:|---:|---:|\n| Enterprise | €659.5k | €296.8k | €168.0k | €464.8k | €194.7k | 29.5% | €13,907 |\n| Pro | €66.2k | €16.1k | €8.6k | €24.7k | €41.5k | 62.7% | €4,611 |\n| Starter | €32.0k | €11.4k | €10.3k | €21.7k | €10.3k | 32.2% | €792 |\n\n### Margin trend\n\n| Plan | September margin | October margin | Change |\n|---|---:|---:|---:|\n| Enterprise | 32.2% | 29.5% | -2.7pp |\n| Pro | 67.5% | 62.7% | -4.8pp |\n| Starter | 34.9% | 32.2% | -2.7pp |\n\n### What this means\n\n- **Pro is the strongest plan by margin**, but it is deteriorating. Support cost rose from €6.9k to €8.6k (+25%), and support tickets rose from 19 to 28. Rate-limit tickets rose from 5 to 13, all on Pro customers.\n- **Enterprise is the largest absolute contributor** (€194.7k contribution) but has the lowest margin and the largest cost increase: total cost rose €17.8k while revenue rose only €0.5k.\n- **Starter is the weakest plan by contribution per customer** at €792. It also has the highest churn problem, but it is small in absolute terms.\n- **Plans.csv October customer counts include churned customers.** For example, Pro revenue includes Nakatomi’s €15k invoice even though Nakatomi churned on 19 October. Starter revenue includes four churned SMB customers. Active-only MRR is lower:\n  - Enterprise: €659.5k\n  - Pro: €51.2k\n  - Starter: €21.7k\n\n### Usage vs included requests\n\n- **Enterprise:** average usage is 1.89M requests vs 3M included. Stark and Wayne exceed 3M, but the plan average is below included volume.\n- **Pro:** average usage is 442k vs 600k included. However, Wonka (1.02M), Aperture (705k), and Vandelay (690k) exceed included volume. This aligns with the rate-limit ticket spike.\n- **Starter:** average usage is 84k vs 200k included. No overage pressure.\n\n---\n\n## 5. RECOMMENDATIONS\n\n### 1. Segment decision: reduce investment in SMB acquisition, not SMB support\n\n- **Supported:** SMB is the weakest segment. It has 22% monthly churn, low contribution per customer, and rising support tickets.\n- **But do not cut SMB support.** SMB is the only source of new logos in October, and active SMB ARR is roughly flat. Cutting support would likely increase churn further.\n- **Action:** Reduce incremental SMB acquisition spend until retention improves. Fix the churn problem first; otherwise new SMB logos are just replacing churned SMB logos.\n- **Enterprise should not be reduced.** It is the revenue base, has no churn, and usage is healthy.\n- **Mid-market should be monitored, not cut.** Soylent is at risk, but Hooli expanded and the segment still has €1.53M active ARR.\n\n### 2. Acquisition decision: do not scale paid search; test content if anything\n\n- **Paid search is not supported for increased spend.** Conversion rate fell from 8.5% to 6.4%, and most attributed revenue is expansion revenue from existing customers, not new logos.\n- **Content is the only channel with consistent new-logo yield.** It produced 1 new logo in September and 2 in October, with stable trial conversion.\n- **Action:** If leadership wants to increase spend, run a small, controlled test on content. Do not commit to a large increase without marketing spend data and CAC payback.\n- **Partner is not scalable based on this data.** High trial conversion, but zero October conversions and tiny volume.\n\n### 3. Product plan decision: focus engineering on Pro\n\n- **Pro deserves the most attention.** It is the highest-margin plan, but support tickets rose 47%, rate-limit tickets rose from 5 to 13, and support cost rose 25%.\n- **Action:** Engineering should focus on Pro plan rate limits, capacity, and plan-limit handling. Several Pro customers are above included request volume, and rate-limit tickets are concentrated there.\n- This protects the highest-margin plan and should reduce support cost.\n\n### 4. CFO request: CAC payback cannot be provided\n\n- Need marketing spend by channel, cost per lead, cost per conversion, and trial-to-paid conversion data.\n- Without that, any CAC payback number would be unsupported.\n\n---\n\n## 6. UNCERTAINTIES / DATA ISSUES\n\n- **Duplicate revenue record:** `INV-2026-10-0209` appears twice for Soylent — once from Stripe and once from billing_sync. I treated it as one invoice. If double-counted, October invoiced revenue would be €892.9k instead of €873.4k.\n- **Revenue recognition mismatch:** Revenue.csv records full invoice value in the invoice month. The €120k Gringotts annual invoice is recorded in October, but plans.csv uses the €10k monthly equivalent. These should not be compared directly.\n- **Churned customers are still in October revenue and plans.csv counts.** Nakatomi and four SMB starter customers were invoiced on 1 October before churning. This inflates reported MRR and plan customer counts.\n- **No marketing spend data.** CAC, CAC payback, ROAS, and channel ROI cannot be calculated.\n- **Funnel conversions are paid trials, not paying customers.** Trial-to-paid conversion is not tracked in this pack.\n- **Attributed revenue is annualised contract value, not cash.** Expansion revenue also takes effect from the following billing cycle, so October attributed expansions are not yet in October revenue.\n- **No segment-level cost or investment data.** We can infer segment weakness from churn and support, but we cannot calculate segment ROI.\n- **Small sample sizes.** Partner had only 2 converted customers in September and 0 in October. SMB churn is based on 18 customers. These are not statistically robust.\n- **Usage change percentages are missing for new customers**, so we cannot calculate their growth trajectory.\n- **Support ticket statuses include open and pending tickets.** We cannot assume all tickets are resolved or that ticket count equals cost driver.\n- **No causal evidence.** Usage decline before churn, support tickets, and channel attribution are correlations, not proven causes.",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "chatcmpl-1789132276-froa83YF2wHHuppZk6Ex",
+    "raw_usage": {
+      "completion_tokens": 29477,
+      "prompt_tokens": 10394,
+      "total_tokens": 39871,
+      "completion_tokens_details": {
+        "audio_tokens": 0,
+        "reasoning_tokens": 25206,
+        "image_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 0,
+        "video_tokens": 0,
+        "cache_write_tokens": 0
+      }
+    }
+  }
+}

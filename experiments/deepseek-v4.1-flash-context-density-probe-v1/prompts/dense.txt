@@ -1,0 +1,443 @@
+PLATFORM PROGRAMME - CONSOLIDATED DOSSIER
+
+This dossier is the full set of material that has accumulated around the
+platform work: runbook extracts, rosters, decision logs, correspondence, chat
+excerpts, risk register entries and background reports. It has been assembled
+from several sources and is deliberately not deduplicated, because the group
+wants the provenance of each statement to remain visible.
+
+All times are on a 24-hour clock. Everything operational described here happens
+on the same day unless a date is given.
+
+===============================================================================
+SECTION 1 - PROGRAMME HISTORY
+===============================================================================
+
+The platform group entered the year with three programmes on its plate. The
+first, the reporting warehouse consolidation, completed in February, five weeks
+ahead of its forecast, largely because the vendor's migration tool turned out to
+handle nested partitions without the manual intervention the estimate had
+assumed. The second, the identity broker refresh, was deferred to next year
+after the security review asked for a threat model that nobody had budgeted time
+to write. The third is the subject of this dossier.
+
+Teodor produced the first scoping document in April. It ran to nine pages and
+proposed a three-day exercise with an intermediate state held between days two
+and three. Ines revised it twice. Her first revision followed the capacity
+review and trimmed two pages of contingency that the review had shown to be
+unnecessary. Her second followed the vendor call of 22 April, at which the
+vendor confirmed that the intermediate state could be skipped entirely, and that
+revision is what collapsed the exercise into a single day.
+
+Marek took over the runbook in May. He has asked repeatedly that changes go
+through him rather than being edited in place. This is not bureaucracy: the
+June incident on the notification relay was traced to two engineers editing the
+same runbook section within the same hour, each unaware of the other, producing
+a procedure that referenced a step that no longer existed. The post-incident
+review recommended a single owner per runbook and that recommendation was
+adopted across the group.
+
+Anselm, who joined in June, has been reading the dossier as onboarding material
+and has filed four clarification tickets against it. Three were about wording.
+The fourth pointed out that an early draft had two different figures for the
+same measurement, which was true, and the draft was corrected. None of these
+tickets changed the plan.
+
+===============================================================================
+SECTION 2 - RUNBOOK EXTRACT A: OPENING CONDITIONS AND FIRST TIMINGS
+===============================================================================
+
+The opening condition is a matter of building access rather than technology. The
+data floor is badged open from 06:45 and the group has agreed not to treat the
+fifteen minutes before the hour as working time.
+
+Work on the cutover may begin no earlier than 07:00.
+
+The timings recorded in this dossier come from the second rehearsal. The first
+rehearsal was abandoned after a hardware fault on the rehearsal rack and its
+numbers were discarded; anyone who finds a copy of the first rehearsal's
+figures should treat them as void.
+
+The export snapshot takes 60 minutes.
+
+Marek's annotation on this figure: measured three times during rehearsal two,
+with a spread of under four minutes, so the figure is treated as reliable and
+not as an estimate.
+
+===============================================================================
+SECTION 3 - EARLY ASSIGNMENT NOTES (AS FIRST CIRCULATED)
+===============================================================================
+
+The following assignment notes were circulated in May, when the roster was
+first drawn up. They are reproduced here as circulated. Later sections of this
+dossier contain material that arrived afterwards.
+
+Nadia will run the index rebuild.
+
+The reasoning at the time was that she had run the equivalent step in both
+rehearsals and knew the failure signatures. Nothing about that reasoning has
+been disputed. Whether the assignment still stands is a separate question and
+depends on material later in this dossier rather than on anything in this
+section.
+
+Delphine was pencilled in as a second pair of hands for the morning and then
+removed from the plan when it became clear that the morning work does not
+parallelise in a way that a second person helps with. She has no role.
+
+===============================================================================
+SECTION 4 - RUNBOOK EXTRACT B: ORDERING, FIRST PART
+===============================================================================
+
+The ordering constraints are the part of the runbook Marek considers settled and
+has asked not to be relitigated.
+
+The schema upgrade cannot start until the export snapshot has finished.
+
+The index rebuild cannot start until the schema upgrade has finished.
+
+An earlier version of the runbook contained a sixth ordering rule concerning the
+intermediate state. It was removed on 22 April when the intermediate state left
+scope. It is not reinstated anywhere in this dossier and anyone who remembers it
+should disregard it.
+
+===============================================================================
+SECTION 5 - ROSTER AS PUBLISHED IN MAY
+===============================================================================
+
+The roster below is the version published in May and pinned in the channel.
+
+Nadia is available from 07:00 to 12:00.
+
+Halvard is the named escalation contact for the day. He is available all day but
+he is an escalation contact only and performs no part of the work. His role is to
+answer a page and to decide whether to call the vendor.
+
+Ines is on leave for the whole of that week and is not contactable.
+
+Teodor is in an all-day workshop off site. He has asked not to be scheduled. He
+is not needed for any part of the work in any case, and the workshop cannot be
+moved, which he has mentioned more than once.
+
+Yusuf and Kiran are both on the search tier that week and unavailable to this
+programme. Delphine, as noted above, has no role.
+
+===============================================================================
+SECTION 6 - GROUND RULES AND THE OUTER BOUND
+===============================================================================
+
+Two things in this section are hard. The first is the outer bound, which comes
+from the customer commitment rather than from anything technical: the group
+promised that the platform would be back in its normal serving state by the
+evening, and the number that was written down is the one below.
+
+The whole cutover must be complete by 19:00.
+
+The second is an ordering statement that was part of the original plan:
+
+The permissions sync runs before the schema upgrade.
+
+Both statements are recorded here as they stood when this section was written.
+The updates channel, reproduced later in this dossier, is the authority on
+whether either has since changed.
+
+===============================================================================
+SECTION 7 - RUNBOOK EXTRACT C: SECOND TIMINGS
+===============================================================================
+
+The schema upgrade takes 90 minutes.
+
+The index rebuild takes 120 minutes.
+
+Marek's annotation: the second of these two figures is the largest single number
+in the plan and the one most people misremember. It was measured twice in
+rehearsal two, at 119 and 121 minutes, and the plan uses the round figure.
+
+===============================================================================
+SECTION 8 - RESTRICTIONS ON WHO MAY DO WHAT
+===============================================================================
+
+One step is restricted, for a reason that is documented in the security review
+rather than here: the credential it uses is issued to a single named person and
+the review declined to issue a second copy.
+
+Only Priya may run the schema upgrade.
+
+The group has asked twice for a second credential holder and been refused twice.
+A third request is open and is not expected to be resolved before the day.
+
+No other step carries a credential restriction of this kind.
+
+===============================================================================
+SECTION 9 - RUNBOOK EXTRACT D: ORDERING, SECOND PART
+===============================================================================
+
+The smoke checks cannot start until both the index rebuild and the permissions sync have finished.
+
+This is the only ordering rule in the plan with two predecessors, and it is the
+one Anselm's fourth clarification ticket was originally about; the ticket was
+closed once the wording above was adopted.
+
+The consumer replay cannot start until the smoke checks have finished.
+
+The final verification cannot start until the consumer replay has finished.
+
+===============================================================================
+SECTION 10 - SHARED EQUIPMENT
+===============================================================================
+
+The group has one piece of contended equipment. It was meant to be two: a second
+unit was ordered in March and has not shipped. The vendor's latest date for it is
+after the day in question, so the plan assumes one unit.
+
+The index rebuild and the permissions sync each need exclusive use of the staging cluster, so they cannot overlap.
+
+Nothing else in the plan needs that equipment. Sofia's cost report, described
+later, runs against a read replica, which is a different thing and is not
+contended. The mobile gateway rollout uses its own hardware entirely.
+
+===============================================================================
+SECTION 11 - REHEARSAL TWO: WHAT WENT WRONG AND WHAT DID NOT
+===============================================================================
+
+Rehearsal two is the source of the timings in this dossier, and it is also the
+source of a piece of folklore that keeps resurfacing.
+
+The schema upgrade failed during last week's rehearsal.
+
+That sentence, on its own, has caused two people to propose adding contingency
+to the plan. The dossier records it because it is true and because proposals
+keep being made on the strength of it. Whether it should change the plan depends
+on material later in this dossier.
+
+The rest of rehearsal two was uneventful. The timings came out with a spread of
+under four minutes on the shorter steps and under two minutes on the longest.
+
+The permissions sync takes 45 minutes.
+
+===============================================================================
+SECTION 12 - ROSTER ADDENDUM: AFTERNOON COVER
+===============================================================================
+
+The afternoon cover was settled later than the rest of the roster, which is why
+it sits in its own addendum.
+
+Owen is available from 11:00 to 21:00.
+
+Priya is available from 09:00 to 12:00.
+
+Ruth is available from 06:00 to 14:00 but is committed to the ledger archive
+work described in section 20 and is not available to this programme. Her window
+is recorded here only because people keep asking.
+
+===============================================================================
+SECTION 13 - CAPACITY, COST AND OTHER BACKGROUND NUMBERS
+===============================================================================
+
+The capacity review of March found the platform running at about 41% of
+provisioned headroom on a normal weekday, rising to 68% during the month-end
+close. The day in question is not during a close. Neither figure constrains the
+plan and neither should be used in any calculation.
+
+Sofia's cost note puts the incremental infrastructure cost of the day at roughly
+2,400 units, most of it temporary storage. Finance approved it on 11 July. The
+approval expires at the end of the quarter, which is after the day and is
+therefore not a constraint.
+
+The event bus carries about 18,000 messages a minute at peak and is untouched by
+this work. The billing reconciler is untouched. The media transcoder fleet was
+resized in June and is irrelevant here. The search tier is in the middle of its
+own migration, which Yusuf and Kiran are covering, and which shares no equipment
+with this plan.
+
+===============================================================================
+SECTION 14 - RUNBOOK EXTRACT E: REMAINING TIMINGS
+===============================================================================
+
+The smoke checks take 30 minutes.
+
+The consumer replay takes 75 minutes.
+
+The final verification takes 60 minutes.
+
+Marek's annotation on the last of these: it is the step most often shortened in
+planning conversations, on the grounds that "it is only checks". It has never
+come in under its figure in either rehearsal and the plan uses the measured
+number.
+
+===============================================================================
+SECTION 15 - OPTIONAL AND DISCRETIONARY ITEMS
+===============================================================================
+
+The group keeps a short list of things that are worth doing when there is room
+and are not part of the commitment. There is exactly one such item on the day.
+
+An optional cache warm of 50 minutes can be run on the staging cluster, but it is not required for the cutover.
+
+Marek's view, recorded because he asked for it to be recorded: a discretionary
+item is a nice thing to have when there is room for it and a distraction when
+there is not, and the decision belongs to whoever is holding the plan on the
+day rather than to the dossier.
+
+Two other discretionary items were proposed and dropped: a log retention change,
+which was dropped because it needs a separate approval, and a dashboard
+relabelling, which was dropped because nobody could find anyone who wanted it.
+
+===============================================================================
+SECTION 16 - WORK ON OTHER SYSTEMS THE SAME DAY
+===============================================================================
+
+Four other things happen that day. None of them interacts with this plan and
+none of them constrains it.
+
+The mobile gateway team rolls out a client release in two waves, at 09:30 and at
+14:00. Their rollout uses its own pipeline and its own hardware. It will
+generate support volume, which matters to the support rota and to nothing else.
+
+Ruth's ledger archive compaction runs from 02:00 to 05:30. It finishes before
+any of the work here begins and it finishes whether or not the rest of the day
+goes to plan.
+
+Sofia runs a 30-minute cost report in the afternoon against a read replica.
+
+The notification relay has a configuration change queued behind a review. If the
+review lands in time the change goes out that evening; if not it waits a week.
+Either way it is independent of this plan.
+
+===============================================================================
+SECTION 17 - ASSIGNMENT POLICY
+===============================================================================
+
+The group's standing policy on who may pick up which step is deliberately
+permissive, because the roster is thin and the alternative is idle time.
+
+Any of Nadia, Priya and Owen may run any task that is not restricted to a named person.
+
+The restriction referred to is the credential restriction in section 8. There
+are no other restrictions. Halvard's escalation role is not an exception to this
+policy, because escalation is not part of the work.
+
+===============================================================================
+SECTION 18 - UPDATES CHANNEL, PART ONE: PEOPLE
+===============================================================================
+
+The updates below arrived after the roster in sections 5 and 12 was published.
+Where an update contradicts earlier material in this dossier, the update is what
+applies.
+
+Update: Nadia is out from 10:00 today.
+
+Update: Halvard swapped his escalation slot with Ruth for the first two hours of
+the day. This changes who answers a page and nothing else about the plan.
+
+Update: Anselm will observe the day as part of his onboarding. Observing only.
+
+Update: Teodor's workshop was confirmed as mandatory, so his earlier request not
+to be scheduled is now moot rather than a preference.
+
+===============================================================================
+SECTION 19 - UPDATES CHANNEL, PART TWO: ASSIGNMENTS
+===============================================================================
+
+Update: the index rebuild is now Owen's, not Nadia's.
+
+Update: Delphine's removal from the plan is confirmed and final.
+
+Update: the second unit of shared equipment has slipped again. The plan assumes
+one unit, as section 10 already states.
+
+===============================================================================
+SECTION 20 - RISK REGISTER EXTRACT
+===============================================================================
+
+R-104, the loss of the second equipment unit, is accepted and is reflected in
+section 10.
+
+R-112, the single credential holder, is accepted and is reflected in section 8.
+Mitigation is the open third request, which is not expected to land in time.
+
+R-118, support volume from the unrelated mobile gateway waves, is accepted and
+owned by the support rota rather than by this programme.
+
+R-121, the ledger archive compaction overrunning into the morning, was closed in
+June. The compaction has finished by 05:30 in each of the last eleven runs and
+its worst recorded overrun was eleven minutes.
+
+R-126, a fault in the longest step forcing a restart, is accepted with no
+mitigation beyond the escalation contact. It has never occurred in rehearsal.
+
+===============================================================================
+SECTION 21 - HOW THE WORK IS PERFORMED
+===============================================================================
+
+The mechanics below are group convention and apply to every step without
+exception.
+
+One person performs one task at a time, no task may be paused once it has started, and a task must fit entirely inside the availability window of the person performing it.
+
+The convention about pausing comes from the June incident: a step that was
+paused and resumed left a lock behind and the lock was what took the notification
+relay down. The group has not allowed a paused step since.
+
+===============================================================================
+SECTION 22 - UPDATES CHANNEL, PART THREE: THE REHEARSAL FOLKLORE
+===============================================================================
+
+Update: the rehearsal failure was traced to an expired credential, which has since been replaced.
+
+Update: the two proposals to add contingency on the strength of the rehearsal
+folklore are therefore withdrawn by their authors.
+
+Update: Anselm's clarification tickets are all closed.
+
+===============================================================================
+SECTION 23 - OPEN QUESTIONS AND THINGS NOBODY HAS CONFIRMED
+===============================================================================
+
+The group keeps this list short on purpose. There is one open question with any
+bearing on the plan, and the instruction attached to it is explicit.
+
+Nobody has confirmed whether the consumer replay can run at double speed, so use the stated duration.
+
+The vendor was asked twice. The first answer was a marketing page and the second
+was a promise to follow up. Nothing has followed up.
+
+Two other open questions have no bearing: whether the deferred identity broker
+refresh returns next year, and whether the log retention change gets its
+separate approval.
+
+===============================================================================
+SECTION 24 - UPDATES CHANNEL, PART FOUR: ORDERING
+===============================================================================
+
+Update: the permissions sync must now run after the schema upgrade.
+
+The change was requested by the security review and accepted without argument.
+It supersedes the corresponding statement in section 6.
+
+Update: no other ordering rule has changed. The five ordering statements in
+sections 4 and 9 stand as written.
+
+===============================================================================
+SECTION 25 - ADMINISTRATIVE ODDS AND ENDS
+===============================================================================
+
+Ruth has asked, twice, to be told when the day is over so that she can restart
+her nightly comparison job. Somebody should remember to tell her.
+
+The group closed 34 tickets last week against an intake of 31. The oldest open
+ticket is 19 days old and concerns a dashboard label. Two tickets were reopened,
+both about notification delivery on the mobile gateway.
+
+The post-day retrospective is booked for the following morning. Attendance is
+optional for observers and expected for participants.
+
+Catering was cancelled. Nobody objected.
+
+===============================================================================
+SECTION 26 - THE QUESTION
+===============================================================================
+
+Question: with every task scheduled as early as the rules allow, at what clock time does the final verification finish?
+
+End your reply with a single final line in exactly this form:
+ANSWER: HH:MM

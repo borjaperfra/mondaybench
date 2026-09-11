@@ -392,3 +392,58 @@ releases:
       - id: monday-005
         prompt_sha256: 532cd464a9b75045f808886c44e667237d6fd1b947826510643b9f8bcc30059a
         rubric_version: "0.4"
+
+  - overall_version: 3
+    revision: 4
+    label: "Overall v3.4 - DeepSeek V4.1 Flash measured on its current deployment"
+    status: released
+    suite_version: "1.5"
+    aggregation: arithmetic_mean
+    note: >
+      A REVISION OF v3, NOT A NEW VERSION. Same five scenarios, same frozen
+      prompts, same rubric versions, same arithmetic, same judge contract. Every
+      incumbent Monday Score here is identical to its v3.3 score, and the
+      re-stamp into suite v1.5 changed zero labels and zero scores across 151
+      evaluations.
+
+      WHAT CHANGED, AND WHY. DeepSeek V4.1 Flash now has ONE battery on this
+      board instead of two, and it is a new one. The gateway serves this model
+      under an id it shares with DeepSeek V4 Flash and replaced the deployment
+      in place rather than publishing a second id, so the same request reaches
+      different weights at different times. Measured on 2026-09-11, the same
+      five prompts through the same endpoint produce reasoning volumes 1.3x to
+      2.5x the 2026-09-10 battery's at equal or better throughput - a change no
+      amount of load explains. The 2026-09-10 battery therefore no longer
+      describes what the id serves, and a board row is a claim about what a
+      caller gets today.
+
+      WHAT IS NO LONGER CARRIED. Two batteries are not in this suite: the
+      2026-09-10 one and its reliability-prompt variant. Their runs, verdicts
+      and v1.4 evaluations are untouched on disk and v1.4 still verifies; they
+      are simply not members of v1.5. The reliability variant goes with them
+      because its control no longer exists as a current measurement - a treated
+      arm published without its untreated arm is a number with nothing to
+      difference against. A later experiment against the current deployment
+      found the same prompt worth +0.04 points under the judge who scored this
+      board, which is not an effect.
+
+      THE ROW IS THE NATURAL CONFIGURATION. No reliability prompt, no
+      reasoning_effort, the harness default system prompt, temperature 0 and the
+      scenarios' own ceilings - the same configuration every other row on this
+      board ran under.
+    scenarios:
+      - id: monday-001
+        prompt_sha256: ed4d7beb1d7d1029c36eb8533e449027e0dc1a1047f8a38951a91781a0a5e398
+        rubric_version: "0.2"
+      - id: monday-002
+        prompt_sha256: 740e627cbc7413c321ede0d54000504de54821d34ff4677f82731b89600423a8
+        rubric_version: "0.2"
+      - id: monday-003
+        prompt_sha256: aaf788f309d955d2b427c86fe7d95d2bbf88575fde7306adcfd74b0ec4a4103f
+        rubric_version: "0.3"
+      - id: monday-004
+        prompt_sha256: 3a0cbb569ca4f711b8907177af9204cec267d26f35f732829df56b03ed23ef99
+        rubric_version: "0.3"
+      - id: monday-005
+        prompt_sha256: 532cd464a9b75045f808886c44e667237d6fd1b947826510643b9f8bcc30059a
+        rubric_version: "0.4"

@@ -1,0 +1,78 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.2",
+  "scenario_id": "monday-002",
+  "scenario_prompt_sha256": "740e627cbc7413c321ede0d54000504de54821d34ff4677f82731b89600423a8",
+  "run_id": "monday-002__deepseek-v4.1-flash-probe__003",
+  "run_number": 3,
+  "model": {
+    "slug": "deepseek-v4.1-flash-probe",
+    "display_name": "DeepSeek V4.1 Flash (variance probe)",
+    "provider": "helmcode",
+    "model_id": "deepseek-v4-flash"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 32000,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+    "extra_body": {
+      "caching": false
+    },
+    "config_sha256": "d24799fcff2f34662116bbdd15e21e7a97007b32c3a128ac7b5227fdedc6f2aa",
+    "safety_ceiling_tokens": 32000,
+    "ceiling_semantics": "provider_specific"
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "DELIVERED",
+    "tokens": 5952,
+    "evidence": "explicit_reasoning_tokens",
+    "stream_observed": true,
+    "stream_event_count": 5952
+  },
+  "timestamp_utc": "2026-09-10T19:37:28Z",
+  "usage": {
+    "input_tokens": 2335,
+    "output_tokens": 7138,
+    "reasoning_tokens": 5952
+  },
+  "performance": {
+    "ttft_ms": 702.9,
+    "ttfa_ms": 37553.2,
+    "total_latency_ms": 44702.0,
+    "tokens_per_second": 162.2
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "## 1. CURRENT STATE\n\n- **Enterprise Controls launch is stalled.** Staging build 2.9.4 passed Security verification, but Friday’s production attempt failed on shard eu-03 before rollout opened (no customer impact). Two recovery options exist: A (2.9.4, no code change, 20-min deploy, 8% session-reset risk) and B (2.9.5-patch, code change, 45-min deploy, <1% risk).  \n- **Timing constraints:** Marcus is available 09:15–10:20; Priya is available 09:00–09:35 and 10:25–12:30; Sam is available all morning. Atlas migration must begin before 12:00 Monday.  \n- **Option B is not viable** because the required 25-min delta review cannot be completed before Marcus’s departure (earliest diff submission is 09:15, Priya’s first availability window ends at 09:35, leaving only 20 minutes). Therefore, **Option A is the only path that meets the 12:00 deadline**.  \n- **Superseded items:**  \n  - Maya’s approval is not needed (she explicitly removed the executive gate).  \n  - Zenith is fully resolved (contract signed, no escalation).  \n  - Enterprise pricing must not be sent externally (workbook not authoritative).  \n  - Atlas launch confirmation at 10:30 is obsolete; actual rollout will open at ~11:00.  \n- **Expansion reconciliation:** September target €180k vs expected €126k (gap €54k). Wayne (€18k) and Globex (€12k) account for €30k; Soylent (€10k) and Wonka (€14k) account for the remaining €24k. No stated causes for Soylent/Wonka reductions.  \n- **Orion SCIM status is unverified** – org ID confusion (org_71A vs org_17A) must be resolved before any reply.\n\n## 2. MY PLAN FOR TODAY\n\n**09:07–09:15** – Review situation, confirm Option A with Marcus and Priya, and submit the shard precheck plan.  \n**09:15–09:35** – Marcus deploys 2.9.4 (20 min). Monitor.  \n**09:35–10:25** – While waiting for Priya’s availability:  \n  - Prepare and send the September expansion reconciliation to Maya (due 11:00).  \n  - Verify Orion’s correct org ID and live SCIM flag (coordinate with Laura/Sam).  \n  - Draft Atlas notification with the new launch time (~11:00).  \n**10:25–10:45** – Priya performs post-deploy verification (20 min).  \n**10:45–11:00** – Sam opens rollout and sanity-checks (15 min).  \n**11:00** – Confirm rollout is open; instruct Daniel to send the customer announcement; notify Atlas of the launch.  \n**11:00–12:00** – Follow up on Globex support tickets (G-441, G-447, G-451) and coordinate with CS; check if Soylent/Wonka have known issues (but do not invent causes).  \n\n## 3. CUSTOMER / REVENUE PRIORITIES\n\n- **Globex (top priority):** Renewal in 18 days, high-severity SSO ticket (G-441), plus SCIM and audit export issues. Admin logins down 61% – likely related to SSO problems. Expansion pending procurement. Needs immediate attention to prevent churn and secure the €12k expansion.  \n- **Soylent & Wonka (secondary):** Both show reduced expansion and declining usage, but no contract explanation. Renewals in 44 and 31 days respectively. Monitor, but do not assume churn risk without evidence.  \n- **Acme:** Usage decline is expected (approved shift to batch processing) – not a problem.  \n- **Wayne, Stark:** Stable, no action needed.\n\n## 4. DO NOT DO\n\n- **Do not** ask Maya for approval again – she has already delegated to Security and Release processes.  \n- **Do not** send Enterprise pricing to Initech or any external party – workbook is not authoritative.  \n- **Do not** call Zenith – contract signed, no escalation needed.  \n- **Do not** confirm Atlas launch at 10:30 – actual time is ~11:00.  \n- **Do not** send the customer announcement until Sam confirms rollout is open.  \n- **Do not** reply to Orion until the correct org ID is confirmed and the live SCIM flag is read.  \n- **Do not** treat Acme’s usage decline as a problem – it’s expected.  \n- **Do not** invent causes for Soylent/Wonka expansion reductions – state only data.\n\n## 5. UNCLEAR / MUST VERIFY\n\n- **Orion org ID:** Which org ID is actually Orion’s (org_71A or org_17A)? Need to confirm from CRM/support ticket.  \n- **Live SCIM flag:** What is the current `scim_enabled` value for the correct Orion org?  \n- **Soylent/Wonka:** Are there any known reasons for the reduced expansion or usage decline? No contract explanation exists – need to check with CS or account owners.  \n- **Globex SSO issue:** Is the high-severity ticket being actively worked? Need to confirm current status and expected resolution.",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "chatcmpl-1789068992-p1mjyg1T97fs7SL546EN",
+    "raw_usage": {
+      "completion_tokens": 7138,
+      "prompt_tokens": 2335,
+      "total_tokens": 9473,
+      "completion_tokens_details": {
+        "audio_tokens": 0,
+        "reasoning_tokens": 5952,
+        "image_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 2334,
+        "video_tokens": 0,
+        "cache_write_tokens": 0
+      }
+    }
+  }
+}

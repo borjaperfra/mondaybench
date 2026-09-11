@@ -1,0 +1,78 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.4",
+  "scenario_id": "monday-004",
+  "scenario_prompt_sha256": "3a0cbb569ca4f711b8907177af9204cec267d26f35f732829df56b03ed23ef99",
+  "run_id": "monday-004__deepseek-v4.1-flash-probe__003",
+  "run_number": 3,
+  "model": {
+    "slug": "deepseek-v4.1-flash-probe",
+    "display_name": "DeepSeek V4.1 Flash (variance probe)",
+    "provider": "helmcode",
+    "model_id": "deepseek-v4-flash"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 96000,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+    "extra_body": {
+      "caching": false
+    },
+    "config_sha256": "4369225ce32e2470d5687bec6742596f02c1305f486b600a199685f5f2dd3682",
+    "safety_ceiling_tokens": 96000,
+    "ceiling_semantics": "provider_specific"
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "DELIVERED",
+    "tokens": 10341,
+    "evidence": "explicit_reasoning_tokens",
+    "stream_observed": true,
+    "stream_event_count": 10341
+  },
+  "timestamp_utc": "2026-09-10T19:45:10Z",
+  "usage": {
+    "input_tokens": 10302,
+    "output_tokens": 12241,
+    "reasoning_tokens": 10341
+  },
+  "performance": {
+    "ttft_ms": 7966.6,
+    "ttfa_ms": 72663.9,
+    "total_latency_ms": 86359.8,
+    "tokens_per_second": 156.1
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "## 1. EXECUTIVE SUMMARY\n\n- **MRR grew modestly** from €746.1k (Sep) to €757.7k (Oct), +1.6%, but this masks serious churn in the SMB segment.\n- **SMB is the weakest segment**: 4 of 13 SMB customers churned in October (30.8% monthly churn), and SMB ARR is only €478.8k (5.4% of total active ARR). The starter plan, which most SMBs use, has a low gross margin (~32%) and high churn.\n- **Acquisition**: The partner channel shows the highest trial-to-trial conversion rate (25% Sep, 22.7% Oct) and the highest revenue per new logo (€83.4k avg). Paid search has high volume but declining trial conversion (8.5% → 6.4%) and is dominated by expansions, not new logos.\n- **Plan economics**: The Pro plan is the most profitable (gross margin ~63–67%), while Enterprise has a lower margin (~30%) and rising support costs. Starter is low-margin and churn-prone.\n- **Data limitations**: No marketing spend data is available, so CAC payback cannot be calculated. A duplicate invoice for Soylent exists in October, and trial-to-paid conversion is not tracked.\n\n## 2. REVENUE & CUSTOMER HEALTH\n\n**MRR trend** (from plans.csv):  \n- Sep: €746,100  \n- Oct: €757,700  \n- Change: +€11,600 (+1.6%)\n\n**Churn analysis** (from customers.csv):  \n- 5 customers churned in October:  \n  - Nakatomi (Mid-market, Pro, ARR €180k)  \n  - Slate-rock, Mega-lo-mart, Dinoco, Buy-n-large (all SMB, Starter, combined ARR €123.6k)  \n- Total ARR lost: €303.6k  \n- New customers added in October: 5 SMB (Spacely, Cogswell, Bishop, Gekko, Paper-street) with combined ARR €133.2k  \n- Expansions (from acquisition.csv): €252k ARR (Hooli, Stark, Umbrella, Globex, Massive-dynamic, Cyberdyne)  \n- Net ARR impact from these three factors: -€170.4k + €252k = +€81.6k, but MRR only rose €11.6k, indicating other changes (e.g., price adjustments, plan shifts) that are not fully explained.\n\n**Segment health** (active customers as of now):  \n- Enterprise: 8 customers, ARR €6.78M, no churn  \n- Mid-market: 9 active (1 churned), ARR €1.53M, churn rate 10% (1/10)  \n- SMB: 14 active (4 churned), ARR €478.8k, churn rate 30.8% (4/13)  \n\nSMB is clearly the problem: high churn, low revenue, and small contribution to total ARR.\n\n## 3. ACQUISITION\n\n**Funnel data** (leads → paid trial):  \n| Channel | Sep Leads | Sep Trial Conv. | Sep Trial Rate | Oct Leads | Oct Trial Conv. | Oct Trial Rate |\n|---------|-----------|-----------------|----------------|-----------|-----------------|----------------|\n| Paid search | 520 | 44 | 8.5% | 900 | 58 | 6.4% |\n| Content | 260 | 31 | 11.9% | 330 | 34 | 10.3% |\n| Partner | 60 | 15 | 25.0% | 75 | 17 | 22.7% |\n| Outbound | 160 | 10 | 6.3% | 195 | 11 | 5.6% |\n\n**Paid conversions** (from acquisition.csv, Sep+Oct):  \n- Partner: 2 new logos, total attributed revenue €166.8k (avg €83.4k)  \n- Content: 3 new logos + 1 expansion, total €109.2k (avg €27.3k)  \n- Outbound: 2 new logos + 1 expansion, total €80.4k (avg €26.8k)  \n- Paid search: 2 new logos + 4 expansions, total €274.8k (avg €45.8k)  \n\n**Key observations**:  \n- Partner has the highest trial conversion rate and the highest revenue per new logo, but very low volume (only 2 conversions in 2 months).  \n- Paid search has high volume but is increasingly inefficient (trial rate dropped) and its revenue is driven by expansions (existing customers), not new acquisition.  \n- **CAC payback cannot be calculated** because marketing spend per channel is not provided. We only have leads and conversions, not cost.\n\n## 4. PLAN ECONOMICS\n\n**Gross margin by plan (October)**:\n\n| Plan | Revenue | Infra Cost | Support Cost | Total Cost | Gross Profit | Margin |\n|------|---------|------------|--------------|------------|--------------|--------|\n| Enterprise | €659,500 | €296,800 | €168,000 | €464,800 | €194,700 | 29.5% |\n| Pro | €66,200 | €16,100 | €8,600 | €24,700 | €41,500 | 62.7% |\n| Starter | €32,000 | €11,400 | €10,300 | €21,700 | €10,300 | 32.2% |\n\n**Trends**:  \n- Enterprise margin fell from 32.2% (Sep) to 29.5% (Oct) due to rising infra and support costs (+€17.8k total) while revenue only grew €0.5k.  \n- Pro margin remained high (67.5% Sep → 62.7% Oct) and revenue grew 5.1%.  \n- Starter margin is low (~32%) and revenue growth is driven by new customers, but churn is high.\n\n**Usage vs. included requests**:  \n- Enterprise avg requests/customer: 1.89M (included 3M) – underutilised.  \n- Pro avg: 441k (included 600k) – underutilised, but some customers (e.g., Wonka) exceed limits, generating support tickets.  \n- Starter avg: 84k (included 200k) – underutilised.\n\n## 5. RECOMMENDATIONS\n\n1. **Reduce investment in the SMB segment** – specifically the starter plan.  \n   - SMB churn is 30.8% monthly, and starter plan margin is only 32%.  \n   - Focus retention efforts on higher-value SMB Pro customers (e.g., Wonka) and consider migrating them to Pro or upselling.  \n   - De-prioritise new starter acquisitions unless unit economics improve.\n\n2. **Increase spend on the partner channel** – it shows the highest trial conversion rate and brings high-value new logos (avg €83.4k).  \n   - Partner volume is low, so scaling it could yield strong returns.  \n   - Monitor cost per lead and ensure partner leads are qualified to maintain quality.\n\n3. **Focus engineering on the Pro plan** – it has the highest gross margin and is growing.  \n   - Address rate-limit issues (seen in support tickets for Wonka, Aperture, etc.) to reduce churn and improve customer satisfaction.  \n   - Explore ways to increase Pro plan adoption among SMB and Mid-market customers.\n\n## 6. UNCERTAINTIES / DATA ISSUES\n\n- **Duplicate invoice**: INV-2026-10-0209 for Soylent appears twice (sources: stripe and billing_sync). This may inflate October revenue if not deduplicated.  \n- **No marketing spend data**: CAC payback cannot be calculated. Only leads and conversions are available, not cost per lead or total spend.  \n- **Trial-to-paid conversion not tracked**: Funnel shows leads → paid trial, but we cannot link those to actual paid conversions (acquisition.csv). Thus, true conversion rates from lead to paid are unknown.  \n- **Usage data gaps**: Some customers (new in Oct) lack `usage_change_pct`, and September data has no change percentages, limiting month-over-month analysis.  \n- **Expansion revenue attribution**: Acquisition.csv attributes expansions to channels, but these are not new customer acquisitions. This can distort channel performance if not separated.  \n- **Customer ID mismatches**: `usage_account_id` differs from `customer_id` for Wayne Enterprises and Prestige Worldwide; we used the correct mapping, but this could cause join errors if not handled.",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "chatcmpl-1789069420-Kk2pE4OAPl2DoS2TXC7I",
+    "raw_usage": {
+      "completion_tokens": 12241,
+      "prompt_tokens": 10302,
+      "total_tokens": 22543,
+      "completion_tokens_details": {
+        "audio_tokens": 0,
+        "reasoning_tokens": 10341,
+        "image_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 10301,
+        "video_tokens": 0,
+        "cache_write_tokens": 0
+      }
+    }
+  }
+}

@@ -1,0 +1,453 @@
+{
+  "pack_type": "BLIND_INDEPENDENT_EVALUATION_PACK",
+  "blind": true,
+  "scenario_id": "monday-001",
+  "scenario_prompt": "# Monday #001 — Back to Work\n\nIt is Monday, 09:07.\n\nYou have been away from work since Wednesday at 17:30.\n\nWhile you were away, your team continued working and you have accumulated Slack messages, emails, meeting notes, tasks, and company metrics.\n\nReview all the information provided and prepare your Monday briefing.\n\nTell me:\n\n1. What happened while I was away.\n2. What requires my attention today, ordered by priority.\n3. What is important to know but does not require action from me.\n4. What is unclear or requires more information.\n\nBe concise and practical.\n\nDo not assume information that is not provided.\n\n---\n\n## Slack\n\n# Slack messages\n\n## Thursday\n\n### #incidents\n\n**08:42 — Laura Chen — Customer Success**\nAcme is reporting a significant increase in API errors this morning. Their engineering lead says requests to `/v2/events` are intermittently returning 500s.\n\n**08:44 — Marcus Webb — Engineering**\nLooking now.\n\n**08:47 — Laura Chen**\nThey're pretty unhappy. Marking this P1 until we understand what's happening.\n\n**09:03 — Marcus Webb**\nConfirmed. Error rate jumped after yesterday's 2.18.0 deploy. Investigating the event processing workers.\n\n**09:31 — Marcus Webb**\nFound it. One of the new worker configs is exhausting the connection pool under higher concurrency.\n\nRolling back that config now.\n\n**09:48 — Marcus Webb**\nRollback complete. Error rates are returning to normal.\n\nKeeping an eye on it for the next couple of hours.\n\n**11:57 — Marcus Webb**\nAcme has been stable for two hours. Error rate is back at baseline.\n\nI'll write up the incident notes later today.\n\n**12:04 — Laura Chen**\nThanks. I'll check with them directly.\n\n### #product\n\n**10:16 — Julia Santos — Product Marketing**\nFor the Analytics v2 launch email, are we still using the screenshot with the old dashboard navigation?\n\n**10:24 — Sam Rivera — Product**\nI think so, unless design has the new one ready before Friday.\n\n**10:31 — Sam Rivera**\nRelease is still planned for Monday from our side.\n\n**14:08 — Julia Santos**\nI'm going to start drafting the launch email this afternoon. I'll share it tomorrow.\n\n**16:43 — Sam Rivera**\nQA found two regressions in saved reports. Neither is data-loss related, but one affects exports.\n\nWe'll decide tomorrow whether this changes Monday's release.\n\n### #random\n\n**12:21 — Daniel Foster**\nLunch order: Thai or pizza?\n\n**12:22 — Julia Santos**\nThai.\n\n**12:22 — Marcus Webb**\nPizza.\n\n**12:24 — Daniel Foster**\nDemocracy has failed us again.\n\n## Friday\n\n### #sales\n\n**08:51 — Noah Williams — Sales**\nContoso update: call went really well yesterday.\n\nCommercial terms are basically agreed. I don't see anything major blocking the renewal now.\n\n**09:17 — Noah Williams**\nLegal still has a couple of details but nothing scary.\n\n### #product\n\n**09:36 — Sam Rivera**\nQA update on Analytics v2:\n\nThe export regression is more annoying than we thought. Fix is straightforward, but we need another QA cycle.\n\nI'm proposing Wednesday instead of Monday.\n\n**09:41 — Julia Santos**\nWorks for marketing.\n\n**09:43 — Daniel Foster — CEO**\nI'd rather ship Wednesday cleanly than force Monday.\n\nWednesday it is.\n\n**09:47 — Sam Rivera**\n👍 I'll update the internal release plan.\n\n**10:06 — Julia Santos**\nIn that case I'll take full ownership of the launch email. @You no need to do anything there — I'll have the draft ready before Tuesday.\n\n### #design\n\n**10:32 — Julia Santos**\nTiny thing: are we keeping the outlined \"spark\" icon for Analytics or moving to the filled version?\n\n**10:37 — Sam Rivera**\nI prefer filled.\n\n**10:39 — Laura Chen**\nOutlined is clearer IMO.\n\n**10:44 — Julia Santos**\nHere's the filled one at 16px. It looks a little muddy.\n\n**10:48 — Marcus Webb**\n+1 outlined.\n\n**10:51 — Sam Rivera**\nAt 24px filled looks better though.\n\n**10:56 — Julia Santos**\nMost customers will see 16px in the sidebar.\n\n**11:02 — Daniel Foster**\nI have no idea why I'm reading this thread.\n\n**11:03 — Julia Santos**\nImportant executive matters.\n\n**11:07 — Sam Rivera**\n😂\n\n**11:14 — Julia Santos**\nLet's just keep the existing outlined icon for this release.\n\n**11:15 — Sam Rivera**\nFine by me.\n\n### #leadership\n\n**11:42 — Daniel Foster**\nOne thing for next week: I'm slightly concerned about enterprise churn.\n\nThe dashboard has it moving from 3.1% to 4.4%. Not catastrophic, but directionally I don't like it.\n\nWould be good to understand what's driving that before the board meeting next week.\n\n**11:51 — Noah Williams**\nTwo enterprise cancellations I know about were Pied Piper and Hooli.\n\nPied Piper consolidated vendors after their acquisition.\n\nHooli said adoption wasn't high enough across teams.\n\n**11:55 — Daniel Foster**\nUseful. Let's understand whether those explain the movement or whether there's something broader happening.\n\n### #growth\n\n**13:06 — Julia Santos**\nDid conversion absolutely tank today or am I imagining things?\n\nI checked the dashboard earlier and it looked horrible.\n\n**13:12 — Noah Williams**\nI noticed that too but only looked quickly.\n\n**13:18 — Julia Santos**\nCould just be noisy Friday traffic. Worth checking next week.\n\n### #pricing\n\n**14:03 — Daniel Foster**\nQuick reminder from today's pricing discussion:\n\nThe new Enterprise tiers are still a proposal.\n\nPlease keep the numbers internal until we've finalized them and announced the change.\n\n**14:06 — Noah Williams**\n👍\n\n**14:08 — Laura Chen**\nGot it.\n\n### #general\n\n**15:04 — Daniel Foster**\nPartner sync done. Nothing major from my side.\n\nMain takeaway is they're still targeting the October integration.\n\n**15:09 — Sam Rivera**\nSame here.\n\n**16:48 — Julia Santos**\nHave a good weekend everyone 👋\n\n---\n\n## Emails\n\n# Emails\n\n---\n\n## Email 1\n\n**Received:** Thursday 12:37  \n**From:** Rachel Kim <rachel@acme.example>  \n**To:** Laura Chen  \n**CC:** You  \n**Subject:** Re: API errors this morning\n\nHi Laura,\n\nEverything has been stable on our side since around 10am.\n\nWe've processed the backlog successfully and aren't seeing the 500 errors anymore.\n\nThanks to you and the engineering team for jumping on this so quickly.\n\nBest,  \nRachel\n\n---\n\n## Email 2\n\n**Received:** Thursday 15:14  \n**From:** Elena Rossi <elena@globex.example>  \n**To:** You  \n**Subject:** Q3 planning session\n\nHi,\n\nCould we move our Q3 planning session from Tuesday to Thursday afternoon?\n\nOur Head of Product has a conflict on Tuesday and I'd prefer to have her in the room.\n\nNo urgency — sometime early next week is fine for confirming.\n\nThanks,  \nElena\n\n---\n\n## Email 3\n\n**Received:** Friday 09:23  \n**From:** Julia Santos  \n**To:** You  \n**Subject:** Analytics v2 launch copy\n\nHey,\n\nJust sending this here as well so it doesn't get lost in Slack.\n\nI'll own the launch email from here. With the release moving, I've got enough time to handle the whole thing.\n\nNothing needed from you.\n\nJulia\n\n---\n\n## Email 4\n\n**Received:** Friday 13:41  \n**From:** Mark Benson <mark@initech.example>  \n**To:** You  \n**Subject:** Enterprise pricing\n\nHey,\n\nNoah mentioned on our last call that you might be revisiting the Enterprise plans.\n\nWe're budgeting for next quarter at the moment, so if you have the new tiers and pricing already, could you send them over?\n\nEven a rough version would help.\n\nThanks,  \nMark\n\n---\n\n## Email 5\n\n**Received:** Friday 16:18  \n**From:** Sarah Mitchell <sarah@contoso.example>  \n**To:** Noah Williams  \n**CC:** You  \n**Subject:** One remaining point before renewal\n\nHi Noah,\n\nThanks again for yesterday.\n\nWe're happy with the commercial terms and are ready to move forward, but our legal team flagged one remaining question regarding data retention.\n\nThey need written confirmation that data deleted by an administrator is also removed from your disaster recovery backups within the retention period specified in the DPA.\n\nCould you confirm this for us by **11:00 Monday**?\n\nIf we can't get legal comfortable with this point before then, we'll need to push the renewal signature into our next approval window.\n\nBest,  \nSarah\n\n---\n\n## Email 6\n\n**Received:** Friday 16:36  \n**From:** Noah Williams  \n**To:** You  \n**Subject:** Fwd: One remaining point before renewal\n\nThis is the only thing I'm worried about on Contoso now.\n\nI don't want to guess on the backup behaviour.\n\nI think Marcus knows exactly how deletion works on the infrastructure side.\n\nRenewal is €72k ARR, so would be great to get this cleared first thing Monday.\n\n— Noah\n\n---\n\n## Email 7\n\n**Received:** Friday 17:02  \n**From:** Finance  \n**To:** Leadership  \n**CC:** You  \n**Subject:** Weekly revenue snapshot\n\nQuick weekly snapshot:\n\n- New ARR closed: €31k\n- Expansion ARR: €18k\n- Churned ARR: €27k\n- Pipeline created: €214k\n- Cash position remains in line with plan\n\nFull monthly numbers will be ready next week.\n\nFinance\n\n---\n\n## Meeting notes\n\n# Meeting notes\n\n## Friday — Product & Engineering Weekly\n\n**Time:** 09:00–09:30\n\n### Analytics v2\n\nQA identified two regressions in the current release candidate.\n\nOne affects CSV exports from saved reports. The fix is already in progress but requires another complete QA pass.\n\nDecision:\n\n**Move Analytics v2 release from Monday to Wednesday.**\n\nSam owns release coordination.\n\nJulia owns launch communications.\n\nNo action required from You on launch email.\n\n### Acme incident\n\nThursday's API incident was caused by a connection pool configuration introduced in release 2.18.0.\n\nConfiguration was rolled back.\n\nMetrics returned to baseline Thursday morning and Acme confirmed recovery.\n\nMarcus to complete incident documentation.\n\nNo further customer action currently required.\n\n---\n\n## Friday — Leadership / Pricing Review\n\n**Time:** 12:00–12:45\n\n### Enterprise pricing\n\nTeam reviewed a proposed change to Enterprise packaging.\n\nSeveral numbers are still being modeled.\n\nNo final pricing decision was made.\n\n**All proposed pricing remains confidential and must not be shared with customers until approved and publicly announced.**\n\nNext pricing review: Wednesday.\n\n### Enterprise churn\n\nEnterprise logo churn has increased from **3.1% to 4.4%** in the latest reporting period.\n\nKnown recent cancellations include:\n\n- Pied Piper — vendor consolidation following acquisition.\n- Hooli — low adoption outside the initial team.\n\nThese cases may contribute to the increase, but the team did **not** establish whether they fully explain it.\n\nDaniel wants a clearer breakdown before Tuesday's board meeting.\n\n---\n\n## Tasks\n\n# Task list\n\nExported: Monday 08:55\n\n| Status | Priority | Task | Owner | Due |\n|---|---|---|---|---|\n| Open | 🔴 Urgent | Investigate Acme API failures | You | Thursday |\n| Open | High | Confirm Contoso renewal next steps | You | Monday |\n| Open | High | Prepare Analytics v2 launch email | You | Monday |\n| Open | High | Review Analytics v2 launch readiness | You | Monday |\n| Open | Medium | Analyse enterprise churn | You | Tuesday |\n| Open | Medium | Confirm Globex Q3 planning session | You | Wednesday |\n| Open | Medium | Review proposed Enterprise pricing | Daniel | Wednesday |\n| Done | Medium | Prepare partner sync notes | You | Friday |\n| Open | Low | Update website customer logos | Julia | Friday |\n| Open | Low | Review Q3 research survey | You | Friday |\n\n---\n\n## Company metrics\n\ndate,customer,arr_eur,requests_24h,api_errors,p95_latency_ms,usage_change_7d_pct\n2026-08-31,Acme,48000,482140,8,312,3\n2026-08-31,Contoso,72000,821334,22,284,7\n2026-08-31,Globex,36000,183921,5,341,-2\n2026-08-31,Umbrella,54000,94217,163,1821,-41\n2026-08-31,Initech,24000,39104,1,267,4\n2026-08-31,Stark Industries,66000,1482012,74,298,9\n2026-08-31,Wayne Enterprises,42000,274921,11,276,-1\n",
+  "scenario_prompt_sha256": "ed4d7beb1d7d1029c36eb8533e449027e0dc1a1047f8a38951a91781a0a5e398",
+  "rubric": {
+    "version": "0.2",
+    "total_base_points": 100.0,
+    "maximum_global_penalty": 20.0,
+    "dimension_max": {
+      "action_detection": 25.0,
+      "state_reconstruction": 25.0,
+      "prioritization": 15.0,
+      "data_reasoning": 15.0,
+      "uncertainty": 10.0,
+      "noise_resistance": 10.0
+    },
+    "criteria": [
+      {
+        "id": "contoso_action",
+        "dimension": "action_detection",
+        "points": {
+          "pass": 8.0,
+          "partial": 4.0,
+          "fail": 0.0
+        },
+        "pass_definition": "Clearly identifies resolving the Contoso data-retention question before 11:00 Monday as the highest-priority action, and recognizes that the renewal/signature may be delayed if it is not resolved.",
+        "partial_definition": "Identifies Contoso as requiring action today but misses either the 11:00 deadline, the renewal-blocking consequence, or fails to treat it as the top priority.",
+        "fail_definition": "Does not identify the action, materially misunderstands it, or treats the renewal as already fully completed."
+      },
+      {
+        "id": "umbrella_action",
+        "dimension": "action_detection",
+        "points": {
+          "pass": 7.0,
+          "partial": 3.5,
+          "fail": 0.0
+        },
+        "pass_definition": "Identifies Umbrella's metrics as a serious unexplained anomaly that should be investigated today without claiming a root cause.",
+        "partial_definition": "Notices the anomaly but under-prioritizes it or describes the need for investigation incompletely.",
+        "fail_definition": "Misses Umbrella entirely or presents an unsupported root cause as established."
+      },
+      {
+        "id": "churn_action",
+        "dimension": "action_detection",
+        "points": {
+          "pass": 6.0,
+          "partial": 3.0,
+          "fail": 0.0
+        },
+        "pass_definition": "Identifies that enterprise churn should be investigated or broken down today ahead of Tuesday's board meeting.",
+        "partial_definition": "Notes churn as important but does not connect it to work required before the board meeting.",
+        "fail_definition": "Misses the churn issue or claims the known cancellations fully explain the increase."
+      },
+      {
+        "id": "analytics_action",
+        "dimension": "action_detection",
+        "points": {
+          "pass": 4.0,
+          "partial": 2.0,
+          "fail": 0.0
+        },
+        "pass_definition": "Correctly treats Wednesday as the release date and any readiness check as lower priority than today's critical items.",
+        "partial_definition": "Correctly understands Wednesday but gives disproportionate priority to the release.",
+        "fail_definition": "Treats Analytics v2 as launching Monday or assigns the launch email to the user."
+      },
+      {
+        "id": "acme_resolved",
+        "dimension": "state_reconstruction",
+        "points": {
+          "pass": 5.0,
+          "partial": 2.5,
+          "fail": 0.0
+        },
+        "pass_definition": "Clearly states that the Acme incident is resolved or recovered and does not frame it as an active operational problem.",
+        "partial_definition": "Mentions recovery but still suggests light monitoring or follow-up as if the incident may remain active.",
+        "fail_definition": "Treats Acme as an active incident or a Monday investigation priority."
+      },
+      {
+        "id": "release_wednesday",
+        "dimension": "state_reconstruction",
+        "points": {
+          "pass": 5.0,
+          "partial": 2.5,
+          "fail": 0.0
+        },
+        "pass_definition": "States that Analytics v2 is now scheduled for Wednesday.",
+        "partial_definition": "Correctly states that the Monday release was delayed but does not identify Wednesday.",
+        "fail_definition": "Says or implies that the release is still Monday."
+      },
+      {
+        "id": "contoso_blocked",
+        "dimension": "state_reconstruction",
+        "points": {
+          "pass": 5.0,
+          "partial": 2.5,
+          "fail": 0.0
+        },
+        "pass_definition": "Correctly states that renewal/signature can be delayed or blocked pending the data-retention confirmation.",
+        "partial_definition": "Identifies the outstanding legal question but misses the approval or signature consequence.",
+        "fail_definition": "Treats the renewal as fully completed or materially misstates the blocker."
+      },
+      {
+        "id": "launch_email_julia",
+        "dimension": "state_reconstruction",
+        "points": {
+          "pass": 5.0,
+          "partial": 2.5,
+          "fail": 0.0
+        },
+        "pass_definition": "States that Julia owns the launch email or that no launch-email action is required from the user.",
+        "partial_definition": "Does not assign the launch email to the user but misses Julia's ownership.",
+        "fail_definition": "Tells the user to prepare or write the launch email."
+      },
+      {
+        "id": "pricing_confidential",
+        "dimension": "state_reconstruction",
+        "points": {
+          "pass": 5.0,
+          "partial": 2.5,
+          "fail": 0.0
+        },
+        "pass_definition": "States that the proposed Enterprise pricing is not final and must not be shared externally.",
+        "partial_definition": "States that pricing is not final but does not recognize the external-sharing restriction.",
+        "fail_definition": "Recommends sending draft or new pricing to Initech."
+      },
+      {
+        "id": "contoso_first",
+        "dimension": "prioritization",
+        "points": {
+          "pass": 6.0,
+          "partial": 3.0,
+          "fail": 0.0
+        },
+        "pass_definition": "Explicitly treats Contoso as the first or highest-priority item.",
+        "partial_definition": "Includes Contoso among the top priorities but does not clearly rank it first.",
+        "fail_definition": "Under-prioritizes, omits, or presents Contoso as non-urgent."
+      },
+      {
+        "id": "umbrella_and_churn_high",
+        "dimension": "prioritization",
+        "points": {
+          "pass": 5.0,
+          "partial": 2.5,
+          "fail": 0.0
+        },
+        "pass_definition": "Both Umbrella investigation and churn analysis are prominent actionable items for today after Contoso.",
+        "partial_definition": "Only one is appropriately prioritized or both appear but are buried.",
+        "fail_definition": "Neither receives meaningful attention."
+      },
+      {
+        "id": "no_false_priorities",
+        "dimension": "prioritization",
+        "points": {
+          "pass": 4.0,
+          "partial": 2.0,
+          "fail": 0.0
+        },
+        "pass_definition": "No resolved, delegated, completed, or irrelevant item is elevated over legitimate work.",
+        "partial_definition": "One unnecessary item receives moderate priority.",
+        "fail_definition": "Multiple stale or irrelevant items are presented as priorities."
+      },
+      {
+        "id": "umbrella_detected",
+        "dimension": "data_reasoning",
+        "points": {
+          "pass": 5.0,
+          "partial": 2.5,
+          "fail": 0.0
+        },
+        "pass_definition": "Identifies Umbrella as the customer with clearly anomalous metrics.",
+        "partial_definition": "Notices a metrics problem but does not clearly connect it to Umbrella.",
+        "fail_definition": "Misses the anomaly."
+      },
+      {
+        "id": "umbrella_metrics",
+        "dimension": "data_reasoning",
+        "points": {
+          "pass": 4.0,
+          "partial": 2.0,
+          "fail": 0.0
+        },
+        "pass_definition": "Uses at least two correct supporting signals for Umbrella, such as 163 API errors, 1821ms p95 latency, -41% 7-day usage, or its relatively low request count compared with Stark Industries.",
+        "partial_definition": "Uses one correct supporting signal.",
+        "fail_definition": "Gives incorrect numbers or no supporting evidence."
+      },
+      {
+        "id": "churn_numbers",
+        "dimension": "data_reasoning",
+        "points": {
+          "pass": 3.0,
+          "partial": 1.5,
+          "fail": 0.0
+        },
+        "pass_definition": "Correctly identifies the move from 3.1% to 4.4%.",
+        "partial_definition": "Correctly states that enterprise churn increased but omits the figures.",
+        "fail_definition": "Gives the wrong direction or materially wrong numbers."
+      },
+      {
+        "id": "umbrella_error_rate",
+        "dimension": "data_reasoning",
+        "points": {
+          "pass": 3.0,
+          "partial": 1.5,
+          "fail": 0.0
+        },
+        "pass_definition": "Reads Umbrella's error count against its traffic rather than in isolation: gives an error rate, cites the 94,217 request volume alongside the 163 errors, or notes that Stark Industries carries more raw errors on far higher traffic while remaining healthy.",
+        "partial_definition": "Compares Umbrella with another customer, or mentions its low request volume, but does not connect the volume to why the error count is alarming.",
+        "fail_definition": "Treats the raw error count as self-evidently alarming with no reference to traffic, or draws an incorrect comparison."
+      },
+      {
+        "id": "umbrella_unknown_cause",
+        "dimension": "uncertainty",
+        "points": {
+          "pass": 4.0,
+          "partial": 2.0,
+          "fail": 0.0
+        },
+        "pass_definition": "Explicitly distinguishes the observed Umbrella anomaly from an unknown root cause.",
+        "partial_definition": "Does not invent a cause but fails to express uncertainty clearly.",
+        "fail_definition": "Claims a cause not supported by the material."
+      },
+      {
+        "id": "friday_conversion_unknown",
+        "dimension": "uncertainty",
+        "points": {
+          "pass": 3.0,
+          "partial": 1.5,
+          "fail": 0.0
+        },
+        "pass_definition": "Explicitly says Friday conversion cannot be verified from the provided data.",
+        "partial_definition": "Does not repeat the Slack speculation as fact but does not flag the uncertainty.",
+        "fail_definition": "Treats the Friday conversion drop as established fact."
+      },
+      {
+        "id": "churn_causality_unknown",
+        "dimension": "uncertainty",
+        "points": {
+          "pass": 3.0,
+          "partial": 1.5,
+          "fail": 0.0
+        },
+        "pass_definition": "States that Pied Piper and Hooli may contribute but do not establish the full cause of the churn increase.",
+        "partial_definition": "Mentions the known cancellations without claiming they fully explain the increase.",
+        "fail_definition": "Says or strongly implies that those two cancellations explain the increase."
+      }
+    ],
+    "penalties": {
+      "MATERIAL_HALLUCINATION": {
+        "points": -5.0,
+        "definition": "A factual claim that is materially relevant to the briefing but unsupported by the supplied evidence. Do not apply to omissions, harmless paraphrases, or issues already represented only by a lower rubric score."
+      },
+      "PROHIBITED_ACTION": {
+        "points": -10.0,
+        "definition": "Recommends an action explicitly contradicted or prohibited by the current state."
+      },
+      "MAJOR_CONTRADICTION": {
+        "points": -5.0,
+        "definition": "The response materially contradicts itself about the current state of an important issue."
+      }
+    },
+    "noise": {
+      "starting_points": 10.0,
+      "deduction_per_false_action": 2.0,
+      "minimum_points": 0.0,
+      "max_points": 10.0,
+      "false_actions": [
+        {
+          "id": "lunch",
+          "description": "Treating the lunch discussion as relevant or actionable."
+        },
+        {
+          "id": "icon",
+          "description": "Re-opening or prioritizing the resolved icon discussion."
+        },
+        {
+          "id": "partner_sync",
+          "description": "Treating Friday's completed partner sync as upcoming."
+        },
+        {
+          "id": "launch_email",
+          "description": "Assigning the Analytics v2 launch email to the user."
+        },
+        {
+          "id": "acme_active",
+          "description": "Treating Acme investigation as an active Monday task."
+        },
+        {
+          "id": "pricing_send",
+          "description": "Treating sending proposed Enterprise pricing as a valid action."
+        }
+      ]
+    }
+  },
+  "ground_truth": {
+    "scenario": {
+      "id": "monday-001",
+      "name": "Back to Work",
+      "current_time": "Monday 09:07",
+      "last_active": "Wednesday 17:30"
+    },
+    "critical_actions": {
+      "contoso": {
+        "expected": true,
+        "priority": 1,
+        "facts": [
+          "Contoso renewal is worth €72k ARR",
+          "Commercial terms are agreed",
+          "Legal requires written confirmation about backup deletion",
+          "Deadline is Monday 11:00",
+          "Marcus is the suggested source of technical information"
+        ],
+        "expected_action": [
+          "Verify backup deletion behavior with Marcus or the appropriate technical owner",
+          "Provide Contoso with written confirmation before 11:00 Monday"
+        ],
+        "prohibited": [
+          "Assume the backup deletion behavior without verification"
+        ]
+      },
+      "umbrella": {
+        "expected": true,
+        "priority": 2,
+        "facts": [
+          "Umbrella has 94,217 requests in the last 24 hours",
+          "Umbrella has 163 API errors",
+          "Umbrella p95 latency is 1821ms",
+          "Umbrella usage is down 41% over 7 days",
+          "No provided message explains the anomaly",
+          "Stark Industries has more raw API errors than most customers because it has much higher traffic, while its latency and usage remain healthy"
+        ],
+        "expected_action": [
+          "Investigate the anomaly"
+        ],
+        "prohibited": [
+          "Claim a specific root cause"
+        ]
+      },
+      "enterprise_churn": {
+        "expected": true,
+        "priority": 3,
+        "facts": [
+          "Enterprise churn increased from 3.1% to 4.4%",
+          "Board meeting is Tuesday",
+          "Pied Piper and Hooli are known cancellations",
+          "Provided information does not establish that they fully explain the increase"
+        ],
+        "expected_action": [
+          "Prepare or investigate a churn breakdown before Tuesday"
+        ]
+      },
+      "analytics_release": {
+        "expected": true,
+        "priority": 4,
+        "facts": [
+          "Analytics v2 was originally planned for Monday",
+          "Release moved to Wednesday",
+          "Sam owns release coordination",
+          "Julia owns launch communications"
+        ],
+        "expected_action": [
+          "Treat Wednesday as the current release date",
+          "Check readiness only as a lower-priority preparation task"
+        ]
+      }
+    },
+    "current_state": {
+      "contoso_renewal": {
+        "value": "blocked_pending_retention_confirmation"
+      },
+      "acme_incident": {
+        "value": "resolved"
+      },
+      "analytics_v2_release": {
+        "value": "Wednesday"
+      },
+      "analytics_launch_email_owner": {
+        "value": "Julia"
+      },
+      "enterprise_pricing": {
+        "value": "proposal_confidential_not_final"
+      },
+      "umbrella_status": {
+        "value": "anomalous_unknown_cause"
+      },
+      "enterprise_churn": {
+        "value": "4.4_percent_up_from_3.1"
+      },
+      "friday_conversion": {
+        "value": "unknown_from_provided_data"
+      },
+      "board_meeting": {
+        "value": "Tuesday"
+      },
+      "partner_sync": {
+        "value": "completed"
+      }
+    },
+    "uncertainties": [
+      {
+        "id": "umbrella_root_cause",
+        "expected": "unknown"
+      },
+      {
+        "id": "friday_conversion",
+        "expected": "cannot_be_verified"
+      },
+      {
+        "id": "churn_causality",
+        "expected": "not_established"
+      }
+    ],
+    "non_actions": [
+      "Do not send proposed Enterprise pricing to Initech",
+      "Do not prepare the Analytics v2 launch email",
+      "Do not investigate Acme as an active incident",
+      "Do not treat Friday partner sync as upcoming",
+      "Do not take action on the design icon discussion",
+      "Do not infer Friday conversion performance"
+    ],
+    "secondary_actions": {
+      "globex_reschedule": {
+        "facts": [
+          "Globex asked to move the Q3 planning session from Tuesday to Thursday afternoon",
+          "There is no urgency",
+          "Confirming early in the week is sufficient"
+        ],
+        "priority": "low"
+      }
+    }
+  },
+  "candidates": [
+    {
+      "candidate_id": "monday-001-A",
+      "label": "Candidate A",
+      "response": "## 1. What happened while you were away\n\n- **Acme incident, Thursday:** `/v2/events` returned intermittent 500s. Cause was a 2.18.0 worker config exhausting the connection pool. Marcus rolled it back; error rates returned to baseline and Acme confirmed recovery. Marcus is to write incident notes. No further customer action.\n- **Analytics v2:** QA found two saved-report regressions; one affects CSV exports, none are data-loss. Release moved from **Monday to Wednesday**. Sam owns release coordination. Julia owns launch communications and says you need to do nothing on the launch email. Existing outlined spark icon was kept.\n- **Contoso renewal:** Commercial terms are basically agreed. One legal point remains: written confirmation that admin-deleted data is removed from disaster-recovery backups within the DPA retention period. Sarah needs this by **11:00 Monday**. Noah says Marcus knows the infrastructure behavior. Renewal is **€72k ARR**.\n- **Enterprise pricing:** Proposed Enterprise tier changes were reviewed Friday. No final decision. All proposed pricing remains confidential until approved and publicly announced. Next review is Wednesday.\n- **Enterprise churn:** Dashboard moved from **3.1% to 4.4%**. Known cancellations: Pied Piper (vendor consolidation after acquisition) and Hooli (low adoption). It was not established whether those fully explain the increase. Daniel wants a clearer breakdown before Tuesday’s board meeting.\n- **Other:** Growth conversion looked bad Friday—possibly noisy Friday traffic. Globex asked to move the Q3 planning session from Tuesday to Thursday afternoon. Initech asked for the new Enterprise pricing. Partner sync was fine; October integration is still targeted. Finance snapshot: new ARR €31k, expansion €18k, churned ARR €27k, pipeline €214k; cash in line.\n- **Metrics watch:** Umbrella’s snapshot looks abnormal: **163 API errors, p95 latency 1,821 ms, usage down 41% over 7 days**. No Slack or email explains it.\n\n## 2. Requires your attention today, ordered by priority\n\n1. **Contoso legal confirmation before 11:00.** Get Marcus to confirm the exact DR-backup deletion behavior in writing, then route through Noah to Sarah. Do not guess. If it cannot be confirmed by 11:00, tell Noah immediately so Contoso can plan; otherwise the renewal may slip into the next approval window.\n2. **Check the Umbrella anomaly.** The provided metrics show severe errors, latency, and usage decline, with no explanation in Slack or email. Ask support/engineering to validate whether this is a live customer issue.\n3. **Enterprise churn breakdown for Tuesday’s board.** Determine whether Pied Piper and Hooli fully explain 3.1% → 4.4% or whether broader churn is happening. Daniel asked for a clearer breakdown before the board meeting.\n4. **Confirm Globex Q3 planning.** Reply to Elena on whether Thursday afternoon works; the session was originally Tuesday, so confirm before then.\n5. **Respond to Mark Benson / Initech on pricing.** Do not share proposed tiers or numbers. Pricing is not finalized/approved and remains confidential. Acknowledge the request and say you’ll share after approval/announcement; align with Noah.\n6. **Clean up stale / conflicting tasks.** The task list still shows Acme investigation as open (resolved; Marcus documents it) and Analytics launch email as yours (Julia owns it; no action). “Review Analytics v2 launch readiness” is assigned to you, but Sam owns release coordination—confirm, close, or delegate.\n7. **Low overdue items:** website customer logos (Julia, due Friday) and Q3 research survey (you, due Friday). Decide whether they are still needed.\n\n## 3. Important but no action from you\n\n- Acme incident is resolved; Acme is stable. Marcus owns incident documentation.\n- Analytics v2 release moved to Wednesday; Julia owns the launch email; no action needed from you there.\n- Partner sync had nothing major; October integration remains the target.\n- Finance weekly snapshot: new ARR €31k, expansion €18k, churned ARR €27k, pipeline €214k, cash in line. Net ARR movement was +€22k.\n- Daniel owns the proposed Enterprise pricing review on Wednesday. Your only related action is not to disclose anything externally.\n- Pied Piper and Hooli cancellation reasons are useful context, but they do not yet explain the full churn movement.\n\n## 4. Unclear or requires more information\n\n- Do Pied Piper and Hooli fully explain the enterprise churn increase? Need segment/cohort/reason data.\n- Exact Contoso DR-backup deletion confirmation has not yet been obtained.\n- Umbrella anomaly: cause, severity, and customer impact are unknown.\n- Friday conversion drop: real or noisy? No data provided.\n- Analytics v2 launch readiness ownership: task list says you; Friday meeting notes say Sam owns release coordination.\n- Initech pricing request: no approved pricing exists to share yet.\n- Globex: whether Thursday afternoon actually works for your calendar.\n- Marcus’s incident documentation status.\n- Status of overdue low-priority tasks: website logos and Q3 research survey.",
+      "response_sha256": "4888354b3c54a3a6b12fc8954d877d8d1f98b927523acbb2105abe90c8c9998d"
+    },
+    {
+      "candidate_id": "monday-001-B",
+      "label": "Candidate B",
+      "response": "## Monday briefing — 09:07\n\n### 1. What happened while you were away\n\n- **Acme P1 API incident (Thursday):** `/v2/events` returned intermittent 500s after the 2.18.0 deploy. Root cause was a new worker config exhausting the connection pool under higher concurrency. The config was rolled back; error rates returned to baseline by late morning. Acme confirmed stability. **Marcus** still owns incident documentation. No further customer action identified.\n- **Analytics v2 release moved Monday → Wednesday:** QA found two regressions; one affects CSV exports from saved reports. The fix is straightforward but needs another full QA pass. CEO approved moving to Wednesday. **Sam** owns release coordination; **Julia** owns launch communications and the launch email. No action from you on the launch email.\n- **Contoso renewal:** Commercial terms are basically agreed. One legal/data-retention point remains: Contoso needs written confirmation that admin-deleted data is also removed from disaster-recovery backups within the DPA retention period, **by 11:00 Monday**. Noah believes Marcus knows the deletion behavior. Renewal is €72k ARR; if not cleared, it may slip to the next approval window.\n- **Enterprise pricing:** Proposed Enterprise tiers are still internal, unapproved, and confidential. No final decision has been made. Next pricing review is Wednesday. **Mark Benson at Initech** has asked for the new tiers/pricing, including a rough version.\n- **Enterprise churn:** Dashboard shows enterprise logo churn rising from **3.1% to 4.4%**. Known cancellations: **Pied Piper** (vendor consolidation after acquisition) and **Hooli** (low adoption outside the initial team). It was **not established** whether those fully explain the increase. Daniel wants a clearer breakdown before the board meeting; meeting notes say Tuesday.\n- **Globex:** Elena asked to move your Q3 planning session from Tuesday to Thursday afternoon. She said no urgency and early next week is fine for confirming.\n- **Other:** Partner sync — October integration target unchanged. Finance weekly snapshot: new ARR €31k, expansion ARR €18k, churned ARR €27k, pipeline €214k, cash in line. Design decided to keep the existing outlined “spark” icon for this release. Julia/Noah flagged that conversion looked bad Friday; possibly noisy Friday traffic, but unconfirmed.\n- **Latest metrics (2026-08-31):** **Umbrella** stands out — usage change **-41%**, p95 latency **1,821 ms**, and **163 API errors**. No Slack/email context explains this.\n\n### 2. What requires your attention today, ordered by priority\n\n1. **Contoso data-retention confirmation — before 11:00.** Get written confirmation from **Marcus** on whether admin-deleted data is removed from DR backups within the DPA retention period. Do not guess. Then send the confirmation to Sarah/Noah by 11:00. This is today’s only hard deadline.\n2. **Enterprise churn analysis — work today for Tuesday’s board meeting.** Build a breakdown: logo vs ARR churn, cancellations, reasons, timing, and whether Pied Piper/Hooli explain the 3.1%→4.4% movement or whether something broader is happening. Reconcile with Finance’s €27k churned ARR if possible.\n3. **Check/assign the Umbrella anomaly.** The latest metrics show a 41% usage drop, 1,821 ms p95 latency, and 163 API errors. Determine whether this is a real customer-impacting issue or a data/seasonality anomaly.\n4. **Respond to Mark Benson on pricing — no numbers.** Pricing remains confidential and unapproved. Reply without sharing proposed tiers or rough pricing; say you’ll share once finalized/announced.\n5. **Confirm Globex scheduling.** Move the Q3 planning session to Thursday afternoon if possible. If the Tuesday session is tomorrow, confirm today; otherwise by Wednesday.\n6. **Reconcile stale tasks.** The Monday 08:55 task list still shows you owning the Acme investigation (resolved), the Analytics v2 launch email (Julia owns), and launch readiness (Sam owns release coordination). Update/close these to avoid confusion.\n\n### 3. Important, but no action from you\n\n- Acme incident is resolved from the customer side; Marcus owns documentation.\n- Analytics v2 is moved to Wednesday; Julia owns launch email, Sam owns release coordination.\n- Enterprise pricing remains internal/confidential until approved and announced.\n- Partner sync: October integration target unchanged.\n- Finance: net new ARR is €22k (€31k new + €18k expansion − €27k churned); cash is in line with plan.\n- Design: existing outlined icon stays for this release.\n- Low priority/not today: Q3 research survey (you, Friday) and website customer logos (Julia, Friday).\n\n### 4. Unclear or requires more information\n\n- Whether Pied Piper and Hooli fully explain the enterprise churn increase. Need cohort/logo/ARR/reason breakdown. Finance’s €27k churned ARR is not reconciled to enterprise logo churn.\n- Umbrella anomaly: cause unknown; no customer report or explanation provided.\n- Friday conversion drop: real issue or noisy Friday traffic? Needs dashboard check.\n- Contoso DR backup deletion behavior: only engineering/Marcus can confirm; cannot be assumed.\n- Analytics v2: exact QA completion/readiness status; Sam owns this.\n- Acme incident documentation status.\n- Globex: confirm whether Tuesday’s session is tomorrow and whether Thursday afternoon works.\n- Board meeting date: Slack said “next week”; meeting notes say Tuesday. Confirm the exact date.",
+      "response_sha256": "cb621b972802b69c38cf3dbeac938750e4b4fcf478e0aa6739f63cfa57bc20ad"
+    },
+    {
+      "candidate_id": "monday-001-C",
+      "label": "Candidate C",
+      "response": "# Monday Briefing — 09:07\n\n## 1. What happened while you were away\n\n**Thursday — Acme API incident (resolved)**\n- Acme saw intermittent 500s on `/v2/events`; marked P1.\n- Cause: a new event-worker config in release 2.18.0 exhausting the connection pool. Marcus rolled it back.\n- Error rates returned to baseline by ~10:00; Acme confirmed recovery (Rachel Kim, Thursday 12:37). Marcus to write up incident notes.\n\n**Friday — Analytics v2 release slipped**\n- QA found two regressions (one affecting CSV export from saved reports); a re-QA cycle is needed.\n- Decision (Daniel): move release **Monday → Wednesday**. Sam owns release coordination, Julia owns launch communications/email. Julia explicitly said **no action needed from you**.\n- Icon thread resolved: keeping the existing outlined icon for this release.\n\n**Enterprise churn concern raised**\n- Dashboard shows enterprise logo churn up **3.1% → 4.4%**.\n- Two known cancellations: Pied Piper (vendor consolidation post-acquisition) and Hooli (low adoption). Whether these *fully* explain the rise was **not** established. Daniel wants a clearer breakdown before Tuesday's board meeting.\n\n**Contoso renewal**\n- Call went well; commercial terms basically agreed.\n- One open legal item: Contoso needs written confirmation that admin-deleted data is also removed from DR backups within the DPA retention period. **Needs an answer by 11:00 Monday** or the signature slips to their next approval window. Renewal is €72k ARR. Noah flagged this as his only concern and warned against guessing — he believes Marcus knows the infrastructure behaviour.\n\n**Pricing (confidential)**\n- New Enterprise tiers are still a **proposal only**, no decision made; next review Wednesday. Daniel: keep numbers internal, do **not** share with customers until approved and announced.\n- Initech (Mark Benson) has asked for the new tiers/pricing, even a rough version, for their budgeting.\n\n**Other**\n- Globex wants the Q3 planning session moved from Tuesday to **Thursday afternoon** (no urgency).\n- Partner sync: partner still targeting the October integration.\n- Finance weekly snapshot: New ARR €31k, Expansion €18k, Churned €27k, Pipeline €214k; cash in line with plan.\n\n---\n\n## 2. Requires your attention today (priority order)\n\n**1. Contoso data-retention confirmation — hard deadline 11:00 today.**\nGet Marcus to confirm, in writing, exactly how admin deletions behave with respect to DR backups within the DPA retention period. Do **not** guess or commit on Noah's behalf. Once confirmed, respond to Sarah before 11:00 to protect the €72k renewal. This is the only item with a same-day, same-morning deadline.\n\n**2. Respond to Initech's pricing request (Email 4).**\nA reply is owed, but you **must not** share the proposed tiers or numbers — they are unapproved and confidential. Acknowledge and defer until pricing is finalized and announced.\n\n**3. Enterprise churn analysis — due Tuesday.**\nBegin the breakdown Daniel asked for, aimed at separating the Pied Piper/Hooli cases from anything broader, ahead of tomorrow's board meeting.\n\n**4. Confirm the Globex Q3 session (low urgency).**\nReply to Elena agreeing to Thursday afternoon (or flag the conflict). Due Wednesday.\n\n---\n\n## 3. Important, but no action from you\n\n- **Acme incident** — resolved and confirmed by the customer; only the incident write-up (Marcus) remains.\n- **Analytics v2 launch** — date moved to Wednesday, Julia owns the launch email and comms. Nothing required from you there.\n- **Partner sync** — nothing major; October integration still the target.\n- **Finance snapshot** — in line with plan; full monthly numbers next week.\n- **Task list is stale in places:** \"Investigate Acme API failures\" (assigned to you, due Thursday) is done and was actually handled by Marcus; \"Prepare Analytics v2 launch email\" is now Julia's. Both can be closed/reassigned.\n\n---\n\n## 4. Unclear / needs more information\n\n- **Churn attribution** — whether Pied Piper and Hooli actually account for the 3.1% → 4.4% move, or whether something broader is happening.\n- **Umbrella metrics anomaly** — its 2026-08-31 row shows usage change **−41%**, 163 API errors, and p95 latency of 1821 ms, well outside every other account. No one flagged it; it may or may not relate to the churn concern and warrants a look.\n- **Contoso's actual answer** — we don't yet know whether the DPA/DR behaviour Marcus describes will satisfy their legal question; that must be verified, not assumed.\n- **Friday conversion \"tanking\"** — Julia and Noah both thought the dashboard looked bad, but it was never confirmed; possibly noisy Friday traffic.\n- **Analytics v2 readiness review** — task list still shows this as due Monday to you; unclear whether it's still needed given the Wednesday move and that Sam owns release coordination.\n- **Launch email screenshot** — the old-dashboard-navigation screenshot question (Thursday) appears never explicitly resolved, though Julia now owns the email.\n- **Initech timeline** — no stated deadline on their request, but they are budgeting now; you'll need a deferral message that doesn't disclose pricing.",
+      "response_sha256": "a69ffad1b17bc71cc04e4c1490c7a028b25a42ed1ec6b43612ab27e7ae125bb1"
+    }
+  ]
+}

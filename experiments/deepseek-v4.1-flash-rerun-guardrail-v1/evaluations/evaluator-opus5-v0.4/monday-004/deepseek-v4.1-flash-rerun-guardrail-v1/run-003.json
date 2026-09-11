@@ -1,0 +1,291 @@
+{
+  "schema_version": "1",
+  "evaluator_id": "evaluator-opus5-v0.4",
+  "benchmark_version": "0.4",
+  "rubric_version": "0.3",
+  "scenario_id": "monday-004",
+  "run_id": "monday-004__deepseek-v4.1-flash-rerun-guardrail-v1__003",
+  "model_slug": "deepseek-v4.1-flash-rerun-guardrail-v1",
+  "scenario_prompt_sha256": "3a0cbb569ca4f711b8907177af9204cec267d26f35f732829df56b03ed23ef99",
+  "timestamp_utc": "2026-09-11T19:57:50Z",
+  "judge": {
+    "provider": "anthropic",
+    "model_id": "claude-opus-5",
+    "temperature": 0.0,
+    "effort": null,
+    "unsupported_parameters": [],
+    "prompt_fingerprint": "45998b3c03939498",
+    "route": "recorded",
+    "verdict_source": "monday-004.verdicts.jsonl",
+    "contract_fingerprint": "5ef5dc8dc34221ac",
+    "contract_schema_version": "1",
+    "judge_session_id": null
+  },
+  "suite_version": null,
+  "migrated_from": null,
+  "dimensions": {
+    "revenue_reasoning": {
+      "score": 20.0,
+      "max_score": 20.0
+    },
+    "customer_health": {
+      "score": 15.0,
+      "max_score": 15.0
+    },
+    "acquisition_reasoning": {
+      "score": 16.5,
+      "max_score": 19.0
+    },
+    "plan_economics": {
+      "score": 12.5,
+      "max_score": 19.0
+    },
+    "cross_table_data_quality": {
+      "score": 14.5,
+      "max_score": 18.0
+    },
+    "decision_quality": {
+      "score": 9.0,
+      "max_score": 9.0
+    }
+  },
+  "criteria": {
+    "duplicate_detected": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "Declared in the first line and quantified: 'Including it would overstate October revenue by 19.5k, or 2.2% of deduplicated October revenue'",
+      "reason": "Declared in the first line and quantified: 'Including it would overstate October revenue by 19.5k, or 2.2% of deduplicated October revenue'"
+    },
+    "annual_prepayment_normalized": {
+      "result": "PASS",
+      "points_awarded": 6.0,
+      "points_possible": 6.0,
+      "evidence": "'Gringotts annual subscription: 120.0k cash invoice for 12 months. In MRR terms it is only 10.0k/month'",
+      "reason": "'Gringotts annual subscription: 120.0k cash invoice for 12 months. In MRR terms it is only 10.0k/month'"
+    },
+    "headline_vs_recurring_growth": {
+      "result": "PASS",
+      "points_awarded": 6.0,
+      "points_possible": 6.0,
+      "evidence": "'873.4k... That is +76.3k / +9.6%. But recurring MRR from plans.csv only rose from 746.1k to 757.7k, or +11.6k / +1.6%', with the treatment stated and the gap attributed to 'timing/prepay and a duplicate invoice, not broad recurring growth'",
+      "reason": "'873.4k... That is +76.3k / +9.6%. But recurring MRR from plans.csv only rose from 746.1k to 757.7k, or +11.6k / +1.6%', with the treatment stated and the gap attributed to 'timing/prepay and a duplicate invoice, not broad recurring growth'"
+    },
+    "revenue_conclusion": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'The headline October revenue jump is misleading' heads the summary, and the conclusion is carried into the recommendation to separate MRR from prepay and services",
+      "reason": "'The headline October revenue jump is misleading' heads the summary, and the conclusion is carried into the recommendation to separate MRR from prepay and services"
+    },
+    "segment_retention_quantified": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "Active ARR and its change quantified for every segment - 'Enterprise 0', 'Mid-market -174k', 'SMB +9.6k' - against a stated September run-rate base, with the churn and offsetting bookings both shown",
+      "reason": "Active ARR and its change quantified for every segment - 'Enterprise 0', 'Mid-market -174k', 'SMB +9.6k' - against a stated September run-rate base, with the churn and offsetting bookings both shown"
+    },
+    "sample_size_arr_context": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'SMB also added five new accounts worth 133.2k ARR, so SMB net ARR was +9.6k', set beside Nakatomi's single 180k loss and SMB's 5.5% share of active ARR",
+      "reason": "'SMB also added five new accounts worth 133.2k ARR, so SMB net ARR was +9.6k', set beside Nakatomi's single 180k loss and SMB's 5.5% share of active ARR"
+    },
+    "acme_false_positive_avoided": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'Acme requests fell -45%... estimated to reduce interactive requests by 40-50%, so the request drop is expected. Acme tokens fell only -12%... The cost impact is therefore not proportional to the request decline'",
+      "reason": "'Acme requests fell -45%... estimated to reduce interactive requests by 40-50%, so the request drop is expected. Acme tokens fell only -12%... The cost impact is therefore not proportional to the request decline'"
+    },
+    "no_churn_overreach": {
+      "result": "PASS",
+      "points_awarded": 2.0,
+      "points_possible": 2.0,
+      "evidence": "No churn cause is asserted; Nakatomi's ticket is reported as context rather than explanation",
+      "reason": "No churn cause is asserted; Nakatomi's ticket is reported as context rather than explanation"
+    },
+    "raw_attribution_not_equivalent_new_business": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'October paid_search attributed revenue was 238.8k, but 174.0k of that was expansion bookings on existing accounts; only 64.8k was new logos'",
+      "reason": "'October paid_search attributed revenue was 238.8k, but 174.0k of that was expansion bookings on existing accounts; only 64.8k was new logos'"
+    },
+    "existing_customer_expansion_removed": {
+      "result": "PARTIAL",
+      "points_awarded": 2.5,
+      "points_possible": 5.0,
+      "evidence": "The table separates new-logo from expansion ARR by channel for both months and every figure is correct, but the per-channel two-month totals are not formed, so the Partner-first ranking is not produced - the response reports only that total new-logo ARR fell from 246.0k to 133.2k",
+      "reason": "The table separates new-logo from expansion ARR by channel for both months and every figure is correct, but the per-channel two-month totals are not formed, so the Partner-first ranking is not produced - the response reports only that total new-logo ARR fell from 246.0k to 133.2k"
+    },
+    "conversion_rate_vs_absolute_volume": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'Total 1,000 / 100 / 10.0%' against '1,500 / 120 / 8.0%', with both directions named: 'Leads rose 50%, but paid trials rose only 20%. Every channel's same-month trial rate fell'",
+      "reason": "'Total 1,000 / 100 / 10.0%' against '1,500 / 120 / 8.0%', with both directions named: 'Leads rose 50%, but paid trials rose only 20%. Every channel's same-month trial rate fell'"
+    },
+    "no_unsupported_channel_scale_decision": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "'No channel increase is supported without spend and trial-to-paid data' and 'Do not increase paid_search spend yet'",
+      "reason": "'No channel increase is supported without spend and trial-to-paid data' and 'Do not increase paid_search spend yet'"
+    },
+    "cac_payback_unavailable": {
+      "result": "PASS",
+      "points_awarded": 2.0,
+      "points_possible": 2.0,
+      "evidence": "'CAC payback by channel cannot be calculated. The pack has no channel spend, no channel-level gross margin, no retention/expansion timing, and no trial-to-paid conversion'",
+      "reason": "'CAC payback by channel cannot be calculated. The pack has no channel spend, no channel-level gross margin, no retention/expansion timing, and no trial-to-paid conversion'"
+    },
+    "contribution_calculated": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "'Oct CM 194.7k / 41.5k / 10.3k' with September alongside and a company total of 246.5k",
+      "reason": "'Oct CM 194.7k / 41.5k / 10.3k' with September alongside and a company total of 246.5k"
+    },
+    "margin_calculated_or_correctly_compared": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "'29.5% / 62.7% / 32.2%', with the company margin of 32.5% also correct",
+      "reason": "'29.5% / 62.7% / 32.2%', with the company margin of 32.5% also correct"
+    },
+    "absolute_vs_scalable_economics": {
+      "result": "PARTIAL",
+      "points_awarded": 2.5,
+      "points_possible": 5.0,
+      "evidence": "Absolute contribution and margin are both present and contrasted, but no revenue-per-customer figure is given, the two questions are not distinguished, and the plan decision is argued straight off the absolute figure: 'Which plan deserves the most attention: Enterprise. It is the largest profit pool and its contribution decline (-17.3k) is larger than the total company contribution decline'",
+      "reason": "Absolute contribution and margin are both present and contrasted, but no revenue-per-customer figure is given, the two questions are not distinguished, and the plan decision is argued straight off the absolute figure: 'Which plan deserves the most attention: Enterprise. It is the largest profit pool and its contribution decline (-17.3k) is larger than the total company contribution decline'"
+    },
+    "plan_trajectory_evidence": {
+      "result": "PARTIAL",
+      "points_awarded": 1.5,
+      "points_possible": 3.0,
+      "evidence": "Enterprise is quantified forward - 'requests were down 0.4%, but tokens rose +4.8%, from 29,194M to 30,605M', which recomputes exactly - but Pro has no usage signal at all: the three Pro accounts over the 600k included volume are never identified, and only Enterprise accounts appear in the overage note",
+      "reason": "Enterprise is quantified forward - 'requests were down 0.4%, but tokens rose +4.8%, from 29,194M to 30,605M', which recomputes exactly - but Pro has no usage signal at all: the three Pro accounts over the 600k included volume are never identified, and only Enterprise accounts appear in the overage note"
+    },
+    "product_focus_supported": {
+      "result": "PARTIAL",
+      "points_awarded": 2.5,
+      "points_possible": 5.0,
+      "evidence": "The recommendation is Enterprise, and its stated ground is absolute size - 'the largest profit pool' with the largest contribution decline - which is the one basis the rubric excludes for preferring another plan to Pro; the cost-efficiency signals are attached afterwards rather than carrying the choice",
+      "reason": "The recommendation is Enterprise, and its stated ground is absolute size - 'the largest profit pool' with the largest contribution decline - which is the one basis the rubric excludes for preferring another plan to Pro; the cost-efficiency signals are attached afterwards rather than carrying the choice"
+    },
+    "customer_id_alias_resolved": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'Wayne 3.1M/3.41M vs 3M' in the overage note, and the Enterprise request total of 26.54M -> 26.44M is only reachable with the wayne_ent rows joined",
+      "reason": "'Wayne 3.1M/3.41M vs 3M' in the overage note, and the Enterprise request total of 26.54M -> 26.44M is only reachable with the wayne_ent rows joined"
+    },
+    "support_normalized": {
+      "result": "PARTIAL",
+      "points_awarded": 2.0,
+      "points_possible": 4.0,
+      "evidence": "One plan is normalised - Starter's 'support cost per customer is roughly flat (811 -> 792)', which recomputes - but no rate is given for Enterprise or Pro, and Enterprise's 35 of 74 raw tickets are never set against its size",
+      "reason": "One plan is normalised - Starter's 'support cost per customer is roughly flat (811 -> 792)', which recomputes - but no rate is given for Enterprise or Pro, and Enterprise's 35 of 74 raw tickets are never set against its size"
+    },
+    "cross_table_customer_signal": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'Soylent is a clear risk: MRR fell from 22.0k to 19.5k, requests fell 27%, and support tickets rose from 3 to 8, including one critical API-errors ticket and four high-severity tickets' - the severity split recomputes exactly",
+      "reason": "'Soylent is a clear risk: MRR fell from 22.0k to 19.5k, requests fell 27%, and support tickets rose from 3 to 8, including one critical API-errors ticket and four high-severity tickets' - the severity split recomputes exactly"
+    },
+    "figures_carried_correctly": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "Every figure recomputes, including several no other candidate attempted: the ARR bridge closing at -164.4k, Enterprise tokens 29,194M -> 30,605M, high/critical tickets 16 -> 20, Soylent's 1 -> 5 high/critical, and Starter support cost per customer 811 -> 792",
+      "reason": "Every figure recomputes, including several no other candidate attempted: the ARR bridge closing at -164.4k, Enterprise tokens 29,194M -> 30,605M, high/critical tickets 16 -> 20, Soylent's 1 -> 5 high/critical, and Starter support cost per customer 811 -> 792"
+    },
+    "causal_boundary": {
+      "result": "PARTIAL",
+      "points_awarded": 1.5,
+      "points_possible": 3.0,
+      "evidence": "The Soylent pattern is reported in full and no cause is asserted outright, but the response moves straight to 'Assign retention/reliability work before renewal', which implies the API issues as the mechanism, and never states that the data cannot establish what caused what",
+      "reason": "The Soylent pattern is reported in full and no cause is asserted outright, but the response moves straight to 'Assign retention/reliability work before renewal', which implies the API issues as the mechanism, and never states that the data cannot establish what caused what"
+    },
+    "segment_recommendation": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "'Do not make a broad segment cut... target SMB onboarding/churn and the specific Mid-market at-risk accounts, not a blanket investment reduction', with the missing evidence named: 'full segment cost/P&L cannot' be calculated from plan-level costs",
+      "reason": "'Do not make a broad segment cut... target SMB onboarding/churn and the specific Mid-market at-risk accounts, not a blanket investment reduction', with the missing evidence named: 'full segment cost/P&L cannot' be calculated from plan-level costs"
+    },
+    "acquisition_recommendation": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "'If a channel test is needed, partner/content are the better trial-conversion candidates; paid_search needs more scrutiny', with every move conditioned - 'None of this replaces CAC data'",
+      "reason": "'If a channel test is needed, partner/content are the better trial-conversion candidates; paid_search needs more scrutiny', with every move conditioned - 'None of this replaces CAC data'"
+    },
+    "product_recommendation": {
+      "result": "PASS",
+      "points_awarded": 1.0,
+      "points_possible": 1.0,
+      "evidence": "'Give the Enterprise plan the most engineering/operational attention next quarter' - single, actionable and consistent with the plan economics section above it",
+      "reason": "'Give the Enterprise plan the most engineering/operational attention next quarter' - single, actionable and consistent with the plan economics section above it"
+    },
+    "uncertainty_discipline": {
+      "result": "PASS",
+      "points_awarded": 2.0,
+      "points_possible": 2.0,
+      "evidence": "Eleven real gaps named, including that overage revenue is not calculable and that churned accounts' usage changes are not organic signals. No figure invented",
+      "reason": "Eleven real gaps named, including that overage revenue is not calculable and that churned accounts' usage changes are not organic signals. No figure invented"
+    }
+  },
+  "false_actions": {},
+  "penalties": {
+    "items": [],
+    "dismissed": [],
+    "raw_total": 0.0,
+    "total": 0.0,
+    "capped": false
+  },
+  "deterministic_checks": [
+    {
+      "id": "contoso_11_00",
+      "matched": false,
+      "detail": "'11:00' appears near a mention of Contoso"
+    },
+    {
+      "id": "churn_3_1_to_4_4",
+      "matched": false,
+      "detail": "both churn figures 3.1 and 4.4 are present"
+    },
+    {
+      "id": "umbrella_metrics_present",
+      "matched": false,
+      "detail": "at least two of 163 / 1821 / 41 appear near a mention of Umbrella"
+    },
+    {
+      "id": "umbrella_named",
+      "matched": true,
+      "detail": "Umbrella is named in the response"
+    },
+    {
+      "id": "wednesday_present",
+      "matched": false,
+      "detail": "'Wednesday' appears in the response"
+    },
+    {
+      "id": "julia_present",
+      "matched": false,
+      "detail": "'Julia' appears in the response"
+    },
+    {
+      "id": "pied_piper_and_hooli",
+      "matched": false,
+      "detail": "both known cancellations are named"
+    }
+  ],
+  "disagreements": [],
+  "base_score": 87.5,
+  "final_score": 87.5
+}

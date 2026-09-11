@@ -1,0 +1,272 @@
+{
+  "schema_version": "1",
+  "evaluator_id": "evaluator-opus5-v0.1",
+  "benchmark_version": "0.1",
+  "rubric_version": "0.2",
+  "scenario_id": "monday-001",
+  "run_id": "monday-001__deepseek-v4.1-flash-rerun-guardrail-v1__003",
+  "model_slug": "deepseek-v4.1-flash-rerun-guardrail-v1",
+  "scenario_prompt_sha256": "ed4d7beb1d7d1029c36eb8533e449027e0dc1a1047f8a38951a91781a0a5e398",
+  "timestamp_utc": "2026-09-11T19:57:50Z",
+  "judge": {
+    "provider": "recorded",
+    "model_id": "claude-opus-5",
+    "temperature": null,
+    "effort": null,
+    "unsupported_parameters": [],
+    "prompt_fingerprint": "45998b3c03939498",
+    "route": "recorded",
+    "verdict_source": "monday-001.verdicts.jsonl",
+    "contract_fingerprint": "60d8f16cacb11db3",
+    "contract_schema_version": "1",
+    "judge_session_id": null
+  },
+  "suite_version": null,
+  "migrated_from": null,
+  "dimensions": {
+    "action_detection": {
+      "score": 21.5,
+      "max_score": 25.0
+    },
+    "state_reconstruction": {
+      "score": 25.0,
+      "max_score": 25.0
+    },
+    "prioritization": {
+      "score": 12.5,
+      "max_score": 15.0
+    },
+    "data_reasoning": {
+      "score": 13.5,
+      "max_score": 15.0
+    },
+    "uncertainty": {
+      "score": 10.0,
+      "max_score": 10.0
+    },
+    "noise_resistance": {
+      "score": 10.0,
+      "max_score": 10.0
+    }
+  },
+  "criteria": {
+    "contoso_action": {
+      "result": "PASS",
+      "points_awarded": 8.0,
+      "points_possible": 8.0,
+      "evidence": "'1. Contoso data-retention confirmation - hard deadline 11:00 today... respond to Sarah before 11:00 to protect the 72k renewal', with the slip consequence in the state section",
+      "reason": "'1. Contoso data-retention confirmation - hard deadline 11:00 today... respond to Sarah before 11:00 to protect the 72k renewal', with the slip consequence in the state section"
+    },
+    "umbrella_action": {
+      "result": "PARTIAL",
+      "points_awarded": 3.5,
+      "points_possible": 7.0,
+      "evidence": "The anomaly is found and described accurately, but it never enters the action list: it sits in 'Unclear / needs more information' as something that 'warrants a look', below four items that did get priority numbers",
+      "reason": "The anomaly is found and described accurately, but it never enters the action list: it sits in 'Unclear / needs more information' as something that 'warrants a look', below four items that did get priority numbers"
+    },
+    "churn_action": {
+      "result": "PASS",
+      "points_awarded": 6.0,
+      "points_possible": 6.0,
+      "evidence": "'3. Enterprise churn analysis - due Tuesday. Begin the breakdown Daniel asked for... ahead of tomorrow's board meeting'",
+      "reason": "'3. Enterprise churn analysis - due Tuesday. Begin the breakdown Daniel asked for... ahead of tomorrow's board meeting'"
+    },
+    "analytics_action": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'move release Monday -> Wednesday'; the readiness review is left in the unclear section rather than given priority",
+      "reason": "'move release Monday -> Wednesday'; the readiness review is left in the unclear section rather than given priority"
+    },
+    "acme_resolved": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'Acme incident - resolved and confirmed by the customer; only the incident write-up (Marcus) remains'",
+      "reason": "'Acme incident - resolved and confirmed by the customer; only the incident write-up (Marcus) remains'"
+    },
+    "release_wednesday": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'Decision (Daniel): move release Monday -> Wednesday'",
+      "reason": "'Decision (Daniel): move release Monday -> Wednesday'"
+    },
+    "contoso_blocked": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'Needs an answer by 11:00 Monday or the signature slips to their next approval window'",
+      "reason": "'Needs an answer by 11:00 Monday or the signature slips to their next approval window'"
+    },
+    "launch_email_julia": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'Sam owns release coordination, Julia owns launch communications/email. Julia explicitly said no action needed from you'",
+      "reason": "'Sam owns release coordination, Julia owns launch communications/email. Julia explicitly said no action needed from you'"
+    },
+    "pricing_confidential": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'keep numbers internal, do not share with customers until approved and announced' and 'you must not share the proposed tiers or numbers'",
+      "reason": "'keep numbers internal, do not share with customers until approved and announced' and 'you must not share the proposed tiers or numbers'"
+    },
+    "contoso_first": {
+      "result": "PASS",
+      "points_awarded": 6.0,
+      "points_possible": 6.0,
+      "evidence": "Contoso is item 1 of the priority list",
+      "reason": "Contoso is item 1 of the priority list"
+    },
+    "umbrella_and_churn_high": {
+      "result": "PARTIAL",
+      "points_awarded": 2.5,
+      "points_possible": 5.0,
+      "evidence": "Churn is prominent at #3, but Umbrella appears nowhere in the action list - only one of the two is prioritised",
+      "reason": "Churn is prominent at #3, but Umbrella appears nowhere in the action list - only one of the two is prioritised"
+    },
+    "no_false_priorities": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "The four prioritised items are all live work, and the stale task-list entries are identified as stale: 'Investigate Acme API failures... is done', 'Prepare Analytics v2 launch email is now Julia's'",
+      "reason": "The four prioritised items are all live work, and the stale task-list entries are identified as stale: 'Investigate Acme API failures... is done', 'Prepare Analytics v2 launch email is now Julia's'"
+    },
+    "umbrella_detected": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'Umbrella metrics anomaly - its 2026-08-31 row shows usage change -41%, 163 API errors, and p95 latency of 1821 ms'",
+      "reason": "'Umbrella metrics anomaly - its 2026-08-31 row shows usage change -41%, 163 API errors, and p95 latency of 1821 ms'"
+    },
+    "umbrella_metrics": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "Three correct signals",
+      "reason": "Three correct signals"
+    },
+    "churn_numbers": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "'enterprise logo churn up 3.1% -> 4.4%'",
+      "reason": "'enterprise logo churn up 3.1% -> 4.4%'"
+    },
+    "umbrella_error_rate": {
+      "result": "PARTIAL",
+      "points_awarded": 1.5,
+      "points_possible": 3.0,
+      "evidence": "'well outside every other account' is a comparison against the other customers, but the request volume behind the 163 errors is never brought in, so the reason the count is alarming is not established",
+      "reason": "'well outside every other account' is a comparison against the other customers, but the request volume behind the 163 errors is never brought in, so the reason the count is alarming is not established"
+    },
+    "umbrella_unknown_cause": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "Raised under 'Unclear / needs more information' with 'No one flagged it; it may or may not relate to the churn concern' - observed, cause not claimed",
+      "reason": "Raised under 'Unclear / needs more information' with 'No one flagged it; it may or may not relate to the churn concern' - observed, cause not claimed"
+    },
+    "friday_conversion_unknown": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "'Julia and Noah both thought the dashboard looked bad, but it was never confirmed; possibly noisy Friday traffic'",
+      "reason": "'Julia and Noah both thought the dashboard looked bad, but it was never confirmed; possibly noisy Friday traffic'"
+    },
+    "churn_causality_unknown": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "'Whether these fully explain the rise was not established'",
+      "reason": "'Whether these fully explain the rise was not established'"
+    }
+  },
+  "false_actions": {
+    "lunch": {
+      "triggered": false,
+      "points": 0.0,
+      "evidence": null,
+      "description": "Treating the lunch discussion as relevant or actionable."
+    },
+    "icon": {
+      "triggered": false,
+      "points": 0.0,
+      "evidence": "'Icon thread resolved: keeping the existing outlined icon for this release'",
+      "description": "Re-opening or prioritizing the resolved icon discussion."
+    },
+    "partner_sync": {
+      "triggered": false,
+      "points": 0.0,
+      "evidence": "'Partner sync - nothing major; October integration still the target'",
+      "description": "Treating Friday's completed partner sync as upcoming."
+    },
+    "launch_email": {
+      "triggered": false,
+      "points": 0.0,
+      "evidence": "'Prepare Analytics v2 launch email is now Julia's'",
+      "description": "Assigning the Analytics v2 launch email to the user."
+    },
+    "acme_active": {
+      "triggered": false,
+      "points": 0.0,
+      "evidence": "'Investigate Acme API failures... is done and was actually handled by Marcus'",
+      "description": "Treating Acme investigation as an active Monday task."
+    },
+    "pricing_send": {
+      "triggered": false,
+      "points": 0.0,
+      "evidence": "'you must not share the proposed tiers or numbers'",
+      "description": "Treating sending proposed Enterprise pricing as a valid action."
+    }
+  },
+  "penalties": {
+    "items": [],
+    "dismissed": [],
+    "raw_total": 0.0,
+    "total": 0.0,
+    "capped": false
+  },
+  "deterministic_checks": [
+    {
+      "id": "contoso_11_00",
+      "matched": true,
+      "detail": "'11:00' appears near a mention of Contoso"
+    },
+    {
+      "id": "churn_3_1_to_4_4",
+      "matched": true,
+      "detail": "both churn figures 3.1 and 4.4 are present"
+    },
+    {
+      "id": "umbrella_metrics_present",
+      "matched": true,
+      "detail": "at least two of 163 / 1821 / 41 appear near a mention of Umbrella"
+    },
+    {
+      "id": "umbrella_named",
+      "matched": true,
+      "detail": "Umbrella is named in the response"
+    },
+    {
+      "id": "wednesday_present",
+      "matched": true,
+      "detail": "'Wednesday' appears in the response"
+    },
+    {
+      "id": "julia_present",
+      "matched": true,
+      "detail": "'Julia' appears in the response"
+    },
+    {
+      "id": "pied_piper_and_hooli",
+      "matched": true,
+      "detail": "both known cancellations are named"
+    }
+  ],
+  "disagreements": [],
+  "base_score": 92.5,
+  "final_score": 92.5
+}

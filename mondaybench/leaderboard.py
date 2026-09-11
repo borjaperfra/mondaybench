@@ -211,7 +211,13 @@ def summarize_model(
         if run is None:
             warnings.append(f"evaluation {evaluation.run_id} has no matching raw run file")
             continue
-        display_name = run.model.display_name
+        # The run artifact records the name the model had WHEN IT RAN; models.yaml
+        # records the name it is published under NOW. A battery that supersedes an
+        # earlier one keeps its own slug for provenance, so the two can differ and
+        # the board must show the current name rather than the historical one.
+        # Falling back to the run's keeps a model that is no longer configured -
+        # an archived slug rebuilt from stored evidence - rendering as it always did.
+        display_name = _configured_names().get(model_slug, run.model.display_name)
         if run.performance.total_latency_ms is not None:
             latencies.append(run.performance.total_latency_ms)
         if run.performance.ttft_ms is not None:
@@ -335,6 +341,20 @@ def summarize_model(
         run_paths=run_paths,
         evaluation_paths=evaluation_paths,
     )
+
+
+
+def _configured_names() -> dict[str, str]:
+    """Display names as currently configured, or an empty map if unreadable.
+
+    A board must still build from stored evidence when models.yaml cannot be
+    loaded, so a configuration error degrades to the historical names rather
+    than failing the aggregation.
+    """
+    try:
+        return {slug: cfg.display_name for slug, cfg in load_models().items()}
+    except ConfigError:
+        return {}
 
 
 def build_leaderboard(

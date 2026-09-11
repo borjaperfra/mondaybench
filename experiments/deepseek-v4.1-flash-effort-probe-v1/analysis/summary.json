@@ -1,0 +1,669 @@
+{
+  "experiment": "deepseek-v4.1-flash-effort-probe-v1",
+  "phase": 1,
+  "is_mondaybench_run": false,
+  "limitations": [
+    {
+      "issue": "byte-identical input was counted as 3 different prompt-token totals [72, 98, 151]",
+      "consequence": "the samples were not all answered under one accounting, and reasoning tokens differ by group, so the baseline/high difference cannot be attributed to reasoning_effort. See input_token_accounting."
+    },
+    {
+      "issue": "success rate is saturated at 1.0 in both variants",
+      "consequence": "gate A could not have fired whatever reasoning_effort does. This prompt cannot discriminate quality, so 'no quality effect' is NOT established - it was not measurable. The zero-width bootstrap CI on the success-rate difference is an artefact of that ceiling, not precision."
+    },
+    {
+      "issue": "the two procedures disagree on the median reasoning-token difference at the 5% threshold",
+      "detail": "permutation p=0.0253, bootstrap 95% CI [-812.0, 5.5] (includes zero: True)",
+      "consequence": "neither is treated as a finding. Four tests were run and no multiplicity correction was applied, so a single p-value near 0.05 is not evidence of an effect."
+    },
+    {
+      "issue": "scope",
+      "consequence": "one prompt, one route, one model, one session, calls issued sequentially. Interleaving controls for slow backend drift, not for load at the moment of a call. Nothing here generalises to other prompts or to MondayBench scenarios."
+    },
+    {
+      "issue": "observable behaviour only",
+      "consequence": "request-id shapes, token counters and stream events are descriptions of responses. They establish nothing about how the provider routes or serves a request internally."
+    }
+  ],
+  "prompt_sha256": "672c55f3a1a2da583a43475e6b8f8f1d7a393412fb2dc8ad79bb8738c399ada7",
+  "scorer": "strict-distinct-times + last-time robustness check, v1",
+  "correct_answer": "15:00",
+  "calls": {
+    "phase1_slots": 60,
+    "phase1_ok": 60,
+    "phase1_failed": 0,
+    "retries_total": 0,
+    "sentinel_calls": 5,
+    "total_api_calls": 65
+  },
+  "per_variant": {
+    "baseline": {
+      "n_slots": 30,
+      "n_ok": 30,
+      "n_failed": 0,
+      "scoring_strict": {
+        "CORRECT": 30,
+        "INCORRECT": 0,
+        "UNPARSEABLE": 0,
+        "success_rate": 1.0
+      },
+      "scoring_last_time": {
+        "CORRECT": 30,
+        "INCORRECT": 0,
+        "UNPARSEABLE": 0,
+        "success_rate": 1.0
+      },
+      "reasoning_tokens": {
+        "reported_count": 30,
+        "missing_count": 0,
+        "reported_zero_count": 0,
+        "n": 30,
+        "mean": 1343.2,
+        "median": 973.0,
+        "min": 253.0,
+        "max": 5707.0,
+        "p10": 350.9,
+        "p25": 368.5,
+        "p75": 1441.2,
+        "p90": 2956.2,
+        "stdev": 1423.5
+      },
+      "output_tokens": {
+        "n": 30,
+        "mean": 1500.2,
+        "median": 1123.5,
+        "min": 292.0,
+        "max": 6213.0,
+        "p10": 354.9,
+        "p25": 392.2,
+        "p75": 1677.2,
+        "p90": 3279.3,
+        "stdev": 1554.9
+      },
+      "ttfa_ms": {
+        "n": 30,
+        "mean": 11905.7,
+        "median": 8077.4,
+        "min": 2834.9,
+        "max": 48225.1,
+        "p10": 2994.5,
+        "p25": 3963.1,
+        "p75": 15170.1,
+        "p90": 27075.7,
+        "stdev": 11283.3
+      },
+      "ttft_ms": {
+        "n": 30,
+        "mean": 1631.8,
+        "median": 1226.9,
+        "min": 695.3,
+        "max": 6528.1,
+        "p10": 810.8,
+        "p25": 870.0,
+        "p75": 1731.5,
+        "p90": 2226.1,
+        "stdev": 1353.5
+      },
+      "total_latency_ms": {
+        "n": 30,
+        "mean": 12053.3,
+        "median": 8186.0,
+        "min": 2838.9,
+        "max": 48804.5,
+        "p10": 3084.6,
+        "p25": 4078.8,
+        "p75": 15339.0,
+        "p90": 27393.2,
+        "stdev": 11426.2
+      },
+      "reasoning_delivery": {
+        "stream_observed_true": 30,
+        "stream_observed_false": 0,
+        "percentage_observed": 100.0,
+        "note": "stream_observed=false means reasoning delivery was not observed, NOT that the model did not reason"
+      },
+      "request_id_shapes": {
+        "chatcmpl-digits-alnum": 30
+      },
+      "finish_reasons": {
+        "stop": 30
+      }
+    },
+    "high": {
+      "n_slots": 30,
+      "n_ok": 30,
+      "n_failed": 0,
+      "scoring_strict": {
+        "CORRECT": 30,
+        "INCORRECT": 0,
+        "UNPARSEABLE": 0,
+        "success_rate": 1.0
+      },
+      "scoring_last_time": {
+        "CORRECT": 30,
+        "INCORRECT": 0,
+        "UNPARSEABLE": 0,
+        "success_rate": 1.0
+      },
+      "reasoning_tokens": {
+        "reported_count": 30,
+        "missing_count": 0,
+        "reported_zero_count": 0,
+        "n": 30,
+        "mean": 1041.1,
+        "median": 474.0,
+        "min": 226.0,
+        "max": 10631.0,
+        "p10": 300.6,
+        "p25": 367.2,
+        "p75": 846.2,
+        "p90": 1306.4,
+        "stdev": 1951.3
+      },
+      "output_tokens": {
+        "n": 30,
+        "mean": 1132.9,
+        "median": 501.5,
+        "min": 264.0,
+        "max": 11262.0,
+        "p10": 370.0,
+        "p25": 396.2,
+        "p75": 964.0,
+        "p90": 1419.3,
+        "stdev": 2063.0
+      },
+      "ttfa_ms": {
+        "n": 30,
+        "mean": 9183.9,
+        "median": 4863.2,
+        "min": 3087.4,
+        "max": 84099.7,
+        "p10": 3718.3,
+        "p25": 4180.2,
+        "p75": 7483.0,
+        "p90": 10580.0,
+        "stdev": 15137.8
+      },
+      "ttft_ms": {
+        "n": 30,
+        "mean": 1389.3,
+        "median": 1177.7,
+        "min": 783.0,
+        "max": 4191.7,
+        "p10": 858.7,
+        "p25": 999.7,
+        "p75": 1528.5,
+        "p90": 2100.0,
+        "stdev": 677.4
+      },
+      "total_latency_ms": {
+        "n": 30,
+        "mean": 9303.6,
+        "median": 4969.5,
+        "min": 3139.7,
+        "max": 85334.2,
+        "p10": 3789.2,
+        "p25": 4268.7,
+        "p75": 7598.2,
+        "p90": 10655.3,
+        "stdev": 15355.7
+      },
+      "reasoning_delivery": {
+        "stream_observed_true": 30,
+        "stream_observed_false": 0,
+        "percentage_observed": 100.0,
+        "note": "stream_observed=false means reasoning delivery was not observed, NOT that the model did not reason"
+      },
+      "request_id_shapes": {
+        "chatcmpl-digits-alnum": 30
+      },
+      "finish_reasons": {
+        "stop": 30
+      }
+    }
+  },
+  "comparisons": {
+    "bootstrap": {
+      "seed": 424242,
+      "resamples": 10000,
+      "method": "percentile bootstrap",
+      "outliers_removed": false,
+      "median_reasoning_tokens_high_minus_baseline": {
+        "available": true,
+        "resamples": 10000,
+        "point_estimate": -499.0,
+        "ci95_low": -812.0,
+        "ci95_high": 5.5,
+        "includes_zero": true
+      },
+      "median_total_latency_ms_high_minus_baseline": {
+        "available": true,
+        "resamples": 10000,
+        "point_estimate": -3216.6,
+        "ci95_low": -7237.1,
+        "ci95_high": 687.3,
+        "includes_zero": true
+      },
+      "success_rate_high_minus_baseline": {
+        "available": true,
+        "resamples": 10000,
+        "point_estimate": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0,
+        "includes_zero": true
+      }
+    },
+    "permutation_tests": {
+      "seed": 424242,
+      "resamples": 10000,
+      "median_reasoning_tokens": {
+        "available": true,
+        "observed": -499.0,
+        "resamples": 10000,
+        "p_two_sided": 0.0253
+      },
+      "cliffs_delta_reasoning_tokens": {
+        "available": true,
+        "observed": -0.2733,
+        "resamples": 10000,
+        "p_two_sided": 0.0725
+      },
+      "median_total_latency_ms": {
+        "available": true,
+        "observed": -3216.6,
+        "resamples": 10000,
+        "p_two_sided": 0.041
+      },
+      "success_rate": {
+        "available": true,
+        "observed": 0.0,
+        "resamples": 10000,
+        "p_two_sided": 1.0
+      }
+    },
+    "cliffs_delta_reasoning_tokens": {
+      "point_estimate": -0.2733,
+      "interpretation": "P(high > baseline) - P(high < baseline) over all pairs",
+      "bootstrap": {
+        "available": true,
+        "resamples": 10000,
+        "point_estimate": -0.2733,
+        "ci95_low": -0.5556,
+        "ci95_high": 0.0134,
+        "includes_zero": true
+      }
+    },
+    "success_rate_difference": {
+      "absolute_pp": 0.0,
+      "relative_pct": 0.0
+    }
+  },
+  "tail_sensitivity_check": {
+    "what": "top 3 reasoning_tokens values dropped from each variant",
+    "purpose": "is the shift carried by an extreme tail?",
+    "used_in_headline_numbers": false,
+    "baseline": {
+      "median": 685.0,
+      "p25": 366.0
+    },
+    "high": {
+      "median": 408.0,
+      "p25": 355.0
+    },
+    "median_still_higher": false,
+    "p25_still_higher": false
+  },
+  "distributions": {
+    "reasoning_tokens_histogram": {
+      "bins": [
+        "0-249",
+        "250-499",
+        "500-999",
+        "1000-1999",
+        "2000-3999",
+        "4000-7999",
+        "8000-15999",
+        ">=16000"
+      ],
+      "baseline": [
+        0,
+        10,
+        7,
+        8,
+        2,
+        3,
+        0,
+        0
+      ],
+      "high": [
+        1,
+        14,
+        9,
+        4,
+        0,
+        1,
+        1,
+        0
+      ]
+    },
+    "reasoning_tokens_sorted": {
+      "baseline": [
+        253,
+        288,
+        350,
+        351,
+        351,
+        353,
+        365,
+        367,
+        373,
+        479,
+        538,
+        638,
+        648,
+        685,
+        952,
+        994,
+        994,
+        1073,
+        1190,
+        1217,
+        1223,
+        1388,
+        1459,
+        1536,
+        1990,
+        2180,
+        2807,
+        4299,
+        5248,
+        5707
+      ],
+      "high": [
+        226,
+        284,
+        297,
+        301,
+        326,
+        336,
+        344,
+        366,
+        371,
+        377,
+        387,
+        387,
+        406,
+        408,
+        436,
+        512,
+        520,
+        533,
+        554,
+        618,
+        665,
+        835,
+        850,
+        951,
+        1157,
+        1225,
+        1281,
+        1535,
+        4114,
+        10631
+      ]
+    },
+    "total_latency_ms_sorted": {
+      "baseline": [
+        2838,
+        2935,
+        3017,
+        3092,
+        3118,
+        3351,
+        3864,
+        3913,
+        4573,
+        4590,
+        4846,
+        5272,
+        5733,
+        7040,
+        7838,
+        8533,
+        8646,
+        10491,
+        11240,
+        11821,
+        12139,
+        12389,
+        16322,
+        17542,
+        19044,
+        21139,
+        26835,
+        32408,
+        38213,
+        48804
+      ],
+      "high": [
+        3139,
+        3177,
+        3658,
+        3803,
+        3870,
+        3934,
+        4148,
+        4261,
+        4290,
+        4371,
+        4433,
+        4490,
+        4560,
+        4579,
+        4713,
+        5225,
+        5492,
+        5790,
+        5822,
+        5974,
+        6462,
+        7473,
+        7639,
+        9071,
+        9211,
+        9675,
+        10632,
+        10857,
+        33009,
+        85334
+      ]
+    }
+  },
+  "reasoning_tokens_vs_correctness": {
+    "pooled": {
+      "CORRECT": {
+        "n": 60,
+        "mean": 1192.2,
+        "median": 586.0,
+        "min": 226.0,
+        "max": 10631.0,
+        "p10": 323.5,
+        "p25": 366.8,
+        "p75": 1218.5,
+        "p90": 2242.7,
+        "stdev": 1700.2
+      }
+    },
+    "baseline": {
+      "CORRECT": {
+        "n": 30,
+        "mean": 1343.2,
+        "median": 973.0,
+        "min": 253.0,
+        "max": 5707.0,
+        "p10": 350.9,
+        "p25": 368.5,
+        "p75": 1441.2,
+        "p90": 2956.2,
+        "stdev": 1423.5
+      }
+    },
+    "high": {
+      "CORRECT": {
+        "n": 30,
+        "mean": 1041.1,
+        "median": 474.0,
+        "min": 226.0,
+        "max": 10631.0,
+        "p10": 300.6,
+        "p25": 367.2,
+        "p75": 846.2,
+        "p90": 1306.4,
+        "stdev": 1951.3
+      }
+    }
+  },
+  "input_token_accounting": {
+    "prompt_bytes_identical_in_every_sample": true,
+    "distinct_prompt_token_counts": [
+      72,
+      98,
+      151
+    ],
+    "buckets": {
+      "98": {
+        "n": 17,
+        "by_variant": {
+          "baseline": 9,
+          "high": 8
+        },
+        "reasoning_tokens_summary": {
+          "n": 17,
+          "mean": 494.9,
+          "median": 377.0,
+          "min": 288.0,
+          "max": 1535.0,
+          "p10": 350.6,
+          "p25": 353.0,
+          "p75": 533.0,
+          "p90": 656.8,
+          "stdev": 292.1
+        }
+      },
+      "72": {
+        "n": 21,
+        "by_variant": {
+          "baseline": 21
+        },
+        "reasoning_tokens_summary": {
+          "n": 21,
+          "mean": 1740.4,
+          "median": 1217.0,
+          "min": 253.0,
+          "max": 5707.0,
+          "p10": 479.0,
+          "p25": 952.0,
+          "p75": 1990.0,
+          "p90": 4299.0,
+          "stdev": 1542.1
+        }
+      },
+      "151": {
+        "n": 22,
+        "by_variant": {
+          "high": 22
+        },
+        "reasoning_tokens_summary": {
+          "n": 22,
+          "mean": 1207.6,
+          "median": 516.0,
+          "min": 226.0,
+          "max": 10631.0,
+          "p10": 297.4,
+          "p25": 338.0,
+          "p75": 925.8,
+          "p90": 1275.4,
+          "stdev": 2257.7
+        }
+      }
+    },
+    "per_variant": {
+      "baseline": {
+        "72": 21,
+        "98": 9,
+        "151": 0
+      },
+      "high": {
+        "72": 0,
+        "98": 8,
+        "151": 22
+      }
+    },
+    "observation": "byte-identical input was billed as 72, 98, 151 prompt tokens across the 60 samples, and the reasoning-token distribution differs sharply between those groups. The variants do not map one-to-one onto the groups, but neither are they independent of them.",
+    "consequence": "the baseline-vs-high reasoning-token comparison is confounded: a sample's prompt-token group predicts its reasoning tokens at least as well as its variant does. No causal reading of the variant difference is available from this data.",
+    "interpretation_limit": "observable accounting only; nothing here establishes what the provider served or why"
+  },
+  "decision_gate": {
+    "A_quality_signal": {
+      "criterion": "success_rate(high) - success_rate(baseline) >= +10 pp",
+      "baseline": 1.0,
+      "high": 1.0,
+      "difference_pp": 0.0,
+      "met": false
+    },
+    "B_compute_signal": {
+      "criterion": "median(high) > median(baseline) AND p25(high) > p25(baseline) AND the shift is not carried by an extreme tail",
+      "median_higher": false,
+      "p25_higher": false,
+      "survives_tail_trim_sensitivity_check": false,
+      "cliffs_delta_ci_excludes_zero": false,
+      "met": false
+    },
+    "outcome": "STOP - no observable high-effort effect large enough to justify a MondayBench battery",
+    "max_executed": false,
+    "note": "max is never executed by this script under any outcome."
+  },
+  "sentinel_banana": {
+    "n": 5,
+    "n_ok": 5,
+    "http_statuses": [
+      200
+    ],
+    "request_id_shapes": {
+      "chatcmpl-hex": 5
+    },
+    "reasoning_tokens_field_present": 5,
+    "reasoning_tokens_field_absent": 0,
+    "reasoning_stream_observed_true": 0,
+    "output_tokens": [
+      6,
+      6,
+      6,
+      6,
+      6
+    ],
+    "total_latency_ms": [
+      564.2,
+      6341.0,
+      526.1,
+      480.1,
+      481.7
+    ],
+    "scores_strict": [
+      "INCORRECT",
+      "INCORRECT",
+      "INCORRECT",
+      "INCORRECT",
+      "INCORRECT"
+    ],
+    "answers": [
+      "17:00",
+      "14:00",
+      "14:00",
+      "17:00",
+      "17:00"
+    ],
+    "in_statistics": false,
+    "note": "observable behaviour only; this says nothing about how the provider routes requests internally"
+  }
+}

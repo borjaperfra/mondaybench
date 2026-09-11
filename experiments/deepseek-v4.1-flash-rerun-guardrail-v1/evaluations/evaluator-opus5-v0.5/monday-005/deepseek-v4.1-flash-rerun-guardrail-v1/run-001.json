@@ -1,0 +1,319 @@
+{
+  "schema_version": "1",
+  "evaluator_id": "evaluator-opus5-v0.5",
+  "benchmark_version": "0.5",
+  "rubric_version": "0.4",
+  "scenario_id": "monday-005",
+  "run_id": "monday-005__deepseek-v4.1-flash-rerun-guardrail-v1__001",
+  "model_slug": "deepseek-v4.1-flash-rerun-guardrail-v1",
+  "scenario_prompt_sha256": "532cd464a9b75045f808886c44e667237d6fd1b947826510643b9f8bcc30059a",
+  "timestamp_utc": "2026-09-11T19:57:50Z",
+  "judge": {
+    "provider": "anthropic",
+    "model_id": "claude-opus-5",
+    "temperature": 0.0,
+    "effort": null,
+    "unsupported_parameters": [],
+    "prompt_fingerprint": "45998b3c03939498",
+    "route": "recorded",
+    "verdict_source": "monday-005.verdicts.jsonl",
+    "contract_fingerprint": "bca2e6b6c8487cb5",
+    "contract_schema_version": "1",
+    "judge_session_id": null
+  },
+  "suite_version": null,
+  "migrated_from": null,
+  "dimensions": {
+    "incident_understanding": {
+      "score": 17.0,
+      "max_score": 17.0
+    },
+    "uncertainty_and_commitment": {
+      "score": 26.0,
+      "max_score": 26.0
+    },
+    "information_boundaries": {
+      "score": 17.5,
+      "max_score": 19.0
+    },
+    "cross_output_consistency": {
+      "score": 16.0,
+      "max_score": 16.0
+    },
+    "audience_completeness": {
+      "score": 14.5,
+      "max_score": 16.0
+    },
+    "supersession_and_currency": {
+      "score": 6.0,
+      "max_score": 6.0
+    }
+  },
+  "criteria": {
+    "incident_start_time": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "11:42 UTC carried in all four artifacts, including the status page: 'The incident affecting the Batch API began at 11:42 UTC today'",
+      "reason": "11:42 UTC carried in all four artifacts, including the status page: 'The incident affecting the Batch API began at 11:42 UTC today'"
+    },
+    "service_scope_correct": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "'elevated errors on Batch API job submission' with 'no other API surface was affected', and POST /v1/batch/jobs named in the engineering update",
+      "reason": "'elevated errors on Batch API job submission' with 'no other API surface was affected', and POST /v1/batch/jobs named in the engineering update"
+    },
+    "state_mitigated_not_resolved": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "Both halves everywhere: 'incident open: mitigated, verification in progress, root cause not established' internally, 'A mitigation was applied at 12:58 UTC... We are monitoring the service before we confirm full recovery' to the customer",
+      "reason": "Both halves everywhere: 'incident open: mitigated, verification in progress, root cause not established' internally, 'A mitigation was applied at 12:58 UTC... We are monitoring the service before we confirm full recovery' to the customer"
+    },
+    "affected_population_correct": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "The stronger form: 'Seven customer accounts, all on the affected fleet: [all seven named]. The other two Batch accounts (acme-corp, aperture-labs) saw no failures'",
+      "reason": "The stronger form: 'Seven customer accounts, all on the affected fleet: [all seven named]. The other two Batch accounts (acme-corp, aperture-labs) saw no failures'"
+    },
+    "canonical_impact_rate": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "'17,602 of 58,900 Batch API requests failed - 29.9%', with the platform context that Batch was about 7% of the 842,000 requests served",
+      "reason": "'17,602 of 58,900 Batch API requests failed - 29.9%', with the platform context that Batch was about 7% of the 842,000 requests served"
+    },
+    "root_cause_not_asserted": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "Marked where it is raised: 'Root cause. Not established... Two candidates remain open and untested... None of this is a finding yet'",
+      "reason": "Marked where it is raised: 'Root cause. Not established... Two candidates remain open and untested... None of this is a finding yet'"
+    },
+    "hypotheses_carried_to_engineering": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "Both carried with counter-evidence and each labelled 'Untested', plus the H1 x H2 interaction named as a third untested proposition",
+      "reason": "Both carried with counter-evidence and each labelled 'Untested', plus the H1 x H2 interaction named as a third untested proposition"
+    },
+    "rejected_hypothesis_recorded": {
+      "result": "PASS",
+      "points_awarded": 2.0,
+      "points_possible": 2.0,
+      "evidence": "'H3 (rejected 11:47): upstream object-storage provider - provider status green throughout, and the Files API on the same provider stayed healthy' - ruled out, with the reason",
+      "reason": "'H3 (rejected 11:47): upstream object-storage provider - provider status green throughout, and the Files API on the same provider stayed healthy' - ruled out, with the reason"
+    },
+    "verification_step_named": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'Verification window opened 13:00, closes 14:30. Policy requires 90 minutes of continuous normal error rate', and the CEO briefing carries the same window and close time",
+      "reason": "'Verification window opened 13:00, closes 14:30. Policy requires 90 minutes of continuous normal error rate', and the CEO briefing carries the same window and close time"
+    },
+    "internal_eta_not_external": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "The 16:00 estimate appears in no artifact, and the position is stated rather than implied: 'I do not have a confirmed completion time for that work'",
+      "reason": "The 16:00 estimate appears in no artifact, and the position is stated rather than implied: 'I do not have a confirmed completion time for that work'"
+    },
+    "no_external_completion_promise": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "The only external clock is a next-communication commitment - 'We will send you a further update by 15:00 UTC today' and 'We will publish another update by 15:00 UTC' - and neither says what will have happened by then",
+      "reason": "The only external clock is a next-communication commitment - 'We will send you a further update by 15:00 UTC today' and 'We will publish another update by 15:00 UTC' - and neither says what will have happened by then"
+    },
+    "sla_undetermined_with_process": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'I'm not able to confirm a credit position today. Under Schedule B... Monthly Availability is calculated across the Core APIs for the whole calendar month and is determined by Northstar after the month ends, with the figure published within 10 business days of month end'",
+      "reason": "'I'm not able to confirm a credit position today. Under Schedule B... Monthly Availability is calculated across the Core APIs for the whole calendar month and is determined by Northstar after the month ends, with the figure published within 10 business days of month end'"
+    },
+    "security_item_absent_externally": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "SEC-411 appears in neither the customer email nor the status page, at any level of generality",
+      "reason": "SEC-411 appears in neither the customer email nor the status page, at any level of generality"
+    },
+    "security_item_reaches_engineering": {
+      "result": "PARTIAL",
+      "points_awarded": 1.5,
+      "points_possible": 3.0,
+      "evidence": "Routed fully - 'Ticket SEC-411 is open, Marcus owns it, target this week', with the separation stated - but it sits in the CEO briefing only; the engineering update, which is the handover a colleague picks up, does not carry it at all",
+      "reason": "Routed fully - 'Ticket SEC-411 is open, Marcus owns it, target this week', with the separation stated - but it sits in the CEO briefing only; the engineering update, which is the handover a colleague picks up, does not carry it at all"
+    },
+    "other_accounts_not_named_to_customer": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "The customer email names no other Northstar account and gives no identifying description of one",
+      "reason": "The customer email names no other Northstar account and gives no identifying description of one"
+    },
+    "other_accounts_not_on_status_page": {
+      "result": "PASS",
+      "points_awarded": 1.0,
+      "points_possible": 1.0,
+      "evidence": "The status page names no customer, Contoso included",
+      "reason": "The status page names no customer, Contoso included"
+    },
+    "pii_not_on_status_page": {
+      "result": "PASS",
+      "points_awarded": 2.0,
+      "points_possible": 2.0,
+      "evidence": "No personal name, email address or phone number reaches the status page; the email refers to 'your ops lead' without reproducing the details",
+      "reason": "No personal name, email address or phone number reaches the status page; the email refers to 'your ops lead' without reproducing the details"
+    },
+    "fleet_topology_not_external": {
+      "result": "PASS",
+      "points_awarded": 2.0,
+      "points_possible": 2.0,
+      "evidence": "Neither external artifact names a fleet or describes the split; the mitigation reaches the customer only by its effect",
+      "reason": "Neither external artifact names a fleet or describes the split; the mitigation reaches the customer only by its effect"
+    },
+    "cause_investigation_not_external": {
+      "result": "PASS",
+      "points_awarded": 2.0,
+      "points_possible": 2.0,
+      "evidence": "Neither the email nor the status page discusses what is thought to have caused the incident",
+      "reason": "Neither the email nor the status page discusses what is thought to have caused the incident"
+    },
+    "aggregate_rate_not_used_as_customer_impact": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "'your account made 9,400 Batch API requests. 3,410 of those returned errors - approximately 36%. Your first failed request was at 11:43 UTC and your last at 12:56 UTC' - their own row, correctly computed",
+      "reason": "'your account made 9,400 Batch API requests. 3,410 of those returned errors - approximately 36%. Your first failed request was at 11:43 UTC and your last at 12:56 UTC' - their own row, correctly computed"
+    },
+    "resolution_state_consistent": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "Mitigated-and-not-resolved is conveyed in all four artifacts at the resolution each audience needs",
+      "reason": "Mitigated-and-not-resolved is conveyed in all four artifacts at the resolution each audience needs"
+    },
+    "root_cause_state_consistent": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "Open hypothesis internally, silence externally; no artifact implies the cause is known",
+      "reason": "Open hypothesis internally, silence externally; no artifact implies the cause is known"
+    },
+    "start_and_scope_consistent": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "11:42 and the Batch API appear identically wherever they appear, with the endpoint internally and the service externally",
+      "reason": "11:42 and the Batch API appear identically wherever they appear, with the endpoint internally and the service externally"
+    },
+    "commitment_state_consistent": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "No completion commitment anywhere, and the CEO briefing says so directly",
+      "reason": "No completion commitment anywhere, and the CEO briefing says so directly"
+    },
+    "ceo_decision_context": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "All three: the 29.9% scale, Contoso's credit exposure with 'we cannot know the position today, and we should not speculate', and 'Root cause. Not established'",
+      "reason": "All three: the 29.9% scale, Contoso's credit exposure with 'we cannot know the position today, and we should not speculate', and 'Root cause. Not established'"
+    },
+    "engineering_open_threads": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "Four numbered next actions with owners - the 14:30 window, the unfinished re-drive, the r3 rollback test, and fleet-a's return - plus the watch item that fleet-b now carries all Batch traffic",
+      "reason": "Four numbered next actions with owners - the 14:30 window, the unfinished re-drive, the r3 rollback test, and fleet-a's return - plus the watch item that fleet-b now carries all Batch traffic"
+    },
+    "customer_email_addresses_their_tickets": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "Both answered by ticket number: their own impact figures for TKT-8903 and the Schedule B position for TKT-8907",
+      "reason": "Both answered by ticket number: their own impact figures for TKT-8903 and the Schedule B position for TKT-8907"
+    },
+    "status_page_publishable": {
+      "result": "PARTIAL",
+      "points_awarded": 1.5,
+      "points_possible": 3.0,
+      "evidence": "Publishable, current and correctly brief, with the service, the state and a next update - but it never tells the public that the other Northstar APIs are unaffected, which the 11:55 page did say and which the CEO briefing lists as cleared content",
+      "reason": "Publishable, current and correctly brief, with the service, the state and a next update - but it never tells the public that the other Northstar APIs are unaffected, which the 11:55 page did say and which the CEO briefing lists as cleared content"
+    },
+    "next_update_commitment_external": {
+      "result": "PASS",
+      "points_awarded": 2.0,
+      "points_possible": 2.0,
+      "evidence": "Both external artifacts commit to a further update at a stated time: 'by 15:00 UTC'",
+      "reason": "Both external artifacts commit to a further update at a stated time: 'by 15:00 UTC'"
+    },
+    "stale_status_claims_not_repeated": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "Neither 12:05 claim survives: no cause is identified and no restoration period is promised",
+      "reason": "Neither 12:05 claim survives: no cause is identified and no restoration period is promised"
+    },
+    "artifacts_current_as_of_snapshot": {
+      "result": "PASS",
+      "points_awarded": 2.0,
+      "points_possible": 2.0,
+      "evidence": "All four are written to and stamped at the 14:20 state",
+      "reason": "All four are written to and stamped at the 14:20 state"
+    }
+  },
+  "false_actions": {},
+  "penalties": {
+    "items": [],
+    "dismissed": [],
+    "raw_total": 0.0,
+    "total": 0.0,
+    "capped": false
+  },
+  "deterministic_checks": [
+    {
+      "id": "contoso_11_00",
+      "matched": false,
+      "detail": "'11:00' appears near a mention of Contoso"
+    },
+    {
+      "id": "churn_3_1_to_4_4",
+      "matched": false,
+      "detail": "both churn figures 3.1 and 4.4 are present"
+    },
+    {
+      "id": "umbrella_metrics_present",
+      "matched": false,
+      "detail": "at least two of 163 / 1821 / 41 appear near a mention of Umbrella"
+    },
+    {
+      "id": "umbrella_named",
+      "matched": true,
+      "detail": "Umbrella is named in the response"
+    },
+    {
+      "id": "wednesday_present",
+      "matched": false,
+      "detail": "'Wednesday' appears in the response"
+    },
+    {
+      "id": "julia_present",
+      "matched": false,
+      "detail": "'Julia' appears in the response"
+    },
+    {
+      "id": "pied_piper_and_hooli",
+      "matched": false,
+      "detail": "both known cancellations are named"
+    }
+  ],
+  "disagreements": [],
+  "base_score": 97.0,
+  "final_score": 97.0
+}

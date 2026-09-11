@@ -1,0 +1,73 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.3",
+  "scenario_id": "monday-003",
+  "scenario_prompt_sha256": "aaf788f309d955d2b427c86fe7d95d2bbf88575fde7306adcfd74b0ec4a4103f",
+  "run_id": "monday-003__deepseek-v4.1-flash-rerun-v1__001",
+  "run_number": 1,
+  "model": {
+    "slug": "deepseek-v4.1-flash-rerun-v1",
+    "display_name": "DeepSeek V4.1 Flash (rerun 2026-09-11)",
+    "provider": "helmcode",
+    "model_id": "deepseek-v4-flash"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 32000,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+    "extra_body": {
+      "caching": false
+    },
+    "config_sha256": "d24799fcff2f34662116bbdd15e21e7a97007b32c3a128ac7b5227fdedc6f2aa",
+    "safety_ceiling_tokens": 32000,
+    "ceiling_semantics": "provider_specific"
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "DELIVERED",
+    "tokens": 14354,
+    "evidence": "explicit_reasoning_tokens",
+    "stream_observed": true,
+    "stream_event_count": 14354
+  },
+  "timestamp_utc": "2026-09-11T17:47:11Z",
+  "usage": {
+    "input_tokens": 3332,
+    "output_tokens": 15604,
+    "reasoning_tokens": 14354
+  },
+  "performance": {
+    "ttft_ms": 1422.2,
+    "ttfa_ms": 69198.1,
+    "total_latency_ms": 75164.0,
+    "tokens_per_second": 211.6
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "## Read first: stale information\n- **Security review is closed** (Maya’s email). Do not chase it.\n- **Onboarding instrumentation is not a launch blocker** (Julia). Marcus’s 3h hold is stale unless capacity exists after SSO.\n- **Contoso “broken export” is not broken** — it is a DD/MM/YYYY demo request. The real Contoso blocker is **delegated-admin export permission**, due Tuesday 16:00.\n- **Billing schema migration gates SSO compatibility, Contoso permission work, and board revenue charts.**\n\n## 1. CRITICAL PATH\n**Primary critical path — Enterprise SSO (longest / highest commitment):**\n1. `billing_schema_migration` — Elena, 3h  \n2. `api_compatibility_patch` — Marcus, 4h  \n3. `sso_regression` — QA, 2h  \n4. `sso_production_rollout` — Marcus, 1h  \n\nConstraint: Marcus is in Atlas pre-rollout session **Tue 09:00–13:00**, so rollout cannot start until after that.\n\n**Contoso compliance path (earlier deadline, must be parallelized):**\n1. `billing_schema_migration` — Elena, 3h  \n2. `contoso_permission_patch` — Daniel, 3.5h + 0.5h Marcus handoff  \n3. `contoso_compliance_export` — Julia, 1h  \n\n**Billing/backfill path:**\n1. `billing_schema_migration` — Elena, 3h  \n2. `billing_backfill` — automated, 1.5h  \n3. `board_pack_revenue` — Sarah, 2h\n\n## 2. MY PLAN FOR TODAY\n| Time | Action | Owner |\n|---|---|---|\n| 09:10 | Start `billing_schema_migration` — this is the gating item | Elena |\n| 09:10 | Start `contoso_export_formatter` for Tuesday demo | Julia |\n| 09:10–11:40 | Prep: Marcus on SSO compatibility; Daniel on Contoso permission; Sarah on board/pricing | Marcus/Daniel/Sarah |\n| 11:40–12:10 | Marcus hands delegated-admin path to Daniel; reassign `contoso_permission_patch` to Daniel | Marcus/Daniel/me |\n| 12:10 | Schema lands; Elena kicks off `billing_backfill` | Elena |\n| 12:10–16:10 | `api_compatibility_patch` | Marcus |\n| 12:10–15:40 | `contoso_permission_patch` | Daniel |\n| 15:40–16:40 | Produce and send Contoso compliance export | Julia |\n| 16:10–17:30 | Start `sso_regression`; remaining 40m runs Tue 09:00–09:40 | QA |\n| Comms | Confirm delivery to Anja; tell Laura SSO is on track; tell CEO/Peter format fix is underway | Me |\n\n## 3. PARALLEL WORK\n- **Julia:** Contoso formatter, then Contoso compliance export. Later `onboarding_launch` (2h) — not urgent until Friday.\n- **Sarah:** `board_pack_non_revenue`, `pricing_page`, `packaging_approval_pack`. `board_pack_revenue` can start after Mon 13:40.\n- **Elena:** backfill after schema. If migration somehow slips, schedule 30m Daniel handoff before Wed noon.\n- **QA:** prep regression, but cannot run until compatibility patch lands.\n- **Marcus:** no onboarding instrumentation until SSO rollout is done.\n\n## 4. BLOCKERS & DEPENDENCIES\n- **True blockers:** schema migration blocks SSO compatibility and Contoso permission. Compatibility patch blocks QA. QA blocks rollout. Permission patch blocks compliance export.\n- **Unblock today:** reassign Contoso permission to Daniel; do Marcus→Daniel handoff; start schema immediately.\n- **No longer blockers:** Security review is approved. Onboarding instrumentation is not a launch blocker. Contoso formatting is not a production blocker.\n- **Pricing:** Priya says mockups are acceptable, so Sarah may not need a live page before submitting approval pack — but if mockups aren’t ready, that becomes a prerequisite.\n\n## 5. EARLIEST DELIVERY\n- **Billing migration + backfill:** Monday 13:40.\n- **Contoso compliance export:** Monday 16:40 — before Tuesday 16:00 deadline.\n- **Enterprise SSO rollout:** Tuesday 14:00. QA finishes Tue 09:40; Marcus is free at 13:00; rollout 13:00–14:00. Well before Wednesday 17:00.\n- **Onboarding launch:** Friday 12:00 deadline is safe; Julia needs 2h.\n- **Pricing page:** can be public by Thursday 17:00 if approval pack is submitted before 12:00 on a working day.\n- **Board pack:** non-revenue can proceed now; revenue charts after Monday 13:40.\n\n## 6. RISKS / UNKNOWNS\n- Daniel and Marcus are both touching the account-mapping layer; merge/coordination risk is not fully specified.\n- If Daniel’s permission patch slips, Contoso compliance has little buffer before Tuesday 16:00.\n- If Elena’s migration slips past Wednesday noon, Daniel needs the 30m production-permission handoff before she leaves.\n- QA regression could find issues; SSO has buffer until Wednesday 17:00 but not unlimited.\n- Sarah’s access to acceptable packaging mockups is not confirmed.\n- Backfill failure would delay board revenue charts, though not SSO or Contoso compliance.",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "chatcmpl-66c6e2bf-947c-42be-b90f-824ebc9de35d",
+    "raw_usage": {
+      "completion_tokens": 15604,
+      "prompt_tokens": 3332,
+      "total_tokens": 18936,
+      "completion_tokens_details": {
+        "reasoning_tokens": 14354
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

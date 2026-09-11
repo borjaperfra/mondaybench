@@ -1,0 +1,91 @@
+sample_id,level,variant,reasoning_effort_sent,status,outcome,scored_verdict,parsed_answer,expected_answer,timestamp_utc,request_id,request_id_shape,http_status,prompt_bytes,prompt_tokens,output_tokens,reasoning_tokens_reported,reasoning_tokens_field_present,reasoning_stream_observed,reasoning_stream_event_count,ttft_ms,ttfa_ms,total_latency_ms,finish_reason,answer_lines_found,retries,response_sha256,prompt_sha256,raw_answer
+b001,compact,baseline,,NO_ANSWER,BUDGET_EXHAUSTED,,,,,,,200,2341,,,,,,,,,,length,,0,,46162f91b4a5a84c7e02e56226b95c7c16a6ccac08ca3425aec0e6bc3042523a,
+b002,dense,baseline,,OK,CORRECT,CORRECT,16:00,16:00,2026-09-11T08:07:05.754346Z,chatcmpl-1789114014-Nh1COcUTzVgf3Iy96AuS,chatcmpl-digits-alnum,200,21297,3939,9918,9870,True,True,9870,1686.8,66189.7,67665.2,stop,1,0,8f8ba61d82017bfad242ab685f6e3e61650f7846a9ad957d13d94b221b0a13a6,78c21dc4e9b140c0a26c83802a57ef73a878b6b9e50d9e3e3a68e93d11827235,"The required tasks can be scheduled as early as possible with the given availability and ordering constraints. The final verification starts at 15:00 and takes 60 minutes, finishing at 16:00.
+
+ANSWER: 16:00"
+b003,medium,baseline,,OK,CORRECT,CORRECT,16:00,16:00,2026-09-11T08:08:13.421114Z,chatcmpl-1789114083-waIxfuQWbB2vEknSx7UV,chatcmpl-digits-alnum,200,10105,1840,14676,14552,True,True,14552,2218.0,94507.9,96732.7,stop,1,0,0839b1918d8a9f4a2885fcd663ef1829939f392a9d11bbaf2b39e1b508217a0f,660ac4fa06862bdfa83a56082b559df89ea5a3babe1552fc65c0eb205620e8f0,"Scheduling the required tasks as early as possible:
+
+- 07:00–08:00 Export snapshot (Nadia)
+- 09:00–10:30 Schema upgrade (Priya)
+- 10:30–11:15 Permissions sync (Priya)
+- 11:15–13:15 Index rebuild (Owen)
+- 13:15–13:45 Smoke checks (Owen)
+- 13:45–15:00 Consumer replay (Owen)
+- 15:00–16:00 Final verification (Owen)
+
+ANSWER: 16:00"
+b004,compact,baseline,,OK,CORRECT,CORRECT,16:00,16:00,2026-09-11T08:09:50.155259Z,chatcmpl-1789114179-4fuVkl1IaEipc160hoPn,chatcmpl-digits-alnum,200,2341,558,2300,2177,True,True,2177,1763.8,12365.5,12949.9,stop,1,0,a7e9a6afa6e8edcd940a8ea1c7909eab8f934c1297e5db098d3bd83bd956ef7b,46162f91b4a5a84c7e02e56226b95c7c16a6ccac08ca3425aec0e6bc3042523a,"The earliest feasible schedule is:
+- Export snapshot: 07:00–08:00 (Nadia)
+- Schema upgrade: 09:00–10:30 (Priya)
+- Permissions sync: 10:30–11:15 (Priya, staging cluster)
+- Index rebuild: 11:15–13:15 (Owen, staging cluster)
+- Smoke checks: 13:15–13:45
+- Consumer replay: 13:45–15:00
+- Final verification: 15:00–16:00
+
+ANSWER: 16:00"
+b005,dense,baseline,,OK,CORRECT,CORRECT,16:00,16:00,2026-09-11T08:10:03.106077Z,chatcmpl-1789114191-zImw6e4nUvo6de6vsuH2,chatcmpl-digits-alnum,200,21297,3939,11922,11833,True,True,11833,744.2,81899.8,83432.1,stop,1,0,b389fc760140e5df042abb1e947a0eaa90de4df731d4af6d83b2472d0948afcb,78c21dc4e9b140c0a26c83802a57ef73a878b6b9e50d9e3e3a68e93d11827235,"Earliest schedule: export 07:00–08:00; schema upgrade 09:00–10:30; permissions sync 10:30–11:15; index rebuild 11:15–13:15; smoke checks 13:15–13:45; consumer replay 13:45–15:00; final verification 15:00–16:00.
+
+ANSWER: 16:00"
+b006,dense,baseline,,OK,CORRECT,CORRECT,16:00,16:00,2026-09-11T08:11:26.539145Z,chatcmpl-1789114275-QpYL5HkGf3CVmtuJHBD6,chatcmpl-digits-alnum,200,21297,3939,12387,12280,True,True,12280,4716.4,86016.9,87765.8,stop,1,0,531185b3e72cb1cf7a334ab76dbe9b8c2ac3a1a82c76c3f21768f4a4bafba263,78c21dc4e9b140c0a26c83802a57ef73a878b6b9e50d9e3e3a68e93d11827235,"Scheduling the required tasks as early as possible gives: export 07:00–08:00, schema upgrade 09:00–10:30, permissions sync 10:30–11:15, index rebuild 11:15–13:15, smoke checks 13:15–13:45, consumer replay 13:45–15:00, final verification 15:00–16:00. The optional cache warm can be placed earlier without affecting this.
+
+ANSWER: 16:00"
+b007,dense,baseline,,OK,CORRECT,CORRECT,16:00,16:00,2026-09-11T08:12:54.305012Z,chatcmpl-1789114363-aZcX6lec9hfwOU6DJbw8,chatcmpl-digits-alnum,200,21297,3939,10718,10690,True,True,10690,758.6,75399.4,76647.4,stop,1,0,ca9b85e082f0ee9bc60f43ca7b665ce88fffb3535337b613ccce50e7f80d0051,78c21dc4e9b140c0a26c83802a57ef73a878b6b9e50d9e3e3a68e93d11827235,"Using the updated ordering and availability, the earliest schedule finishes the final verification at 16:00.
+
+ANSWER: 16:00"
+b008,medium,baseline,,NO_ANSWER,BUDGET_EXHAUSTED,,,,,,,200,10105,,,,,,,,,,length,,0,,660ac4fa06862bdfa83a56082b559df89ea5a3babe1552fc65c0eb205620e8f0,
+b009,medium,baseline,,OK,CORRECT,CORRECT,16:00,16:00,2026-09-11T08:16:59.229310Z,chatcmpl-1789114608-YCjvK5iUh10M6phza8XN,chatcmpl-digits-alnum,200,10105,1840,11778,11665,True,True,11665,1312.3,80336.4,82041.3,stop,1,0,6f518e4def0fbfb02ce8dd4260ac3f64ad2ae987e856af84fec255dd09a15520,660ac4fa06862bdfa83a56082b559df89ea5a3babe1552fc65c0eb205620e8f0,"Scheduling the required cutover tasks as early as possible gives:
+
+- Export snapshot: 07:00–08:00
+- Schema upgrade: 09:00–10:30
+- Permissions sync: 10:30–11:15
+- Index rebuild: 11:15–13:15
+- Smoke checks: 13:15–13:45
+- Consumer replay: 13:45–15:00
+- Final verification: 15:00–16:00
+
+ANSWER: 16:00"
+b010,dense,baseline,,NO_ANSWER,BUDGET_EXHAUSTED,,,,,,,200,21297,,,,,,,,,,length,,0,,78c21dc4e9b140c0a26c83802a57ef73a878b6b9e50d9e3e3a68e93d11827235,
+b011,medium,baseline,,OK,CORRECT,CORRECT,16:00,16:00,2026-09-11T08:21:09.880827Z,chatcmpl-1789114859-fU3lExOUhbm8LDZiQYHg,chatcmpl-digits-alnum,200,10105,1840,11781,11655,True,True,11655,1402.6,80043.3,81953.5,stop,1,0,12b6e92256dfb9002494ea7c0f561c7be0c36671b445057f776d0ce666166b62,660ac4fa06862bdfa83a56082b559df89ea5a3babe1552fc65c0eb205620e8f0,"Earliest feasible schedule:
+
+- 07:00–08:00: export snapshot (Nadia)
+- 09:00–10:30: schema upgrade (Priya)
+- 10:30–11:15: permissions sync (Priya)
+- 11:15–13:15: index rebuild (Owen)
+- 13:15–13:45: smoke checks (Owen)
+- 13:45–15:00: consumer replay (Owen)
+- 15:00–16:00: final verification (Owen)
+
+ANSWER: 16:00"
+b012,compact,baseline,,NO_ANSWER,BUDGET_EXHAUSTED,,,,,,,200,2341,,,,,,,,,,length,,0,,46162f91b4a5a84c7e02e56226b95c7c16a6ccac08ca3425aec0e6bc3042523a,
+b013,compact,baseline,,OK,CORRECT,CORRECT,16:00,16:00,2026-09-11T08:24:13.153291Z,chatcmpl-1789115042-Tf82AwzQNyLkkWthBeOo,chatcmpl-digits-alnum,200,2341,558,3346,3221,True,True,3221,1899.0,16510.1,16977.1,stop,1,0,79b808cb47cb3512acc95e2fb58d0153f04e280cbac62947a7d85fe66b44cbc8,46162f91b4a5a84c7e02e56226b95c7c16a6ccac08ca3425aec0e6bc3042523a,"Earliest schedule:
+- Export snapshot: 07:00–08:00 (Nadia)
+- Schema upgrade: 09:00–10:30 (Priya)
+- Permissions sync: 10:30–11:15 (Priya)
+- Index rebuild: 11:15–13:15 (Owen)
+- Smoke checks: 13:15–13:45 (Owen)
+- Consumer replay: 13:45–15:00 (Owen)
+- Final verification: 15:00–16:00 (Owen)
+
+ANSWER: 16:00"
+b014,compact,baseline,,OK,CORRECT,CORRECT,16:00,16:00,2026-09-11T08:24:30.131324Z,chatcmpl-1789115058-efXCVjt5kBEl8FqJOFRU,chatcmpl-digits-alnum,200,2341,558,2667,2562,True,True,2562,1430.4,13231.9,13792.0,stop,1,0,3c19e09c14f46644cc43559c5a15f047c507c5c3751f0eb1075d239f5d0af329,46162f91b4a5a84c7e02e56226b95c7c16a6ccac08ca3425aec0e6bc3042523a,"Schedule (earliest possible):
+- Export snapshot: 07:00–08:00
+- Schema upgrade: 09:00–10:30
+- Permissions sync: 10:30–11:15
+- Index rebuild: 11:15–13:15
+- Smoke checks: 13:15–13:45
+- Consumer replay: 13:45–15:00
+- Final verification: 15:00–16:00
+
+ANSWER: 16:00"
+b015,medium,baseline,,OK,CORRECT,CORRECT,16:00,16:00,2026-09-11T08:26:05.548054Z,chatcmpl-1789115154-y7Kn5KEjby7IvdWZgU9V,chatcmpl-digits-alnum,200,10105,1840,10681,10546,True,True,10546,4438.7,72675.7,74247.7,stop,1,0,ffc79890253d70b1784649e7c7528c1ca547544371d38fe06a3d702233c63690,660ac4fa06862bdfa83a56082b559df89ea5a3babe1552fc65c0eb205620e8f0,"Using the updated constraints, the required tasks schedule as early as possible:
+
+- Export snapshot: 07:00–08:00 (Nadia)
+- Schema upgrade: 09:00–10:30 (Priya)
+- Permissions sync: 10:30–11:15 (Priya)
+- Index rebuild: 11:15–13:15 (Owen)
+- Smoke checks: 13:15–13:45 (Owen)
+- Consumer replay: 13:45–15:00 (Owen)
+- Final verification: 15:00–16:00 (Owen)
+
+ANSWER: 16:00"

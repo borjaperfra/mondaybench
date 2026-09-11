@@ -1,0 +1,23 @@
+Maintenance rules. All times are on a 24-hour clock.
+
+- The maintenance window runs from 20:00 to 06:00.
+- Rebuilding index I takes 5 hours and cannot be paused.
+- The rebuild must be immediately preceded by a snapshot. The snapshot takes 45 minutes and must not overlap the rebuild.
+- Both the snapshot and the rebuild must lie entirely inside the maintenance window.
+- Nightly job N starts at 01:00, writes to service S, and cannot be moved or skipped.
+- Any write to service S while index I is rebuilding corrupts the index.
+
+Two plans have been proposed:
+
+Plan 1: snapshot 19:45-20:30, rebuild 20:30-01:30.
+Plan 2: snapshot 20:00-20:45, rebuild 20:45-01:45.
+
+Which plan can be executed exactly as written?
+
+A) Plan 1 only
+B) Plan 2 only
+C) Both plans
+D) Neither plan
+
+End your reply with a single final line in exactly this form:
+ANSWER: X

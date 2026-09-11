@@ -1,0 +1,229 @@
+PLATFORM CUTOVER - WORKING FILE
+
+This file collects the material that has accumulated around the platform work.
+All times are on a 24-hour clock. Everything described happens on the same day.
+
+===============================================================================
+1. WHERE THIS CAME FROM
+===============================================================================
+
+The platform group has been carrying two parallel programmes since the spring.
+The first is the reporting warehouse consolidation, which finished ahead of
+schedule and is no longer discussed here. The second is the one this file is
+about. It was originally scoped as a three-day exercise and then compressed into
+a single day after the vendor confirmed that the intermediate state could be
+skipped.
+
+Teodor wrote the first draft of the plan in April. Ines revised it twice, once
+after the capacity review and once after the vendor call. Marek maintains the
+runbook and has asked that any change to it go through him rather than being
+edited in place, because the June incident was traced to two people editing the
+same runbook section within the same hour.
+
+None of that history changes the plan. It is recorded because people keep
+asking why the plan looks the way it does.
+
+===============================================================================
+2. RUNBOOK EXTRACT - TIMINGS, PART ONE
+===============================================================================
+
+The timings below were measured during the two rehearsals and are the numbers
+the plan uses.
+
+The export snapshot takes 60 minutes.
+
+The schema upgrade takes 90 minutes.
+
+Marek notes that the rehearsal figures were taken on the rehearsal hardware,
+which is the same generation as production. The reporting warehouse work used
+a different generation, so its numbers are not comparable and should not be
+used here.
+
+The index rebuild takes 120 minutes.
+
+The permissions sync takes 45 minutes.
+
+===============================================================================
+3. CAPACITY AND COST NOTES (BACKGROUND ONLY)
+===============================================================================
+
+The capacity review in March found that the platform runs at about 41% of
+provisioned headroom on a normal weekday, rising to 68% during the month-end
+close. Neither figure constrains the plan, because the work described here is
+not scheduled during a close.
+
+Sofia's cost note puts the incremental infrastructure cost of the day at
+roughly 2,400 units, most of it in temporary storage for the intermediate
+state. Finance has approved it. The approval expires at the end of the quarter,
+which is not a constraint on the day itself.
+
+The event bus carries about 18,000 messages a minute at peak. It is untouched by
+this work. The billing reconciler is also untouched, although Ruth has asked to
+be told when the day is over so that she can restart her nightly comparison job.
+
+===============================================================================
+4. RUNBOOK EXTRACT - TIMINGS, PART TWO
+===============================================================================
+
+The smoke checks take 30 minutes.
+
+The consumer replay takes 75 minutes.
+
+The final verification takes 60 minutes.
+
+===============================================================================
+5. RUNBOOK EXTRACT - ORDERING
+===============================================================================
+
+The ordering below is the part of the runbook Marek considers settled.
+
+The schema upgrade cannot start until the export snapshot has finished.
+
+The index rebuild cannot start until the schema upgrade has finished.
+
+The smoke checks cannot start until both the index rebuild and the permissions sync have finished.
+
+The consumer replay cannot start until the smoke checks have finished.
+
+The final verification cannot start until the consumer replay has finished.
+
+Marek adds that the runbook used to contain a sixth ordering rule about the
+intermediate state. It was removed when the vendor confirmed the intermediate
+state could be skipped, and it is not reinstated anywhere.
+
+===============================================================================
+6. STAFFING - ROSTER AS PUBLISHED
+===============================================================================
+
+Nadia is available from 07:00 to 12:00.
+
+Priya is available from 09:00 to 12:00.
+
+Owen is available from 11:00 to 21:00.
+
+Halvard is on the rota as the escalation contact for the day and is available
+all day, but he is an escalation contact only and performs no part of the work.
+Ines is on leave. Teodor is in a workshop until the afternoon and has asked not
+to be scheduled; he is not needed for any part of the work in any case.
+
+Only Priya may run the schema upgrade.
+
+Nadia will run the index rebuild.
+
+Any of Nadia, Priya and Owen may run any task that is not restricted to a named person.
+
+===============================================================================
+7. WORK ON OTHER SYSTEMS THE SAME DAY (NOT PART OF THIS PLAN)
+===============================================================================
+
+Three other things are happening that day and none of them interacts with the
+plan:
+
+- The mobile gateway team is rolling out a client release in two waves, at 09:30
+  and at 14:00. Their rollout uses its own pipeline and its own hardware.
+- Ruth's ledger archive compaction runs from 02:00 to 05:30, well before any of
+  the work here begins, and finishes whether or not the rest of the day goes to
+  plan.
+- Sofia is running a 30-minute cost report against a read replica in the
+  afternoon. Read replicas are not the staging equipment described below.
+
+The mobile gateway waves are worth knowing about because they generate support
+volume, not because they constrain anything.
+
+===============================================================================
+8. SHARED EQUIPMENT
+===============================================================================
+
+There is one piece of shared equipment in play.
+
+The index rebuild and the permissions sync each need exclusive use of the staging cluster, so they cannot overlap.
+
+An optional cache warm of 50 minutes can be run on the staging cluster, but it is not required for the cutover.
+
+Marek's view, recorded for completeness, is that the optional item is a nice
+thing to have when there is room for it and a distraction when there is not.
+
+===============================================================================
+9. GROUND RULES
+===============================================================================
+
+Work on the cutover may begin no earlier than 07:00.
+
+One person performs one task at a time, no task may be paused once it has started, and a task must fit entirely inside the availability window of the person performing it.
+
+The whole cutover must be complete by 19:00.
+
+The permissions sync runs before the schema upgrade.
+
+===============================================================================
+10. DECISION LOG - EARLIER ENTRIES
+===============================================================================
+
+April 09 - Programme compressed to a single day after the vendor call. Superseded
+nothing; the three-day shape had never been agreed.
+
+April 22 - Intermediate state dropped from scope.
+
+May 02 - Rehearsal one. Hardware issue, results discarded.
+
+May 16 - Rehearsal two. Results kept; these are the measured timings in section 2.
+One step did not come through it cleanly, and the note filed at the time reads:
+The schema upgrade failed during last week's rehearsal.
+Two people have since proposed adding contingency on the strength of that note.
+
+June 03 - Runbook editing convention agreed after the incident.
+
+June 27 - Escalation rota published. Halvard named for the day.
+
+July 11 - Finance approval recorded.
+
+===============================================================================
+11. WEEKLY REPORT EXTRACT (BACKGROUND ONLY)
+===============================================================================
+
+The platform group closed 34 tickets last week against an intake of 31. The
+oldest open ticket is 19 days old and concerns a dashboard label, which nobody
+regards as urgent. Two tickets were reopened, both about notification delivery
+on the mobile gateway.
+
+Support volume is expected to rise modestly on the day of the work, mostly from
+the mobile gateway waves rather than from the platform work itself.
+
+===============================================================================
+12. UPDATES CHANNEL - MOST RECENT FIRST
+===============================================================================
+
+These are the messages that arrived after the material above was assembled.
+Where an update contradicts anything above, the update is what applies.
+
+Update: the permissions sync must now run after the schema upgrade.
+
+Update: Nadia is out from 10:00 today.
+
+Update: the index rebuild is now Owen's, not Nadia's.
+
+Update: Halvard swapped his escalation slot with Ruth for the first two hours.
+This changes who answers a page and nothing else.
+
+Update: Sofia's cost report moved from the morning to the afternoon. It runs
+against a read replica either way.
+
+Update: the rehearsal failure was traced to an expired credential, which has since been replaced.
+
+===============================================================================
+13. LOOSE NOTES
+===============================================================================
+
+Nobody has confirmed whether the consumer replay can run at double speed, so use the stated duration.
+
+Ruth has asked, again, to be told when the day is over. Teodor has asked whether
+the workshop can be moved; it cannot, and it does not matter.
+
+===============================================================================
+14. THE QUESTION
+===============================================================================
+
+Question: with every task scheduled as early as the rules allow, at what clock time does the final verification finish?
+
+End your reply with a single final line in exactly this form:
+ANSWER: HH:MM

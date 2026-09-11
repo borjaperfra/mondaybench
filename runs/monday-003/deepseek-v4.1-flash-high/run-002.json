@@ -1,0 +1,79 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.3",
+  "scenario_id": "monday-003",
+  "scenario_prompt_sha256": "aaf788f309d955d2b427c86fe7d95d2bbf88575fde7306adcfd74b0ec4a4103f",
+  "run_id": "monday-003__deepseek-v4.1-flash-high__002",
+  "run_number": 2,
+  "model": {
+    "slug": "deepseek-v4.1-flash-high",
+    "display_name": "DeepSeek V4.1 Flash (reasoning effort high)",
+    "provider": "helmcode",
+    "model_id": "deepseek-v4-flash"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 32000,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+    "extra_body": {
+      "caching": false,
+      "reasoning_effort": "high"
+    },
+    "config_sha256": "2e5f2adc9077cb78ff60c6ce80a0d14d850195a9009547c083ec26602c9499d9",
+    "safety_ceiling_tokens": 32000,
+    "ceiling_semantics": "provider_specific"
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "DELIVERED",
+    "tokens": 20990,
+    "evidence": "explicit_reasoning_tokens",
+    "stream_observed": true,
+    "stream_event_count": 20990
+  },
+  "timestamp_utc": "2026-09-11T14:15:30Z",
+  "usage": {
+    "input_tokens": 3385,
+    "output_tokens": 22273,
+    "reasoning_tokens": 20990
+  },
+  "performance": {
+    "ttft_ms": 1237.2,
+    "ttfa_ms": 130862.1,
+    "total_latency_ms": 138815.5,
+    "tokens_per_second": 161.9
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "## 1. CRITICAL PATH\n\n**Main critical path (Enterprise SSO / Atlas):**\n\n`billing_schema_migration (Elena, 3h) → api_compatibility_patch (Marcus, 4h) → sso_regression (QA, 2h) → sso_production_rollout (Marcus, 1h)`\n\nThis is the longest dependent chain and drives the Wednesday EOD Atlas commitment.\n\n**Parallel critical chain (Contoso compliance):**\n\n`billing_schema_migration → contoso_permission_patch (Daniel, 3.5h + 0.5h handoff) → contoso_compliance_export (Julia, 1h)`\n\nThis shares the same root dependency and has an earlier hard deadline: **Tuesday 16:00 CET**.\n\n---\n\n## 2. MY PLAN FOR TODAY (Monday)\n\n| Time | Action | Owner |\n|---|---|---|\n| 09:00 | Start **billing_schema_migration** | Elena |\n| 09:00 | Start **pricing_page** | Sarah |\n| 09:00 | Start **contoso_export_formatter** | Julia |\n| 11:00 | Start **onboarding_launch** | Julia |\n| 12:00 | Kick off **billing_backfill** (runs 12:00–13:30) | Elena |\n| 12:00 | 30-min handoff on **contoso_permission_patch** | Marcus → Daniel |\n| 12:30 | Start **contoso_permission_patch** | Daniel |\n| 12:30 | Start **api_compatibility_patch** | Marcus |\n| 12:00 | Start **packaging_approval_pack** (after pricing page done) | Sarah |\n| 13:30 | Submit **packaging approval pack** (after 12:00, so approval expected Tuesday morning) | Sarah |\n| 13:30 | Start **board_pack_revenue** (backfill done) | Sarah |\n| 15:30 | Start **board_pack_non_revenue** (2h today, 2h Tuesday) | Sarah |\n| 16:00 | Finish **contoso_permission_patch**; Julia starts **contoso_compliance_export** | Daniel / Julia |\n| 16:30 | Finish **api_compatibility_patch**; QA can start regression Tuesday 09:00 | Marcus |\n| Tue 09:00 | Run **sso_regression** | QA |\n| Tue 13:00 | Run **sso_production_rollout** (after Atlas session) | Marcus |\n\n**Unblocks / delegations today:**\n- Reassign `contoso_permission_patch` from Marcus to Daniel.\n- Tell Marcus to drop `onboarding_instrumentation` as a launch blocker — Julia confirmed existing analytics are sufficient.\n- Mark Security review as closed — Maya’s review already approved the current scope; permission/config fixes do not need re-review.\n\n---\n\n## 3. PARALLEL WORK\n\n- **Billing migration**, **pricing page**, **exporter formatter**, and **onboarding launch** all run in parallel Monday morning.\n- **Billing backfill** runs automatically in parallel with Marcus’s compatibility patch and Daniel’s permission patch.\n- **Board pack non-revenue** can proceed in parallel with billing work; only revenue charts wait for backfill.\n- **Contoso formatter** and **onboarding launch** can proceed while the permission patch is being built.\n- **QA regression** can start as soon as the compatibility patch is done, in parallel with other work.\n\n---\n\n## 4. BLOCKERS & DEPENDENCIES\n\n- **Billing schema migration** is the root blocker for:\n  - SSO API compatibility patch\n  - Contoso permission patch\n  - Billing backfill / revenue charts\n- **Contoso permission patch** blocks the compliance export.\n- **SSO compatibility patch** blocks QA regression; QA regression blocks production rollout.\n- **Marcus’s Tuesday 09:00–13:00 Atlas session** blocks SSO rollout until 13:00.\n- **Board revenue charts** are blocked by billing backfill.\n- **Pricing page going public** is blocked by packaging approval.\n- **Onboarding launch is NOT blocked** by Marcus’s instrumentation — that blocker is stale.\n- **Security review is NOT a blocker** — review is closed.\n\n---\n\n## 5. EARLIEST DELIVERY\n\n- **Main critical path (SSO):** Tuesday 14:00 — well before Wednesday EOD.\n- **Contoso compliance export:** Monday 17:00 — meets Tuesday 16:00 CET deadline.\n- **Pricing page public:** Tuesday morning, after approval.\n- **Onboarding launch:** Monday 13:00.\n- **Board pack:** Tuesday 11:00.\n\n---\n\n## 6. RISKS / UNKNOWNS\n\n- If **billing migration slips**, Daniel can take over, but Elena needs 30 minutes to transfer production migration permissions before she leaves Wednesday noon. Unknown whether that transfer has been scheduled.\n- If **permission patch slips**, the Contoso compliance export could miss Tuesday 16:00 CET. We have Monday buffer, but not much.\n- If **QA finds surprises**, SSO rollout could slip to Wednesday — still before EOD, but less buffer.\n- **Compliance export format:** if Julia changes the exporter format before producing the compliance export, the auditor may receive DD/MM/YYYY instead of ISO. Peter confirmed both formats import correctly, but Anja did not specify. Confirm with Anja, or sequence the formatter change after the compliance export.\n- **Onboarding instrumentation:** Julia says it is not needed, but the task list still marks it urgent. Confirm with Marcus to avoid wasted work.\n- **Pricing approval:** submitted after 12:00 Monday, so approval is expected Tuesday morning. If the committee is slow, pricing page public could slip, but Thursday deadline has buffer.\n- **Board pack revenue:** depends on backfill completing cleanly; unknown if backfill has issues.",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "chatcmpl-1789135980-4X97SZZz0YpXXBewZMTE",
+    "raw_usage": {
+      "completion_tokens": 22273,
+      "prompt_tokens": 3385,
+      "total_tokens": 25658,
+      "completion_tokens_details": {
+        "audio_tokens": 0,
+        "reasoning_tokens": 20990,
+        "image_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 3384,
+        "video_tokens": 0,
+        "cache_write_tokens": 0
+      }
+    }
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.2",
+  "scenario_id": "monday-002",
+  "scenario_prompt_sha256": "740e627cbc7413c321ede0d54000504de54821d34ff4677f82731b89600423a8",
+  "run_id": "monday-002__deepseek-v4.1-flash-probe__001",
+  "run_number": 1,
+  "model": {
+    "slug": "deepseek-v4.1-flash-probe",
+    "display_name": "DeepSeek V4.1 Flash (variance probe)",
+    "provider": "helmcode",
+    "model_id": "deepseek-v4-flash"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 32000,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+    "extra_body": {
+      "caching": false
+    },
+    "config_sha256": "d24799fcff2f34662116bbdd15e21e7a97007b32c3a128ac7b5227fdedc6f2aa",
+    "safety_ceiling_tokens": 32000,
+    "ceiling_semantics": "provider_specific"
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "DELIVERED",
+    "tokens": 6016,
+    "evidence": "explicit_reasoning_tokens",
+    "stream_observed": true,
+    "stream_event_count": 6016
+  },
+  "timestamp_utc": "2026-09-10T19:35:47Z",
+  "usage": {
+    "input_tokens": 2335,
+    "output_tokens": 7158,
+    "reasoning_tokens": 6016
+  },
+  "performance": {
+    "ttft_ms": 1120.3,
+    "ttfa_ms": 38231.1,
+    "total_latency_ms": 44351.3,
+    "tokens_per_second": 165.6
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "## 1. CURRENT STATE\n\n**Enterprise Controls launch:**  \n- Staging build 2.9.4 passed Security verification (Priya) and session-preservation test (Marcus).  \n- Production attempt with 2.9.4 failed on shard eu-03 before rollout opened; no customer impact.  \n- Two recovery options:  \n  - **A** – retry 2.9.4 with shard precheck (no code change, 20 min deploy, 8% session reset risk)  \n  - **B** – deploy 2.9.5-patch (code change, 45 min deploy, <1% risk)  \n- Priya’s release policy:  \n  - No code change → production deploy + 20 min post-deploy verification.  \n  - Code change → 25 min delta review (asynchronous) + production deploy + 20 min post-deploy verification.  \n- Sam needs 15 min after verification to open/sanity-check rollout.  \n- Atlas migration window: must begin before 12:00 Monday; otherwise next window Thursday.  \n- Marcus available 09:15–10:20; Priya available 09:00–09:35 and 10:25–12:30; Sam available 09:00–12:30.  \n- Maya has directed to follow Priya’s policy and Sam’s process; no additional executive gate.\n\n**Revenue / expansion:**  \n- September expansion target €180k, expected €126k, gap €54k.  \n- Wayne (expansion moved to October) + Globex (pending procurement) = €30k reduction.  \n- Soylent (€10k) + Wonka (€14k) = €24k reduction, no contract explanation.  \n- Stark on track; Acme’s usage reduction is expected due to approved batch-processing shift.  \n- Pricing workbook is not authoritative; internal scenario values only.\n\n**Other:**  \n- Zenith contract signed (€96k ARR, 24 months) – no escalation needed.  \n- Orion SCIM verification pending – org ID confusion (org_71A vs org_17A).  \n- Customer announcement draft ready; Daniel will send after rollout is open.\n\n## 2. MY PLAN FOR TODAY\n\n**09:07–09:15** – Review situation, decide on recovery path **B (2.9.5-patch)** due to lower risk. Communicate decision to Marcus, Priya, Sam.\n\n**09:15** – Submit diff to Priya for asynchronous delta review. Marcus starts deploy of 2.9.5-patch (45 min).\n\n**09:15–10:00** – While deploy runs, prepare expansion explanation for Maya using actual arithmetic (Wayne+Globex = €30k, Soylent+Wonka = €24k; no invented causes).\n\n**10:00** – Deploy ends. Wait for Priya’s availability.\n\n**10:25–10:45** – Priya performs post-deploy verification (20 min).\n\n**10:45–11:00** – Sam opens rollout and sanity-checks (15 min).\n\n**11:00** – Rollout begins. Confirm to Atlas (update time to 11:00) and instruct Daniel to send customer announcement.\n\n**11:00** – Send expansion explanation to Maya (before 11:00 deadline).\n\n**Later** – Verify Orion SCIM: confirm correct org ID with admin, read live flag, then reply.\n\n## 3. CUSTOMER / REVENUE PRIORITIES\n\n- **Globex** – High severity open tickets (SSO, SCIM, audit export) and pending September expansion. Address support issues to enable procurement.\n- **Soylent** – Reduced expansion (€10k) with open medium/low tickets. Investigate if support issues are contributing, but do not speculate.\n- **Wonka** – Reduced expansion (€14k) with no tickets. Check for any underlying issues, but no immediate action.\n- **Acme** – Expected reduction due to batch-processing shift; no action.\n- **Wayne** – Expansion moved to October; no action.\n- **Stark** – On track; no action.\n\n## 4. DO NOT DO\n\n- Do **not** send Enterprise pricing to Initech (not authoritative).\n- Do **not** call Zenith (resolved).\n- Do **not** seek additional executive approval (Maya already directed to follow Priya’s policy).\n- Do **not** send customer announcement before rollout is open.\n- Do **not** reply to Orion until org ID is confirmed and live flag read.\n- Do **not** invent causes for Soylent/Wonka reductions in the explanation to Maya.\n- Do **not** use obsolete pricing workbook.\n\n## 5. UNCLEAR / MUST VERIFY\n\n- Confirm Orion’s correct org ID (org_71A vs org_17A) and read live SCIM flag.\n- Ensure Priya completes delta review for 2.9.5-patch before deploy (submit diff and confirm).\n- Confirm 2.9.5-patch is ready and Marcus can deploy at 09:15.\n- Verify if there are additional accounts affecting the expansion gap (only six listed, but expected total is €126k; however, the €54k gap is fully explained by Wayne+Globex and Soylent+Wonka, so proceed with that).",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "chatcmpl-1789068892-qx19kQkGJM4IpXvd0xMC",
+    "raw_usage": {
+      "completion_tokens": 7158,
+      "prompt_tokens": 2335,
+      "total_tokens": 9493,
+      "completion_tokens_details": {
+        "audio_tokens": 0,
+        "reasoning_tokens": 6016,
+        "image_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 0,
+        "video_tokens": 0,
+        "cache_write_tokens": 0
+      }
+    }
+  }
+}

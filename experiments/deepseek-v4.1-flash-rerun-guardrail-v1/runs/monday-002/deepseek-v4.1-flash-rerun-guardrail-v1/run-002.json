@@ -1,0 +1,73 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.2",
+  "scenario_id": "monday-002",
+  "scenario_prompt_sha256": "740e627cbc7413c321ede0d54000504de54821d34ff4677f82731b89600423a8",
+  "run_id": "monday-002__deepseek-v4.1-flash-rerun-guardrail-v1__002",
+  "run_number": 2,
+  "model": {
+    "slug": "deepseek-v4.1-flash-rerun-guardrail-v1",
+    "display_name": "DeepSeek V4.1 Flash (rerun + guardrail 2026-09-11)",
+    "provider": "helmcode",
+    "model_id": "deepseek-v4-flash"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 32000,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "eb136804970c72fa214521a341fdde95294393990fae0a5e86bd15614794653d",
+    "extra_body": {
+      "caching": false
+    },
+    "config_sha256": "6294ee5067cb70d6ecf399c2008e6df51d5e14fd811ce324f3223595bfdb9d04",
+    "safety_ceiling_tokens": 32000,
+    "ceiling_semantics": "provider_specific"
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "DELIVERED",
+    "tokens": 17891,
+    "evidence": "explicit_reasoning_tokens",
+    "stream_observed": true,
+    "stream_event_count": 17891
+  },
+  "timestamp_utc": "2026-09-11T19:11:19Z",
+  "usage": {
+    "input_tokens": 2764,
+    "output_tokens": 19683,
+    "reasoning_tokens": 17891
+  },
+  "performance": {
+    "ttft_ms": 880.0,
+    "ttfa_ms": 77491.5,
+    "total_latency_ms": 85631.4,
+    "tokens_per_second": 232.2
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "# 1. CURRENT STATE\n\n**Enterprise Controls.** Build **2.9.4** passed the staging session‑preservation test and Priya's staging verification (Fri 09:37). The Friday production attempt failed on shard **eu-03 before rollout opened — no customer impact**. Two recovery options exist (release‑options): **A** = 2.9.4 retry with shard precheck (no code change, 20 min deploy, 8% session‑reset risk); **B** = 2.9.5‑patch (code change, 45 min deploy, <1% risk). **Product owns the choice** (me). Maya has ruled out any extra executive gate — follow **Priya's release policy** (exact verified build → post‑deploy check only; code change → 25 min delta review first) and **Sam's rollout process**. Atlas rollout **must begin before 12:00 today**, else migration slips to Thursday (no renewal impact, but executive noise).\n\n**Viability of options (today, it is 09:07):**\n- **A is viable.** 2.9.4 is the staging‑verified build → no delta review. Deploy 09:15–09:35 (well inside Marcus's 09:15–10:20 window).\n- **B is not viable.** It requires a 25 min delta review *before* deploy. The diff can't be submitted before I'm online (~09:07), so review ends ~09:35 and the 45 min deploy would run to ~10:20 — exactly Marcus's hard stop, with zero buffer. B is effectively infeasible today.\n\n**Other state.** Zenith is **resolved** (countersigned €96k / 24 mo; audit‑export fix validated; back to normal cadence). Pricing is **not external**: the pinned workbook is *not* authoritative; only Daniel's 09:07 internal scenario (€2,500 / 40 seats / €55 extra seat) may be used, internally, with no announcement date. Comms: **Sarah is out Monday**; Daniel holds the final draft + Atlas recipient list and sends only after Sam confirms rollout is open. Orion SCIM status is **unresolved** (Rollout Bot reports org_71A scim_enabled=false; ticket references org_17A; wrong CRM record possible). September expansion gap is **€54k = €30k explained (Wayne €18k deferred to Oct by signed amendment; Globex €12k pending procurement) + €24k arithmetic‑only (Soylent −€10k, Wonka −€14k, no stated cause)**.\n\n# 2. MY PLAN FOR TODAY (ordered)\n\n1. **09:07–09:15 — Choose Path A** (2.9.4 retry with shard precheck). Brief Marcus (deploy), tell Priya to run post‑deploy verification at 10:25, and tell Sam to expect rollout after verification. Do **not** seek Maya's approval. Rationale: staging‑verified build → post‑deploy check only; B cannot meet the 12:00 window.\n2. **09:15–09:35 — Marcus runs the production deploy** of 2.9.4 with shard precheck (20 min). Completes 45 min before his 10:20 departure. *If it fails again, escalate immediately — B can no longer fit today and the window likely slips to Thursday.*\n3. **09:35–10:25 — Priya is unavailable, so use this gap to (a)** build and draft the €54k expansion reconciliation for Maya (due 11:00; board pack locks 11:30) **and (b)** verify Orion (correct org ID + live scim_enabled). Monitor deploy health.\n4. **10:25–10:45 — Priya runs post‑deploy verification** (~20 min, required).\n5. **10:45–11:00 — Sam opens and sanity‑checks rollout** (15 min). **Rollout begins ~11:00 < 12:00.** ✓\n6. **~11:00 — After Sam confirms rollout is open:** Daniel sends the customer announcement; only now may any \"launch confirmed\" note go to Atlas.\n7. **By 11:00 — Send the expansion reconciliation to Maya** (before the 11:30 board‑pack lock).\n\nDependencies respected: decision → deploy → security verification → rollout → announcement. All work fits inside Priya's 10:25–12:30 window and leaves 1 hour of margin before the 12:00 Atlas deadline.\n\n# 3. CUSTOMER / REVENUE PRIORITIES\n\n- **Atlas — execute today.** Rollout before 12:00 and post‑rollout announcement. Renewal is signed and not at risk; missing the window only pushes migration to Thursday and creates executive noise.\n- **Globex — highest revenue attention.** Renews in 18 days, €12k September expansion **pending procurement**, and 3 open tickets: **G‑441 high** (SSO setup intermittently fails), G‑447 (SCIM sync delayed), G‑451 (audit export timeout). Prioritize clearing the SSO/SCIM blockers and following up on procurement — the tickets may be gating adoption (hypothesis, not confirmed).\n- **Orion — verify before any further reply:** confirm which org ID is theirs and read the live SCIM flag (Sam's explicit instruction).\n- **Secondary (flag, not today's fire):** **Acme** renews in 9 days — *confirm renewal is on track*; its usage/admin declines are **expected** (approved shift to annual batch processing, −40–50% interactive) and are **not** a problem. **Wonka** (renewal 31 days) — €24k→€10k expansion plus −35% usage / −49% admin logins with **no stated cause**; schedule a CS check, treat as hypothesis. **Soylent** — €28k→€18k expansion, 2 low/medium tickets; monitor.\n- **No action:** Zenith (resolved), Wayne (renewed; expansion deferred to Oct), Stark (on plan; low doc question).\n\n# 4. DO NOT DO\n\n- **Do not** seek a new executive/Maya approval — she declined to add a gate; follow Priya's policy and Sam's process.\n- **Do not** attempt Path B today — its 25 min delta review cannot complete in time for the 45 min deploy to finish before Marcus's 10:20 hard stop.\n- **Do not** deploy any code‑changed build without Priya's prior delta review.\n- **Do not** call Zenith about renewal risk — superseded; fully resolved.\n- **Do not** send the customer announcement (or tell Atlas the launch is confirmed) before Sam confirms rollout is open.\n- **Do not** quote pricing externally, send anything to Initech procurement, or rely on the pinned `enterprise-pricing-v4-final.xlsx`; use Daniel's 09:07 values internally only; there is no public announcement date.\n- **Do not** send another Orion status until the org ID and live SCIM flag are confirmed.\n- **Do not** treat Acme's usage/admin declines as a problem, and **do not** assign a cause to the Soylent/Wonka reductions.\n- **Do not** run any task past Marcus's 10:20 hard stop.\n\n# 5. UNCLEAR / MUST VERIFY\n\n- **Orion:** which org is actually theirs (org_71A vs org_17A) and the live `scim_enabled` value for that org. (Blocking any further status.)\n- **Soylent:** why the expansion fell €28k→€18k (no contractual cause stated).\n- **Wonka:** why the expansion fell €24k→€10k and why usage/admin logins fell −35%/−49% (no cause stated).\n- **Globex:** procurement decision date and whether the three open tickets are actually blocking it.\n- **Acme:** renewal status confirmation (9 days out).\n- **Fallback:** if Path A's deploy fails again, is there any path to begin rollout before 12:00 (likely none — would go to Thursday)?\n- **Pricing:** authoritative final figures and any announcement date — not yet available.",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "chatcmpl-202e5cfc-95ae-488e-b2ad-b7b01537faa7",
+    "raw_usage": {
+      "completion_tokens": 19683,
+      "prompt_tokens": 2764,
+      "total_tokens": 22447,
+      "completion_tokens_details": {
+        "reasoning_tokens": 17891
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 2560
+      }
+    }
+  }
+}

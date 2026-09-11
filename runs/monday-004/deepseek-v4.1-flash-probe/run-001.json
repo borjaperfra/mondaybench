@@ -1,0 +1,78 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.4",
+  "scenario_id": "monday-004",
+  "scenario_prompt_sha256": "3a0cbb569ca4f711b8907177af9204cec267d26f35f732829df56b03ed23ef99",
+  "run_id": "monday-004__deepseek-v4.1-flash-probe__001",
+  "run_number": 1,
+  "model": {
+    "slug": "deepseek-v4.1-flash-probe",
+    "display_name": "DeepSeek V4.1 Flash (variance probe)",
+    "provider": "helmcode",
+    "model_id": "deepseek-v4-flash"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 96000,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+    "extra_body": {
+      "caching": false
+    },
+    "config_sha256": "4369225ce32e2470d5687bec6742596f02c1305f486b600a199685f5f2dd3682",
+    "safety_ceiling_tokens": 96000,
+    "ceiling_semantics": "provider_specific"
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "DELIVERED",
+    "tokens": 12837,
+    "evidence": "explicit_reasoning_tokens",
+    "stream_observed": true,
+    "stream_event_count": 12837
+  },
+  "timestamp_utc": "2026-09-10T19:42:08Z",
+  "usage": {
+    "input_tokens": 10302,
+    "output_tokens": 15303,
+    "reasoning_tokens": 12837
+  },
+  "performance": {
+    "ttft_ms": 1462.3,
+    "ttfa_ms": 76070.0,
+    "total_latency_ms": 93014.6,
+    "tokens_per_second": 167.2
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "## 1. EXECUTIVE SUMMARY\n\n- **Revenue is growing, but profitability is under pressure.** October invoiced revenue (€873.4k) is up 9.6% vs September (€797.1k), driven by an annual prepayment from Gringotts (€120k) and several expansions. However, plan-level contribution margin for the Enterprise plan fell from 32.2% to 29.5% as infrastructure and support costs rose faster than revenue.\n- **SMB segment is bleeding customers.** 4 of 18 SMB customers churned in October (22% monthly churn), while only 5 new SMB logos were added. Mid-market churn was 1 of 10 (10%), and Enterprise had zero churn. SMB also has the lowest ARR per customer, making it a high-churn, low-value segment.\n- **Paid search is the most productive acquisition channel.** In October, paid search generated 5 conversions (2 new logos, 3 expansions) with €238.8k attributed revenue – more than all other channels combined. However, lead-to-trial conversion rates for paid search declined from 8.5% to 6.4% as volume increased, suggesting diminishing returns.\n- **The Pro plan is the most efficient, but small.** Pro has a 62.7% contribution margin, versus 29.5% for Enterprise and 32.2% for Starter. Enterprise generates the most absolute margin per customer (€13.9k) but has the lowest margin percentage and rising support costs.\n- **Data limitations prevent a full CAC payback analysis.** No marketing spend data is provided, and trial-to-paid conversion is not tracked, so we cannot compute CAC payback or true channel ROI.\n\n## 2. REVENUE & CUSTOMER HEALTH\n\n**Headline revenue movement**  \n- September invoiced revenue: €797.1k (subscriptions €746.1k + professional services €51k)  \n- October invoiced revenue: €873.4k (subscriptions €747.7k + Gringotts annual €120k + professional services €5.7k)  \n- The increase is largely non-recurring (annual prepayment) and from expansions (e.g., Hooli +€3k, Stark +€84k attributed expansion, etc.). Recurring monthly revenue (from plans.csv) grew only from €746.1k to €757.7k (+1.6%).\n\n**Segment health**  \n- **Enterprise:** 8 customers, no churn. ARR €6.78M. Usage slightly declined (-1.9% in requests) due to Acme’s 45% drop after moving to batch. Support tickets fell from 26 to 25. Revenue stable, but plan-level costs rose (infra +3.1%, support +5.7%).\n- **Mid-market:** 9 active customers (1 churn: Nakatomi). ARR €1.53M. Usage grew +8.6% (requests). Support tickets jumped from 17 to 23, with Soylent alone generating 8 tickets (including a critical API error). Revenue from subscriptions increased (e.g., Hooli +€3k, Soylent -€2.5k due to usage drop? Actually Soylent’s invoice dropped from €22k to €19.5k, likely due to a downgrade or usage-based adjustment).\n- **SMB:** 14 active customers (4 churns). ARR €478.8k. Usage grew +13.1% (requests). Support tickets rose from 16 to 25. Churn is severe: 22% monthly, with all churned customers on the Starter plan. New SMB logos (5) are small (ARR €20–38k), and many are on Starter.\n\n**Key drivers**  \n- Acme’s usage drop is a red flag: it reduced Enterprise request volume by ~1.9M, but revenue is unchanged. This may signal a shift to lower-value usage patterns, potentially affecting future renewals.\n- Soylent’s usage fell 27% and its invoice dropped by €2.5k, while it generated 8 support tickets (including a critical). This suggests a struggling mid-market account that may be at risk.\n\n## 3. ACQUISITION\n\n**What we can conclude**  \n- **Paid search** is the highest-volume channel (900 leads in October) and produced the most paid conversions (5) and attributed revenue (€238.8k). It also delivered 2 new logos (Spacely, Gekko) and 3 expansions (Stark, Umbrella, Globex).  \n- **Content** produced 3 conversions (2 new, 1 expansion) with €63.6k revenue.  \n- **Outbound** produced 2 conversions (1 new, 1 expansion) with €46.8k revenue.  \n- **Partner** had zero conversions in October, despite having the highest lead-to-trial conversion rate (22.7% in October). This suggests partner leads are high-quality but low volume and possibly not converting to paid.\n\n**What we cannot conclude**  \n- **CAC payback** cannot be calculated because no marketing spend data is provided.  \n- **Trial-to-paid conversion** is not tracked; we only have lead-to-trial conversions from funnel.csv. We cannot link paid conversions to specific lead cohorts.  \n- **Channel efficiency** is unclear: paid search’s lead-to-trial rate dropped from 8.5% to 6.4% as volume increased, indicating possible diminishing returns, but we don’t know if paid conversions are coming from the same month’s leads.\n\n**Implication**  \n- Paid search appears to be the most scalable channel, but we need cost data to confirm ROI. Without it, we can only say it generates the most revenue and conversions.\n\n## 4. PLAN ECONOMICS\n\n**Contribution margin by plan (October)**  \n| Plan | Revenue (€k) | Infra (€k) | Support (€k) | Total Cost (€k) | Margin (€k) | Margin % |\n|------|--------------|------------|--------------|-----------------|-------------|----------|\n| Enterprise | 659.5 | 296.8 | 168.0 | 464.8 | 194.7 | 29.5% |\n| Pro | 66.2 | 16.1 | 8.6 | 24.7 | 41.5 | 62.7% |\n| Starter | 32.0 | 11.4 | 10.3 | 21.7 | 10.3 | 32.2% |\n\n**Trends**  \n- Enterprise margin fell from 32.2% to 29.5% (costs rose faster than revenue). Support cost per customer is €12k, far above Pro (€0.96k) and Starter (€0.79k).  \n- Pro margin is high but revenue is small (€66.2k). It has 9 customers, and usage is growing (+2% avg requests).  \n- Starter margin improved slightly (34.9% → 32.2%? Actually September was 34.9%, October 32.2% – it declined). Wait, September starter margin was 8.4/24.1=34.9%, October 10.3/32=32.2%, so it declined. But revenue grew due to new customers.\n\n**Per-customer economics (October)**  \n- Enterprise: revenue €47.1k, cost €33.2k, margin €13.9k  \n- Pro: revenue €7.36k, cost €2.74k, margin €4.62k  \n- Starter: revenue €2.46k, cost €1.67k, margin €0.79k  \n\n**Assessment**  \n- Enterprise is the largest revenue driver but has the lowest margin percentage and rising costs. It also has the highest support burden, likely due to complex integrations and high-touch service.  \n- Pro is highly efficient but under-scaled.  \n- Starter is low-margin and high-churn (all churned customers were on Starter).\n\n## 5. RECOMMENDATIONS\n\n**1. Reduce investment in the SMB segment**  \n- SMB has a 22% monthly churn rate, low ARR, and high support ticket volume relative to revenue. The segment is not retaining customers, and the cost of acquiring new SMB logos (via paid search, content, etc.) is likely not recouped given the short lifetime.  \n- Action: Cut marketing spend targeting SMB, pause new SMB acquisition, and focus on improving retention for existing SMB customers (e.g., onboarding, support) or migrate them to higher-value plans. Alternatively, raise SMB pricing to improve unit economics.\n\n**2. Increase spend on paid search**  \n- Paid search generated the most conversions and attributed revenue in October (€238.8k). It also delivered 2 new logos and 3 expansions. While lead-to-trial conversion declined, the absolute number of paid conversions increased from 1 to 5.  \n- Action: Increase paid search budget, but monitor conversion rates closely. Consider optimizing ad targeting to improve lead quality, as the drop in lead-to-trial rate suggests we may be attracting less qualified traffic. Also, ensure we have cost data to validate ROI.\n\n**3. Focus engineering on the Enterprise plan**  \n- Enterprise has the lowest margin percentage and rising costs. The Acme usage drop indicates that enterprise customers are changing usage patterns (moving to batch), which may reduce future value. Support costs are high, suggesting the product may be too complex or under-served.  \n- Action: Prioritize improvements that reduce infrastructure and support costs for Enterprise (e.g., better batch processing, self-service tools, automated support). Also, investigate Acme’s usage drop to ensure it doesn’t lead to churn or renegotiation. Consider introducing usage-based pricing to align revenue with actual consumption.\n\n## 6. UNCERTAINTIES / DATA ISSUES\n\n- **Duplicate invoice:** INV-2026-10-0209 for Soylent appears twice (Stripe and billing_sync) with the same amount. We treated it as one invoice; if both are real, October revenue is overstated by €19.5k.\n- **No marketing spend data:** CAC payback cannot be calculated. The CFO’s request cannot be fulfilled with the provided data.\n- **Trial-to-paid conversion not tracked:** Funnel.csv only shows leads to paid trial, not to paid customers. We cannot compute conversion rates from leads to paid, so channel performance is based on absolute conversions and attributed revenue, not efficiency.\n- **Usage data for churned customers:** Customers who churned in October still have usage data for the full month, but they may have only used part of the month. This could distort usage trends.\n- **Plan vs. segment mapping:** Plans.csv groups by plan, not segment. Some mid-market customers are on the Enterprise plan (e.g., Gringotts, Soylent), so plan-level costs do not directly map to segments. This limits our ability to attribute costs to segments.\n- **Annual prepayment:** Gringotts’ €120k annual invoice is recorded in October, but it covers 12 months. This inflates October revenue and should be treated as deferred revenue for monthly comparisons.\n- **Expansion attribution:** Acquisition.csv attributes revenue to channels for expansions, but these are not new customers. The revenue is incremental ARR, but we don’t know if it would have happened without the channel touch.",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "chatcmpl-1789069225-tWU5f6duRCLnTG3LDScB",
+    "raw_usage": {
+      "completion_tokens": 15303,
+      "prompt_tokens": 10302,
+      "total_tokens": 25605,
+      "completion_tokens_details": {
+        "audio_tokens": 0,
+        "reasoning_tokens": 12837,
+        "image_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 0,
+        "video_tokens": 0,
+        "cache_write_tokens": 0
+      }
+    }
+  }
+}

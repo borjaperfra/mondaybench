@@ -1,0 +1,223 @@
+{
+  "generated_utc": "2026-09-11T07:06:55.752168Z",
+  "purpose": "Is reasoning_effort observably effective on this route, or is its effect indistinguishable from this model's natural variance?",
+  "is_mondaybench_run": false,
+  "touches": {
+    "runs/": false,
+    "evaluations/": false,
+    "leaderboards/": false,
+    "releases/": false,
+    "verdicts/": false,
+    "existing deepseek batteries": false,
+    "reliability experiment": false
+  },
+  "controlled": {
+    "model_slug": {
+      "baseline": "deepseek-v4.1-flash",
+      "high": "deepseek-v4.1-flash",
+      "same": true
+    },
+    "provider": {
+      "baseline": "helmcode",
+      "high": "helmcode",
+      "same": true
+    },
+    "api_style": {
+      "baseline": "openai_compatible",
+      "high": "openai_compatible",
+      "same": true
+    },
+    "model_id": {
+      "baseline": "deepseek-v4-flash",
+      "high": "deepseek-v4-flash",
+      "same": true
+    },
+    "base_url_env": {
+      "baseline": "HELMCODE_BASE_URL",
+      "high": "HELMCODE_BASE_URL",
+      "same": true
+    },
+    "api_key_env": {
+      "baseline": "HELMCODE_API_KEY",
+      "high": "HELMCODE_API_KEY",
+      "same": true
+    },
+    "endpoint": {
+      "baseline": "https://api.helmcode.com/v1/chat/completions",
+      "high": "https://api.helmcode.com/v1/chat/completions",
+      "same": true
+    },
+    "temperature": {
+      "baseline": 0,
+      "high": 0,
+      "same": true
+    },
+    "top_p_sent": {
+      "baseline": false,
+      "high": false,
+      "same": true
+    },
+    "top_p": {
+      "baseline": null,
+      "high": null,
+      "same": true
+    },
+    "max_output_tokens": {
+      "baseline": 32000,
+      "high": 32000,
+      "same": true
+    },
+    "extra_body": {
+      "baseline": {
+        "caching": false
+      },
+      "high": {
+        "caching": false
+      },
+      "same": true
+    },
+    "capabilities": {
+      "baseline": {
+        "reasoning": true
+      },
+      "high": {
+        "reasoning": true
+      },
+      "same": true
+    },
+    "reasoning_enabled": {
+      "baseline": true,
+      "high": true,
+      "same": true
+    },
+    "system_prompt": {
+      "baseline": null,
+      "high": null,
+      "same": true
+    },
+    "system_prompt_sha256": {
+      "baseline": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "high": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "same": true
+    },
+    "tools_sent": {
+      "baseline": false,
+      "high": false,
+      "same": true
+    },
+    "streaming": {
+      "baseline": true,
+      "high": true,
+      "same": true
+    },
+    "stream_options_include_usage": {
+      "baseline": true,
+      "high": true,
+      "same": true
+    },
+    "retry_max_attempts": {
+      "baseline": 3,
+      "high": 3,
+      "same": true
+    },
+    "retry_backoff_seconds": {
+      "baseline": [
+        2.0,
+        6.0
+      ],
+      "high": [
+        2.0,
+        6.0
+      ],
+      "same": true
+    },
+    "retry_infra_statuses": {
+      "baseline": [
+        408,
+        409,
+        425,
+        429,
+        500,
+        502,
+        503,
+        504,
+        520,
+        521,
+        522,
+        523,
+        524,
+        525,
+        526,
+        527
+      ],
+      "high": [
+        408,
+        409,
+        425,
+        429,
+        500,
+        502,
+        503,
+        504,
+        520,
+        521,
+        522,
+        523,
+        524,
+        525,
+        526,
+        527
+      ],
+      "same": true
+    },
+    "prompt_sha256": {
+      "baseline": "672c55f3a1a2da583a43475e6b8f8f1d7a393412fb2dc8ad79bb8738c399ada7",
+      "high": "672c55f3a1a2da583a43475e6b8f8f1d7a393412fb2dc8ad79bb8738c399ada7",
+      "same": true
+    },
+    "prompt_bytes": {
+      "baseline": 223,
+      "high": 223,
+      "same": true
+    },
+    "conversation_carry_over": {
+      "baseline": false,
+      "high": false,
+      "same": true
+    },
+    "best_of_n": {
+      "baseline": false,
+      "high": false,
+      "same": true
+    },
+    "quality_retries": {
+      "baseline": false,
+      "high": false,
+      "same": true
+    },
+    "reasoning_effort": {
+      "baseline": "<field absent from request body>",
+      "high": "high",
+      "same": false
+    }
+  },
+  "differences": [
+    "reasoning_effort"
+  ],
+  "declared_deviations_from_a_benchmark_run": [
+    {
+      "what": "system prompt",
+      "value": "absent for every variant",
+      "why": "continues the earlier probe, which sent none",
+      "constant_across_variants": true
+    },
+    {
+      "what": "streaming",
+      "value": "on for every variant",
+      "why": "the only way to observe reasoning stream events; the earlier probe was blocking and could not see them",
+      "constant_across_variants": true,
+      "consequence": "token counts are not directly comparable with the earlier blocking probe"
+    }
+  ],
+  "verdict": "CLEAN"
+}

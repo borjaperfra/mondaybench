@@ -1,0 +1,73 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.3",
+  "scenario_id": "monday-003",
+  "scenario_prompt_sha256": "aaf788f309d955d2b427c86fe7d95d2bbf88575fde7306adcfd74b0ec4a4103f",
+  "run_id": "monday-003__deepseek-v4.1-flash-rerun-guardrail-v1__001",
+  "run_number": 1,
+  "model": {
+    "slug": "deepseek-v4.1-flash-rerun-guardrail-v1",
+    "display_name": "DeepSeek V4.1 Flash (rerun + guardrail 2026-09-11)",
+    "provider": "helmcode",
+    "model_id": "deepseek-v4-flash"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 32000,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "eb136804970c72fa214521a341fdde95294393990fae0a5e86bd15614794653d",
+    "extra_body": {
+      "caching": false
+    },
+    "config_sha256": "6294ee5067cb70d6ecf399c2008e6df51d5e14fd811ce324f3223595bfdb9d04",
+    "safety_ceiling_tokens": 32000,
+    "ceiling_semantics": "provider_specific"
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "DELIVERED",
+    "tokens": 9196,
+    "evidence": "explicit_reasoning_tokens",
+    "stream_observed": true,
+    "stream_event_count": 9196
+  },
+  "timestamp_utc": "2026-09-11T19:13:50Z",
+  "usage": {
+    "input_tokens": 3735,
+    "output_tokens": 11116,
+    "reasoning_tokens": 9196
+  },
+  "performance": {
+    "ttft_ms": 1612.8,
+    "ttfa_ms": 44688.4,
+    "total_latency_ms": 53871.8,
+    "tokens_per_second": 212.7
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "# Situation read (what's actually true)\n\n- **Security review is not a blocker.** Maya's Friday 16:48 email closed it — approved for exactly the scope we're doing (account-mapping rewrite + tenant permission model). Task list and Friday meeting notes are stale. Permission-check/config fixes in scope need **no** re-review.\n- **Onboarding instrumentation is not a launch blocker.** Julia and Marcus confirmed it in Slack; the tracker is stale. Julia owns onboarding launch.\n- **Contoso is two different problems.** The \"broken export\" is only a **date-format preference** (Peter: imports fine, not blocking; wanted for Tue PM demo). The **real** Contoso issue is the **delegated-admin permission** (`insufficient scope`), which blocks the **contractual compliance export due Tue 22 Sept 16:00 CET** (hard, auditor window). That is the week's tightest deadline.\n- **One root dependency:** Elena's billing schema migration. It gates the SSO compatibility patch, the Contoso permission patch, the backfill, and Sarah's revenue charts. Nothing else can start until it lands.\n- **Reassign the Contoso permission patch to Daniel.** Rachel logged it to Marcus as \"his module,\" but Daniel was in that model two weeks ago and Marcus is the only person who can do the SSO compatibility patch (branch is his alone). Parallelizing is what saves the week.\n\n---\n\n## 1. CRITICAL PATH\n\nSingle root, then two chains (share the schema gate):\n\n**Root:** `billing_schema_migration` — Elena, 3h (must start now).\n\n**Chain A — Enterprise SSO** (deadline Wed 23 Sept 17:00):\n`billing_schema_migration` → `api_compatibility_patch` (Marcus, 4h) → `sso_regression` (QA, 2h) → `sso_production_rollout` (Marcus, 1h)\n\n**Chain B — Contoso compliance export** (deadline Tue 22 Sept 16:00 — tightest):\n`billing_schema_migration` → `contoso_permission_patch` (Daniel 3.5h + 0.5h Marcus handoff) → `contoso_compliance_export` (Julia, 1h)\n\nMarcus is single-threaded and the only owner of Chain A's patch and rollout → Chain B must run on Daniel to keep both chains alive.\n\n---\n\n## 2. MY PLAN FOR TODAY (in order)\n\n1. **Elena — start the schema migration now** (09:10→~12:10). This is the week's gating item. She must land it today/tomorrow because she's out from Wed 12:00.\n2. **Marcus → Daniel: 30-min handoff** on the delegated-admin path. Do it this morning before the schema lands (Marcus has no patch work until then anyway).\n3. **Reassign `contoso_permission_patch` from Marcus → Daniel.** (Confirm with Rachel so the ticket reflects it.)\n4. **Elena — kick off the reconciliation backfill** the moment the schema lands (automated, ~90 min). This unblocks Sarah's revenue charts.\n5. **Marcus — start `api_compatibility_patch`** as soon as schema lands (~12:10, 4h).\n6. **Daniel — start `contoso_permission_patch`** as soon as schema lands (~12:10).\n7. **Julia — produce and send the Contoso compliance export** once the permission patch lands (~15:40). Hard deadline Tue 16:00.\n8. **Correct the stale records:** close the Security-review task (done), remove onboarding instrumentation as a launch blocker, and reclassify the Contoso export as a formatting request.\n9. **Comms (do today):**\n   - **Anja/Contoso** — confirm the compliance export will be delivered by Tue 16:00 (plan achieves it). No internal detail.\n   - **CEO** — export isn't broken; the real issue is delegated-admin access on the compliance export, owned, due Tue 16:00.\n   - **Peter/Contoso** — ack; format fix (DD/MM/YYYY) will land before Tue afternoon.\n10. **Sarah — start `board_pack_non_revenue` now.** Hold revenue charts until the backfill completes. Prep the approval pack from **mockups** — Priya explicitly accepts mockups and does not require live captures, so it is *not* gated on the built page; submit before 12:00 to clear same day.\n11. **Julia — onboarding launch support** (Fri 12:00). Not on the critical path.\n\n---\n\n## 3. PARALLEL WORK\n\n- **Sarah:** board narrative/customer charts (4h), then revenue charts after backfill; then pricing page + approval pack.\n- **Daniel:** permission patch — runs parallel to Marcus's compatibility patch (both start post-schema).\n- **Julia:** onboarding launch support (deadline Fri 12:00), and the Contoso **formatter** (2h) — do it *after* the compliance export so the same exporter isn't being changed mid-delivery; target Tue morning, before the PM demo.\n- **Elena's backfill** runs automatically once kicked off (no hand-holding).\n- **Optional:** Marcus can use the idle window (~09:40–12:10) to start onboarding instrumentation, but it is non-blocking and must yield to the patch at ~12:10.\n\n---\n\n## 4. BLOCKERS & DEPENDENCIES\n\n**Actually blocking:**\n- Schema migration not started → blocks both chains, backfill, revenue charts.\n- Permissions patch needs schema **and** the Marcus→Daniel handoff.\n- SSO compatibility patch needs schema.\n- Pricing page cannot go public until packaging approval.\n- Board revenue charts need the completed backfill.\n\n**Can be unblocked now:**\n- Reassign the permission patch → Daniel (removes the Marcus conflict).\n- Kill the stale Security-review blocker — already approved.\n- De-scope onboarding instrumentation — free Marcus's 3h hold.\n- Decouple the approval pack from the live page (mockups are acceptable).\n\n**Hard constraints to respect:**\n- Marcus unavailable **Tue 09:00–13:00** (Atlas session); heads-down either side.\n- Elena **out Wed 12:00 → Mon**; schema must land Mon/Tue (doing it Monday avoids the Daniel handoff/runbook transfer entirely).\n- Marcus is the **only** owner of the SSO patch + rollout.\n- Contoso compliance export: **no extension** (auditor window).\n\n---\n\n## 5. EARLIEST DELIVERY\n\n- **Contoso compliance export:** schema to ~12:10 → Daniel patch to ~15:40 → Julia send ~16:40 **today**, comfortably inside the Tue 16:00 deadline.\n- **Enterprise SSO:** patch done ~16:10 today → QA runs Mon 16:10–17:30 + Tue 09:00–09:40 → rollout Tue **13:00–14:00** (Marcus free after the Atlas session). **Live Tuesday afternoon**, inside the Wednesday 17:00 commitment.\n- **Billing schema:** ~12:10 today; backfill ~13:40; **board revenue charts** can complete Thu/Fri, before Fri 10:00.\n\nSo the headline commitment (SSO) can land a day early, and the tightest contractual item (Contoso) lands a day early — **provided the schema migration lands today.**\n\n---\n\n## 6. RISKS / UNKNOWNS\n\n- **Estimates, not commitments:** Marcus's 4h patch, QA's 2h (\"if nothing surprising\"), Daniel's 3.5h, Elena's 3h. Any overrun compresses SSO's buffer.\n- **Single point of failure:** Marcus owns the SSO patch *and* rollout, with a Tuesday-morning blackout. If his patch slips past Monday, QA + rollout push into Wednesday and the deadline gets tight.\n- **Contoso fallback:** if Daniel's patch overruns, Marcus could do it himself in 2h — but that delays SSO. Decide the cutover point today.\n- **Backfill dependency on Elena:** it's automated once kicked off, but a failure needs her, and she's gone from Wed 12:00. If the migration itself slipped, Daniel would need prod migration permissions + a 30-min runbook transfer he doesn't currently have.\n- **Security:** no re-review is needed *only* as long as the auth flow and approved scope don't change. Confirm no scope creep during the patch.\n- **Unverified:** whether design mockups actually exist for the approval pack (Priya says they're acceptable); QA capacity beyond the stated 2h slot; whether the permission-model fix has side effects beyond delegated admins.\n- **Not concluded from evidence:** exact rollout/QA windows, or that any of today's estimates will hold without surprises.",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "chatcmpl-43f840d2-0846-436f-be7f-93ee8fde9a62",
+    "raw_usage": {
+      "completion_tokens": 11116,
+      "prompt_tokens": 3735,
+      "total_tokens": 14851,
+      "completion_tokens_details": {
+        "reasoning_tokens": 9196
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 256
+      }
+    }
+  }
+}

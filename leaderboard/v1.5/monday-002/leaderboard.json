@@ -1,0 +1,1718 @@
+{
+  "benchmark_version": "0.2",
+  "suite_version": "1.5",
+  "scenario": "monday-002",
+  "evaluator": "evaluator-opus5-v0.2",
+  "generated_at": "2026-09-11T20:40:09Z",
+  "scenario_status": null,
+  "integrity_warning": null,
+  "models": [
+    {
+      "rank": 1,
+      "model_slug": "gpt-6-astra",
+      "display_name": "GPT-6 Astra",
+      "score": {
+        "mean": 100.0,
+        "min": 100.0,
+        "max": 100.0,
+        "range": 0.0,
+        "stddev": 0.0,
+        "runs": 3
+      },
+      "run_scores": [
+        100.0,
+        100.0,
+        100.0
+      ],
+      "dimensions": {
+        "cross_source_data_reasoning": 15.0,
+        "decision_prioritization": 20.0,
+        "planning_dependencies": 25.0,
+        "state_reconstruction": 15.0,
+        "temporal_supersession": 15.0,
+        "uncertainty_epistemic": 10.0
+      },
+      "excluded_runs": [],
+      "performance": {
+        "median_ttfa_ms": null,
+        "median_ttft_ms": null,
+        "median_total_latency_ms": null,
+        "median_output_tokens": null
+      },
+      "economics": {
+        "median_cost_usd": null
+      },
+      "provenance": {
+        "scenario_prompt_sha256": "740e627cbc7413c321ede0d54000504de54821d34ff4677f82731b89600423a8",
+        "rubric_version": "0.2",
+        "judge_model_id": "claude-opus-5",
+        "runs": [
+          "runs/monday-002/gpt-6-astra/run-001.json",
+          "runs/monday-002/gpt-6-astra/run-002.json",
+          "runs/monday-002/gpt-6-astra/run-003.json"
+        ],
+        "evaluations": [
+          "evaluations/v1.5/evaluator-opus5-v0.2/monday-002/gpt-6-astra/run-001.json",
+          "evaluations/v1.5/evaluator-opus5-v0.2/monday-002/gpt-6-astra/run-002.json",
+          "evaluations/v1.5/evaluator-opus5-v0.2/monday-002/gpt-6-astra/run-003.json"
+        ]
+      },
+      "missed": [],
+      "got_wrong": [],
+      "warnings": []
+    },
+    {
+      "rank": 2,
+      "model_slug": "qwen3.8-flash",
+      "display_name": "Qwen 3.8 Flash",
+      "score": {
+        "mean": 94.83,
+        "min": 91.5,
+        "max": 100.0,
+        "range": 8.5,
+        "stddev": 4.54,
+        "runs": 3
+      },
+      "run_scores": [
+        93.0,
+        100.0,
+        91.5
+      ],
+      "dimensions": {
+        "cross_source_data_reasoning": 15.0,
+        "decision_prioritization": 20.0,
+        "planning_dependencies": 20.33,
+        "state_reconstruction": 15.0,
+        "temporal_supersession": 15.0,
+        "uncertainty_epistemic": 9.5
+      },
+      "excluded_runs": [
+        {
+          "run_id": "monday-002__qwen3.8-flash__002",
+          "score": 66.5,
+          "reasons": [
+            "REASONING_NOT_DELIVERED: reasoning was requested but the provider returned 0 reasoning tokens, so this run is not in the same regime as the model's other runs"
+          ]
+        }
+      ],
+      "performance": {
+        "median_ttfa_ms": 258914.4,
+        "median_ttft_ms": 2026.2,
+        "median_total_latency_ms": 284965.9,
+        "median_output_tokens": 33714.0
+      },
+      "economics": {
+        "median_cost_usd": null
+      },
+      "provenance": {
+        "scenario_prompt_sha256": "740e627cbc7413c321ede0d54000504de54821d34ff4677f82731b89600423a8",
+        "rubric_version": "0.2",
+        "judge_model_id": "claude-opus-5",
+        "runs": [
+          "runs/monday-002/qwen3.8-flash/run-001.json",
+          "runs/monday-002/qwen3.8-flash/run-003.json",
+          "runs/monday-002/qwen3.8-flash/run-004.json"
+        ],
+        "evaluations": [
+          "evaluations/v1.5/evaluator-opus5-v0.2/monday-002/qwen3.8-flash/run-001.json",
+          "evaluations/v1.5/evaluator-opus5-v0.2/monday-002/qwen3.8-flash/run-003.json",
+          "evaluations/v1.5/evaluator-opus5-v0.2/monday-002/qwen3.8-flash/run-004.json"
+        ]
+      },
+      "missed": [
+        {
+          "run_id": "monday-002__qwen3.8-flash__001",
+          "criterion": "choose_option_b",
+          "result": "PARTIAL",
+          "points_awarded": 4.0,
+          "points_possible": 8.0,
+          "reason": "chooses viable A and schedules it correctly; B is set aside because 'there is no evidence the 2.9.5 diff is already submitted', which the response itself files as a thing to verify rather than a settled constraint",
+          "evidence": "chooses viable A and schedules it correctly; B is set aside because 'there is no evidence the 2.9.5 diff is already submitted', which the response itself files as a thing to verify rather than a settled constraint"
+        },
+        {
+          "run_id": "monday-002__qwen3.8-flash__001",
+          "criterion": "schedule_feasibility",
+          "result": "PARTIAL",
+          "points_awarded": 3.0,
+          "points_possible": 6.0,
+          "reason": "every constraint is named and the A sequence is exact, but no B schedule is committed - it is deferred to MUST VERIFY",
+          "evidence": "every constraint is named and the A sequence is exact, but no B schedule is committed - it is deferred to MUST VERIFY"
+        },
+        {
+          "run_id": "monday-002__qwen3.8-flash__004",
+          "criterion": "choose_option_b",
+          "result": "PARTIAL",
+          "points_awarded": 4.0,
+          "points_possible": 8.0,
+          "reason": "chooses A, which is viable and correctly scheduled; B is set aside because a diff submitted before 09:15 'is not evidenced', which names the right unlocking condition but treats submitting it as outside the user's control",
+          "evidence": "chooses A, which is viable and correctly scheduled; B is set aside because a diff submitted before 09:15 'is not evidenced', which names the right unlocking condition but treats submitting it as outside the user's control"
+        },
+        {
+          "run_id": "monday-002__qwen3.8-flash__004",
+          "criterion": "schedule_feasibility",
+          "result": "PARTIAL",
+          "points_awarded": 3.0,
+          "points_possible": 6.0,
+          "reason": "the B arithmetic is right for the anchor it picks - 'if Marcus submits the diff at his 09:15 start, review ends 09:40, then a 45-minute deploy would end 10:25' - and it identifies the crux ('B could only work if a diff is submitted before 09:15'), but no viable B schedule is committed",
+          "evidence": "the B arithmetic is right for the anchor it picks - 'if Marcus submits the diff at his 09:15 start, review ends 09:40, then a 45-minute deploy would end 10:25' - and it identifies the crux ('B could only work if a diff is submitted before 09:15'), but no viable B schedule is committed"
+        },
+        {
+          "run_id": "monday-002__qwen3.8-flash__004",
+          "criterion": "conditional_launch_timing",
+          "result": "PARTIAL",
+          "points_awarded": 1.5,
+          "points_possible": 3.0,
+          "reason": "'Do not confirm Atlas launch at 10:30' is right, but '09:40-09:45 ... confirm to Atlas that rollout is scheduled to begin at 11:00' still goes out before Priya's verification, with the conditionality only implied by the preceding step",
+          "evidence": "'Do not confirm Atlas launch at 10:30' is right, but '09:40-09:45 ... confirm to Atlas that rollout is scheduled to begin at 11:00' still goes out before Priya's verification, with the conditionality only implied by the preceding step"
+        }
+      ],
+      "got_wrong": [],
+      "warnings": []
+    },
+    {
+      "rank": 3,
+      "model_slug": "deepseek-v4.1-flash-rerun-v1",
+      "display_name": "DeepSeek V4.1 Flash",
+      "score": {
+        "mean": 93.0,
+        "min": 89.5,
+        "max": 100.0,
+        "range": 10.5,
+        "stddev": 6.06,
+        "runs": 3
+      },
+      "run_scores": [
+        89.5,
+        100.0,
+        89.5
+      ],
+      "dimensions": {
+        "cross_source_data_reasoning": 15.0,
+        "decision_prioritization": 20.0,
+        "planning_dependencies": 18.0,
+        "state_reconstruction": 15.0,
+        "temporal_supersession": 15.0,
+        "uncertainty_epistemic": 10.0
+      },
+      "excluded_runs": [],
+      "performance": {
+        "median_ttfa_ms": 61170.4,
+        "median_ttft_ms": 1221.7,
+        "median_total_latency_ms": 67842.8,
+        "median_output_tokens": 13799.0
+      },
+      "economics": {
+        "median_cost_usd": null
+      },
+      "provenance": {
+        "scenario_prompt_sha256": "740e627cbc7413c321ede0d54000504de54821d34ff4677f82731b89600423a8",
+        "rubric_version": "0.2",
+        "judge_model_id": "claude-opus-5",
+        "runs": [
+          "runs/monday-002/deepseek-v4.1-flash-rerun-v1/run-001.json",
+          "runs/monday-002/deepseek-v4.1-flash-rerun-v1/run-002.json",
+          "runs/monday-002/deepseek-v4.1-flash-rerun-v1/run-003.json"
+        ],
+        "evaluations": [
+          "evaluations/v1.5/evaluator-opus5-v0.2/monday-002/deepseek-v4.1-flash-rerun-v1/run-001.json",
+          "evaluations/v1.5/evaluator-opus5-v0.2/monday-002/deepseek-v4.1-flash-rerun-v1/run-002.json",
+          "evaluations/v1.5/evaluator-opus5-v0.2/monday-002/deepseek-v4.1-flash-rerun-v1/run-003.json"
+        ]
+      },
+      "missed": [
+        {
+          "run_id": "monday-002__deepseek-v4.1-flash-rerun-v1__001",
+          "criterion": "choose_option_b",
+          "result": "PARTIAL",
+          "points_awarded": 4.0,
+          "points_possible": 8.0,
+          "reason": "Option A is viable, but the lower-risk Option B is incorrectly treated as non-viable.",
+          "evidence": "The response rejects Option B by anchoring the delta-review start to Marcus's availability, an unsupported dependency."
+        },
+        {
+          "run_id": "monday-002__deepseek-v4.1-flash-rerun-v1__001",
+          "criterion": "option_b_sequence",
+          "result": "PARTIAL",
+          "points_awarded": 3.5,
+          "points_possible": 7.0,
+          "reason": "The model knows the dependency but does not execute the correct Option B sequence.",
+          "evidence": "The required review-before-deploy rule is understood, but a complete viable Option B chain is not produced."
+        },
+        {
+          "run_id": "monday-002__deepseek-v4.1-flash-rerun-v1__001",
+          "criterion": "schedule_feasibility",
+          "result": "PARTIAL",
+          "points_awarded": 3.0,
+          "points_possible": 6.0,
+          "reason": "The end-to-end feasibility check is only partly correct.",
+          "evidence": "The chosen Option A schedule is feasible, but Option B feasibility is computed using an unsupported 09:15 start constraint."
+        },
+        {
+          "run_id": "monday-002__deepseek-v4.1-flash-rerun-v1__003",
+          "criterion": "choose_option_b",
+          "result": "PARTIAL",
+          "points_awarded": 4.0,
+          "points_possible": 8.0,
+          "reason": "That dependency is not in the sources; Option B fits the available windows.",
+          "evidence": "The response rejects Option B because it assumes the diff cannot be submitted/reviewed before Marcus is online."
+        },
+        {
+          "run_id": "monday-002__deepseek-v4.1-flash-rerun-v1__003",
+          "criterion": "option_b_sequence",
+          "result": "PARTIAL",
+          "points_awarded": 3.5,
+          "points_possible": 7.0,
+          "reason": "The sequence is only partially resolved.",
+          "evidence": "The review-before-deploy requirement is stated, but the response never executes the viable Option B chain."
+        },
+        {
+          "run_id": "monday-002__deepseek-v4.1-flash-rerun-v1__003",
+          "criterion": "schedule_feasibility",
+          "result": "PARTIAL",
+          "points_awarded": 3.0,
+          "points_possible": 6.0,
+          "reason": "Global feasibility is therefore only partially correct.",
+          "evidence": "The plan is feasible for Option A, but the response incorrectly makes Option B infeasible by inventing a timing dependency."
+        }
+      ],
+      "got_wrong": [],
+      "warnings": []
+    },
+    {
+      "rank": 4,
+      "model_slug": "glm5.2",
+      "display_name": "GLM 5.2",
+      "score": {
+        "mean": 91.17,
+        "min": 87.5,
+        "max": 95.5,
+        "range": 8.0,
+        "stddev": 4.04,
+        "runs": 3
+      },
+      "run_scores": [
+        90.5,
+        87.5,
+        95.5
+      ],
+      "dimensions": {
+        "cross_source_data_reasoning": 15.0,
+        "decision_prioritization": 20.0,
+        "planning_dependencies": 18.67,
+        "state_reconstruction": 15.0,
+        "temporal_supersession": 12.5,
+        "uncertainty_epistemic": 10.0
+      },
+      "excluded_runs": [],
+      "performance": {
+        "median_ttfa_ms": 67020.3,
+        "median_ttft_ms": 1006.2,
+        "median_total_latency_ms": 85425.2,
+        "median_output_tokens": 6777.0
+      },
+      "economics": {
+        "median_cost_usd": 0.0165
+      },
+      "provenance": {
+        "scenario_prompt_sha256": "740e627cbc7413c321ede0d54000504de54821d34ff4677f82731b89600423a8",
+        "rubric_version": "0.2",
+        "judge_model_id": "claude-opus-5",
+        "runs": [
+          "runs/monday-002/glm5.2/run-001.json",
+          "runs/monday-002/glm5.2/run-002.json",
+          "runs/monday-002/glm5.2/run-003.json"
+        ],
+        "evaluations": [
+          "evaluations/v1.5/evaluator-opus5-v0.2/monday-002/glm5.2/run-001.json",
+          "evaluations/v1.5/evaluator-opus5-v0.2/monday-002/glm5.2/run-002.json",
+          "evaluations/v1.5/evaluator-opus5-v0.2/monday-002/glm5.2/run-003.json"
+        ]
+      },
+      "missed": [
+        {
+          "run_id": "monday-002__glm5.2__001",
+          "criterion": "ownership_supersession",
+          "result": "PARTIAL",
+          "points_awarded": 2.5,
+          "points_possible": 5.0,
+          "reason": "names Daniel as the current sender and gates it on Sam's confirmation, but Sarah's handoff is never traced and the stale 'You' task is not displaced",
+          "evidence": "names Daniel as the current sender and gates it on Sam's confirmation, but Sarah's handoff is never traced and the stale 'You' task is not displaced"
+        },
+        {
+          "run_id": "monday-002__glm5.2__001",
+          "criterion": "choose_option_b",
+          "result": "PARTIAL",
+          "points_awarded": 4.0,
+          "points_possible": 8.0,
+          "reason": "chooses A, which is viable and correctly scheduled; B is set aside because 'the 2.9.5 diff is already submitted' is 'not confirmed' - a defensible reading, but submitting it is an action the user could take at 09:07",
+          "evidence": "chooses A, which is viable and correctly scheduled; B is set aside because 'the 2.9.5 diff is already submitted' is 'not confirmed' - a defensible reading, but submitting it is an action the user could take at 09:07"
+        },
+        {
+          "run_id": "monday-002__glm5.2__001",
+          "criterion": "schedule_feasibility",
+          "result": "PARTIAL",
+          "points_awarded": 3.0,
+          "points_possible": 6.0,
+          "reason": "every constraint is identified, including the right review window ('Priya's 09:00-09:25 review'), but no B schedule is committed to",
+          "evidence": "every constraint is identified, including the right review window ('Priya's 09:00-09:25 review'), but no B schedule is committed to"
+        },
+        {
+          "run_id": "monday-002__glm5.2__002",
+          "criterion": "ownership_supersession",
+          "result": "PARTIAL",
+          "points_awarded": 2.5,
+          "points_possible": 5.0,
+          "reason": "names Daniel as the current sender and gates it on Sam's confirmation, but Sarah's handoff is never traced and the stale 'You' task is not displaced",
+          "evidence": "names Daniel as the current sender and gates it on Sam's confirmation, but Sarah's handoff is never traced and the stale 'You' task is not displaced"
+        },
+        {
+          "run_id": "monday-002__glm5.2__002",
+          "criterion": "choose_option_b",
+          "result": "PARTIAL",
+          "points_awarded": 4.0,
+          "points_possible": 8.0,
+          "reason": "chooses viable A and schedules it correctly, but the stated reason is false",
+          "evidence": "chooses viable A and schedules it correctly, but the stated reason is false"
+        },
+        {
+          "run_id": "monday-002__glm5.2__002",
+          "criterion": "schedule_feasibility",
+          "result": "FAIL",
+          "points_awarded": 0.0,
+          "points_possible": 6.0,
+          "reason": "'Option B cannot fit Marcus's 09:15-10:20 window after a required 25-min delta review (review + 45-min deploy > 65 min available)' - the review runs before Marcus arrives, so the deploy has 09:32-10:17",
+          "evidence": "'Option B cannot fit Marcus's 09:15-10:20 window after a required 25-min delta review (review + 45-min deploy > 65 min available)' - the review runs before Marcus arrives, so the deploy has 09:32-10:17"
+        },
+        {
+          "run_id": "monday-002__glm5.2__003",
+          "criterion": "ownership_supersession",
+          "result": "PARTIAL",
+          "points_awarded": 2.5,
+          "points_possible": 5.0,
+          "reason": "names Daniel as the current sender and gates it on Sam's confirmation, but Sarah's handoff is never traced and the stale 'You' task is not displaced",
+          "evidence": "names Daniel as the current sender and gates it on Sam's confirmation, but Sarah's handoff is never traced and the stale 'You' task is not displaced"
+        },
+        {
+          "run_id": "monday-002__glm5.2__003",
+          "criterion": "parallelize_work",
+          "result": "PARTIAL",
+          "points_awarded": 2.0,
+          "points_possible": 4.0,
+          "reason": "the board pack and Globex triage are scheduled for the right day and the right deadline, but the plan does not say they run inside the delegated deploy window",
+          "evidence": "the board pack and Globex triage are scheduled for the right day and the right deadline, but the plan does not say they run inside the delegated deploy window"
+        }
+      ],
+      "got_wrong": [],
+      "warnings": []
+    },
+    {
+      "rank": 5,
+      "model_slug": "deepseek-v4-flash",
+      "display_name": "DeepSeek V4 Flash",
+      "score": {
+        "mean": 89.33,
+        "min": 84.0,
+        "max": 97.5,
+        "range": 13.5,
+        "stddev": 7.18,
+        "runs": 3
+      },
+      "run_scores": [
+        97.5,
+        86.5,
+        84.0
+      ],
+      "dimensions": {
+        "cross_source_data_reasoning": 15.0,
+        "decision_prioritization": 20.0,
+        "planning_dependencies": 16.0,
+        "state_reconstruction": 15.0,
+        "temporal_supersession": 13.33,
+        "uncertainty_epistemic": 10.0
+      },
+      "excluded_runs": [],
+      "performance": {
+        "median_ttfa_ms": 162576.6,
+        "median_ttft_ms": 2754.6,
+        "median_total_latency_ms": 178795.6,
+        "median_output_tokens": 14863.0
+      },
+      "economics": {
+        "median_cost_usd": 0.0056
+      },
+      "provenance": {
+        "scenario_prompt_sha256": "740e627cbc7413c321ede0d54000504de54821d34ff4677f82731b89600423a8",
+        "rubric_version": "0.2",
+        "judge_model_id": "claude-opus-5",
+        "runs": [
+          "runs/monday-002/deepseek-v4-flash/run-001.json",
+          "runs/monday-002/deepseek-v4-flash/run-002.json",
+          "runs/monday-002/deepseek-v4-flash/run-003.json"
+        ],
+        "evaluations": [
+          "evaluations/v1.5/evaluator-opus5-v0.2/monday-002/deepseek-v4-flash/run-001.json",
+          "evaluations/v1.5/evaluator-opus5-v0.2/monday-002/deepseek-v4-flash/run-002.json",
+          "evaluations/v1.5/evaluator-opus5-v0.2/monday-002/deepseek-v4-flash/run-003.json"
+        ]
+      },
+      "missed": [
+        {
+          "run_id": "monday-002__deepseek-v4-flash__001",
+          "criterion": "ownership_supersession",
+          "result": "PARTIAL",
+          "points_awarded": 2.5,
+          "points_possible": 5.0,
+          "reason": "names Daniel as the current sender and gates it on Sam's confirmation, but Sarah's handoff is never traced and the stale 'You' task is not displaced",
+          "evidence": "names Daniel as the current sender and gates it on Sam's confirmation, but Sarah's handoff is never traced and the stale 'You' task is not displaced"
+        },
+        {
+          "run_id": "monday-002__deepseek-v4-flash__002",
+          "criterion": "choose_option_b",
+          "result": "PARTIAL",
+          "points_awarded": 4.0,
+          "points_possible": 8.0,
+          "reason": "chooses viable A and schedules it correctly, on a false claim about B",
+          "evidence": "chooses viable A and schedules it correctly, on a false claim about B"
+        },
+        {
+          "run_id": "monday-002__deepseek-v4-flash__002",
+          "criterion": "option_b_sequence",
+          "result": "PARTIAL",
+          "points_awarded": 3.5,
+          "points_possible": 7.0,
+          "reason": "'Do not use 2.9.5-patch without a completed Security delta review' places the review before deploy, but the B chain is not carried through verification and Sam",
+          "evidence": "'Do not use 2.9.5-patch without a completed Security delta review' places the review before deploy, but the B chain is not carried through verification and Sam"
+        },
+        {
+          "run_id": "monday-002__deepseek-v4-flash__002",
+          "criterion": "schedule_feasibility",
+          "result": "FAIL",
+          "points_awarded": 0.0,
+          "points_possible": 6.0,
+          "reason": "'Priya's 09:35-10:25 gap plus Marcus leaving at 10:20 prevents completion before noon' - with the review in her 09:00-09:35 window the deploy runs 09:32-10:17 and rollout opens by 11:00",
+          "evidence": "'Priya's 09:35-10:25 gap plus Marcus leaving at 10:20 prevents completion before noon' - with the review in her 09:00-09:35 window the deploy runs 09:32-10:17 and rollout opens by 11:00"
+        },
+        {
+          "run_id": "monday-002__deepseek-v4-flash__003",
+          "criterion": "ownership_supersession",
+          "result": "PARTIAL",
+          "points_awarded": 2.5,
+          "points_possible": 5.0,
+          "reason": "names Daniel as the current sender and gates it on Sam's confirmation, but Sarah's handoff is never traced and the stale 'You' task is not displaced",
+          "evidence": "names Daniel as the current sender and gates it on Sam's confirmation, but Sarah's handoff is never traced and the stale 'You' task is not displaced"
+        },
+        {
+          "run_id": "monday-002__deepseek-v4-flash__003",
+          "criterion": "choose_option_b",
+          "result": "PARTIAL",
+          "points_awarded": 4.0,
+          "points_possible": 8.0,
+          "reason": "chooses viable A and schedules it correctly; no false global claim is made about B, but no risk comparison is offered either",
+          "evidence": "chooses viable A and schedules it correctly; no false global claim is made about B, but no risk comparison is offered either"
+        },
+        {
+          "run_id": "monday-002__deepseek-v4-flash__003",
+          "criterion": "option_b_sequence",
+          "result": "PARTIAL",
+          "points_awarded": 3.5,
+          "points_possible": 7.0,
+          "reason": "'B... requires 25m Security delta review before deploy' has the gate in the right place, but the chain is not carried through verification and Sam",
+          "evidence": "'B... requires 25m Security delta review before deploy' has the gate in the right place, but the chain is not carried through verification and Sam"
+        },
+        {
+          "run_id": "monday-002__deepseek-v4-flash__003",
+          "criterion": "schedule_feasibility",
+          "result": "FAIL",
+          "points_awarded": 0.0,
+          "points_possible": 6.0,
+          "reason": "no B schedule is produced; 'B cannot meet the 12:00 Atlas window if started after 09:35' is true as stated but the 09:07 start is never considered",
+          "evidence": "no B schedule is produced; 'B cannot meet the 12:00 Atlas window if started after 09:35' is true as stated but the 09:07 start is never considered"
+        }
+      ],
+      "got_wrong": [],
+      "warnings": []
+    },
+    {
+      "rank": 6,
+      "model_slug": "glm5.3",
+      "display_name": "GLM 5.3",
+      "score": {
+        "mean": 87.67,
+        "min": 85.5,
+        "max": 89.5,
+        "range": 4.0,
+        "stddev": 2.02,
+        "runs": 3
+      },
+      "run_scores": [
+        85.5,
+        88.0,
+        89.5
+      ],
+      "dimensions": {
+        "cross_source_data_reasoning": 15.0,
+        "decision_prioritization": 20.0,
+        "planning_dependencies": 14.5,
+        "state_reconstruction": 15.0,
+        "temporal_supersession": 15.0,
+        "uncertainty_epistemic": 8.17
+      },
+      "excluded_runs": [],
+      "performance": {
+        "median_ttfa_ms": 176177.0,
+        "median_ttft_ms": 1887.2,
+        "median_total_latency_ms": 197127.3,
+        "median_output_tokens": 10603.0
+      },
+      "economics": {
+        "median_cost_usd": 0.0028
+      },
+      "provenance": {
+        "scenario_prompt_sha256": "740e627cbc7413c321ede0d54000504de54821d34ff4677f82731b89600423a8",
+        "rubric_version": "0.2",
+        "judge_model_id": "claude-opus-5",
+        "runs": [
+          "runs/monday-002/glm5.3/run-001.json",
+          "runs/monday-002/glm5.3/run-002.json",
+          "runs/monday-002/glm5.3/run-003.json"
+        ],
+        "evaluations": [
+          "evaluations/v1.5/evaluator-opus5-v0.2/monday-002/glm5.3/run-001.json",
+          "evaluations/v1.5/evaluator-opus5-v0.2/monday-002/glm5.3/run-002.json",
+          "evaluations/v1.5/evaluator-opus5-v0.2/monday-002/glm5.3/run-003.json"
+        ]
+      },
+      "missed": [
+        {
+          "run_id": "monday-002__glm5.3__001",
+          "criterion": "choose_option_b",
+          "result": "PARTIAL",
+          "points_awarded": 4.0,
+          "points_possible": 8.0,
+          "reason": "chooses A, which is time-viable, and schedules it correctly - but on the false ground that 'B cannot physically complete today'. The 25-minute delta review can run 09:07-09:32 inside Priya's first window, leaving Marcus 09:32-10:17 for the 45-minute deploy. A's 8% session-reset risk is accepted where B's is under 1%",
+          "evidence": "chooses A, which is time-viable, and schedules it correctly - but on the false ground that 'B cannot physically complete today'. The 25-minute delta review can run 09:07-09:32 inside Priya's first window, leaving Marcus 09:32-10:17 for the 45-minute deploy. A's 8% session-reset risk is accepted where B's is under 1%"
+        },
+        {
+          "run_id": "monday-002__glm5.3__001",
+          "criterion": "option_b_sequence",
+          "result": "PARTIAL",
+          "points_awarded": 3.5,
+          "points_possible": 7.0,
+          "reason": "no B sequence is produced, but the gating dependency is stated - 'never deploy it before Priya's delta review' - and the rest of the chain (deploy, post-deploy verification, Sam rollout) is ordered correctly for the path chosen",
+          "evidence": "no B sequence is produced, but the gating dependency is stated - 'never deploy it before Priya's delta review' - and the rest of the chain (deploy, post-deploy verification, Sam rollout) is ordered correctly for the path chosen"
+        },
+        {
+          "run_id": "monday-002__glm5.3__001",
+          "criterion": "schedule_feasibility",
+          "result": "PARTIAL",
+          "points_awarded": 3.0,
+          "points_possible": 6.0,
+          "reason": "the A schedule is coherent and fits Marcus 09:15-09:35, Priya 10:25-10:45, Sam 10:45-11:00 and the before-12 window; no feasible B schedule is produced and B's feasibility is computed wrongly",
+          "evidence": "the A schedule is coherent and fits Marcus 09:15-09:35, Priya 10:25-10:45, Sam 10:45-11:00 and the before-12 window; no feasible B schedule is produced and B's feasibility is computed wrongly"
+        },
+        {
+          "run_id": "monday-002__glm5.3__001",
+          "criterion": "conditional_launch_timing",
+          "result": "FAIL",
+          "points_awarded": 0.0,
+          "points_possible": 3.0,
+          "reason": "'~09:40 - Confirm to Atlas (via Laura): launch is on today; rollout opens ~10:45-11:00, inside their window' - a firm external commitment to a rollout window, issued before Priya's verification and Sam's rollout have happened, with no conditionality anywhere in the response. PARTIAL is for a non-firm promise with thin conditionality; this is a firm one",
+          "evidence": "'~09:40 - Confirm to Atlas (via Laura): launch is on today; rollout opens ~10:45-11:00, inside their window' - a firm external commitment to a rollout window, issued before Priya's verification and Sam's rollout have happened, with no conditionality anywhere in the response. PARTIAL is for a non-firm promise with thin conditionality; this is a firm one"
+        },
+        {
+          "run_id": "monday-002__glm5.3__001",
+          "criterion": "no_unsupported_causality",
+          "result": "PARTIAL",
+          "points_awarded": 1.0,
+          "points_possible": 2.0,
+          "reason": "'Soylent: -22%/-28% plus a medium ticket citing slower onboarding. Possible link (hypothesis only)' - an unsupported cause offered, but explicitly as a hypothesis, which is the PARTIAL band exactly",
+          "evidence": "'Soylent: -22%/-28% plus a medium ticket citing slower onboarding. Possible link (hypothesis only)' - an unsupported cause offered, but explicitly as a hypothesis, which is the PARTIAL band exactly"
+        },
+        {
+          "run_id": "monday-002__glm5.3__002",
+          "criterion": "choose_option_b",
+          "result": "PARTIAL",
+          "points_awarded": 4.0,
+          "points_possible": 8.0,
+          "reason": "chooses A, which is time-viable, and argues it on schedule slack rather than on a false impossibility. Still the wrong call: it charges the 25-minute delta review against Marcus's 65-minute window when the review is asynchronous and does not need him, and it accepts 8% session-reset risk over B's under 1%",
+          "evidence": "chooses A, which is time-viable, and argues it on schedule slack rather than on a false impossibility. Still the wrong call: it charges the 25-minute delta review against Marcus's 65-minute window when the review is asynchronous and does not need him, and it accepts 8% session-reset risk over B's under 1%"
+        },
+        {
+          "run_id": "monday-002__glm5.3__002",
+          "criterion": "option_b_sequence",
+          "result": "PARTIAL",
+          "points_awarded": 3.5,
+          "points_possible": 7.0,
+          "reason": "the delta-review gate is stated - 'Don't deploy 2.9.5-patch or anything changing code from 2.9.4 without Priya's delta review' - but no B sequence is laid out; the chosen chain is otherwise correctly ordered",
+          "evidence": "the delta-review gate is stated - 'Don't deploy 2.9.5-patch or anything changing code from 2.9.4 without Priya's delta review' - but no B sequence is laid out; the chosen chain is otherwise correctly ordered"
+        },
+        {
+          "run_id": "monday-002__glm5.3__002",
+          "criterion": "schedule_feasibility",
+          "result": "PARTIAL",
+          "points_awarded": 3.0,
+          "points_possible": 6.0,
+          "reason": "a coherent A schedule that respects every window and the 12:00 deadline; B's slack is miscomputed as 'near-zero' by charging Marcus for review time he is not needed for",
+          "evidence": "a coherent A schedule that respects every window and the 12:00 deadline; B's slack is miscomputed as 'near-zero' by charging Marcus for review time he is not needed for"
+        },
+        {
+          "run_id": "monday-002__glm5.3__002",
+          "criterion": "conditional_launch_timing",
+          "result": "PARTIAL",
+          "points_awarded": 1.5,
+          "points_possible": 3.0,
+          "reason": "'Confirm to Atlas via Laura: launch on for today, rollout ETA ~11:00, inside their window; final confirm when Sam opens' - labelled an ETA and deferred to Sam's confirmation, so not a firm promise, but 'launch on for today' is still asserted before verification",
+          "evidence": "'Confirm to Atlas via Laura: launch on for today, rollout ETA ~11:00, inside their window; final confirm when Sam opens' - labelled an ETA and deferred to Sam's confirmation, so not a firm promise, but 'launch on for today' is still asserted before verification"
+        },
+        {
+          "run_id": "monday-002__glm5.3__003",
+          "criterion": "choose_option_b",
+          "result": "PARTIAL",
+          "points_awarded": 4.0,
+          "points_possible": 8.0,
+          "reason": "chooses A, which is time-viable, with a correct A schedule - but rejects B as 'infeasible' on the added premise that 'the diff comes from Marcus, who starts 09:15'. Marcus had both approaches prepared on Friday and Priya's review is asynchronous from a submitted diff, so the review can start at 09:07. The lower-risk option is discarded",
+          "evidence": "chooses A, which is time-viable, with a correct A schedule - but rejects B as 'infeasible' on the added premise that 'the diff comes from Marcus, who starts 09:15'. Marcus had both approaches prepared on Friday and Priya's review is asynchronous from a submitted diff, so the review can start at 09:07. The lower-risk option is discarded"
+        },
+        {
+          "run_id": "monday-002__glm5.3__003",
+          "criterion": "option_b_sequence",
+          "result": "PARTIAL",
+          "points_awarded": 3.5,
+          "points_possible": 7.0,
+          "reason": "'Option B needs a 25-min delta review first' states the gate, and the executed chain (deploy, post-deploy verification, Sam rollout) is correctly ordered; no B sequence is produced",
+          "evidence": "'Option B needs a 25-min delta review first' states the gate, and the executed chain (deploy, post-deploy verification, Sam rollout) is correctly ordered; no B sequence is produced"
+        },
+        {
+          "run_id": "monday-002__glm5.3__003",
+          "criterion": "schedule_feasibility",
+          "result": "PARTIAL",
+          "points_awarded": 3.0,
+          "points_possible": 6.0,
+          "reason": "the A schedule fits every window with the 12:00 deadline explicitly checked; B's feasibility is computed against a start time the sources do not impose",
+          "evidence": "the A schedule fits every window with the 12:00 deadline explicitly checked; B's feasibility is computed against a start time the sources do not impose"
+        }
+      ],
+      "got_wrong": [],
+      "warnings": []
+    },
+    {
+      "rank": 7,
+      "model_slug": "glm5.3-flash",
+      "display_name": "GLM 5.3 Flash",
+      "score": {
+        "mean": 87.33,
+        "min": 85.0,
+        "max": 91.5,
+        "range": 6.5,
+        "stddev": 3.62,
+        "runs": 3
+      },
+      "run_scores": [
+        85.0,
+        85.5,
+        91.5
+      ],
+      "dimensions": {
+        "cross_source_data_reasoning": 15.0,
+        "decision_prioritization": 20.0,
+        "planning_dependencies": 13.67,
+        "state_reconstruction": 15.0,
+        "temporal_supersession": 15.0,
+        "uncertainty_epistemic": 8.67
+      },
+      "excluded_runs": [],
+      "performance": {
+        "median_ttfa_ms": 238547.1,
+        "median_ttft_ms": 1860.9,
+        "median_total_latency_ms": 316597.5,
+        "median_output_tokens": 12394.0
+      },
+      "economics": {
+        "median_cost_usd": null
+      },
+      "provenance": {
+        "scenario_prompt_sha256": "740e627cbc7413c321ede0d54000504de54821d34ff4677f82731b89600423a8",
+        "rubric_version": "0.2",
+        "judge_model_id": "claude-opus-5",
+        "runs": [
+          "runs/monday-002/glm5.3-flash/run-001.json",
+          "runs/monday-002/glm5.3-flash/run-002.json",
+          "runs/monday-002/glm5.3-flash/run-003.json"
+        ],
+        "evaluations": [
+          "evaluations/v1.5/evaluator-opus5-v0.2/monday-002/glm5.3-flash/run-001.json",
+          "evaluations/v1.5/evaluator-opus5-v0.2/monday-002/glm5.3-flash/run-002.json",
+          "evaluations/v1.5/evaluator-opus5-v0.2/monday-002/glm5.3-flash/run-003.json"
+        ]
+      },
+      "missed": [
+        {
+          "run_id": "monday-002__glm5.3-flash__001",
+          "criterion": "choose_option_b",
+          "result": "PARTIAL",
+          "points_awarded": 4.0,
+          "points_possible": 8.0,
+          "reason": "chooses viable A and schedules it correctly, but 'B is not viable today' overstates: the review runs in Priya's 09:00-09:35 window and the deploy ends 10:17",
+          "evidence": "chooses viable A and schedules it correctly, but 'B is not viable today' overstates: the review runs in Priya's 09:00-09:35 window and the deploy ends 10:17"
+        },
+        {
+          "run_id": "monday-002__glm5.3-flash__001",
+          "criterion": "option_b_sequence",
+          "result": "PARTIAL",
+          "points_awarded": 3.5,
+          "points_possible": 7.0,
+          "reason": "'B needs a 25-min delta review first' and 'Don't deploy 2.9.5-patch before Priya's delta review completes' place the gate correctly, but verification and Sam are not carried into the B chain",
+          "evidence": "'B needs a 25-min delta review first' and 'Don't deploy 2.9.5-patch before Priya's delta review completes' place the gate correctly, but verification and Sam are not carried into the B chain"
+        },
+        {
+          "run_id": "monday-002__glm5.3-flash__001",
+          "criterion": "schedule_feasibility",
+          "result": "FAIL",
+          "points_awarded": 0.0,
+          "points_possible": 6.0,
+          "reason": "no B schedule is produced; 'delta review + 45-min deploy leaves zero slack against Marcus's 10:20 exit' understates the real 3-minute margin and concludes infeasibility",
+          "evidence": "no B schedule is produced; 'delta review + 45-min deploy leaves zero slack against Marcus's 10:20 exit' understates the real 3-minute margin and concludes infeasibility"
+        },
+        {
+          "run_id": "monday-002__glm5.3-flash__001",
+          "criterion": "conditional_launch_timing",
+          "result": "PARTIAL",
+          "points_awarded": 1.5,
+          "points_possible": 3.0,
+          "reason": "kills the 10:30 task, but 'By 09:45 - Confirm to Atlas: launch proceeds today, rollout opens ~11:00' goes out before the deploy has been verified",
+          "evidence": "kills the 10:30 task, but 'By 09:45 - Confirm to Atlas: launch proceeds today, rollout opens ~11:00' goes out before the deploy has been verified"
+        },
+        {
+          "run_id": "monday-002__glm5.3-flash__002",
+          "criterion": "choose_option_b",
+          "result": "PARTIAL",
+          "points_awarded": 4.0,
+          "points_possible": 8.0,
+          "reason": "chooses viable A and schedules it correctly, but rests it on 'zero slack anywhere' for B, which is not what the windows say",
+          "evidence": "chooses viable A and schedules it correctly, but rests it on 'zero slack anywhere' for B, which is not what the windows say"
+        },
+        {
+          "run_id": "monday-002__glm5.3-flash__002",
+          "criterion": "option_b_sequence",
+          "result": "PARTIAL",
+          "points_awarded": 3.5,
+          "points_possible": 7.0,
+          "reason": "'Don't deploy 2.9.5 (code change) without Priya's delta review' places the gate correctly; the B chain stops there",
+          "evidence": "'Don't deploy 2.9.5 (code change) without Priya's delta review' places the gate correctly; the B chain stops there"
+        },
+        {
+          "run_id": "monday-002__glm5.3-flash__002",
+          "criterion": "schedule_feasibility",
+          "result": "FAIL",
+          "points_awarded": 0.0,
+          "points_possible": 6.0,
+          "reason": "'Option B needs the delta review done by ~09:35 and a 45-min deploy finished before Marcus leaves at 10:20 - zero slack anywhere'; the review can start at 09:07 and the deploy ends 10:17",
+          "evidence": "'Option B needs the delta review done by ~09:35 and a 45-min deploy finished before Marcus leaves at 10:20 - zero slack anywhere'; the review can start at 09:07 and the deploy ends 10:17"
+        },
+        {
+          "run_id": "monday-002__glm5.3-flash__002",
+          "criterion": "no_unsupported_causality",
+          "result": "PARTIAL",
+          "points_awarded": 1.0,
+          "points_possible": 2.0,
+          "reason": "'The -61% admin-logins drop is consistent with the SSO breakage - actionable today via the ticket, not a mystery' presents the link as settled rather than as a hypothesis",
+          "evidence": "'The -61% admin-logins drop is consistent with the SSO breakage - actionable today via the ticket, not a mystery' presents the link as settled rather than as a hypothesis"
+        },
+        {
+          "run_id": "monday-002__glm5.3-flash__003",
+          "criterion": "choose_option_b",
+          "result": "PARTIAL",
+          "points_awarded": 4.0,
+          "points_possible": 8.0,
+          "reason": "chooses A, and the analysis behind it is sound - 'B's 45-min deploy ends exactly at Marcus's 10:20 hard stop with zero slack' is close to correct - but the <1% path is still traded away for the 8% one",
+          "evidence": "chooses A, and the analysis behind it is sound - 'B's 45-min deploy ends exactly at Marcus's 10:20 hard stop with zero slack' is close to correct - but the <1% path is still traded away for the 8% one"
+        },
+        {
+          "run_id": "monday-002__glm5.3-flash__003",
+          "criterion": "schedule_feasibility",
+          "result": "PARTIAL",
+          "points_awarded": 3.0,
+          "points_possible": 6.0,
+          "reason": "the B analysis correctly shows it fits ('requires Priya to start a delta review by ~09:10'), but no verification or Sam timings are attached to it",
+          "evidence": "the B analysis correctly shows it fits ('requires Priya to start a delta review by ~09:10'), but no verification or Sam timings are attached to it"
+        },
+        {
+          "run_id": "monday-002__glm5.3-flash__003",
+          "criterion": "conditional_launch_timing",
+          "result": "PARTIAL",
+          "points_awarded": 1.5,
+          "points_possible": 3.0,
+          "reason": "rejects the 10:30 task, but '~09:45: Confirm to Atlas that migration is on this morning with rollout opening ~11:00' precedes any verification",
+          "evidence": "rejects the 10:30 task, but '~09:45: Confirm to Atlas that migration is on this morning with rollout opening ~11:00' precedes any verification"
+        }
+      ],
+      "got_wrong": [],
+      "warnings": []
+    },
+    {
+      "rank": 8,
+      "model_slug": "mimo-v2.5",
+      "display_name": "MIMO v2.5",
+      "score": {
+        "mean": 81.17,
+        "min": 64.5,
+        "max": 97.5,
+        "range": 33.0,
+        "stddev": 16.5,
+        "runs": 3
+      },
+      "run_scores": [
+        64.5,
+        81.5,
+        97.5
+      ],
+      "dimensions": {
+        "cross_source_data_reasoning": 14.0,
+        "decision_prioritization": 18.33,
+        "planning_dependencies": 14.83,
+        "state_reconstruction": 14.17,
+        "temporal_supersession": 12.5,
+        "uncertainty_epistemic": 9.0
+      },
+      "excluded_runs": [],
+      "performance": {
+        "median_ttfa_ms": 163327.5,
+        "median_ttft_ms": 1813.9,
+        "median_total_latency_ms": 195433.4,
+        "median_output_tokens": 9510.0
+      },
+      "economics": {
+        "median_cost_usd": null
+      },
+      "provenance": {
+        "scenario_prompt_sha256": "740e627cbc7413c321ede0d54000504de54821d34ff4677f82731b89600423a8",
+        "rubric_version": "0.2",
+        "judge_model_id": "claude-opus-5",
+        "runs": [
+          "runs/monday-002/mimo-v2.5/run-001.json",
+          "runs/monday-002/mimo-v2.5/run-002.json",
+          "runs/monday-002/mimo-v2.5/run-003.json"
+        ],
+        "evaluations": [
+          "evaluations/v1.5/evaluator-opus5-v0.2/monday-002/mimo-v2.5/run-001.json",
+          "evaluations/v1.5/evaluator-opus5-v0.2/monday-002/mimo-v2.5/run-002.json",
+          "evaluations/v1.5/evaluator-opus5-v0.2/monday-002/mimo-v2.5/run-003.json"
+        ]
+      },
+      "missed": [
+        {
+          "run_id": "monday-002__mimo-v2.5__001",
+          "criterion": "launch_state",
+          "result": "PARTIAL",
+          "points_awarded": 2.5,
+          "points_possible": 5.0,
+          "reason": "the recovery state and Maya's removed gate are right, but '09:45 | Confirm to Atlas: Enterprise Controls launch is on for today... Migration target ~11:00' is sent before any verification",
+          "evidence": "the recovery state and Maya's removed gate are right, but '09:45 | Confirm to Atlas: Enterprise Controls launch is on for today... Migration target ~11:00' is sent before any verification"
+        },
+        {
+          "run_id": "monday-002__mimo-v2.5__001",
+          "criterion": "ownership_supersession",
+          "result": "PARTIAL",
+          "points_awarded": 2.5,
+          "points_possible": 5.0,
+          "reason": "names Daniel as the current sender and gates it on Sam's confirmation, but Sarah's handoff is never traced and the stale 'You' task is not displaced",
+          "evidence": "names Daniel as the current sender and gates it on Sam's confirmation, but Sarah's handoff is never traced and the stale 'You' task is not displaced"
+        },
+        {
+          "run_id": "monday-002__mimo-v2.5__001",
+          "criterion": "choose_option_b",
+          "result": "PARTIAL",
+          "points_awarded": 4.0,
+          "points_possible": 8.0,
+          "reason": "chooses viable A; the rationale is 'fewer moving parts' and an accepted 8% risk rather than a comparison the evidence supports",
+          "evidence": "chooses viable A; the rationale is 'fewer moving parts' and an accepted 8% risk rather than a comparison the evidence supports"
+        },
+        {
+          "run_id": "monday-002__mimo-v2.5__001",
+          "criterion": "option_b_sequence",
+          "result": "FAIL",
+          "points_awarded": 0.0,
+          "points_possible": 7.0,
+          "reason": "no B chain is given; the contingency - 'fall to Option B with a delta review Monday afternoon' - is offered for a moment when Marcus, the only deployer, has already left",
+          "evidence": "no B chain is given; the contingency - 'fall to Option B with a delta review Monday afternoon' - is offered for a moment when Marcus, the only deployer, has already left"
+        },
+        {
+          "run_id": "monday-002__mimo-v2.5__001",
+          "criterion": "schedule_feasibility",
+          "result": "FAIL",
+          "points_awarded": 0.0,
+          "points_possible": 6.0,
+          "reason": "no B schedule is produced",
+          "evidence": "no B schedule is produced"
+        },
+        {
+          "run_id": "monday-002__mimo-v2.5__001",
+          "criterion": "globex_priority",
+          "result": "PARTIAL",
+          "points_awarded": 2.5,
+          "points_possible": 5.0,
+          "reason": "'3 open tickets, one high-severity (SSO blocker). September expansion (EUR12k) stalled in procurement. Renewal in 18 days' - the usage -18% and admin -61% signals are never brought in",
+          "evidence": "'3 open tickets, one high-severity (SSO blocker). September expansion (EUR12k) stalled in procurement. Renewal in 18 days' - the usage -18% and admin -61% signals are never brought in"
+        },
+        {
+          "run_id": "monday-002__mimo-v2.5__001",
+          "criterion": "expansion_fully_reconciled",
+          "result": "PARTIAL",
+          "points_awarded": 3.0,
+          "points_possible": 6.0,
+          "reason": "Wayne EUR18k, Globex EUR12k, Soylent EUR10k and Wonka EUR14k all appear, and 'Together these are the entire EUR24k unexplained gap', but the four are never closed against the EUR54k",
+          "evidence": "Wayne EUR18k, Globex EUR12k, Soylent EUR10k and Wonka EUR14k all appear, and 'Together these are the entire EUR24k unexplained gap', but the four are never closed against the EUR54k"
+        },
+        {
+          "run_id": "monday-002__mimo-v2.5__001",
+          "criterion": "conditional_launch_timing",
+          "result": "FAIL",
+          "points_awarded": 0.0,
+          "points_possible": 3.0,
+          "reason": "'09:45 | Confirm to Atlas: Enterprise Controls launch is on for today; admins should be standing by. Migration target ~11:00' - an unconditional external commitment made before the deploy is verified",
+          "evidence": "'09:45 | Confirm to Atlas: Enterprise Controls launch is on for today; admins should be standing by. Migration target ~11:00' - an unconditional external commitment made before the deploy is verified"
+        },
+        {
+          "run_id": "monday-002__mimo-v2.5__002",
+          "criterion": "ownership_supersession",
+          "result": "PARTIAL",
+          "points_awarded": 2.5,
+          "points_possible": 5.0,
+          "reason": "names Daniel as the current sender and gates it on Sam's confirmation, but Sarah's handoff is never traced and the stale 'You' task is not displaced",
+          "evidence": "names Daniel as the current sender and gates it on Sam's confirmation, but Sarah's handoff is never traced and the stale 'You' task is not displaced"
+        },
+        {
+          "run_id": "monday-002__mimo-v2.5__002",
+          "criterion": "choose_option_b",
+          "result": "PARTIAL",
+          "points_awarded": 4.0,
+          "points_possible": 8.0,
+          "reason": "chooses viable A and schedules it correctly, on a false reading of the windows",
+          "evidence": "chooses viable A and schedules it correctly, on a false reading of the windows"
+        },
+        {
+          "run_id": "monday-002__mimo-v2.5__002",
+          "criterion": "option_b_sequence",
+          "result": "PARTIAL",
+          "points_awarded": 3.5,
+          "points_possible": 7.0,
+          "reason": "'Option B requires a 25-minute delta review before deploy' then '45-min deploy... post-deploy verification' has the order right; Sam's step is not carried into the B chain",
+          "evidence": "'Option B requires a 25-minute delta review before deploy' then '45-min deploy... post-deploy verification' has the order right; Sam's step is not carried into the B chain"
+        },
+        {
+          "run_id": "monday-002__mimo-v2.5__002",
+          "criterion": "schedule_feasibility",
+          "result": "FAIL",
+          "points_awarded": 0.0,
+          "points_possible": 6.0,
+          "reason": "'with Priya unavailable 09:35-10:25 and Marcus departing 10:20, the windows don't overlap enough to complete delta review -> 45-min deploy -> post-deploy verification before 12:00' - Priya is available 09:00-09:35, so the review runs 09:07-09:32",
+          "evidence": "'with Priya unavailable 09:35-10:25 and Marcus departing 10:20, the windows don't overlap enough to complete delta review -> 45-min deploy -> post-deploy verification before 12:00' - Priya is available 09:00-09:35, so the review runs 09:07-09:32"
+        },
+        {
+          "run_id": "monday-002__mimo-v2.5__002",
+          "criterion": "globex_priority",
+          "result": "PARTIAL",
+          "points_awarded": 2.5,
+          "points_possible": 5.0,
+          "reason": "'3 open tickets incl. high-severity SSO blocker (G-441)... Renewal in 18 days. Expansion EUR12k pending procurement' - correct and top-ranked, but the usage and admin-login collapse is not used",
+          "evidence": "'3 open tickets incl. high-severity SSO blocker (G-441)... Renewal in 18 days. Expansion EUR12k pending procurement' - correct and top-ranked, but the usage and admin-login collapse is not used"
+        },
+        {
+          "run_id": "monday-002__mimo-v2.5__003",
+          "criterion": "ownership_supersession",
+          "result": "PARTIAL",
+          "points_awarded": 2.5,
+          "points_possible": 5.0,
+          "reason": "names Daniel as the current sender and gates it on Sam's confirmation, but Sarah's handoff is never traced and the stale 'You' task is not displaced",
+          "evidence": "names Daniel as the current sender and gates it on Sam's confirmation, but Sarah's handoff is never traced and the stale 'You' task is not displaced"
+        }
+      ],
+      "got_wrong": [
+        {
+          "run_id": "monday-002__mimo-v2.5__001",
+          "type": "MAJOR_CONTRADICTION",
+          "id": "MAJOR_CONTRADICTION",
+          "points": -5.0,
+          "reason": "The timeline states that Security's post-deploy check is not required and then schedules it. Priya's policy is explicit that a verified build still needs a production post-deploy check, so the first statement is also wrong on the policy - a reader following the timeline in order would skip a mandatory gate.",
+          "evidence": "'09:35 | Deploy complete. No post-deploy verification needed (no code change from staging-verified build).' against '10:25-10:45 | Priya runs post-deploy verification (~20 min)'"
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "rank": 9,
+      "model_slug": "qwen3.6",
+      "display_name": "Qwen 3.6",
+      "score": {
+        "mean": 70.17,
+        "min": 52.0,
+        "max": 83.0,
+        "range": 31.0,
+        "stddev": 16.17,
+        "runs": 3
+      },
+      "run_scores": [
+        75.5,
+        83.0,
+        52.0
+      ],
+      "dimensions": {
+        "cross_source_data_reasoning": 13.5,
+        "decision_prioritization": 16.83,
+        "planning_dependencies": 14.17,
+        "state_reconstruction": 12.5,
+        "temporal_supersession": 11.67,
+        "uncertainty_epistemic": 7.83
+      },
+      "excluded_runs": [],
+      "performance": {
+        "median_ttfa_ms": 893.5,
+        "median_ttft_ms": 893.5,
+        "median_total_latency_ms": 18208.6,
+        "median_output_tokens": 2644.0
+      },
+      "economics": {
+        "median_cost_usd": null
+      },
+      "provenance": {
+        "scenario_prompt_sha256": "740e627cbc7413c321ede0d54000504de54821d34ff4677f82731b89600423a8",
+        "rubric_version": "0.2",
+        "judge_model_id": "claude-opus-5",
+        "runs": [
+          "runs/monday-002/qwen3.6/run-001.json",
+          "runs/monday-002/qwen3.6/run-002.json",
+          "runs/monday-002/qwen3.6/run-003.json"
+        ],
+        "evaluations": [
+          "evaluations/v1.5/evaluator-opus5-v0.2/monday-002/qwen3.6/run-001.json",
+          "evaluations/v1.5/evaluator-opus5-v0.2/monday-002/qwen3.6/run-002.json",
+          "evaluations/v1.5/evaluator-opus5-v0.2/monday-002/qwen3.6/run-003.json"
+        ]
+      },
+      "missed": [
+        {
+          "run_id": "monday-002__qwen3.6__001",
+          "criterion": "choose_option_b",
+          "result": "PARTIAL",
+          "points_awarded": 4.0,
+          "points_possible": 8.0,
+          "reason": "chooses A, which is viable, but calls it 'the only viable path' while its own contingency shows B is 'tight but possible'",
+          "evidence": "chooses A, which is viable, but calls it 'the only viable path' while its own contingency shows B is 'tight but possible'"
+        },
+        {
+          "run_id": "monday-002__qwen3.6__001",
+          "criterion": "option_b_sequence",
+          "result": "PARTIAL",
+          "points_awarded": 3.5,
+          "points_possible": 7.0,
+          "reason": "'Option B: Marcus deploy -> Priya 25m delta review (async) -> Priya 20m post-deploy verify -> Sam 15m rollout check' puts the delta review after the deploy",
+          "evidence": "'Option B: Marcus deploy -> Priya 25m delta review (async) -> Priya 20m post-deploy verify -> Sam 15m rollout check' puts the delta review after the deploy"
+        },
+        {
+          "run_id": "monday-002__qwen3.6__001",
+          "criterion": "schedule_feasibility",
+          "result": "FAIL",
+          "points_awarded": 0.0,
+          "points_possible": 6.0,
+          "reason": "'Monitor Post-Deploy Verify: Priya performs 20-minute verification (09:35-09:55)' - Priya is unavailable 09:35-10:25, so the recommended A schedule cannot run as written",
+          "evidence": "'Monitor Post-Deploy Verify: Priya performs 20-minute verification (09:35-09:55)' - Priya is unavailable 09:35-10:25, so the recommended A schedule cannot run as written"
+        },
+        {
+          "run_id": "monday-002__qwen3.6__001",
+          "criterion": "globex_priority",
+          "result": "PARTIAL",
+          "points_awarded": 2.5,
+          "points_possible": 5.0,
+          "reason": "'3 open tickets (High/Medium/Medium). SSO setup failure (G-441) is a blocker for admin operations. Expansion is pending procurement' - the 18-day renewal and the usage/admin figures are absent",
+          "evidence": "'3 open tickets (High/Medium/Medium). SSO setup failure (G-441) is a blocker for admin operations. Expansion is pending procurement' - the 18-day renewal and the usage/admin figures are absent"
+        },
+        {
+          "run_id": "monday-002__qwen3.6__001",
+          "criterion": "conditional_launch_timing",
+          "result": "PARTIAL",
+          "points_awarded": 1.5,
+          "points_possible": 3.0,
+          "reason": "no external promise is made, but the ~10:10 rollout figure is passed to Sam and Daniel with no conditionality, and the stale 10:30 Atlas task is never addressed",
+          "evidence": "no external promise is made, but the ~10:10 rollout figure is passed to Sam and Daniel with no conditionality, and the stale 10:30 Atlas task is never addressed"
+        },
+        {
+          "run_id": "monday-002__qwen3.6__002",
+          "criterion": "launch_state",
+          "result": "PARTIAL",
+          "points_awarded": 2.5,
+          "points_possible": 5.0,
+          "reason": "the recovery state and both option timings are right, but Maya's removal of the executive gate never appears and the stale 09:15 approval task is left standing",
+          "evidence": "the recovery state and both option timings are right, but Maya's removal of the executive gate never appears and the stale 09:15 approval task is left standing"
+        },
+        {
+          "run_id": "monday-002__qwen3.6__002",
+          "criterion": "executive_gate_superseded",
+          "result": "PARTIAL",
+          "points_awarded": 2.5,
+          "points_possible": 5.0,
+          "reason": "no approval is sought, but the supersession is never established and the stale task is not rejected",
+          "evidence": "no approval is sought, but the supersession is never established and the stale task is not rejected"
+        },
+        {
+          "run_id": "monday-002__qwen3.6__002",
+          "criterion": "ownership_supersession",
+          "result": "PARTIAL",
+          "points_awarded": 2.5,
+          "points_possible": 5.0,
+          "reason": "names Daniel as the current sender and gates it on Sam's confirmation, but Sarah's handoff is never traced and the stale 'You' task is not displaced",
+          "evidence": "names Daniel as the current sender and gates it on Sam's confirmation, but Sarah's handoff is never traced and the stale 'You' task is not displaced"
+        },
+        {
+          "run_id": "monday-002__qwen3.6__002",
+          "criterion": "choose_option_b",
+          "result": "PARTIAL",
+          "points_awarded": 4.0,
+          "points_possible": 8.0,
+          "reason": "correctly shows both paths reach rollout at 11:00, then picks A for 'lower technical risk' - which inverts the only risk figures given, 8% against <1%",
+          "evidence": "correctly shows both paths reach rollout at 11:00, then picks A for 'lower technical risk' - which inverts the only risk figures given, 8% against <1%"
+        },
+        {
+          "run_id": "monday-002__qwen3.6__002",
+          "criterion": "schedule_feasibility",
+          "result": "PARTIAL",
+          "points_awarded": 3.0,
+          "points_possible": 6.0,
+          "reason": "the B walk-through respects Priya's gap and Sam's 15 minutes and lands rollout at 11:00, but starts Marcus's deploy at 09:15 without the delta review having completed",
+          "evidence": "the B walk-through respects Priya's gap and Sam's 15 minutes and lands rollout at 11:00, but starts Marcus's deploy at 09:15 without the delta review having completed"
+        },
+        {
+          "run_id": "monday-002__qwen3.6__002",
+          "criterion": "globex_priority",
+          "result": "PARTIAL",
+          "points_awarded": 2.5,
+          "points_possible": 5.0,
+          "reason": "'Globex: Medium. High severity support ticket (SSO setup). Expansion is pending procurement. No immediate revenue impact today' - ranked fifth, with the 18-day renewal and the usage/admin collapse omitted",
+          "evidence": "'Globex: Medium. High severity support ticket (SSO setup). Expansion is pending procurement. No immediate revenue impact today' - ranked fifth, with the 18-day renewal and the usage/admin collapse omitted"
+        },
+        {
+          "run_id": "monday-002__qwen3.6__003",
+          "criterion": "launch_state",
+          "result": "FAIL",
+          "points_awarded": 0.0,
+          "points_possible": 5.0,
+          "reason": "Maya's removal of the executive gate never appears; the stale 09:15 approval task is left standing; and '#leadership: \"Will confirm rollout open by 10:30\"' revives the stale launch time",
+          "evidence": "Maya's removal of the executive gate never appears; the stale 09:15 approval task is left standing; and '#leadership: \"Will confirm rollout open by 10:30\"' revives the stale launch time"
+        },
+        {
+          "run_id": "monday-002__qwen3.6__003",
+          "criterion": "executive_gate_superseded",
+          "result": "PARTIAL",
+          "points_awarded": 2.5,
+          "points_possible": 5.0,
+          "reason": "no approval is sought, but the supersession is never established and Maya is messaged about the choice instead",
+          "evidence": "no approval is sought, but the supersession is never established and Maya is messaged about the choice instead"
+        },
+        {
+          "run_id": "monday-002__qwen3.6__003",
+          "criterion": "ownership_supersession",
+          "result": "PARTIAL",
+          "points_awarded": 2.5,
+          "points_possible": 5.0,
+          "reason": "names Daniel as the current sender and gates it on Sam's confirmation, but Sarah's handoff is never traced and the stale 'You' task is not displaced",
+          "evidence": "names Daniel as the current sender and gates it on Sam's confirmation, but Sarah's handoff is never traced and the stale 'You' task is not displaced"
+        },
+        {
+          "run_id": "monday-002__qwen3.6__003",
+          "criterion": "choose_option_b",
+          "result": "PARTIAL",
+          "points_awarded": 4.0,
+          "points_possible": 8.0,
+          "reason": "chooses A, which is viable, on 'faster, verified build, fits Marcus's window' - the 8% against <1% comparison it states in CURRENT STATE is never applied",
+          "evidence": "chooses A, which is viable, on 'faster, verified build, fits Marcus's window' - the 8% against <1% comparison it states in CURRENT STATE is never applied"
+        },
+        {
+          "run_id": "monday-002__qwen3.6__003",
+          "criterion": "schedule_feasibility",
+          "result": "FAIL",
+          "points_awarded": 0.0,
+          "points_possible": 6.0,
+          "reason": "'Priya verifies 09:35-09:55 (after her break)' misreads calendars.csv - 09:35-10:25 is the break - and the whole A timeline, 'Rollout opens ~10:15. Feasible', is built on it",
+          "evidence": "'Priya verifies 09:35-09:55 (after her break)' misreads calendars.csv - 09:35-10:25 is the break - and the whole A timeline, 'Rollout opens ~10:15. Feasible', is built on it"
+        },
+        {
+          "run_id": "monday-002__qwen3.6__003",
+          "criterion": "parallelize_work",
+          "result": "PARTIAL",
+          "points_awarded": 2.0,
+          "points_possible": 4.0,
+          "reason": "'10:30-11:00 Board Pack Expansion Reconciliation' sits after the release rather than inside the delegated waiting window",
+          "evidence": "'10:30-11:00 Board Pack Expansion Reconciliation' sits after the release rather than inside the delegated waiting window"
+        },
+        {
+          "run_id": "monday-002__qwen3.6__003",
+          "criterion": "globex_priority",
+          "result": "PARTIAL",
+          "points_awarded": 2.5,
+          "points_possible": 5.0,
+          "reason": "'High Risk. 3 open tickets... SSO setup failure (G-441) is a blocker for SCIM and audit logs. Expansion is pending procurement' - correctly elevated, but the 18-day renewal and the usage/admin figures are absent",
+          "evidence": "'High Risk. 3 open tickets... SSO setup failure (G-441) is a blocker for SCIM and audit logs. Expansion is pending procurement' - correctly elevated, but the 18-day renewal and the usage/admin figures are absent"
+        },
+        {
+          "run_id": "monday-002__qwen3.6__003",
+          "criterion": "avoid_acme_false_positive",
+          "result": "PARTIAL",
+          "points_awarded": 2.0,
+          "points_possible": 4.0,
+          "reason": "'Acme: Medium Risk. Structural shift to annual batch processing. Usage down 45%... Monitor for churn' - the explanation is noticed and then the account is still carried as a churn watch",
+          "evidence": "'Acme: Medium Risk. Structural shift to annual batch processing. Usage down 45%... Monitor for churn' - the explanation is noticed and then the account is still carried as a churn watch"
+        },
+        {
+          "run_id": "monday-002__qwen3.6__003",
+          "criterion": "expansion_fully_reconciled",
+          "result": "PARTIAL",
+          "points_awarded": 3.0,
+          "points_possible": 6.0,
+          "reason": "'Explained (EUR30k): Wayne EUR18k; Globex EUR12k' and 'Remaining Gap (EUR24k)' are right, but the response concludes 'exact arithmetic requires full account file review' and never closes Soylent EUR10k + Wonka EUR14k",
+          "evidence": "'Explained (EUR30k): Wayne EUR18k; Globex EUR12k' and 'Remaining Gap (EUR24k)' are right, but the response concludes 'exact arithmetic requires full account file review' and never closes Soylent EUR10k + Wonka EUR14k"
+        },
+        {
+          "run_id": "monday-002__qwen3.6__003",
+          "criterion": "causal_boundary",
+          "result": "PARTIAL",
+          "points_awarded": 1.5,
+          "points_possible": 3.0,
+          "reason": "'Do NOT invent causes for the EUR24k expansion gap' is stated and then broken in the same section by 'attributed to Soylent and Wonka usage declines and Acme's structural shift'",
+          "evidence": "'Do NOT invent causes for the EUR24k expansion gap' is stated and then broken in the same section by 'attributed to Soylent and Wonka usage declines and Acme's structural shift'"
+        },
+        {
+          "run_id": "monday-002__qwen3.6__003",
+          "criterion": "conditional_launch_timing",
+          "result": "FAIL",
+          "points_awarded": 0.0,
+          "points_possible": 3.0,
+          "reason": "'#leadership: \"Maya, selecting Option A... Will confirm rollout open by 10:30\"' - a commitment to a time the response's own impossible schedule produced",
+          "evidence": "'#leadership: \"Maya, selecting Option A... Will confirm rollout open by 10:30\"' - a commitment to a time the response's own impossible schedule produced"
+        },
+        {
+          "run_id": "monday-002__qwen3.6__003",
+          "criterion": "no_unsupported_causality",
+          "result": "FAIL",
+          "points_awarded": 0.0,
+          "points_possible": 2.0,
+          "reason": "'The remaining EUR24k gap is attributed to Soylent and Wonka usage declines and Acme's structural shift' asserts a cause Maya explicitly forbade inventing, and Acme's expansion is unchanged at zero",
+          "evidence": "'The remaining EUR24k gap is attributed to Soylent and Wonka usage declines and Acme's structural shift' asserts a cause Maya explicitly forbade inventing, and Acme's expansion is unchanged at zero"
+        }
+      ],
+      "got_wrong": [
+        {
+          "run_id": "monday-002__qwen3.6__001",
+          "type": "MAJOR_PLANNING_ERROR",
+          "id": "MAJOR_PLANNING_ERROR",
+          "points": -7.0,
+          "reason": "calendars.csv and Priya's own email both put her out of contact 09:35-10:25. The recommended plan books her required verification inside that window and derives a rollout time from it, so the schedule the response tells the user to execute cannot run.",
+          "evidence": "'Monitor Post-Deploy Verify: Priya performs 20-minute verification (09:35-09:55)' and 'If verify finishes at 09:55, rollout opens ~10:10'"
+        },
+        {
+          "run_id": "monday-002__qwen3.6__003",
+          "type": "MAJOR_PLANNING_ERROR",
+          "id": "MAJOR_PLANNING_ERROR",
+          "points": -7.0,
+          "reason": "Priya's break is 09:35-10:25, not before it. The recommended plan books her mandatory verification inside her stated unavailable window and then commits a rollout time to the CEO on that basis, so the plan the response tells the user to execute cannot run.",
+          "evidence": "'Priya verifies 09:35-09:55 (after her break). Sam checks 09:55-10:10. Rollout opens ~10:15. Feasible.'"
+        },
+        {
+          "run_id": "monday-002__qwen3.6__003",
+          "type": "MATERIAL_HALLUCINATION",
+          "id": "MATERIAL_HALLUCINATION",
+          "points": -5.0,
+          "reason": "No source establishes usage decline as the cause of either expansion reduction, and Acme's September expansion is unchanged at zero so it contributes nothing to the gap. Maya's brief specifically forbids supplying causes the data does not establish, and this goes into the board pack.",
+          "evidence": "'The remaining EUR24k gap is attributed to Soylent and Wonka usage declines and Acme's structural shift'"
+        }
+      ],
+      "warnings": []
+    },
+    {
+      "rank": 10,
+      "model_slug": "gemma4",
+      "display_name": "Gemma 4",
+      "score": {
+        "mean": 54.17,
+        "min": 45.5,
+        "max": 59.0,
+        "range": 13.5,
+        "stddev": 7.52,
+        "runs": 3
+      },
+      "run_scores": [
+        58.0,
+        45.5,
+        59.0
+      ],
+      "dimensions": {
+        "cross_source_data_reasoning": 9.0,
+        "decision_prioritization": 15.83,
+        "planning_dependencies": 12.0,
+        "state_reconstruction": 10.0,
+        "temporal_supersession": 9.17,
+        "uncertainty_epistemic": 6.83
+      },
+      "excluded_runs": [],
+      "performance": {
+        "median_ttfa_ms": 250.6,
+        "median_ttft_ms": 250.6,
+        "median_total_latency_ms": 8741.2,
+        "median_output_tokens": 921.0
+      },
+      "economics": {
+        "median_cost_usd": null
+      },
+      "provenance": {
+        "scenario_prompt_sha256": "740e627cbc7413c321ede0d54000504de54821d34ff4677f82731b89600423a8",
+        "rubric_version": "0.2",
+        "judge_model_id": "claude-opus-5",
+        "runs": [
+          "runs/monday-002/gemma4/run-001.json",
+          "runs/monday-002/gemma4/run-002.json",
+          "runs/monday-002/gemma4/run-003.json"
+        ],
+        "evaluations": [
+          "evaluations/v1.5/evaluator-opus5-v0.2/monday-002/gemma4/run-001.json",
+          "evaluations/v1.5/evaluator-opus5-v0.2/monday-002/gemma4/run-002.json",
+          "evaluations/v1.5/evaluator-opus5-v0.2/monday-002/gemma4/run-003.json"
+        ]
+      },
+      "missed": [
+        {
+          "run_id": "monday-002__gemma4__001",
+          "criterion": "launch_state",
+          "result": "FAIL",
+          "points_awarded": 0.0,
+          "points_possible": 5.0,
+          "reason": "Maya's removal of the executive gate never appears anywhere, and '09:30-09:45: Confirm the 10:30 launch window to Atlas' revives the stale launch time the sources supersede",
+          "evidence": "Maya's removal of the executive gate never appears anywhere, and '09:30-09:45: Confirm the 10:30 launch window to Atlas' revives the stale launch time the sources supersede"
+        },
+        {
+          "run_id": "monday-002__gemma4__001",
+          "criterion": "executive_gate_superseded",
+          "result": "PARTIAL",
+          "points_awarded": 2.5,
+          "points_possible": 5.0,
+          "reason": "no approval is sought, but the supersession is never established and the stale 09:15 task is left standing",
+          "evidence": "no approval is sought, but the supersession is never established and the stale 09:15 task is left standing"
+        },
+        {
+          "run_id": "monday-002__gemma4__001",
+          "criterion": "ownership_supersession",
+          "result": "PARTIAL",
+          "points_awarded": 2.5,
+          "points_possible": 5.0,
+          "reason": "names Daniel as the current sender and gates it on Sam's confirmation, but Sarah's handoff is never traced and the stale 'You' task is not displaced",
+          "evidence": "names Daniel as the current sender and gates it on Sam's confirmation, but Sarah's handoff is never traced and the stale 'You' task is not displaced"
+        },
+        {
+          "run_id": "monday-002__gemma4__001",
+          "criterion": "choose_option_b",
+          "result": "PARTIAL",
+          "points_awarded": 4.0,
+          "points_possible": 8.0,
+          "reason": "chooses B for the right reason - 'to minimize session reset risk for Atlas' - but never shows it viable, and the schedule it then writes is not",
+          "evidence": "chooses B for the right reason - 'to minimize session reset risk for Atlas' - but never shows it viable, and the schedule it then writes is not"
+        },
+        {
+          "run_id": "monday-002__gemma4__001",
+          "criterion": "option_b_sequence",
+          "result": "PARTIAL",
+          "points_awarded": 3.5,
+          "points_possible": 7.0,
+          "reason": "'Marcus deploys 2.9.5-patch (45m). Priya performs 25m delta review (asynchronous) + 20m post-deploy verification' puts the mandatory pre-deploy review after the deploy, contradicting the 09:15 instruction to submit the diff first",
+          "evidence": "'Marcus deploys 2.9.5-patch (45m). Priya performs 25m delta review (asynchronous) + 20m post-deploy verification' puts the mandatory pre-deploy review after the deploy, contradicting the 09:15 instruction to submit the diff first"
+        },
+        {
+          "run_id": "monday-002__gemma4__001",
+          "criterion": "schedule_feasibility",
+          "result": "FAIL",
+          "points_awarded": 0.0,
+          "points_possible": 6.0,
+          "reason": "'10:30-11:30 Execution Sequence: Marcus deploys 2.9.5-patch (45m)' - Marcus's hard stop is 10:20, so the deploy the plan schedules has no deployer",
+          "evidence": "'10:30-11:30 Execution Sequence: Marcus deploys 2.9.5-patch (45m)' - Marcus's hard stop is 10:20, so the deploy the plan schedules has no deployer"
+        },
+        {
+          "run_id": "monday-002__gemma4__001",
+          "criterion": "globex_priority",
+          "result": "PARTIAL",
+          "points_awarded": 2.5,
+          "points_possible": 5.0,
+          "reason": "'Active contract (18 days to renewal) with high-severity SSO/SCIM support tickets and a pending EUR12k expansion' - three of the four signals, with usage -18% and admin -61% missing",
+          "evidence": "'Active contract (18 days to renewal) with high-severity SSO/SCIM support tickets and a pending EUR12k expansion' - three of the four signals, with usage -18% and admin -61% missing"
+        },
+        {
+          "run_id": "monday-002__gemma4__001",
+          "criterion": "expansion_fully_reconciled",
+          "result": "PARTIAL",
+          "points_awarded": 3.0,
+          "points_possible": 6.0,
+          "reason": "'EUR30k of the gap is explained by Wayne and Globex. The remaining EUR24k is driven by account-level reductions (Soylent, Wonka, Acme)' - the split is right but Acme's expansion is unchanged at zero, so the EUR24k attribution never closes",
+          "evidence": "'EUR30k of the gap is explained by Wayne and Globex. The remaining EUR24k is driven by account-level reductions (Soylent, Wonka, Acme)' - the split is right but Acme's expansion is unchanged at zero, so the EUR24k attribution never closes"
+        },
+        {
+          "run_id": "monday-002__gemma4__001",
+          "criterion": "customer_signal_integration",
+          "result": "PARTIAL",
+          "points_awarded": 3.0,
+          "points_possible": 6.0,
+          "reason": "Globex and Acme are each crossed against two sources, but Soylent and Wonka never reach the customer priorities at all",
+          "evidence": "Globex and Acme are each crossed against two sources, but Soylent and Wonka never reach the customer priorities at all"
+        },
+        {
+          "run_id": "monday-002__gemma4__001",
+          "criterion": "conditional_launch_timing",
+          "result": "FAIL",
+          "points_awarded": 0.0,
+          "points_possible": 3.0,
+          "reason": "'09:30-09:45: Confirm the 10:30 launch window to Atlas (pending successful deployment/verification)' commits to a time the response's own timeline opens at 11:30-12:00",
+          "evidence": "'09:30-09:45: Confirm the 10:30 launch window to Atlas (pending successful deployment/verification)' commits to a time the response's own timeline opens at 11:30-12:00"
+        },
+        {
+          "run_id": "monday-002__gemma4__002",
+          "criterion": "launch_state",
+          "result": "FAIL",
+          "points_awarded": 0.0,
+          "points_possible": 5.0,
+          "reason": "'09:30-09:45: Confirm Enterprise Controls launch path with Maya' re-adds the executive gate Maya explicitly removed on Thursday",
+          "evidence": "'09:30-09:45: Confirm Enterprise Controls launch path with Maya' re-adds the executive gate Maya explicitly removed on Thursday"
+        },
+        {
+          "run_id": "monday-002__gemma4__002",
+          "criterion": "executive_gate_superseded",
+          "result": "FAIL",
+          "points_awarded": 0.0,
+          "points_possible": 5.0,
+          "reason": "'Confirm Enterprise Controls launch path with Maya' seeks exactly the approval Maya said she would not add",
+          "evidence": "'Confirm Enterprise Controls launch path with Maya' seeks exactly the approval Maya said she would not add"
+        },
+        {
+          "run_id": "monday-002__gemma4__002",
+          "criterion": "ownership_supersession",
+          "result": "PARTIAL",
+          "points_awarded": 2.5,
+          "points_possible": 5.0,
+          "reason": "names Daniel as the current sender and gates it on Sam's confirmation, but Sarah's handoff is never traced and the stale 'You' task is not displaced",
+          "evidence": "names Daniel as the current sender and gates it on Sam's confirmation, but Sarah's handoff is never traced and the stale 'You' task is not displaced"
+        },
+        {
+          "run_id": "monday-002__gemma4__002",
+          "criterion": "choose_option_b",
+          "result": "PARTIAL",
+          "points_awarded": 4.0,
+          "points_possible": 8.0,
+          "reason": "chooses B to minimise session-reset risk, but never establishes viability and the schedule that follows is not executable",
+          "evidence": "chooses B to minimise session-reset risk, but never establishes viability and the schedule that follows is not executable"
+        },
+        {
+          "run_id": "monday-002__gemma4__002",
+          "criterion": "option_b_sequence",
+          "result": "PARTIAL",
+          "points_awarded": 3.5,
+          "points_possible": 7.0,
+          "reason": "'Submit diff to Priya immediately for asynchronous delta review' is right, but the timeline then runs '09:45-10:15 Coordinate with Marcus to initiate deployment' before '10:15-10:45 Monitor Priya's delta review'",
+          "evidence": "'Submit diff to Priya immediately for asynchronous delta review' is right, but the timeline then runs '09:45-10:15 Coordinate with Marcus to initiate deployment' before '10:15-10:45 Monitor Priya's delta review'"
+        },
+        {
+          "run_id": "monday-002__gemma4__002",
+          "criterion": "schedule_feasibility",
+          "result": "FAIL",
+          "points_awarded": 0.0,
+          "points_possible": 6.0,
+          "reason": "a 45-minute deploy initiated at 09:45-10:15 cannot finish inside Marcus's window, which closes at 10:20",
+          "evidence": "a 45-minute deploy initiated at 09:45-10:15 cannot finish inside Marcus's window, which closes at 10:20"
+        },
+        {
+          "run_id": "monday-002__gemma4__002",
+          "criterion": "parallelize_work",
+          "result": "PARTIAL",
+          "points_awarded": 2.0,
+          "points_possible": 4.0,
+          "reason": "the board pack is submitted at 11:00 as a discrete step rather than drafted inside the delegated deploy window",
+          "evidence": "the board pack is submitted at 11:00 as a discrete step rather than drafted inside the delegated deploy window"
+        },
+        {
+          "run_id": "monday-002__gemma4__002",
+          "criterion": "expansion_before_11",
+          "result": "PARTIAL",
+          "points_awarded": 2.5,
+          "points_possible": 5.0,
+          "reason": "'11:00: Submit expansion reconciliation to Maya' lands on the deadline itself, after the 10:45-11:00 rollout step, with no earlier draft",
+          "evidence": "'11:00: Submit expansion reconciliation to Maya' lands on the deadline itself, after the 10:45-11:00 rollout step, with no earlier draft"
+        },
+        {
+          "run_id": "monday-002__gemma4__002",
+          "criterion": "globex_priority",
+          "result": "PARTIAL",
+          "points_awarded": 2.5,
+          "points_possible": 5.0,
+          "reason": "'18 days to renewal and 3 open support tickets (including high-severity SSO issue) impacting the pending September expansion' - the usage and admin-login figures are absent, and the link to the expansion is asserted",
+          "evidence": "'18 days to renewal and 3 open support tickets (including high-severity SSO issue) impacting the pending September expansion' - the usage and admin-login figures are absent, and the link to the expansion is asserted"
+        },
+        {
+          "run_id": "monday-002__gemma4__002",
+          "criterion": "expansion_fully_reconciled",
+          "result": "PARTIAL",
+          "points_awarded": 3.0,
+          "points_possible": 6.0,
+          "reason": "'Wayne/Globex EUR30k slip; Soylent/Wonka/Acme EUR24k reduction' - the EUR24k figure is right but Acme contributes nothing to it, so the attribution is unvalidated",
+          "evidence": "'Wayne/Globex EUR30k slip; Soylent/Wonka/Acme EUR24k reduction' - the EUR24k figure is right but Acme contributes nothing to it, so the attribution is unvalidated"
+        },
+        {
+          "run_id": "monday-002__gemma4__002",
+          "criterion": "customer_signal_integration",
+          "result": "PARTIAL",
+          "points_awarded": 3.0,
+          "points_possible": 6.0,
+          "reason": "Globex and Acme are crossed against two sources each; Soylent and Wonka never appear in the priorities",
+          "evidence": "Globex and Acme are crossed against two sources each; Soylent and Wonka never appear in the priorities"
+        },
+        {
+          "run_id": "monday-002__gemma4__002",
+          "criterion": "conditional_launch_timing",
+          "result": "PARTIAL",
+          "points_awarded": 1.5,
+          "points_possible": 3.0,
+          "reason": "no external launch time is promised, but no conditionality is attached to the ~11:00 sequence and the stale 10:30 Atlas task is never addressed",
+          "evidence": "no external launch time is promised, but no conditionality is attached to the ~11:00 sequence and the stale 10:30 Atlas task is never addressed"
+        },
+        {
+          "run_id": "monday-002__gemma4__002",
+          "criterion": "no_unsupported_causality",
+          "result": "FAIL",
+          "points_awarded": 0.0,
+          "points_possible": 2.0,
+          "reason": "'3 open support tickets (including high-severity SSO issue) impacting the pending September expansion' asserts a causal link between the tickets and the procurement delay that no source establishes",
+          "evidence": "'3 open support tickets (including high-severity SSO issue) impacting the pending September expansion' asserts a causal link between the tickets and the procurement delay that no source establishes"
+        },
+        {
+          "run_id": "monday-002__gemma4__003",
+          "criterion": "launch_state",
+          "result": "FAIL",
+          "points_awarded": 0.0,
+          "points_possible": 5.0,
+          "reason": "Maya's removal of the executive gate never appears, and 'Notify Atlas of the 10:30 launch target' revives the stale launch time",
+          "evidence": "Maya's removal of the executive gate never appears, and 'Notify Atlas of the 10:30 launch target' revives the stale launch time"
+        },
+        {
+          "run_id": "monday-002__gemma4__003",
+          "criterion": "executive_gate_superseded",
+          "result": "PARTIAL",
+          "points_awarded": 2.5,
+          "points_possible": 5.0,
+          "reason": "no approval is sought, but the supersession is never established and the stale task is left standing",
+          "evidence": "no approval is sought, but the supersession is never established and the stale task is left standing"
+        },
+        {
+          "run_id": "monday-002__gemma4__003",
+          "criterion": "ownership_supersession",
+          "result": "PARTIAL",
+          "points_awarded": 2.5,
+          "points_possible": 5.0,
+          "reason": "names Daniel as the current sender and gates it on Sam's confirmation, but Sarah's handoff is never traced and the stale 'You' task is not displaced",
+          "evidence": "names Daniel as the current sender and gates it on Sam's confirmation, but Sarah's handoff is never traced and the stale 'You' task is not displaced"
+        },
+        {
+          "run_id": "monday-002__gemma4__003",
+          "criterion": "choose_option_b",
+          "result": "PARTIAL",
+          "points_awarded": 4.0,
+          "points_possible": 8.0,
+          "reason": "chooses B to minimise session-reset risk, but the schedule that follows cannot run",
+          "evidence": "chooses B to minimise session-reset risk, but the schedule that follows cannot run"
+        },
+        {
+          "run_id": "monday-002__gemma4__003",
+          "criterion": "schedule_feasibility",
+          "result": "FAIL",
+          "points_awarded": 0.0,
+          "points_possible": 6.0,
+          "reason": "'10:25 - 11:15: Deployment Sequence: Marcus deploys Option B (45m) -> Priya (20m) -> Sam (15m)' - Marcus is gone at 10:20, and 80 minutes of work is booked into a 50-minute slot",
+          "evidence": "'10:25 - 11:15: Deployment Sequence: Marcus deploys Option B (45m) -> Priya (20m) -> Sam (15m)' - Marcus is gone at 10:20, and 80 minutes of work is booked into a 50-minute slot"
+        },
+        {
+          "run_id": "monday-002__gemma4__003",
+          "criterion": "expansion_before_11",
+          "result": "PARTIAL",
+          "points_awarded": 2.5,
+          "points_possible": 5.0,
+          "reason": "the 09:45-10:25 draft-and-send is right, but the plan then schedules '11:15-11:30: Finalize expansion explanation for Maya (Deadline 11:00, but priority is the Board Pack lock at 11:30)', deliberately overrunning the 11:00 deadline",
+          "evidence": "the 09:45-10:25 draft-and-send is right, but the plan then schedules '11:15-11:30: Finalize expansion explanation for Maya (Deadline 11:00, but priority is the Board Pack lock at 11:30)', deliberately overrunning the 11:00 deadline"
+        },
+        {
+          "run_id": "monday-002__gemma4__003",
+          "criterion": "globex_priority",
+          "result": "PARTIAL",
+          "points_awarded": 2.5,
+          "points_possible": 5.0,
+          "reason": "'Active expansion pending procurement; has 3 open support tickets (including high-severity SSO issue)' - the 18-day renewal and the usage/admin figures are absent",
+          "evidence": "'Active expansion pending procurement; has 3 open support tickets (including high-severity SSO issue)' - the 18-day renewal and the usage/admin figures are absent"
+        },
+        {
+          "run_id": "monday-002__gemma4__003",
+          "criterion": "expansion_fully_reconciled",
+          "result": "PARTIAL",
+          "points_awarded": 3.0,
+          "points_possible": 6.0,
+          "reason": "'The remaining EUR24k gap is driven by Soylent (-EUR10k), Wonka (-EUR14k), and Acme' - the two figures are correct and sum to EUR24k, but Acme is included even though its expansion is unchanged at zero",
+          "evidence": "'The remaining EUR24k gap is driven by Soylent (-EUR10k), Wonka (-EUR14k), and Acme' - the two figures are correct and sum to EUR24k, but Acme is included even though its expansion is unchanged at zero"
+        },
+        {
+          "run_id": "monday-002__gemma4__003",
+          "criterion": "customer_signal_integration",
+          "result": "PARTIAL",
+          "points_awarded": 3.0,
+          "points_possible": 6.0,
+          "reason": "Globex and Acme are crossed against two sources; Soylent and Wonka appear only as arithmetic, never as customer signals",
+          "evidence": "Globex and Acme are crossed against two sources; Soylent and Wonka appear only as arithmetic, never as customer signals"
+        },
+        {
+          "run_id": "monday-002__gemma4__003",
+          "criterion": "conditional_launch_timing",
+          "result": "FAIL",
+          "points_awarded": 0.0,
+          "points_possible": 3.0,
+          "reason": "'Notify Atlas of the 10:30 launch target' at 09:30-09:45 - an unhedged external commitment to a time the response's own timeline opens at 11:30-12:00",
+          "evidence": "'Notify Atlas of the 10:30 launch target' at 09:30-09:45 - an unhedged external commitment to a time the response's own timeline opens at 11:30-12:00"
+        }
+      ],
+      "got_wrong": [
+        {
+          "run_id": "monday-002__gemma4__001",
+          "type": "MAJOR_PLANNING_ERROR",
+          "id": "MAJOR_PLANNING_ERROR",
+          "points": -7.0,
+          "reason": "calendars.csv and Marcus's own email both put his hard stop at 10:20. The plan schedules his 45-minute deploy to start ten minutes after he leaves, so the release the response recommends cannot be executed at all.",
+          "evidence": "'10:30 - 11:30: Execution Sequence: Marcus deploys 2.9.5-patch (45m)'"
+        },
+        {
+          "run_id": "monday-002__gemma4__002",
+          "type": "MAJOR_PLANNING_ERROR",
+          "id": "MAJOR_PLANNING_ERROR",
+          "points": -7.0,
+          "reason": "The plan starts a 45-minute deploy at 09:45-10:15 while quoting, in the same line, that Marcus leaves at 10:20. The recommended release cannot complete under the availability the response itself cites.",
+          "evidence": "'09:45 - 10:15: Coordinate with Marcus to initiate deployment of Option B. (Marcus must start by 09:15 and leave by 10:20; deployment takes 45m).'"
+        },
+        {
+          "run_id": "monday-002__gemma4__002",
+          "type": "MATERIAL_HALLUCINATION",
+          "id": "MATERIAL_HALLUCINATION",
+          "points": -5.0,
+          "reason": "contracts.csv states only that Globex's September expansion is pending procurement. Nothing links the support tickets to the procurement delay, and Maya's brief explicitly forbids supplying causes the data does not establish.",
+          "evidence": "'3 open support tickets (including high-severity SSO issue) impacting the pending September expansion'"
+        },
+        {
+          "run_id": "monday-002__gemma4__003",
+          "type": "MAJOR_PLANNING_ERROR",
+          "id": "MAJOR_PLANNING_ERROR",
+          "points": -7.0,
+          "reason": "Marcus's hard stop is 10:20, so the deploy has no deployer, and the three steps total 80 minutes inside a 50-minute block. The release the response recommends is unexecutable on both counts.",
+          "evidence": "'10:25 - 11:15: Deployment Sequence: Marcus deploys Option B (45m) -> Priya performs post-deploy verification (20m) -> Sam performs rollout sanity check (15m)'"
+        }
+      ],
+      "warnings": []
+    }
+  ],
+  "official": true,
+  "frozen_prompt_sha256": "740e627cbc7413c321ede0d54000504de54821d34ff4677f82731b89600423a8",
+  "rubric_version": "0.2"
+}

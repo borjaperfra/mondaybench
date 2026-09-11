@@ -289,7 +289,7 @@ models:
   # slug starts from zero and needs its own 15.
   # ---------------------------------------------------------------------------
   deepseek-v4.1-flash:
-    display_name: "DeepSeek V4.1 Flash"
+    display_name: "DeepSeek V4.1 Flash (2026-09-10 battery, superseded)"
     provider: helmcode
     api_style: openai_compatible
     # Not a typo. The gateway serves 4.1 under the 4 id; there is no 4.1 id.
@@ -317,6 +317,195 @@ models:
       above for what was observed and what is only stated. Its runs are
       therefore distinguishable from the incumbent's by date and by
       provider_metadata.request_id, not by the id that was called.
+
+  # ---------------------------------------------------------------------------
+  # A REPLICATION OF THE PUBLISHED BATTERY, GENERATED 13 DAYS LATER.
+  #
+  # Byte-identical to deepseek-v4.1-flash: same endpoint, same model_id, same
+  # temperature, same ceiling, same caching flag, no reasoning_effort. The only
+  # variable is the clock.
+  #
+  # WHY ITS OWN SLUG. runs/monday-00X/deepseek-v4.1-flash/ holds the three runs
+  # behind the published 84.63. Appending run-004..006 there would silently
+  # re-average that score over six runs; a separate slug leaves every published
+  # number where it is and lets the two batteries be compared as two batteries.
+  #
+  # WHAT IT CAN AND CANNOT SETTLE. It was generated to test whether the
+  # published battery was depressed by service load. It can only do that if the
+  # deployment behind the shared model_id is unchanged since 2026-09-10, which
+  # no client can verify - the id is the same either way. One measured warning
+  # sign is on record: on monday-002, with no effort parameter, this endpoint
+  # returned 13,043-18,005 reasoning tokens on 2026-09-11 against 4,255, 5,183
+  # and 12,497 on 2026-09-10. If that gap holds across the battery, the two are
+  # not the same deployment and no difference in score can be read as load.
+  deepseek-v4.1-flash-rerun-v1:
+    display_name: "DeepSeek V4.1 Flash"
+    provider: helmcode
+    api_style: openai_compatible
+    model_id: "deepseek-v4-flash"
+    base_url_env: HELMCODE_BASE_URL
+    api_key_env: HELMCODE_API_KEY
+    generation:
+      temperature: 0
+      max_output_tokens: 32000
+    extra_body:
+      caching: false
+    capabilities:
+      reasoning: true
+    # DeepSeek's own published rates for V4.1 Flash, which shipped 2026-09-10 -
+    # which is also why the deployment behind the shared `deepseek-v4-flash` id
+    # changed under us. NOT measured from the gateway: this deployment returns no
+    # cost_details, verified again on 2026-09-11, and `/v1/models` carries no
+    # pricing. So this is a FIRST_PARTY_LIST rate, not a reading.
+    #
+    # The rate is time-of-day dependent - peak is Mon-Fri 01:00-04:00 and
+    # 06:00-10:00 UTC, and doubles everything. Recorded here at the OFF-PEAK rate
+    # because all fifteen official runs are timestamped 2026-09-11 17:40-18:00
+    # UTC, which is off-peak, so that is the rate this battery actually incurred.
+    # The peak figures are in the snapshot; the published cost carries both ends.
+    pricing:
+      input_per_million_usd: 0.15
+      output_per_million_usd: 0.60
+      source: "DeepSeek published list price, off-peak, snapshot first-party-2026-09-11"
+    notes: >
+      Replication arm. Not a competitor and not on any board: it exists to be
+      differenced against deepseek-v4.1-flash, whose generation config it copies
+      exactly. Publishing it beside the incumbent would put the same
+      configuration on the leaderboard twice.
+
+  # ---------------------------------------------------------------------------
+  # THE GUARDRAIL ARM OF THE RERUN BATTERY. ONE VARIABLE.
+  #
+  # Identical to deepseek-v4.1-flash-rerun-v1 in every generation parameter -
+  # same endpoint, same model_id, same temperature, same ceilings, same caching
+  # flag, no reasoning_effort, no tools, same retry policy, same prompt assembly.
+  # ONE thing differs: the system prompt is the frozen reliability guardrail
+  # rather than the harness default.
+  #
+  # The control for this arm is deepseek-v4.1-flash-rerun-v1, NOT the older
+  # deepseek-v4.1-flash-reliability-v1 battery. The reliability battery ran on
+  # 2026-09-10 against whatever the gateway served that day, and the reasoning
+  # distribution behind this model_id has since moved; differencing against it
+  # would confound the prompt with that shift.
+  #
+  # `system_prompt_file` points at the reliability experiment's frozen file
+  # rather than a copy, so there is one set of bytes and no second file to drift.
+  # sha256 eb136804970c72fa214521a341fdde95294393990fae0a5e86bd15614794653d.
+  deepseek-v4.1-flash-rerun-guardrail-v1:
+    display_name: "DeepSeek V4.1 Flash (rerun + guardrail 2026-09-11)"
+    provider: helmcode
+    api_style: openai_compatible
+    model_id: "deepseek-v4-flash"
+    base_url_env: HELMCODE_BASE_URL
+    api_key_env: HELMCODE_API_KEY
+    generation:
+      temperature: 0
+      max_output_tokens: 32000
+    extra_body:
+      caching: false
+    capabilities:
+      reasoning: true
+    system_prompt_file: experiments/deepseek-v4.1-flash-reliability-v1/frozen-system-prompt.txt
+    notes: >
+      Treatment arm. Not a competitor and not on any board: it exists to be
+      differenced against deepseek-v4.1-flash-rerun-v1, whose generation config
+      it copies exactly apart from the system prompt.
+
+  # ---------------------------------------------------------------------------
+  # THE REASONING-EFFORT ARM. A THIRD REGIME, NOT "THE SAME WITH MORE EFFORT".
+  #
+  # Identical to deepseek-v4.1-flash in every generation parameter - same
+  # endpoint, same model_id, same temperature, same ceilings, same caching flag,
+  # same retry policy, same prompt assembly, same system prompt. ONE thing
+  # differs: `reasoning_effort: max` is sent in the request body.
+  #
+  # WHY ITS OWN SLUG (IMPLEMENTATION.md s36). Sending the field is not a dial on
+  # the same configuration. Measured against api.helmcode.com on 2026-09-11, the
+  # high levels arrive at the model with MORE prompt tokens than the bare
+  # prompt, so something is injected into the request at those levels. A battery
+  # generated this way is therefore a different regime from the incumbent's, and
+  # averaging the two into one number would put two configurations behind one
+  # score.
+  #
+  # WHAT IS ESTABLISHED ABOUT `max`, AND WHAT IS NOT.
+  #   * It is accepted and it DELIVERS reasoning, on the blocking route and on
+  #     the streaming route the harness actually generates on. Verified with a
+  #     control: `bogus_xyz` returns 200 with reasoning off, so a row of 200s
+  #     means something.
+  #   * It is absent from the gateway's own openapi.json, which declares only
+  #     low | medium | high. It works anyway.
+  #   * It does NOT reliably buy more reasoning. Across three prompts the volume
+  #     does not order by level - on one, `high` came in below `low`. Nothing
+  #     here promises "more effort, more thinking".
+  #
+  # THE SILENT FAILURE THIS SLUG IS EXPOSED TO. Any value the gateway does not
+  # recognise returns 200 with reasoning switched off and no error - "HIGH",
+  # an empty string, the number 100. On the streaming route that comes back as
+  # `reasoning_tokens: 0`, which `reasoning.classify` reads as NOT_DELIVERED and
+  # `qualify_run` rejects, so a typo here cannot quietly produce a battery. That
+  # guard is the reason the value below must never be edited casually.
+  # ---------------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
+  # THE OTHER EFFORT ARM. Same construction as the `-max` slug below, same one
+  # difference from the incumbent - `reasoning_effort` in the request body -
+  # with `high` instead of `max`.
+  #
+  # WHY IT EXISTS. The `max` battery could not be generated: ten of its fifteen
+  # runs consumed the entire output ceiling on reasoning and never emitted an
+  # answer, including three of three on monday-002, monday-003 and monday-005,
+  # with single attempts reaching 583,280 characters of reasoning against the
+  # suite's largest ceiling. `high` is the next level down, and the measured
+  # volume does not order by level - on one of Borja's three probe prompts
+  # `high` came in BELOW `low` - so it is not safe to assume it merely runs away
+  # slightly less. That is the thing being tested.
+  # ---------------------------------------------------------------------------
+  deepseek-v4.1-flash-high:
+    display_name: "DeepSeek V4.1 Flash (reasoning effort high)"
+    provider: helmcode
+    api_style: openai_compatible
+    model_id: "deepseek-v4-flash"
+    base_url_env: HELMCODE_BASE_URL
+    api_key_env: HELMCODE_API_KEY
+    generation:
+      temperature: 0
+      max_output_tokens: 32000
+    extra_body:
+      caching: false
+      # THE EXPERIMENTAL VARIABLE.
+      reasoning_effort: "high"
+    capabilities:
+      reasoning: true
+    notes: >
+      DeepSeek V4.1 Flash with reasoning_effort=high. A separate regime from the
+      incumbent slug for the same reason as the max arm: the gateway injects
+      extra prompt tokens at the high effort levels, so this is not a dial on
+      the incumbent's configuration.
+
+  deepseek-v4.1-flash-max:
+    display_name: "DeepSeek V4.1 Flash (reasoning effort max)"
+    provider: helmcode
+    api_style: openai_compatible
+    model_id: "deepseek-v4-flash"
+    base_url_env: HELMCODE_BASE_URL
+    api_key_env: HELMCODE_API_KEY
+    generation:
+      temperature: 0
+      max_output_tokens: 32000
+    extra_body:
+      # Same as every other DeepSeek battery. A cached completion would return
+      # another battery's bytes.
+      caching: false
+      # THE EXPERIMENTAL VARIABLE, and the only difference from
+      # deepseek-v4.1-flash.
+      reasoning_effort: "max"
+    capabilities:
+      reasoning: true
+    notes: >
+      DeepSeek V4.1 Flash with reasoning_effort=max. A separate regime from the
+      incumbent slug, not a setting on it: the gateway injects extra prompt
+      tokens at the high effort levels. Delivery of reasoning at this level is
+      verified on both routes with a control; depth is not promised, because the
+      measured volume does not order by level.
 
   # ---------------------------------------------------------------------------
   # A VARIANCE PROBE, NOT A COMPETITOR. NEVER PUT THIS SLUG ON A BOARD.

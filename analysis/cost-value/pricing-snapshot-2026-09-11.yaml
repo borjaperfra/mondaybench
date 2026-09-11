@@ -1,0 +1,114 @@
+# MondayBench FIRST-PARTY pricing snapshot — DeepSeek V4.1 Flash
+#
+# snapshot_id:    first-party-2026-09-11
+# effective_date: 2026-09-11
+# pricing_class:  FIRST_PARTY_LIST
+# status:         FROZEN
+# extends:        pricing-2026-09-03 (unchanged, not superseded)
+#
+# WHY THIS SNAPSHOT EXISTS. DeepSeek V4.1 Flash entered suite v1.5 with no price
+# of any kind. The two routes the project normally uses were both tried first and
+# both failed, and that is the reason a list price is being recorded rather than
+# a measurement:
+#
+#   1. GATEWAY MEASUREMENT. Every other DeepSeek figure in this project was read
+#      off `cost_details` in the gateway's own response. That field is gone. A
+#      live call on 2026-09-11 returned usage with prompt_tokens,
+#      completion_tokens, completion_tokens_details and prompt_tokens_details and
+#      no cost of any kind, on any key.
+#   2. GATEWAY METADATA. `GET /v1/models` lists the id and nothing else - no
+#      pricing object. `/v1/pricing` and `/v1/models/<id>` both 404.
+#
+# So the price below is the vendor's published rate, not a reading of what we
+# were charged, and it is classed FIRST_PARTY_LIST accordingly. It is NOT
+# evidence about what the Helmcode gateway bills for this id.
+#
+# THE MODEL SHIPPED THE DAY BEFORE THE BATTERY RAN. V4.1 Flash launched
+# 2026-09-10. DeepSeek serves it under the same `deepseek-v4-flash` id as V4
+# Flash rather than publishing a second id, which is why the deployment behind
+# that id changed between the 2026-09-10 and 2026-09-11 batteries, and why the
+# older battery was retired from the suite. The vendor's own pricing page still
+# listed only V4-Flash and V4-Pro when checked on 2026-09-11; the V4.1 Flash
+# rates below come from DeepSeek's launch announcement as reported at the
+# sources recorded under `provenance`.
+#
+# THE RATE IS TIME-OF-DAY DEPENDENT, WHICH IS WHY THIS IS A RANGE. Peak doubles
+# every line. The battery's own applicable rate is not ambiguous - all fifteen
+# runs are stamped 2026-09-11 between 17:40 and 18:00 UTC, a Friday, which is
+# outside both peak windows - so the off-peak column is what these runs incurred.
+# The peak column is carried because a caller running the same battery inside the
+# window pays it, and a single number would hide that.
+
+snapshot_id: first-party-2026-09-11
+effective_date: "2026-09-11"
+pricing_class: FIRST_PARTY_LIST
+status: FROZEN
+
+peak_window:
+  days: Monday-Friday
+  windows_utc:
+    - "01:00-04:00"
+    - "06:00-10:00"
+  note: >
+    All other hours are off-peak. Peak multiplies every rate below by two.
+
+models:
+  deepseek-v4.1-flash:
+    display_name: DeepSeek V4.1 Flash
+    vendor: DeepSeek
+    benchmark_slug: deepseek-v4.1-flash-rerun-v1
+    model_id_called: deepseek-v4-flash
+    pricing_class: FIRST_PARTY_LIST
+    price_basis: First-party
+    pricing_confidence: MEDIUM
+    # MEDIUM, not HIGH: the rate is the vendor's own and is not in dispute, but it
+    # was read from launch coverage rather than from the vendor's pricing page,
+    # which had not yet been updated when this snapshot was taken.
+    identity_confidence: EXACT
+    # EXACT because the id called is the id the vendor prices, and the vendor
+    # publishes only one V4.1 Flash rate card.
+    benchmark_run_identity: STRONG_MATCH
+    # The runs went through the Helmcode gateway, not DeepSeek direct. The gateway
+    # serves this id and the response fingerprint matches V4.1 Flash behaviour,
+    # but the gateway's own margin is not observable, so the vendor rate is a
+    # floor on what the runs cost, not a reading of it.
+    off_peak_per_million_usd:
+      input_cache_miss: 0.15
+      input_cache_hit: 0.003
+      output: 0.60
+    peak_per_million_usd:
+      input_cache_miss: 0.30
+      input_cache_hit: 0.006
+      output: 1.20
+    applicable_rate_for_official_battery: off_peak
+    applicable_rate_reason: >
+      All fifteen official runs are stamped 2026-09-11 17:40-18:00 UTC, a Friday,
+      outside both peak windows.
+    provenance:
+      - "https://venturebeat.com/technology/deepseek-v4-1-flash-debuts-with-0-003-1m-off-peak-cached-input-rate-and-benchmarks-eclipsing-gpt-5-6-sol-claude-opus-5"
+      - "https://deepseek.ai/pricing"
+    provenance_note: >
+      The vendor page is recorded because it is where this rate will live once
+      updated, and because it is the evidence that it did not list V4.1 Flash on
+      2026-09-11 - it carried V4-Flash at 0.14/0.0028/0.28 and V4-Pro at
+      0.435/0.003625/0.87, neither of which is this model.
+
+# ── MODELS STILL UNPRICED ────────────────────────────────────────────────────
+unknown_pricing_remaining:
+  gpt-6-astra:
+    display_name: GPT-6 Astra
+    published_rate_found: true
+    published_rate_per_million_usd:
+      input: 10.00
+      output: 50.00
+      cached_input: 1.00
+    reason_still_unpriced: NO_TOKEN_COUNTS
+    detail: >
+      A rate is not the blocker; the multiplicand is. Astra's fifteen runs were
+      generated through the Codex CLI, which reports no usage: input_tokens,
+      output_tokens and reasoning_tokens are null in all fifteen artefacts, and
+      `provider_metadata.raw_usage.codex_runtime.unobservable` lists them as
+      unobservable by construction. A cost per task is tokens times a rate, and
+      this model has no tokens. Publishing its list rate beside other models'
+      measured cost per task would invite exactly that multiplication, using a
+      token count nobody has. It stays UNKNOWN until a run of it reports usage.

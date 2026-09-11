@@ -1,0 +1,73 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.5",
+  "scenario_id": "monday-005",
+  "scenario_prompt_sha256": "532cd464a9b75045f808886c44e667237d6fd1b947826510643b9f8bcc30059a",
+  "run_id": "monday-005__deepseek-v4.1-flash-rerun-v1__001",
+  "run_number": 1,
+  "model": {
+    "slug": "deepseek-v4.1-flash-rerun-v1",
+    "display_name": "DeepSeek V4.1 Flash (rerun 2026-09-11)",
+    "provider": "helmcode",
+    "model_id": "deepseek-v4-flash"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 131072,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+    "extra_body": {
+      "caching": false
+    },
+    "config_sha256": "fc165158970f6db8c60eb2b6422c612d987a3fc8994d7ac1adbd5b360ee4a8ff",
+    "safety_ceiling_tokens": 131072,
+    "ceiling_semantics": "provider_specific"
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "DELIVERED",
+    "tokens": 17398,
+    "evidence": "explicit_reasoning_tokens",
+    "stream_observed": true,
+    "stream_event_count": 17398
+  },
+  "timestamp_utc": "2026-09-11T17:58:45Z",
+  "usage": {
+    "input_tokens": 4863,
+    "output_tokens": 19077,
+    "reasoning_tokens": 17398
+  },
+  "performance": {
+    "ttft_ms": 1619.6,
+    "ttfa_ms": 78429.6,
+    "total_latency_ms": 85139.9,
+    "tokens_per_second": 228.4
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "## CEO BRIEFING\n\nDana — for the 15:00 board call, as of 14:20 UTC:\n\n- **Incident:** INC-2026-1109-01, Batch API. Elevated 502s on `POST /v1/batch/jobs` from 11:42 UTC. Other API surfaces are not part of this incident.\n- **Status:** open — mitigated, verification in progress, root cause not established.\n- **Mitigation:** at 12:58 all Batch API traffic was moved to fleet-b; fleet-a drained and held out of rotation. Error rate on the affected endpoint fell to 0.4% within two minutes; 0.3% at 14:12 vs 0.2% baseline. Verification window opened 13:00 and closes 14:30. Nothing is resolved before then.\n- **Root cause:** not established. Two live candidates: the `r3` connection-pool change (max pool 80→24 per worker, shipped 11:31) and concentrated load on one fleet (~3x morning average from 11:38). They may interact. Upstream object-storage provider ruled out. The `r3` rollback test has not been run. Do not state cause as confirmed.\n- **Customer impact:** 17,602 failed Batch API requests out of 58,900 in 11:42–12:58, about **29.9%**. Seven accounts affected: stark-industries, contoso, wayne-enterprises, globex, wonka-industries, umbrella-health, initech. Contoso is the only affected account with a service-level credit clause; the other six are standard terms.\n- **Contoso:** 9,400 Batch API requests, 3,410 failures, first failure 11:43, last 12:56. They have asked about Schedule B credits. We cannot confirm breach or credit now; Monthly Availability is determined after month end and published within 10 business days. Customer email is being sent.\n- **Support:** tickets also from umbrella-health, wonka-industries, globex; Tomas is handling.\n- **Public status:** the 12:05 update said “Identified” and was premature. New status page update at 14:20 says the incident began 11:42, a mitigation has been applied, service is recovering, we are monitoring before confirming recovery, and a further update will follow after 14:30. External lines are limited to the approved list.\n- **Re-drive:** ~60% complete at 13:52, no failures on re-drive. Internal only.\n- **Suggested language if it comes up:** “We had a Batch API incident beginning 11:42 UTC. We mitigated by moving traffic; error rates are back near baseline. We are in a required monitoring window until 14:30 and are not calling it resolved yet. Root cause investigation continues. Seven Batch API accounts saw failed requests; Contoso is the only affected account with service credits in contract, and SLA determination follows the post-month-end process. We will provide a further public update after 14:30.”\n- **Next decision point:** 14:30 verification close. fleet-a return and root-cause testing remain open.\n\n## ENGINEERING UPDATE\n\nINC-2026-1109-01 — Batch API 5xx — IC handover at 14:20 UTC.\n\n**Current state:**\n- Open: mitigated, verification in progress, root cause not established.\n- Mitigated 12:58: all Batch API traffic cut to fleet-b; fleet-a drained and held out of rotation.\n- Error rate on `POST /v1/batch/jobs`: 0.3% at 14:12; baseline 0.2%. Verification window opened 13:00, closes 14:30. Requires 90 minutes continuous normal error rate. Do not call resolved before 14:30.\n- Re-drive: ~60% complete at 13:52, no failures on re-drive.\n\n**Impact:**\n- Window 11:42–12:58. 7 affected accounts, all on fleet-a: stark-industries, contoso, wayne-enterprises, globex, wonka-industries, umbrella-health, initech.\n- Total Batch API: 58,900 requests; 17,602 failures; headline 29.9%.\n- Fleet-a internal: 48,900 requests; 17,602 failures (~36.0%). Fleet-b clean.\n- Contoso is the only affected account with SLA credits; the other six are standard terms.\n\n**Root cause:**\n- **H1 (leading, untested):** `r3` at 11:31 lowered DB pool max 80→24 per worker; fleet-a workers queueing on DB connections. Against: `r3` also on fleet-b, which is healthy.\n- **H2 (live, untested):** concentrated load on fleet-a, ~3x morning average from 11:38, driven by wonka scheduled job. Against: fleet-a took a higher peak on 2026-11-03 without elevated errors.\n- Possible interaction untested.\n- **H3 upstream object storage:** rejected at 11:47 (provider green; Files API healthy).\n- `r3` rollback test not run. 12:31 decision: don’t roll back yet to preserve evidence.\n\n**Open actions:**\n1. 14:30: confirm verification window closes clean. If clean, record window close; root cause still open. Owner: IC/on-call.\n2. Finish re-drive. Owner: Priya.\n3. Run controlled test for H1/H2; `r3` rollback test still pending. Owner: Marcus/Priya.\n4. Decide when to return fleet-a to rotation; currently out. Owner: Marcus.\n5. Support/comms: Tomas/Ruth handling. Contoso TKT-8903/TKT-8907; umbrella TKT-8904; wonka TKT-8912; globex TKT-8918. External lines limited to approved list.\n6. Separate, not part of this incident: SEC-411 (billing schema over-permission found during triage) is not a contributing factor. Marcus owns; target this week to narrow to read-only on the two tables actually used.\n\nNext IC update after 14:30 verification.\n\n## CUSTOMER EMAIL\n\nTo: Contoso  \nSubject: Re: Batch submits failing / SLA — INC-2026-1109-01\n\nHello Contoso team,\n\nThank you for your tickets TKT-8903 and TKT-8907. We can confirm there was an incident affecting the Batch API. It began at 11:42 UTC on 2026-11-09. A mitigation has been applied, and Batch API error rates are recovering. We are monitoring before confirming recovery. We will provide a further update after 14:30 UTC.\n\nFor your account specifically, between 11:42 and 12:58 UTC, your account made 9,400 Batch API requests. 3,410 of those requests failed. The first failed request on your account was at 11:43 UTC and the last was at 12:56 UTC. All times are UTC.\n\nOn your Schedule B question: Schedule B calculates Monthly Availability across the Covered Services for the calendar month. Monthly Availability is determined by Northstar from its own service records after the end of the calendar month and published within 10 business days of month end. A credit claim must be submitted within 30 days of that publication. We cannot confirm a breach of the 99.9% commitment or a specific service credit before that determination.\n\nNorthstar Support\n\n## STATUS PAGE UPDATE\n\n2026-11-09 14:20 — Batch API incident update\n\nThe incident affecting the Batch API began at 11:42 UTC. A mitigation has been applied and the Batch API is recovering. We are monitoring before confirming recovery. We will provide a further update after 14:30 UTC.\n\n*Monitoring.*",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "chatcmpl-aee15fb2-3316-430e-9019-033ecf1aa0b8",
+    "raw_usage": {
+      "completion_tokens": 19077,
+      "prompt_tokens": 4863,
+      "total_tokens": 23940,
+      "completion_tokens_details": {
+        "reasoning_tokens": 17398
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 4608
+      }
+    }
+  }
+}
