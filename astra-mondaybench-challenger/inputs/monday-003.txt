@@ -1,0 +1,347 @@
+You are the Product & Growth Lead at Northstar.
+
+It is Monday at 09:10. You have been offline since Friday at 16:30.
+
+Several important things are supposed to ship this week. Some depend on each other, several workstreams share the same people, and some of the information you have is stale.
+
+Using only the information provided, work out what is really going on and produce an execution plan.
+
+Your response must include:
+
+1. CRITICAL PATH — the sequence of work that determines when this week's commitments can actually be met.
+2. MY PLAN FOR TODAY — what I should do, delegate, or unblock, in order, and who owns each piece.
+3. PARALLEL WORK — what can proceed without waiting.
+4. BLOCKERS & DEPENDENCIES — what is actually blocking work and what can be unblocked.
+5. EARLIEST DELIVERY — the earliest realistic completion of the main critical path.
+6. RISKS / UNKNOWNS — anything that cannot be concluded from the available evidence.
+
+Be concise and practical.
+
+Do not assume information that is not provided.
+
+---
+
+## Slack
+
+# Slack
+
+## Friday 16:42 — #enterprise-sso
+
+Noah:
+Atlas is still expecting Enterprise SSO this week. Wednesday EOD is the committed date.
+
+Marcus:
+The auth side is basically done, but I cannot finish the compatibility work until the billing schema migration lands. The current branch still assumes the old account mapping.
+
+Elena:
+Yep. The schema change is mine. Roughly three hours once I start.
+
+Marcus:
+After that I need about four focused hours for the compatibility patch.
+
+Sam:
+QA needs the completed compatibility patch before regression. Two hours should be enough if nothing surprising appears.
+
+Marcus:
+And production rollout itself is about an hour after QA gives us the green light.
+
+Sam:
+If Marcus ends up stretched this week, can anyone else pick up the compatibility work?
+
+Elena:
+That branch is Marcus's account-mapping rewrite. Nobody else has been inside it since the spike.
+
+## Friday 17:06 — #onboarding
+
+Julia:
+The onboarding flow itself is ready.
+
+Sam:
+Do we still need Marcus's event instrumentation before launch?
+
+Julia:
+No. Existing analytics are enough for launch monitoring. The additional events can ship afterwards.
+
+Marcus:
+Noted. The tracker still has it down as a launch blocker, so I have three hours held for it.
+
+## Friday 17:24 — #contoso
+
+CEO:
+URGENT — Contoso says the export is broken. Can we please get someone on this first thing Monday?
+
+Noah:
+Looking.
+
+Julia:
+I ran it. The export completes and the file is valid. What they are reacting to is the date format: `2026-09-21` where they expect `21/09/2026`.
+
+Noah:
+Does that break their import?
+
+Julia:
+No. They confirmed both formats import correctly. They want the European format for an internal demo Tuesday.
+
+CEO:
+Still, €110k ARR account, and the expansion is meant to sign this quarter. Please don't let it linger.
+
+Julia:
+I wrote that exporter last quarter. Changing the format string and the fixtures is about two hours.
+
+## Monday 08:06 — #support-escalations
+
+Rachel:
+Contoso opened a ticket at 07:40. Two of their delegated administrators get `insufficient scope for tenant export` when they run the tenant data export. Their tenant owner account works.
+
+Sam:
+Reproduced on staging with a delegated-admin token. The tenant-scoped export permission check does not accept delegated admins at all.
+
+Daniel:
+I was in that permission model two weeks ago for the SCIM work, so I can take it. Realistically three and a half hours for me, plus about half an hour with Marcus first to walk the delegated-admin path.
+
+Marcus:
+Two hours if I do it. Either way it sits on the same account-mapping layer as Elena's schema change, so it can only go in after that lands.
+
+Rachel:
+Logged as `contoso_permission_patch` and assigned to Marcus, since it is his module. Reassign if that is wrong.
+
+Rachel:
+Once the permission check accepts delegated admins, producing and sending the file itself is about an hour of Julia's time. Same exporter.
+
+## Monday 08:19 — #billing
+
+Elena:
+Reminder: I am out from Wednesday noon through Friday.
+
+If the billing migration somehow slips, Daniel can take over, but I need about 30 minutes with him before I leave to transfer the production migration permissions and walk through the runbook.
+
+Elena:
+Also, once the schema change lands the reconciliation backfill runs for about ninety minutes. I kick it off; after that it is automated.
+
+## Monday 08:29 — #enterprise-sso
+
+Marcus:
+Heads up on my week. I am in Atlas's pre-rollout technical session on Tuesday, 09:00 to 13:00 — Laura's IT team wants the walkthrough before they start on Thursday. I am heads-down either side of it.
+
+## Monday 08:41 — #board
+
+Sarah:
+I have started the Friday board pack.
+
+Most of it can be done independently, but I do not want to freeze the revenue charts until the billing migration and its backfill are complete. The current revenue pipeline still duplicates some expansion events.
+
+Noah:
+Makes sense. Work on everything else in parallel.
+
+## Monday 08:52 — #pricing
+
+Daniel:
+Reminder that the new pricing page cannot go public until packaging approval clears. Priya's committee signs it off.
+
+Sarah:
+Understood. I will put the approval pack together as soon as the page is built and I can take the screenshots off it.
+
+---
+
+## Emails
+
+# Emails
+
+## Friday 16:48
+From: Maya Osei <maya@northstar.example>
+Subject: SEC-4471 Enterprise SSO — review outcome
+
+Review closed.
+
+Approved for the current implementation scope, which covers the account-mapping rewrite and the tenant permission model as specified in the design doc.
+
+Re-review is required only if the authentication flow itself changes. Permission-check and configuration fixes inside the approved scope do not need to come back to us.
+
+Maya
+
+## Friday 17:38
+From: Laura Chen <laura@atlas.example>
+Subject: Enterprise SSO rollout this week
+
+Hi Noah,
+
+Just confirming that we're still planning for Enterprise SSO to be available by Wednesday end of day.
+
+Our internal IT rollout starts Thursday morning, so Wednesday is the latest useful date for us.
+
+Thanks,
+Laura
+
+## Friday 18:03
+From: Peter Lawson <peter@contoso.example>
+Subject: Export formatting for Tuesday demo
+
+Hi,
+
+Thanks for checking this.
+
+To confirm: the current export imports correctly into our system. This isn't blocking production.
+
+For Tuesday's management demo we'd strongly prefer dates in DD/MM/YYYY rather than ISO format, because that's what the team expects to see.
+
+If you can fix that before Tuesday afternoon, great.
+
+Peter
+
+## Friday 18:20
+From: Priya Raman <priya@northstar.example>
+Subject: Packaging approval — what the committee needs
+
+Reposting the submission checklist so nobody has to ask again.
+
+1. Proposed tier structure and price points.
+2. Screenshots or design mockups showing the proposed packaging. Mockups are acceptable; we do not require captures from a live page.
+3. Margin impact summary.
+
+The committee clears submissions the same working day when they arrive before 12:00. After that they roll to the next morning.
+
+Priya
+
+## Monday 07:52
+From: Anja Weber <anja.weber@contoso.example>
+Subject: Q3 compliance export — delegated admin access
+
+Hello,
+
+Our delegated administrators cannot run the tenant data export; they receive a scope error. Only our tenant owner account can produce it, and she is on leave until October.
+
+Under section 8.3 of our agreement the quarterly compliance export is due to us by 16:00 CET on Tuesday 22 September. Our external auditor's review window closes at that point and we cannot move it.
+
+Please confirm today that this will be delivered.
+
+Anja Weber
+Head of Compliance, Contoso
+
+## Monday 08:17
+From: Elena Ruiz
+Subject: Billing migration / Wednesday
+
+Just flagging my availability because I don't want this to become a surprise.
+
+I'm online normally Monday and Tuesday, then only until 12:00 Wednesday.
+
+The schema migration is straightforward and should take around three hours. The reconciliation backfill that follows it runs for about ninety minutes.
+
+Daniel can execute the migration if needed, but he doesn't currently have the production migration permissions. I can transfer those and walk him through the runbook in around 30 minutes before I leave.
+
+Elena
+
+---
+
+## Meetings
+
+# Meeting notes
+
+## Friday 14:00 — Product / Engineering weekly
+
+### Enterprise SSO
+
+- Wednesday EOD remains the Atlas commitment.
+- Marcus walked the team through the account-mapping rewrite. The branch is his and stays his for the rest of the release.
+- Sam confirmed QA has a regression slot open as soon as there is something to test.
+- Security review is still listed as outstanding on the release checklist as of this meeting.
+
+### Onboarding
+
+- Core onboarding flow is launch-ready.
+- Launch support moves from Marcus to Julia with immediate effect.
+- Marcus keeps the event instrumentation work.
+
+### Contoso
+
+- Renewal plus expansion is the largest single line in the mid-market book this quarter, and the CEO is running it personally.
+- Support keeps the weekly ticket review through quarter close.
+- Contract obligations sit with the compliance team on their side, not with Peter.
+
+### Pricing
+
+- Priya chairs the packaging committee; it meets on a rolling basis rather than weekly.
+- Sarah owns both the new pricing page and the approval submission.
+
+### Board pack
+
+- Sarah can build narrative, customer sections and most charts before billing work completes.
+- Final revenue charts should use the post-backfill dataset, because the existing pipeline can double-count some expansion events.
+
+---
+
+## Tasks
+
+# Task list — last edited Friday 14:20
+
+## Urgent
+
+- 🔴 Marcus — finish onboarding instrumentation before launch
+- 🔴 Product — unblock Security review for Enterprise SSO
+- 🔴 Product — investigate broken Contoso exports
+- 🔴 Sarah — finish pricing page before packaging approval meeting
+
+## This week
+
+- Elena — billing schema migration
+- Marcus — SSO API compatibility patch
+- QA — SSO regression
+- Marcus — SSO production rollout
+- Sarah — board metrics pack
+- Marcus — onboarding launch support
+
+---
+
+## Work Items
+
+work_item,owner,duration_hours,external_deadline,business_context
+billing_schema_migration,Elena,3,2026-09-24T15:00:00+02:00,Billing platform Q3 milestone
+billing_backfill,Elena,1.5,,Revenue data reconciliation
+api_compatibility_patch,Marcus,4,,Enterprise SSO engineering
+sso_regression,QA,2,,Enterprise SSO engineering
+sso_production_rollout,Marcus,1,2026-09-23T17:00:00+02:00,Atlas enterprise delivery
+contoso_permission_patch,Marcus,2,,Tenant export access engineering
+contoso_compliance_export,Julia,1,2026-09-22T16:00:00+02:00,Contoso contractual quarterly delivery
+contoso_export_formatter,Julia,2,,Contoso demo formatting request
+onboarding_instrumentation,Marcus,3,,Product analytics enrichment
+onboarding_launch,Julia,2,2026-09-25T12:00:00+02:00,Self-serve onboarding launch
+packaging_approval_pack,Sarah,1.5,,Internal packaging approval submission
+pricing_page,Sarah,3,2026-09-24T17:00:00+02:00,Public pricing page
+board_pack_non_revenue,Sarah,4,2026-09-25T10:00:00+02:00,Friday board meeting
+board_pack_revenue,Sarah,2,2026-09-25T10:00:00+02:00,Friday board meeting
+
+---
+
+## Availability
+
+person,date,status,available_from,available_until,notes
+Elena,2026-09-21,available,09:00,17:30,Normal working day
+Elena,2026-09-22,available,09:00,17:30,Normal working day
+Elena,2026-09-23,available,09:00,12:00,Leaves at midday
+Elena,2026-09-24,out,,,Away until Monday
+Elena,2026-09-25,out,,,Away until Monday
+Marcus,2026-09-21,available,09:00,17:30,Normal working day
+Marcus,2026-09-22,available,13:00,17:30,Atlas pre-rollout technical session 09:00-13:00
+Marcus,2026-09-23,available,09:00,17:30,Normal working day
+Marcus,2026-09-24,available,09:00,17:30,Normal working day
+Marcus,2026-09-25,available,09:00,17:30,Normal working day
+Daniel,2026-09-21,available,09:00,17:30,Normal working day
+Daniel,2026-09-22,available,09:00,17:30,Normal working day
+Daniel,2026-09-23,available,09:00,17:30,Normal working day
+Daniel,2026-09-24,available,09:00,17:30,Normal working day
+Daniel,2026-09-25,available,09:00,17:30,Normal working day
+Julia,2026-09-21,available,09:00,17:30,Normal working day
+Julia,2026-09-22,available,09:00,17:30,Normal working day
+Julia,2026-09-23,available,09:00,17:30,Normal working day
+Julia,2026-09-24,available,09:00,17:30,Normal working day
+Julia,2026-09-25,available,09:00,17:30,Normal working day
+Sarah,2026-09-21,available,09:00,17:30,Normal working day
+Sarah,2026-09-22,available,09:00,17:30,Normal working day
+Sarah,2026-09-23,available,09:00,17:30,Normal working day
+Sarah,2026-09-24,available,09:00,17:30,Normal working day
+Sarah,2026-09-25,available,09:00,17:30,Normal working day
+QA,2026-09-21,available,09:00,17:30,Normal working day
+QA,2026-09-22,available,09:00,17:30,Normal working day
+QA,2026-09-23,available,09:00,17:30,Normal working day
+QA,2026-09-24,available,09:00,17:30,Normal working day
+QA,2026-09-25,available,09:00,17:30,Normal working day

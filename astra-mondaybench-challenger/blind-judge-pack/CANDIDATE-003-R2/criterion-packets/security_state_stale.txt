@@ -1,0 +1,485 @@
+Evaluate one atomic criterion for MondayBench #003 v0.3 "Blockers". Return JSON only: {"result":"PASS|PARTIAL|FAIL","evidence":"brief semantic evidence","reason":"criterion-specific reason"}.
+
+Judge semantics, not phrasing. No credit for absent information. Full credit may require inference: this scenario states its facts and withholds its conclusions on purpose, so a candidate that derives the right conclusion from the right facts earns the point even if it never uses the rubric's words.
+
+Judge the plan the candidate actually recommends, not the possibility that it might have meant something better. A dependency order, an owner, or a duration that is wrong is material. Generic "coordinate with the team" does not satisfy a criterion that asks for an owner or a sequence.
+
+Two commitments compete in this scenario and either may be nominated as the critical path. Do not mark a candidate down for the label it chose; mark it on whether both chains are reconstructed and the resource contention between them is resolved.
+
+A criterion may be satisfied by what the plan does as well as by what the prose asserts. Where a criterion says a distinction must be unambiguous, a response that assigns the two items different owners and lets only one of them gate a dated delivery has made the distinction, whether or not it also states it in a sentence.
+
+`factual_plan_accuracy` is scored against `factual_anchors` in the answer key and against nothing else. Check only values the response actually uses. An omitted fact is not an error, a rounded start time is not an error, and a wrong dependency, gate or state belongs to the criterion that prices it, not to this one.
+
+Where evidence is sufficient, excessive hedging can lose credit; where it is insufficient, guessing can lose credit. Raising one of the open questions listed in the answer key is correct reading, not a fault.
+
+If a response sits between two labels, choose the lower.
+
+SCENARIO GROUND TRUTH RELEVANT TO THIS CRITERION:
+dependencies:
+  api_compatibility_patch:
+    requires:
+    - billing_schema_migration
+    stated_in: 'slack.md #enterprise-sso Friday 16:42 (Marcus)'
+  sso_regression:
+    requires:
+    - api_compatibility_patch
+    stated_in: 'slack.md #enterprise-sso Friday 16:42 (Sam)'
+  sso_production_rollout:
+    requires:
+    - sso_regression
+    stated_in: 'slack.md #enterprise-sso Friday 16:42 (Marcus)'
+  contoso_permission_patch:
+    requires:
+    - billing_schema_migration
+    stated_in: 'slack.md #support-escalations Monday 08:06 (Marcus)'
+    note: 'The shared root. Both engineering paths sit on the account-mapping layer
+      the schema change rewrites, so neither can start before Elena finishes.
+
+      '
+  contoso_compliance_export:
+    requires:
+    - contoso_permission_patch
+    stated_in: 'slack.md #support-escalations Monday 08:06 (Rachel), emails.md Monday
+      07:52'
+  billing_backfill:
+    requires:
+    - billing_schema_migration
+    stated_in: 'slack.md #billing Monday 08:19 (Elena), emails.md Monday 08:17'
+  packaging_approval:
+    requires:
+    - packaging_approval_pack
+    stated_in: emails.md Friday 18:20 (Priya)
+  pricing_page:
+    requires:
+    - packaging_approval
+    stated_in: 'slack.md #pricing Monday 08:52 (Daniel)'
+  board_pack_revenue:
+    requires:
+    - billing_backfill
+    stated_in: 'slack.md #board Monday 08:41 (Sarah), meetings.md'
+independent_or_nonblocking:
+- contoso_export_formatter
+- onboarding_instrumentation
+- onboarding_launch
+- board_pack_non_revenue
+chains:
+  sso:
+    steps:
+    - billing_schema_migration
+    - api_compatibility_patch
+    - sso_regression
+    - sso_production_rollout
+    work_hours: 10
+    depth: 4
+    external_commitment: Atlas, Wednesday 2026-09-23 17:00
+    contested_owner: Marcus
+  contoso_compliance:
+    steps:
+    - billing_schema_migration
+    - contoso_permission_patch
+    - contoso_compliance_export
+    work_hours: 6
+    depth: 3
+    external_commitment: Contoso MSA section 8.3, Tuesday 2026-09-22 16:00
+    contested_owner: Marcus
+  pricing:
+    steps:
+    - packaging_approval_pack
+    - packaging_approval
+    - pricing_page
+    external_commitment: Thursday 2026-09-24 17:00
+  board:
+    steps:
+    - billing_schema_migration
+    - billing_backfill
+    - board_pack_revenue
+    external_commitment: Friday 2026-09-25 10:00
+resources:
+  billing_schema_migration:
+    preferred:
+    - Elena
+    substitutes:
+    - owner: Daniel
+      duration_hours: 3
+      handoff_minutes: 30
+      handoff_from: Elena
+      prerequisite: production migration permissions transferred, before Wednesday
+        12:00
+  api_compatibility_patch:
+    preferred:
+    - Marcus
+    substitutes: []
+    why_no_substitute: 'Elena, Friday 16:42: nobody else has been inside the branch
+      since the spike.'
+  sso_production_rollout:
+    preferred:
+    - Marcus
+    substitutes: []
+  contoso_permission_patch:
+    preferred:
+    - Marcus
+    default_assignment: Marcus
+    substitutes:
+    - owner: Daniel
+      duration_hours: 3.5
+      handoff_minutes: 30
+      handoff_from: Marcus
+      why: Daniel was in the permission model two weeks ago for the SCIM work.
+  contoso_compliance_export:
+    preferred:
+    - Julia
+    substitutes: []
+  contoso_export_formatter:
+    preferred:
+    - Julia
+    substitutes: []
+    why: Julia wrote the exporter last quarter and quotes the change herself.
+  sso_regression:
+    preferred:
+    - QA
+    substitutes: []
+  billing_backfill:
+    preferred:
+    - Elena
+    substitutes: []
+    why: Automated once started; whoever ran the migration kicks it off.
+  packaging_approval_pack:
+    preferred:
+    - Sarah
+    substitutes: []
+resource_contention:
+  person: Marcus
+  claimed_by:
+  - api_compatibility_patch
+  - sso_production_rollout
+  - contoso_permission_patch
+  substitutable_item: contoso_permission_patch
+  substitute: Daniel
+  cost_of_substituting: +1.5h of Daniel's time, +0.5h of Marcus's for the walkthrough
+stale_items:
+  security_review_for_sso:
+    stated_in: tasks.md 'Product - unblock Security review'; meetings.md release checklist
+    superseded_by: 'emails.md Friday 16:48, Maya: review closed, approved for current
+      scope'
+    actual_state: 'Closed. Re-review is required only if the authentication flow itself
+      changes. Neither the compatibility patch nor the permission fix does that -
+      both are inside the approved scope - so no Security action is needed. A candidate
+      that raises the question and answers it correctly is right; a candidate that
+      raises it and leaves Security as an open gate is not.
+
+      '
+  onboarding_instrumentation_as_launch_blocker:
+    stated_in: tasks.md 'Marcus - finish onboarding instrumentation before launch'
+    superseded_by: 'slack.md #onboarding Friday 17:06, Julia'
+    actual_state: Not required for launch; existing analytics suffice. Marcus is holding
+      three hours for it that nothing needs.
+  onboarding_launch_support_owner:
+    stated_in: tasks.md 'Marcus - onboarding launch support'
+    superseded_by: 'meetings.md: launch support moves from Marcus to Julia with immediate
+      effect'
+    actual_state: Julia owns launch support.
+  contoso_broken_export:
+    stated_in: tasks.md 'Product - investigate broken Contoso exports'
+    superseded_by: 'slack.md #contoso Friday 17:24 (Julia); emails.md Friday 18:03
+      (Peter)'
+    actual_state: 'The export runs and the file is valid. The complaint is a date-format
+      preference for a Tuesday demo. This does NOT generalise to the whole account:
+      the Monday 07:52 email is a different, real defect.
+
+      '
+  pricing_page_before_approval:
+    stated_in: tasks.md 'Sarah - finish pricing page before packaging approval meeting'
+    superseded_by: 'slack.md #pricing Monday 08:52 (Daniel); emails.md Friday 18:20
+      (Priya)'
+    actual_state: Approval comes first, the page follows it, and the approval pack
+      accepts mockups.
+apparent_deadlock:
+  pricing:
+    sarah_intends: assemble the approval pack from screenshots taken off the finished
+      page
+    but: the page cannot go public until packaging approval clears
+    resolved_by: Priya's checklist accepts design mockups; captures from a live page
+      are not required
+    consequence_if_missed: the approval pack never starts and the Thursday 17:00 page
+      date is lost
+canonical_plan:
+  monday:
+  - task: billing_schema_migration
+    owner: Elena
+    start: 09:30
+    end: '12:30'
+  - task: contoso_permission_walkthrough
+    owner: Marcus
+    start: 09:30
+    end: '10:00'
+    note: 30 minutes to Daniel
+  - task: contoso_export_formatter
+    owner: Julia
+    start: 09:30
+    end: '11:30'
+  - task: packaging_approval_pack
+    owner: Sarah
+    start: 09:30
+    end: '11:00'
+    note: submitted before 12:00, so the committee clears it same day
+  - task: billing_backfill
+    owner: Elena
+    start: '12:30'
+    end: '14:00'
+  - task: contoso_permission_patch
+    owner: Daniel
+    start: '12:30'
+    end: '16:00'
+  - task: api_compatibility_patch
+    owner: Marcus
+    start: '13:00'
+    end: '17:00'
+  - task: contoso_compliance_export
+    owner: Julia
+    start: '16:00'
+    end: '17:00'
+  tuesday:
+  - task: sso_regression
+    owner: QA
+    start: 09:00
+    end: '11:00'
+  - task: sso_production_rollout
+    owner: Marcus
+    start: '13:00'
+    end: '14:00'
+    note: Marcus is in the Atlas session until 13:00
+  - task: migration_permissions_transfer
+    owner: Elena
+    start: '14:00'
+    end: '14:30'
+    note: contingency, must happen before Wednesday 12:00
+earliest_delivery:
+  sso:
+    lower_bound: '2026-09-22T14:00:00+02:00'
+    why_it_cannot_be_earlier: 'The chain is ten hours of work that cannot start before
+      09:10 Monday, so it cannot finish on Monday. On Tuesday the rollout is Marcus''s
+      and he is in the Atlas pre-rollout session until 13:00. One hour of rollout
+      after that puts the floor at 14:00, and the floor does not move if the earlier
+      steps are compressed.
+
+      '
+    canonical: '2026-09-22T14:00:00+02:00'
+    against_commitment: 2026-09-23T17:00:00+02:00 - just over a day of slack
+  contoso_compliance:
+    lower_bound: '2026-09-21T15:10:00+02:00'
+    canonical: '2026-09-21T17:00:00+02:00'
+    against_commitment: 2026-09-22T16:00:00+02:00 - about a day of slack
+do_not_credit:
+- 'An SSO completion on Monday: ten hours of dependent work cannot fit.'
+- 'An SSO rollout on Tuesday morning: the rollout owner is unavailable until 13:00.'
+- QA starting before the compatibility patch is complete.
+- Rollout before QA passes.
+- The Contoso permission patch starting before the schema migration lands.
+- Wednesday presented as the earliest SSO delivery when Tuesday is reachable.
+- Marcus spending Monday on onboarding instrumentation.
+- Treating the whole Contoso account as a false alarm because the format complaint
+  was one.
+- Treating the date format as the contractual obligation.
+allocation_comparison:
+  delegated_to_daniel:
+    sso_complete: Tuesday 14:00
+    contoso_delivered: Monday 17:00, about 23 hours before the deadline
+    slack_if_something_slips: Wednesday is free, and Elena is still present until
+      Wednesday noon
+  marcus_does_both:
+    best_case_sso_complete: Tuesday 16:00 to 17:00
+    best_case_contoso_delivered: Monday 15:30, or Tuesday 15:00 depending on the order
+      chosen
+    slack_if_something_slips: 'Near zero on Tuesday. A QA defect, or the migration
+      running long, pushes the rollout to Wednesday and can push the compliance export
+      past a deadline the customer states cannot move.
+
+      '
+    verdict: feasible, materially worse, and avoidable at a cost of 1.5 extra hours
+      of Daniel
+settled_facts:
+- QA cannot start regression before the compatibility patch is complete.
+- Production rollout cannot start before QA passes.
+- Marcus performs both the compatibility patch and the rollout, and no substitute
+  exists for either.
+- Marcus is unavailable Tuesday 09:00-13:00.
+- Both the compatibility patch and the Contoso permission patch sit behind the billing
+  schema migration.
+- Daniel can do the Contoso permission patch in 3.5 hours after 30 minutes with Marcus.
+- The Security approval covers the planned work. Neither remaining patch changes the
+  authentication flow, so no re-review is triggered.
+- Onboarding instrumentation is not required for launch, and launch support belongs
+  to Julia.
+- Julia wrote the exporter, quotes two hours for the format change, and needs one
+  hour to produce the compliance file once the permission check is fixed.
+- The Contoso compliance export is a contractual obligation due Tuesday 16:00 and
+  the customer states the date cannot move.
+- The date-format request is a preference for a demo and the customer confirms the
+  current file imports correctly.
+- Mock screenshots are accepted for internal packaging approval; submissions before
+  12:00 clear the same day.
+- The board revenue section needs the post-backfill dataset, and the backfill is ninety
+  minutes after the migration.
+- Daniel does not currently hold production migration permissions; transferring them
+  plus the runbook costs about 30 minutes of Elena's time and must happen before Wednesday
+  12:00.
+recorded_gaps:
+- How long the packaging committee actually takes once a submission clears is not
+  stated beyond same-day or next-morning.
+- Whether the Atlas pre-rollout session can be moved is not stated.
+- Whether Contoso would accept the compliance export from the tenant owner account
+  is not stated; she is on leave.
+- Nothing states how long the onboarding launch itself takes to execute beyond the
+  two-hour work item.
+- Whether 'the migration lands' means the schema change alone or the schema change
+  plus the backfill is never stated explicitly; the schema change alone is what Marcus
+  names.
+factual_anchors:
+  external_deadlines:
+    sso_production_rollout: 2026-09-23T17:00 - Wednesday EOD, Atlas
+    contoso_compliance_export: 2026-09-22T16:00 CET - Tuesday, Contoso MSA section
+      8.3
+    billing_schema_migration: 2026-09-24T15:00 - THURSDAY 15:00, not Wednesday
+    pricing_page: 2026-09-24T17:00 - Thursday
+    onboarding_launch: 2026-09-25T12:00 - Friday
+    board_pack_non_revenue: 2026-09-25T10:00 - Friday
+    board_pack_revenue: 2026-09-25T10:00 - Friday
+  durations_hours:
+    billing_schema_migration: 3
+    billing_backfill: 1.5
+    api_compatibility_patch: 4
+    sso_regression: 2
+    sso_production_rollout: 1
+    contoso_permission_patch: 2
+    contoso_compliance_export: 1
+    contoso_export_formatter: 2
+    onboarding_instrumentation: 3
+    onboarding_launch: 2
+    packaging_approval_pack: 1.5
+    pricing_page: 3
+    board_pack_non_revenue: 4
+    board_pack_revenue: 2
+    marcus_to_daniel_walkthrough: 0.5
+    elena_to_daniel_permission_transfer: 0.5
+  availability:
+    marcus: Mon, Wed, Thu, Fri 09:00-17:30. TUESDAY 13:00-17:30 only - Atlas session
+      09:00-13:00.
+    elena: Mon and Tue 09:00-17:30, Wed 09:00-12:00, out Thu and Fri.
+    everyone_else: 09:00-17:30 Monday to Friday, unconstrained.
+  owners:
+    billing_schema_migration: Elena
+    api_compatibility_patch: Marcus
+    sso_regression: QA
+    sso_production_rollout: Marcus
+    contoso_permission_patch: Marcus by default; Daniel is the stated substitute
+    contoso_compliance_export: Julia
+    contoso_export_formatter: Julia
+    onboarding_launch: Julia
+    packaging_approval_pack: Sarah
+    pricing_page: Sarah
+    board_pack_non_revenue: Sarah
+    board_pack_revenue: Sarah
+  commitment_terms:
+    atlas: Available by Wednesday EOD; their IT rollout starts Thursday morning.
+    contoso_compliance: 16:00 CET Tuesday 22 September, auditor window closes then,
+      customer states it cannot move.
+    contoso_formatting: DD/MM/YYYY preferred for a Tuesday management demo; current
+      file imports correctly.
+    packaging_committee: Clears submissions the same working day when they arrive
+      before 12:00; otherwise next morning.
+
+CRITERION:
+security_state_stale (dimension: critical_path_and_dependencies)
+
+PASS DEFINITION:
+Security approval is closed for the current scope; the task-list and checklist entries are out of date and no Security action is required.
+
+PARTIAL DEFINITION:
+Notes the approval but still treats Security as something to chase or confirm.
+
+FAIL DEFINITION:
+Neither the PASS nor the PARTIAL bar is met.
+
+MODEL RESPONSE:
+## 1. CRITICAL PATH
+
+**Start with billing, not the stale “urgent” list.** It unlocks three branches:
+
+- **Atlas:** Elena’s migration **3h** → Marcus’s compatibility patch **4h** → Sam/QA regression **2h** → Marcus’s rollout **1h**. Marcus is unavailable Tuesday 09:00–13:00.
+- **Contoso compliance:** migration → Daniel’s permission patch **3.5h**, following **30 minutes with Marcus** → Julia produces and sends the export **1h**. Reassigning this protects Marcus’s unique SSO work.
+- **Board revenue:** migration → automated backfill **1.5h** → Sarah’s revenue section **2h**.
+
+Separately: **packaging submission → approval → public pricing launch**. Building the page is **not** required before submission; mockups are acceptable.
+
+## 2. MY PLAN FOR TODAY
+
+Times below assume no work is already complete and immediate starts at 09:10.
+
+| When | Owner | Action |
+|---|---|---|
+| 09:10 | **You** | Confirm actual progress; replace stale blockers and assignments. Prioritize Contoso’s contractual export separately from its cosmetic demo request. |
+| 09:10–12:10 | **Elena** | Complete billing migration; immediately start automated backfill, finishing approximately 13:40. |
+| 09:10–09:40 | **Marcus + Daniel** | Walk through delegated-admin permissions. Reassign `contoso_permission_patch` to Daniel. |
+| 09:10–10:40 | **Sarah** | Prepare and submit packaging approval pack using mockups, **if required inputs are available**. Get it in before noon. |
+| This morning | **You + Noah/Rachel** | Respond to Anja with the delivery plan; verify contractual timing. Confirm Atlas remains on track. Tell Peter formatting is a separate request. |
+| 12:10–16:10 | **Marcus** | Complete SSO compatibility patch, uninterrupted. |
+| 12:10–15:40 | **Daniel** | Complete Contoso permission patch after migration lands. |
+| 15:40–16:40 | **Julia** | Produce and send Contoso’s compliance export once permissions work. |
+| From 16:10 | **Sam/QA** | Begin SSO regression; finish Tuesday morning. Reserve Marcus’s Tuesday 13:00–14:00 rollout slot. |
+
+**You:** remove Security review as a blocker: approval already covers account mapping and permission fixes. Remove onboarding instrumentation as a launch dependency and transfer launch support to Julia.
+
+## 3. PARALLEL WORK
+
+- **Julia:** formatter **09:10–11:10**, then onboarding launch **11:10–13:10**; retain the afternoon export slot.
+- **Sarah:** build pricing page after submitting approval; publish only after approval. Work on non-revenue board sections independently; revenue work can start after backfill completes.
+- **Elena:** backfill runs unattended; no need to hold Marcus or Daniel until it finishes.
+- **Marcus:** instrumentation remains deferred enrichment, not a launch blocker.
+- **Elena + Daniel:** arrange the 30-minute migration contingency handover before Wednesday noon if still needed; Daniel cannot currently execute the production migration.
+
+## 4. BLOCKERS & DEPENDENCIES
+
+**Real**
+- Billing schema blocks both engineering patches.
+- Marcus uniquely owns the SSO compatibility branch.
+- Delegated-admin permissions block Contoso’s export; its working owner account is unavailable.
+- Backfill blocks freezing board revenue charts.
+- Packaging approval blocks public pricing launch.
+
+**Removable / stale**
+- Security review is already approved unless authentication flow changes.
+- Onboarding does not need additional instrumentation.
+- Pricing submission does not need a completed page.
+- Contoso formatting neither breaks imports nor fixes delegated-admin access.
+
+## 5. EARLIEST DELIVERY
+
+- **Contoso compliance export:** **Monday 16:40**, assuming patch completion includes making the fix usable.
+- **Main SSO path:** **Tuesday 14:00**. Regression finishes Tuesday morning, but rollout waits until Marcus returns at 13:00. This beats Wednesday’s 17:00 commitment.
+- **Billing plus backfill:** **Monday 13:40**.
+
+These are clean-run estimates, not allowances for defects or additional release work.
+
+## 6. RISKS / UNKNOWNS
+
+- **Date conflict:** the work schedule describes Monday **21 September 2026**, while the environment says **10 September**. The plan above uses the supplied workweek; confirm before communicating dates.
+- Anja says **16:00 CET**, while the work item specifies **16:00 +02:00**. Confirm the intended timezone; target the earlier time meanwhile.
+- Permission-patch testing/deployment duration and interactions between the two account-mapping changes are unspecified. Sam should confirm integration coverage.
+- Same-day pricing approval depends on having tier/pricing proposals, mockups and margin analysis ready before noon; their readiness is unknown.
+- Current progress, unexpected defects and additional operational overhead are not supplied. Revalidate estimates at the migration and patch handoffs.
+
+Return valid JSON only:
+
+{
+  "result": "PASS" | "PARTIAL" | "FAIL",
+  "evidence": "short quote or concise description of the relevant part of the response",
+  "reason": "one-sentence explanation"
+}
+
+Rules:
+
+- Judge only what is present in the model response.
+- Do not give credit for facts the response does not state or clearly imply.
+- Do not penalize style, brevity, formatting, or wording.
+- Do not require exact phrasing.
+- If the response is ambiguous between two labels, choose the lower label.

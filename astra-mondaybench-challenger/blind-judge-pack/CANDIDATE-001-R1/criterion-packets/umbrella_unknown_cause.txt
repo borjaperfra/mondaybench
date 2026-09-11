@@ -1,0 +1,87 @@
+You are evaluating a model response for MondayBench.
+
+Your job is NOT to judge writing quality and NOT to assign a numeric score.
+
+Evaluate only the criterion below.
+
+SCENARIO GROUND TRUTH RELEVANT TO THIS CRITERION:
+current_state.umbrella_status:
+  value: anomalous_unknown_cause
+critical_actions.umbrella:
+  expected: true
+  priority: 2
+  facts:
+  - Umbrella has 94,217 requests in the last 24 hours
+  - Umbrella has 163 API errors
+  - Umbrella p95 latency is 1821ms
+  - Umbrella usage is down 41% over 7 days
+  - No provided message explains the anomaly
+  - Stark Industries has more raw API errors than most customers because it has much
+    higher traffic, while its latency and usage remain healthy
+  expected_action:
+  - Investigate the anomaly
+  prohibited:
+  - Claim a specific root cause
+uncertainties:
+- id: umbrella_root_cause
+  expected: unknown
+- id: friday_conversion
+  expected: cannot_be_verified
+- id: churn_causality
+  expected: not_established
+
+CRITERION:
+umbrella_unknown_cause (dimension: uncertainty)
+
+PASS DEFINITION:
+Explicitly distinguishes the observed Umbrella anomaly from an unknown root cause.
+
+PARTIAL DEFINITION:
+Does not invent a cause but fails to express uncertainty clearly.
+
+FAIL DEFINITION:
+Claims a cause not supported by the material.
+
+MODEL RESPONSE:
+## 1. What happened while you were away
+- **Acme incident resolved Thursday:** a 2.18.0 worker configuration exhausted the connection pool. Rollback restored normal service; Acme confirmed recovery and cleared its backlog.
+- **Analytics v2 moved to Wednesday** because of two saved-report regressions, including CSV exports. Sam owns release coordination; Julia fully owns launch communications.
+- **Contoso’s renewal has a legal blocker**, despite earlier optimism from Sales.
+- Enterprise logo churn rose from **3.1% to 4.4%**. Daniel needs a breakdown before Tuesday’s board meeting.
+
+## 2. Your attention today — priority order
+1. **Contoso: resolve by 11:00 today.** €72k ARR renewal could slip to the next approval window. Ask Marcus to verify deletion behavior in disaster-recovery backups against the DPA; coordinate a verified written response with Noah and Legal. Do not guess or promise compliance without confirmation.
+2. **Umbrella: check current customer health promptly.** Supplied metrics show usage down **41%**, p95 latency **1,821 ms**, and **163 errors / 94,217 requests (~0.17%)**, with €54k ARR exposed. Ask Engineering/CS for current telemetry and customer context; the snapshot is dated August 31, so it does not establish a live incident.
+3. **Start the churn breakdown for Tuesday.** Quantify cancellations and the reporting-period denominator; establish whether Pied Piper and Hooli explain the increase or whether it is broader.
+4. **Reply to Initech without sharing proposed pricing.** Explain that pricing is not finalized and cannot be shared yet. Proposals remain confidential until approved and publicly announced.
+5. **Check Analytics readiness with Sam.** Confirm fixes and the complete QA pass are on track for Wednesday. Remove your obsolete launch-email assignment; update the readiness task to reflect the new release date.
+6. **Reply to Globex** about Thursday afternoon, subject to your availability. Close the stale Acme investigation task based on the documented recovery.
+
+## 3. Important, but no action currently needed
+- Marcus owns Acme incident documentation; no further customer action is currently required.
+- Julia owns the launch email; the existing outlined Analytics icon stays.
+- Weekly finance: **€31k new ARR, €18k expansion, €27k churn** — net **+€22k**. Pipeline created: €214k; cash remains on plan.
+- Partner integration still targets October. Daniel owns Wednesday’s pricing review.
+
+## 4. Unclear / needs more information
+- **Contoso:** actual backup-deletion behavior and the relevant DPA retention period.
+- **Churn:** reporting period, underlying counts, and whether known cancellations fully explain the movement.
+- **Conversion:** Slack suggests a drop, but no conversion data was provided; request figures before concluding it “tanked.”
+- **Analytics:** current fix/QA status and details of the second regression.
+- **Timing:** the supplied metrics are dated August 31; their freshness relative to this Monday is not established.
+
+Return valid JSON only:
+
+{
+  "result": "PASS" | "PARTIAL" | "FAIL",
+  "evidence": "short quote or concise description of the relevant part of the response",
+  "reason": "one-sentence explanation"
+}
+
+Rules:
+
+- Judge only what is present in the model response.
+- Do not give credit for facts the response does not state or clearly imply.
+- Do not penalize style, brevity, formatting, or wording.
+- Do not require exact phrasing.
+- If the response is ambiguous between two labels, choose the lower label.

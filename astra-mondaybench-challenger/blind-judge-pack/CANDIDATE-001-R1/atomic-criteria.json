@@ -1,0 +1,751 @@
+[
+  {
+    "id": "contoso_action",
+    "dimension": "action_detection",
+    "points_pass": 8.0,
+    "points_partial": 4.0,
+    "points_fail": 0.0,
+    "pass_definition": "Clearly identifies resolving the Contoso data-retention question before 11:00 Monday as the highest-priority action, and recognizes that the renewal/signature may be delayed if it is not resolved.",
+    "partial_definition": "Identifies Contoso as requiring action today but misses either the 11:00 deadline, the renewal-blocking consequence, or fails to treat it as the top priority.",
+    "fail_definition": "Does not identify the action, materially misunderstands it, or treats the renewal as already fully completed.",
+    "reference_paths": [
+      "critical_actions.contoso",
+      "current_state.contoso_renewal"
+    ],
+    "reference_material": {
+      "critical_actions.contoso": {
+        "expected": true,
+        "priority": 1,
+        "facts": [
+          "Contoso renewal is worth €72k ARR",
+          "Commercial terms are agreed",
+          "Legal requires written confirmation about backup deletion",
+          "Deadline is Monday 11:00",
+          "Marcus is the suggested source of technical information"
+        ],
+        "expected_action": [
+          "Verify backup deletion behavior with Marcus or the appropriate technical owner",
+          "Provide Contoso with written confirmation before 11:00 Monday"
+        ],
+        "prohibited": [
+          "Assume the backup deletion behavior without verification"
+        ]
+      },
+      "current_state.contoso_renewal": {
+        "value": "blocked_pending_retention_confirmation"
+      }
+    }
+  },
+  {
+    "id": "umbrella_action",
+    "dimension": "action_detection",
+    "points_pass": 7.0,
+    "points_partial": 3.5,
+    "points_fail": 0.0,
+    "pass_definition": "Identifies Umbrella's metrics as a serious unexplained anomaly that should be investigated today without claiming a root cause.",
+    "partial_definition": "Notices the anomaly but under-prioritizes it or describes the need for investigation incompletely.",
+    "fail_definition": "Misses Umbrella entirely or presents an unsupported root cause as established.",
+    "reference_paths": [
+      "critical_actions.umbrella",
+      "current_state.umbrella_status"
+    ],
+    "reference_material": {
+      "critical_actions.umbrella": {
+        "expected": true,
+        "priority": 2,
+        "facts": [
+          "Umbrella has 94,217 requests in the last 24 hours",
+          "Umbrella has 163 API errors",
+          "Umbrella p95 latency is 1821ms",
+          "Umbrella usage is down 41% over 7 days",
+          "No provided message explains the anomaly",
+          "Stark Industries has more raw API errors than most customers because it has much higher traffic, while its latency and usage remain healthy"
+        ],
+        "expected_action": [
+          "Investigate the anomaly"
+        ],
+        "prohibited": [
+          "Claim a specific root cause"
+        ]
+      },
+      "current_state.umbrella_status": {
+        "value": "anomalous_unknown_cause"
+      }
+    }
+  },
+  {
+    "id": "churn_action",
+    "dimension": "action_detection",
+    "points_pass": 6.0,
+    "points_partial": 3.0,
+    "points_fail": 0.0,
+    "pass_definition": "Identifies that enterprise churn should be investigated or broken down today ahead of Tuesday's board meeting.",
+    "partial_definition": "Notes churn as important but does not connect it to work required before the board meeting.",
+    "fail_definition": "Misses the churn issue or claims the known cancellations fully explain the increase.",
+    "reference_paths": [
+      "critical_actions.enterprise_churn",
+      "current_state.enterprise_churn",
+      "current_state.board_meeting"
+    ],
+    "reference_material": {
+      "critical_actions.enterprise_churn": {
+        "expected": true,
+        "priority": 3,
+        "facts": [
+          "Enterprise churn increased from 3.1% to 4.4%",
+          "Board meeting is Tuesday",
+          "Pied Piper and Hooli are known cancellations",
+          "Provided information does not establish that they fully explain the increase"
+        ],
+        "expected_action": [
+          "Prepare or investigate a churn breakdown before Tuesday"
+        ]
+      },
+      "current_state.enterprise_churn": {
+        "value": "4.4_percent_up_from_3.1"
+      },
+      "current_state.board_meeting": {
+        "value": "Tuesday"
+      }
+    }
+  },
+  {
+    "id": "analytics_action",
+    "dimension": "action_detection",
+    "points_pass": 4.0,
+    "points_partial": 2.0,
+    "points_fail": 0.0,
+    "pass_definition": "Correctly treats Wednesday as the release date and any readiness check as lower priority than today's critical items.",
+    "partial_definition": "Correctly understands Wednesday but gives disproportionate priority to the release.",
+    "fail_definition": "Treats Analytics v2 as launching Monday or assigns the launch email to the user.",
+    "reference_paths": [
+      "critical_actions.analytics_release",
+      "current_state.analytics_v2_release",
+      "current_state.analytics_launch_email_owner"
+    ],
+    "reference_material": {
+      "critical_actions.analytics_release": {
+        "expected": true,
+        "priority": 4,
+        "facts": [
+          "Analytics v2 was originally planned for Monday",
+          "Release moved to Wednesday",
+          "Sam owns release coordination",
+          "Julia owns launch communications"
+        ],
+        "expected_action": [
+          "Treat Wednesday as the current release date",
+          "Check readiness only as a lower-priority preparation task"
+        ]
+      },
+      "current_state.analytics_v2_release": {
+        "value": "Wednesday"
+      },
+      "current_state.analytics_launch_email_owner": {
+        "value": "Julia"
+      }
+    }
+  },
+  {
+    "id": "acme_resolved",
+    "dimension": "state_reconstruction",
+    "points_pass": 5.0,
+    "points_partial": 2.5,
+    "points_fail": 0.0,
+    "pass_definition": "Clearly states that the Acme incident is resolved or recovered and does not frame it as an active operational problem.",
+    "partial_definition": "Mentions recovery but still suggests light monitoring or follow-up as if the incident may remain active.",
+    "fail_definition": "Treats Acme as an active incident or a Monday investigation priority.",
+    "reference_paths": [
+      "current_state.acme_incident"
+    ],
+    "reference_material": {
+      "current_state.acme_incident": {
+        "value": "resolved"
+      }
+    }
+  },
+  {
+    "id": "release_wednesday",
+    "dimension": "state_reconstruction",
+    "points_pass": 5.0,
+    "points_partial": 2.5,
+    "points_fail": 0.0,
+    "pass_definition": "States that Analytics v2 is now scheduled for Wednesday.",
+    "partial_definition": "Correctly states that the Monday release was delayed but does not identify Wednesday.",
+    "fail_definition": "Says or implies that the release is still Monday.",
+    "reference_paths": [
+      "current_state.analytics_v2_release",
+      "critical_actions.analytics_release"
+    ],
+    "reference_material": {
+      "current_state.analytics_v2_release": {
+        "value": "Wednesday"
+      },
+      "critical_actions.analytics_release": {
+        "expected": true,
+        "priority": 4,
+        "facts": [
+          "Analytics v2 was originally planned for Monday",
+          "Release moved to Wednesday",
+          "Sam owns release coordination",
+          "Julia owns launch communications"
+        ],
+        "expected_action": [
+          "Treat Wednesday as the current release date",
+          "Check readiness only as a lower-priority preparation task"
+        ]
+      }
+    }
+  },
+  {
+    "id": "contoso_blocked",
+    "dimension": "state_reconstruction",
+    "points_pass": 5.0,
+    "points_partial": 2.5,
+    "points_fail": 0.0,
+    "pass_definition": "Correctly states that renewal/signature can be delayed or blocked pending the data-retention confirmation.",
+    "partial_definition": "Identifies the outstanding legal question but misses the approval or signature consequence.",
+    "fail_definition": "Treats the renewal as fully completed or materially misstates the blocker.",
+    "reference_paths": [
+      "current_state.contoso_renewal",
+      "critical_actions.contoso"
+    ],
+    "reference_material": {
+      "current_state.contoso_renewal": {
+        "value": "blocked_pending_retention_confirmation"
+      },
+      "critical_actions.contoso": {
+        "expected": true,
+        "priority": 1,
+        "facts": [
+          "Contoso renewal is worth €72k ARR",
+          "Commercial terms are agreed",
+          "Legal requires written confirmation about backup deletion",
+          "Deadline is Monday 11:00",
+          "Marcus is the suggested source of technical information"
+        ],
+        "expected_action": [
+          "Verify backup deletion behavior with Marcus or the appropriate technical owner",
+          "Provide Contoso with written confirmation before 11:00 Monday"
+        ],
+        "prohibited": [
+          "Assume the backup deletion behavior without verification"
+        ]
+      }
+    }
+  },
+  {
+    "id": "launch_email_julia",
+    "dimension": "state_reconstruction",
+    "points_pass": 5.0,
+    "points_partial": 2.5,
+    "points_fail": 0.0,
+    "pass_definition": "States that Julia owns the launch email or that no launch-email action is required from the user.",
+    "partial_definition": "Does not assign the launch email to the user but misses Julia's ownership.",
+    "fail_definition": "Tells the user to prepare or write the launch email.",
+    "reference_paths": [
+      "current_state.analytics_launch_email_owner",
+      "critical_actions.analytics_release"
+    ],
+    "reference_material": {
+      "current_state.analytics_launch_email_owner": {
+        "value": "Julia"
+      },
+      "critical_actions.analytics_release": {
+        "expected": true,
+        "priority": 4,
+        "facts": [
+          "Analytics v2 was originally planned for Monday",
+          "Release moved to Wednesday",
+          "Sam owns release coordination",
+          "Julia owns launch communications"
+        ],
+        "expected_action": [
+          "Treat Wednesday as the current release date",
+          "Check readiness only as a lower-priority preparation task"
+        ]
+      }
+    }
+  },
+  {
+    "id": "pricing_confidential",
+    "dimension": "state_reconstruction",
+    "points_pass": 5.0,
+    "points_partial": 2.5,
+    "points_fail": 0.0,
+    "pass_definition": "States that the proposed Enterprise pricing is not final and must not be shared externally.",
+    "partial_definition": "States that pricing is not final but does not recognize the external-sharing restriction.",
+    "fail_definition": "Recommends sending draft or new pricing to Initech.",
+    "reference_paths": [
+      "current_state.enterprise_pricing",
+      "non_actions"
+    ],
+    "reference_material": {
+      "current_state.enterprise_pricing": {
+        "value": "proposal_confidential_not_final"
+      },
+      "non_actions": [
+        "Do not send proposed Enterprise pricing to Initech",
+        "Do not prepare the Analytics v2 launch email",
+        "Do not investigate Acme as an active incident",
+        "Do not treat Friday partner sync as upcoming",
+        "Do not take action on the design icon discussion",
+        "Do not infer Friday conversion performance"
+      ]
+    }
+  },
+  {
+    "id": "contoso_first",
+    "dimension": "prioritization",
+    "points_pass": 6.0,
+    "points_partial": 3.0,
+    "points_fail": 0.0,
+    "pass_definition": "Explicitly treats Contoso as the first or highest-priority item.",
+    "partial_definition": "Includes Contoso among the top priorities but does not clearly rank it first.",
+    "fail_definition": "Under-prioritizes, omits, or presents Contoso as non-urgent.",
+    "reference_paths": [
+      "critical_actions.contoso",
+      "critical_actions.umbrella",
+      "critical_actions.enterprise_churn",
+      "critical_actions.analytics_release"
+    ],
+    "reference_material": {
+      "critical_actions.contoso": {
+        "expected": true,
+        "priority": 1,
+        "facts": [
+          "Contoso renewal is worth €72k ARR",
+          "Commercial terms are agreed",
+          "Legal requires written confirmation about backup deletion",
+          "Deadline is Monday 11:00",
+          "Marcus is the suggested source of technical information"
+        ],
+        "expected_action": [
+          "Verify backup deletion behavior with Marcus or the appropriate technical owner",
+          "Provide Contoso with written confirmation before 11:00 Monday"
+        ],
+        "prohibited": [
+          "Assume the backup deletion behavior without verification"
+        ]
+      },
+      "critical_actions.umbrella": {
+        "expected": true,
+        "priority": 2,
+        "facts": [
+          "Umbrella has 94,217 requests in the last 24 hours",
+          "Umbrella has 163 API errors",
+          "Umbrella p95 latency is 1821ms",
+          "Umbrella usage is down 41% over 7 days",
+          "No provided message explains the anomaly",
+          "Stark Industries has more raw API errors than most customers because it has much higher traffic, while its latency and usage remain healthy"
+        ],
+        "expected_action": [
+          "Investigate the anomaly"
+        ],
+        "prohibited": [
+          "Claim a specific root cause"
+        ]
+      },
+      "critical_actions.enterprise_churn": {
+        "expected": true,
+        "priority": 3,
+        "facts": [
+          "Enterprise churn increased from 3.1% to 4.4%",
+          "Board meeting is Tuesday",
+          "Pied Piper and Hooli are known cancellations",
+          "Provided information does not establish that they fully explain the increase"
+        ],
+        "expected_action": [
+          "Prepare or investigate a churn breakdown before Tuesday"
+        ]
+      },
+      "critical_actions.analytics_release": {
+        "expected": true,
+        "priority": 4,
+        "facts": [
+          "Analytics v2 was originally planned for Monday",
+          "Release moved to Wednesday",
+          "Sam owns release coordination",
+          "Julia owns launch communications"
+        ],
+        "expected_action": [
+          "Treat Wednesday as the current release date",
+          "Check readiness only as a lower-priority preparation task"
+        ]
+      }
+    }
+  },
+  {
+    "id": "umbrella_and_churn_high",
+    "dimension": "prioritization",
+    "points_pass": 5.0,
+    "points_partial": 2.5,
+    "points_fail": 0.0,
+    "pass_definition": "Both Umbrella investigation and churn analysis are prominent actionable items for today after Contoso.",
+    "partial_definition": "Only one is appropriately prioritized or both appear but are buried.",
+    "fail_definition": "Neither receives meaningful attention.",
+    "reference_paths": [
+      "critical_actions.umbrella",
+      "critical_actions.enterprise_churn"
+    ],
+    "reference_material": {
+      "critical_actions.umbrella": {
+        "expected": true,
+        "priority": 2,
+        "facts": [
+          "Umbrella has 94,217 requests in the last 24 hours",
+          "Umbrella has 163 API errors",
+          "Umbrella p95 latency is 1821ms",
+          "Umbrella usage is down 41% over 7 days",
+          "No provided message explains the anomaly",
+          "Stark Industries has more raw API errors than most customers because it has much higher traffic, while its latency and usage remain healthy"
+        ],
+        "expected_action": [
+          "Investigate the anomaly"
+        ],
+        "prohibited": [
+          "Claim a specific root cause"
+        ]
+      },
+      "critical_actions.enterprise_churn": {
+        "expected": true,
+        "priority": 3,
+        "facts": [
+          "Enterprise churn increased from 3.1% to 4.4%",
+          "Board meeting is Tuesday",
+          "Pied Piper and Hooli are known cancellations",
+          "Provided information does not establish that they fully explain the increase"
+        ],
+        "expected_action": [
+          "Prepare or investigate a churn breakdown before Tuesday"
+        ]
+      }
+    }
+  },
+  {
+    "id": "no_false_priorities",
+    "dimension": "prioritization",
+    "points_pass": 4.0,
+    "points_partial": 2.0,
+    "points_fail": 0.0,
+    "pass_definition": "No resolved, delegated, completed, or irrelevant item is elevated over legitimate work.",
+    "partial_definition": "One unnecessary item receives moderate priority.",
+    "fail_definition": "Multiple stale or irrelevant items are presented as priorities.",
+    "reference_paths": [
+      "non_actions",
+      "current_state",
+      "secondary_actions"
+    ],
+    "reference_material": {
+      "non_actions": [
+        "Do not send proposed Enterprise pricing to Initech",
+        "Do not prepare the Analytics v2 launch email",
+        "Do not investigate Acme as an active incident",
+        "Do not treat Friday partner sync as upcoming",
+        "Do not take action on the design icon discussion",
+        "Do not infer Friday conversion performance"
+      ],
+      "current_state": {
+        "contoso_renewal": {
+          "value": "blocked_pending_retention_confirmation"
+        },
+        "acme_incident": {
+          "value": "resolved"
+        },
+        "analytics_v2_release": {
+          "value": "Wednesday"
+        },
+        "analytics_launch_email_owner": {
+          "value": "Julia"
+        },
+        "enterprise_pricing": {
+          "value": "proposal_confidential_not_final"
+        },
+        "umbrella_status": {
+          "value": "anomalous_unknown_cause"
+        },
+        "enterprise_churn": {
+          "value": "4.4_percent_up_from_3.1"
+        },
+        "friday_conversion": {
+          "value": "unknown_from_provided_data"
+        },
+        "board_meeting": {
+          "value": "Tuesday"
+        },
+        "partner_sync": {
+          "value": "completed"
+        }
+      },
+      "secondary_actions": {
+        "globex_reschedule": {
+          "facts": [
+            "Globex asked to move the Q3 planning session from Tuesday to Thursday afternoon",
+            "There is no urgency",
+            "Confirming early in the week is sufficient"
+          ],
+          "priority": "low"
+        }
+      }
+    }
+  },
+  {
+    "id": "umbrella_detected",
+    "dimension": "data_reasoning",
+    "points_pass": 5.0,
+    "points_partial": 2.5,
+    "points_fail": 0.0,
+    "pass_definition": "Identifies Umbrella as the customer with clearly anomalous metrics.",
+    "partial_definition": "Notices a metrics problem but does not clearly connect it to Umbrella.",
+    "fail_definition": "Misses the anomaly.",
+    "reference_paths": [
+      "critical_actions.umbrella"
+    ],
+    "reference_material": {
+      "critical_actions.umbrella": {
+        "expected": true,
+        "priority": 2,
+        "facts": [
+          "Umbrella has 94,217 requests in the last 24 hours",
+          "Umbrella has 163 API errors",
+          "Umbrella p95 latency is 1821ms",
+          "Umbrella usage is down 41% over 7 days",
+          "No provided message explains the anomaly",
+          "Stark Industries has more raw API errors than most customers because it has much higher traffic, while its latency and usage remain healthy"
+        ],
+        "expected_action": [
+          "Investigate the anomaly"
+        ],
+        "prohibited": [
+          "Claim a specific root cause"
+        ]
+      }
+    }
+  },
+  {
+    "id": "umbrella_metrics",
+    "dimension": "data_reasoning",
+    "points_pass": 4.0,
+    "points_partial": 2.0,
+    "points_fail": 0.0,
+    "pass_definition": "Uses at least two correct supporting signals for Umbrella, such as 163 API errors, 1821ms p95 latency, -41% 7-day usage, or its relatively low request count compared with Stark Industries.",
+    "partial_definition": "Uses one correct supporting signal.",
+    "fail_definition": "Gives incorrect numbers or no supporting evidence.",
+    "reference_paths": [
+      "critical_actions.umbrella"
+    ],
+    "reference_material": {
+      "critical_actions.umbrella": {
+        "expected": true,
+        "priority": 2,
+        "facts": [
+          "Umbrella has 94,217 requests in the last 24 hours",
+          "Umbrella has 163 API errors",
+          "Umbrella p95 latency is 1821ms",
+          "Umbrella usage is down 41% over 7 days",
+          "No provided message explains the anomaly",
+          "Stark Industries has more raw API errors than most customers because it has much higher traffic, while its latency and usage remain healthy"
+        ],
+        "expected_action": [
+          "Investigate the anomaly"
+        ],
+        "prohibited": [
+          "Claim a specific root cause"
+        ]
+      }
+    }
+  },
+  {
+    "id": "churn_numbers",
+    "dimension": "data_reasoning",
+    "points_pass": 3.0,
+    "points_partial": 1.5,
+    "points_fail": 0.0,
+    "pass_definition": "Correctly identifies the move from 3.1% to 4.4%.",
+    "partial_definition": "Correctly states that enterprise churn increased but omits the figures.",
+    "fail_definition": "Gives the wrong direction or materially wrong numbers.",
+    "reference_paths": [
+      "current_state.enterprise_churn",
+      "critical_actions.enterprise_churn"
+    ],
+    "reference_material": {
+      "current_state.enterprise_churn": {
+        "value": "4.4_percent_up_from_3.1"
+      },
+      "critical_actions.enterprise_churn": {
+        "expected": true,
+        "priority": 3,
+        "facts": [
+          "Enterprise churn increased from 3.1% to 4.4%",
+          "Board meeting is Tuesday",
+          "Pied Piper and Hooli are known cancellations",
+          "Provided information does not establish that they fully explain the increase"
+        ],
+        "expected_action": [
+          "Prepare or investigate a churn breakdown before Tuesday"
+        ]
+      }
+    }
+  },
+  {
+    "id": "umbrella_error_rate",
+    "dimension": "data_reasoning",
+    "points_pass": 3.0,
+    "points_partial": 1.5,
+    "points_fail": 0.0,
+    "pass_definition": "Reads Umbrella's error count against its traffic rather than in isolation: gives an error rate, cites the 94,217 request volume alongside the 163 errors, or notes that Stark Industries carries more raw errors on far higher traffic while remaining healthy.",
+    "partial_definition": "Compares Umbrella with another customer, or mentions its low request volume, but does not connect the volume to why the error count is alarming.",
+    "fail_definition": "Treats the raw error count as self-evidently alarming with no reference to traffic, or draws an incorrect comparison.",
+    "reference_paths": [
+      "critical_actions.umbrella"
+    ],
+    "reference_material": {
+      "critical_actions.umbrella": {
+        "expected": true,
+        "priority": 2,
+        "facts": [
+          "Umbrella has 94,217 requests in the last 24 hours",
+          "Umbrella has 163 API errors",
+          "Umbrella p95 latency is 1821ms",
+          "Umbrella usage is down 41% over 7 days",
+          "No provided message explains the anomaly",
+          "Stark Industries has more raw API errors than most customers because it has much higher traffic, while its latency and usage remain healthy"
+        ],
+        "expected_action": [
+          "Investigate the anomaly"
+        ],
+        "prohibited": [
+          "Claim a specific root cause"
+        ]
+      }
+    }
+  },
+  {
+    "id": "umbrella_unknown_cause",
+    "dimension": "uncertainty",
+    "points_pass": 4.0,
+    "points_partial": 2.0,
+    "points_fail": 0.0,
+    "pass_definition": "Explicitly distinguishes the observed Umbrella anomaly from an unknown root cause.",
+    "partial_definition": "Does not invent a cause but fails to express uncertainty clearly.",
+    "fail_definition": "Claims a cause not supported by the material.",
+    "reference_paths": [
+      "current_state.umbrella_status",
+      "critical_actions.umbrella",
+      "uncertainties"
+    ],
+    "reference_material": {
+      "current_state.umbrella_status": {
+        "value": "anomalous_unknown_cause"
+      },
+      "critical_actions.umbrella": {
+        "expected": true,
+        "priority": 2,
+        "facts": [
+          "Umbrella has 94,217 requests in the last 24 hours",
+          "Umbrella has 163 API errors",
+          "Umbrella p95 latency is 1821ms",
+          "Umbrella usage is down 41% over 7 days",
+          "No provided message explains the anomaly",
+          "Stark Industries has more raw API errors than most customers because it has much higher traffic, while its latency and usage remain healthy"
+        ],
+        "expected_action": [
+          "Investigate the anomaly"
+        ],
+        "prohibited": [
+          "Claim a specific root cause"
+        ]
+      },
+      "uncertainties": [
+        {
+          "id": "umbrella_root_cause",
+          "expected": "unknown"
+        },
+        {
+          "id": "friday_conversion",
+          "expected": "cannot_be_verified"
+        },
+        {
+          "id": "churn_causality",
+          "expected": "not_established"
+        }
+      ]
+    }
+  },
+  {
+    "id": "friday_conversion_unknown",
+    "dimension": "uncertainty",
+    "points_pass": 3.0,
+    "points_partial": 1.5,
+    "points_fail": 0.0,
+    "pass_definition": "Explicitly says Friday conversion cannot be verified from the provided data.",
+    "partial_definition": "Does not repeat the Slack speculation as fact but does not flag the uncertainty.",
+    "fail_definition": "Treats the Friday conversion drop as established fact.",
+    "reference_paths": [
+      "current_state.friday_conversion",
+      "uncertainties"
+    ],
+    "reference_material": {
+      "current_state.friday_conversion": {
+        "value": "unknown_from_provided_data"
+      },
+      "uncertainties": [
+        {
+          "id": "umbrella_root_cause",
+          "expected": "unknown"
+        },
+        {
+          "id": "friday_conversion",
+          "expected": "cannot_be_verified"
+        },
+        {
+          "id": "churn_causality",
+          "expected": "not_established"
+        }
+      ]
+    }
+  },
+  {
+    "id": "churn_causality_unknown",
+    "dimension": "uncertainty",
+    "points_pass": 3.0,
+    "points_partial": 1.5,
+    "points_fail": 0.0,
+    "pass_definition": "States that Pied Piper and Hooli may contribute but do not establish the full cause of the churn increase.",
+    "partial_definition": "Mentions the known cancellations without claiming they fully explain the increase.",
+    "fail_definition": "Says or strongly implies that those two cancellations explain the increase.",
+    "reference_paths": [
+      "critical_actions.enterprise_churn",
+      "uncertainties"
+    ],
+    "reference_material": {
+      "critical_actions.enterprise_churn": {
+        "expected": true,
+        "priority": 3,
+        "facts": [
+          "Enterprise churn increased from 3.1% to 4.4%",
+          "Board meeting is Tuesday",
+          "Pied Piper and Hooli are known cancellations",
+          "Provided information does not establish that they fully explain the increase"
+        ],
+        "expected_action": [
+          "Prepare or investigate a churn breakdown before Tuesday"
+        ]
+      },
+      "uncertainties": [
+        {
+          "id": "umbrella_root_cause",
+          "expected": "unknown"
+        },
+        {
+          "id": "friday_conversion",
+          "expected": "cannot_be_verified"
+        },
+        {
+          "id": "churn_causality",
+          "expected": "not_established"
+        }
+      ]
+    }
+  }
+]

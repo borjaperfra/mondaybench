@@ -1,0 +1,652 @@
+Evaluate one atomic criterion for MondayBench #005 v0.1 "Read the Room". Return JSON only: {"result":"PASS|PARTIAL|FAIL","evidence":"brief semantic evidence","reason":"criterion-specific reason"}.
+
+The response contains four artifacts under fixed headings: CEO BRIEFING, ENGINEERING UPDATE, CUSTOMER EMAIL, STATUS PAGE UPDATE. Most criteria are scoped to one of them and say which. Some compare all four. Read the whole response before scoring any criterion, because a fact's correctness here depends on which artifact it is in.
+
+**This is not a writing test.** Do not score tone, register, length, structure, formatting or professionalism, and do not reward fluency. A blunt four-line status update that says the right things beats a polished one that publishes an unapproved time. If a criterion tempts you toward "this reads well", you are scoring the wrong thing.
+
+**Different detail is not contradiction.** This is the single most important instruction here and the easiest to get wrong. Two artifacts stating the same fact at different resolutions are consistent: "a subset of Batch API requests failed" on the status page and "29.9% of Batch API requests failed" in the CEO briefing are the same fact. A fact present in one artifact and absent from another is not a contradiction. Different framing for a technical and a non-technical reader is not a contradiction. The customer email using Contoso's own 36.3% while the CEO briefing uses the 29.9% aggregate is not a contradiction - those are two correct figures on two correct denominators for two different readers. Only an artifact asserting a factual or commitment STATE that another artifact denies is a contradiction.
+
+**Absence is not denial.** Saying nothing about cause in the customer email while treating it as an open hypothesis in the engineering update is the correct pattern, not an inconsistency. Several criteria are satisfied precisely by a fact NOT appearing somewhere.
+
+**But an artifact that was not produced does not earn the absence criteria.** If a criterion is scoped to an artifact the response did not write, or wrote so slightly that it is not the deliverable, score FAIL. A boundary is honoured by a document that exists and leaves the fact out, not by the absence of the document. A response cannot buy the confidentiality points by staying silent.
+
+**Omission and error are different labels.** Where a criterion requires something and the response simply does not do it, that is PARTIAL. Where the response does it wrongly - asserts a cause that is not established, publishes a time nobody approved, tells the customer the wrong number - that is FAIL. Do not collapse the two.
+
+**Wording is free; state is not.** Never require a phrase. "Root cause remains under investigation", "we have not confirmed the underlying cause", "the cause is still unconfirmed" and "leading hypothesis, untested" are all the same correct state. "The outage was caused by the connection-pool change", stated without qualification, is the wrong state however carefully it is written. Judge the state the reader would come away with.
+
+**Numbers carry tolerance.** The aggregate impact figure passes anywhere from 28% to 32%, and "about 30%", "roughly a third" and the raw counts all pass. Per-account figures pass within 1%. What does not pass is a figure on the wrong denominator, because the reporting basis is stated in context.md.
+
+Score only the criterion in front of you. This scenario deliberately lets one mistake surface in several places - publishing the internal estimate is both a boundary failure and a commitment failure, and each criterion prices its own consequence. Do not charge the same error twice inside one criterion, and do not credit a correct call here because the response got a different one right elsewhere.
+
+If a response sits between two labels, choose the lower.
+
+SCENARIO GROUND TRUTH RELEVANT TO THIS CRITERION:
+scenario_id: monday-005
+snapshot_utc: '2026-11-09T14:20:00Z'
+incident:
+  id: INC-2026-1109-01
+  start_utc: '2026-11-09T11:42:00Z'
+  start_basis: 'First alert, batch_api_5xx_rate crossing its page threshold on fleet-a.
+    Corroborated by customer-impact.csv, whose earliest first_failure_utc is 11:42
+    (globex). The 12:05 status page update is NOT the start time and the 11:55 update
+    is not either; both are publication times.
+
+    '
+  affected_service: Batch API
+  affected_endpoint: POST /v1/batch/jobs
+  unaffected_services:
+  - Inference API
+  - Embeddings API
+  - Files API
+  scope_note: 'One named API surface, not the platform. A response that describes
+    this as a platform-wide or general API outage has overstated the scope.
+
+    '
+  severity_basis: 'Partial failure of one API surface for seven accounts over 76 minutes.
+    Not a total outage: submissions were partially succeeding throughout, and two
+    of the nine Batch API accounts saw no failures at all.
+
+    '
+  mitigation:
+    applied_utc: '2026-11-09T12:58:00Z'
+    action: All Batch API traffic cut over to fleet-b; fleet-a drained and held out
+      of rotation.
+    effect: Error rate on POST /v1/batch/jobs fell to 0.4% within two minutes. Baseline
+      is 0.2%.
+  state_machine:
+    fix_deployed: false
+    mitigation_applied: true
+    service_recovering: true
+    verification_underway: true
+    incident_resolved: false
+  verification:
+    opened_utc: '2026-11-09T13:00:00Z'
+    closes_utc: '2026-11-09T14:30:00Z'
+    policy: 90 minutes of continuous normal error rate on the affected endpoint before
+      resolution may be declared.
+    complete_at_snapshot: false
+    minutes_remaining_at_snapshot: 10
+  currently_ongoing: true
+  still_open_at_snapshot:
+  - Root cause not established; two candidate explanations untested.
+  - The r3 rollback test has not been run.
+  - fleet-a is out of rotation and has not been returned to service.
+  - The re-drive of failed jobs is ~60% complete.
+  - Resolution cannot be declared before 14:30.
+root_cause:
+  confirmed: null
+  confirmed_is_known: false
+  statement: 'No root cause is established at the snapshot. Two explanations remain
+    live and neither has been tested. Any artifact asserting a cause has invented
+    one.
+
+    '
+  hypotheses:
+  - id: H1
+    label: Connection-pool ceiling lowered by release batch-api@2026.11.09-r3
+    status: leading
+    tested: false
+    evidence_for:
+    - r3 lowered max pool size from 80 to 24 per worker.
+    - r3 shipped at 11:31, eleven minutes before the first page.
+    - fleet-a workers were observably queueing on database connections.
+    evidence_against:
+    - r3 shipped to fleet-b as well, and fleet-b never degraded.
+  - id: H2
+    label: Concentrated load on fleet-a from one large scheduled job
+    status: secondary_live
+    tested: false
+    evidence_for:
+    - fleet-a ran at ~3x its morning average from 11:38.
+    - The volume came mainly from wonka-industries' scheduled job.
+    evidence_against:
+    - fleet-a absorbed a higher peak on 2026-11-03 without elevated errors.
+  - id: H3
+    label: Upstream object-storage provider
+    status: rejected
+    tested: true
+    rejected_utc: '2026-11-09T11:47:00Z'
+    evidence_against:
+    - Provider status page green throughout.
+    - The Files API uses the same provider and stayed healthy.
+  interaction_note: 'H1 and H2 plausibly interact - a lower pool ceiling biting under
+    higher concurrency. That is a third proposition and is also untested. A response
+    that offers the interaction as the likely explanation, labelled as unconfirmed,
+    is reasoning correctly and must not be marked down for it.
+
+    '
+impact:
+  window_start_utc: '11:42'
+  window_end_utc: '12:58'
+  duration_minutes: 76
+  batch_requests_window: 58900
+  batch_failures_window: 17602
+  canonical_failure_rate_pct: 29.88
+  total_accounts: 36
+  batch_api_accounts: 9
+  affected_accounts_count: 7
+  affected_accounts:
+  - stark-industries
+  - contoso
+  - wayne-enterprises
+  - globex
+  - wonka-industries
+  - umbrella-health
+  - initech
+  unaffected_batch_accounts:
+  - acme-corp
+  - aperture-labs
+  wrong_denominators:
+    fleet_a_only_pct: 36.0
+    fleet_a_only_why_wrong: 'Exaggerates. Restricts the denominator to the degraded
+      fleet, which context.md states is an internal deployment detail and not a reporting
+      basis.
+
+      '
+    all_platform_requests_pct: 2.09
+    all_platform_requests_why_wrong: 'Minimises. Divides Batch failures by all 842,000
+      platform requests across four API surfaces, three of which were never affected.
+
+      '
+    share_of_all_accounts_pct: 19.4
+    share_of_all_accounts_why_wrong: 'Not wrong as a statement - 7 of 36 accounts
+      is true - but it is not the impact rate and must not be presented as one. 7
+      of 9 Batch API accounts (77.8%) is the meaningful population statement.
+
+      '
+  per_account:
+    stark-industries:
+      requests: 14200
+      failures: 5180
+      rate_pct: 36.48
+      first: '11:43'
+      last: '12:57'
+    contoso:
+      requests: 9400
+      failures: 3410
+      rate_pct: 36.28
+      first: '11:43'
+      last: '12:56'
+    wayne-enterprises:
+      requests: 7850
+      failures: 2790
+      rate_pct: 35.54
+      first: '11:44'
+      last: '12:57'
+    globex:
+      requests: 6100
+      failures: 2240
+      rate_pct: 36.72
+      first: '11:42'
+      last: '12:55'
+    wonka-industries:
+      requests: 5900
+      failures: 2020
+      rate_pct: 34.24
+      first: '11:46'
+      last: '12:57'
+    umbrella-health:
+      requests: 4300
+      failures: 1560
+      rate_pct: 36.28
+      first: '11:45'
+      last: '12:54'
+    initech:
+      requests: 1150
+      failures: 402
+      rate_pct: 34.96
+      first: '11:51'
+      last: '12:48'
+  known:
+  - Which accounts failed, how many requests each, and their first and last failure.
+  - That two Batch accounts on fleet-b saw no failures.
+  - That the re-drive of failed jobs is running and has produced no failures.
+  unknown:
+  - Whether the re-drive will fully recover every failed job.
+  - 'Contoso''s month-to-date request and failure totals: no source carries them.'
+  - How much of Contoso's November failure volume is excludable as customer-caused.
+commitments:
+  internal_estimate:
+    value_utc: '2026-11-09T16:00:00Z'
+    source: 'Marcus, #inc-batch-1109 at 13:41'
+    wording: fully wrapped up and fleet-a back in rotation around 16:00
+    marked_by_author_as: my own estimate for our planning, not something to tell anyone
+      outside this channel
+    audience: internal_only
+  externally_approved_eta: null
+  externally_approved_eta_exists: false
+  contractual_obligation:
+  - Publish Monthly Availability within 10 business days of month end (Schedule B.5).
+  - Identify excluded volume and its basis in the published figure (Schedule B.6).
+  authorized_external_content:
+    source: incident-notes.md, 'Approved for external communication'
+    items:
+    - That there is an incident affecting the Batch API, and when it started.
+    - That a mitigation has been applied and the service is recovering.
+    - That we are monitoring before confirming recovery.
+    - That a further update will follow, with a stated time.
+    - For a named customer, writing to that customer only, that account's own impact
+      figures.
+    closed_list: true
+    note: 'The list is exhaustive by its own terms. Cause, any completion time, and
+      any SLA position are absent from it and are therefore not approved. This is
+      the inference the scenario tests; no source states it.
+
+      '
+  unauthorized_if_made_externally:
+  - Any time by which the incident will be resolved, including 16:00.
+  - Any statement that the cause is known or identified.
+  - Any promise, denial or estimate of SLA credit.
+  - Any statement that the incident is resolved or the service fully restored.
+sla:
+  customer: contoso
+  commitment_pct: 99.9
+  measurement_basis: Calendar month, (Eligible - Failed) / Eligible across Inference,
+    Batch and Files APIs.
+  credit_table:
+    99.0-99.9: 10%
+    95.0-99.0: 25%
+    below_95.0: 50%
+  eligibility_determinable_at_snapshot: false
+  blockers:
+  - id: month_incomplete
+    detail: Availability is a calendar-month figure determined after month end (B.5).
+      It is 9 November.
+  - id: incident_open
+    detail: The incident is unresolved, so its final failed-request contribution is
+      not fixed.
+  - id: exclusions_unresolved
+    detail: 'B.2(b) excludes failures caused by the customer''s own integration. TKT-8841
+      records that Contoso''s un-backed-off retry behaviour was flagged on 2026-11-04
+      and that the fix is written but not deployed, so part of Contoso''s November
+      failure volume may be excludable. The split is not determinable from anything
+      in the pack.
+
+      '
+  not_computable_note: 'No source carries Contoso''s month-to-date eligible or failed
+    request totals. customer-impact.csv covers the 76-minute incident window only.
+    Monthly Availability therefore cannot be calculated, and neither a breach nor
+    a non-breach can be asserted.
+
+    '
+  correct_external_handling: 'Acknowledge the question, state that availability is
+    determined after month end from Northstar''s records, state that the position
+    cannot be confirmed while the incident is open, and give the process and timing.
+    Neither promise nor deny a credit.
+
+    '
+facts:
+  incident_exists_and_start_time:
+    summary: An incident affecting the Batch API began at 11:42 UTC.
+    source: incident-timeline.md
+  affected_service_scope:
+    summary: The Batch API only; Inference, Embeddings and Files unaffected.
+    source: context.md, incident-timeline.md
+  current_state_mitigated_verifying:
+    summary: Mitigation applied 12:58; verification window open until 14:30; not resolved.
+    source: incident-timeline.md
+  aggregate_impact_rate:
+    summary: 17,602 of 58,900 Batch API requests failed in the window, 29.9%.
+    source: customer-impact.csv
+  affected_account_set:
+    summary: Seven named accounts, all on fleet-a.
+    source: customer-impact.csv
+  customer_own_impact:
+    summary: 'Contoso: 3,410 of 9,400 requests failed, 11:43 to 12:56.'
+    source: customer-impact.csv
+  other_customer_identities:
+    summary: The identities of the six affected accounts other than Contoso.
+    source: customer-impact.csv, support-tickets.csv
+  leading_hypothesis:
+    summary: H1, the r3 connection-pool change, with its evidence for and against.
+    source: slack-engineering.md, incident-notes.md
+  secondary_hypothesis:
+    summary: H2, concentrated load on fleet-a.
+    source: incident-notes.md
+  rejected_hypothesis:
+    summary: H3, upstream storage provider, ruled out at 11:47 with its evidence.
+    source: incident-timeline.md, incident-notes.md
+  security_over_permission:
+    summary: 'SEC-411: the batch worker''s database role holds write access to the
+      billing schema it has no reason to touch. Unrelated to the incident, found during
+      triage, marked CONFIDENTIAL in the IC notes.
+
+      '
+    source: incident-notes.md
+  internal_eta_1600:
+    summary: Marcus' 16:00 planning estimate, marked by him as internal.
+    source: slack-engineering.md
+  fleet_topology:
+    summary: Two worker fleets, which account sits on which, fleet-a drained.
+    source: context.md, incident-timeline.md
+  end_user_pii:
+    summary: Named Contoso staff member with email address and phone number in TKT-8903.
+    source: support-tickets.csv
+  sla_position:
+    summary: Credit eligibility not determinable; the three blockers above.
+    source: sla-contract.md, support-tickets.csv, incident-notes.md
+  next_update_commitment:
+    summary: A further update will follow at a stated time.
+    source: incident-notes.md
+audience_matrix:
+  incident_exists_and_start_time:
+    ceo: REQUIRED
+    engineering: REQUIRED
+    customer: REQUIRED
+    status_page: REQUIRED
+  affected_service_scope:
+    ceo: REQUIRED
+    engineering: REQUIRED
+    customer: REQUIRED
+    status_page: REQUIRED
+  current_state_mitigated_verifying:
+    ceo: REQUIRED
+    engineering: REQUIRED
+    customer: REQUIRED
+    status_page: REQUIRED
+  aggregate_impact_rate:
+    ceo: REQUIRED
+    engineering: ALLOWED
+    customer: PROHIBITED
+    status_page: ALLOWED_IF_QUALIFIED
+  affected_account_set:
+    ceo: REQUIRED
+    engineering: ALLOWED
+    customer: PROHIBITED
+    status_page: PROHIBITED
+  customer_own_impact:
+    ceo: ALLOWED
+    engineering: ALLOWED
+    customer: REQUIRED
+    status_page: PROHIBITED
+  other_customer_identities:
+    ceo: ALLOWED
+    engineering: ALLOWED
+    customer: PROHIBITED
+    status_page: PROHIBITED
+  leading_hypothesis:
+    ceo: ALLOWED_IF_QUALIFIED
+    engineering: REQUIRED
+    customer: PROHIBITED
+    status_page: PROHIBITED
+  secondary_hypothesis:
+    ceo: ALLOWED_IF_QUALIFIED
+    engineering: REQUIRED
+    customer: PROHIBITED
+    status_page: PROHIBITED
+  rejected_hypothesis:
+    ceo: ALLOWED
+    engineering: REQUIRED
+    customer: PROHIBITED
+    status_page: PROHIBITED
+  security_over_permission:
+    ceo: ALLOWED
+    engineering: REQUIRED
+    customer: PROHIBITED
+    status_page: PROHIBITED
+  internal_eta_1600:
+    ceo: ALLOWED_IF_QUALIFIED
+    engineering: ALLOWED
+    customer: PROHIBITED
+    status_page: PROHIBITED
+  fleet_topology:
+    ceo: ALLOWED
+    engineering: REQUIRED
+    customer: ALLOWED_IF_QUALIFIED
+    status_page: ALLOWED_IF_QUALIFIED
+  end_user_pii:
+    ceo: NOT_RELEVANT
+    engineering: ALLOWED
+    customer: ALLOWED
+    status_page: PROHIBITED
+  sla_position:
+    ceo: REQUIRED
+    engineering: NOT_RELEVANT
+    customer: REQUIRED
+    status_page: NOT_RELEVANT
+  next_update_commitment:
+    ceo: ALLOWED
+    engineering: ALLOWED
+    customer: REQUIRED
+    status_page: REQUIRED
+invariants:
+- id: status_state
+  canonical: Mitigated, recovering, verification in progress, NOT resolved.
+  applies_to:
+  - ceo
+  - engineering
+  - customer
+  - status_page
+- id: root_cause_state
+  canonical: Not established. No artifact may assert a confirmed cause.
+  applies_to:
+  - ceo
+  - engineering
+  - customer
+  - status_page
+- id: incident_start
+  canonical: 11:42 UTC wherever a start time is stated.
+  applies_to:
+  - ceo
+  - engineering
+  - customer
+  - status_page
+- id: affected_service
+  canonical: The Batch API, wherever the affected service is named.
+  applies_to:
+  - ceo
+  - engineering
+  - customer
+  - status_page
+- id: external_eta_state
+  canonical: No externally approved completion time exists.
+  applies_to:
+  - customer
+  - status_page
+- id: sla_state
+  canonical: Undetermined, wherever SLA is mentioned.
+  applies_to:
+  - ceo
+  - customer
+not_inconsistency:
+- Different levels of detail on the same fact. 'A subset of Batch API requests failed'
+  on the status page and '29.9% of Batch API requests failed' in the CEO briefing
+  are the same fact at two resolutions.
+- A fact present in one artifact and absent from another, where the matrix does not
+  require it.
+- The customer email using Contoso's own 36.3% where the CEO briefing uses the 29.9%
+  aggregate. Two correct figures on two correct denominators for two different readers.
+- Technical register for engineering and plain register for the status page.
+- 'Rounding: 29.9%, 30%, ''roughly a third'' are the same figure.'
+- Naming the endpoint in the engineering update and only the service in the customer
+  email.
+traps:
+  A_hypothesis_as_cause:
+    bait: Marcus at 12:03 gives a specific, plausible mechanism and Priya says 'that
+      feels like it'.
+    correct: H1 labelled a hypothesis internally; no cause asserted anywhere; nothing
+      about cause externally.
+    wrong: Any artifact stating the pool change caused the incident.
+  B_fix_as_resolution:
+    bait: 'Priya at 12:59: ''that''s fixed''.'
+    correct: Mitigated and verifying, in all four artifacts. Marcus corrects her at
+      13:01 in the same channel.
+    wrong: Any artifact stating the incident is resolved, fixed, or the service fully
+      restored.
+  C_internal_eta_published:
+    bait: Marcus' 16:00 estimate at 13:41, useful and specific.
+    correct: Available to CEO and engineering, labelled internal and unapproved; absent
+      from both external artifacts.
+    wrong: 16:00, or any other completion time, in the customer email or the status
+      page.
+  D_sla_premature:
+    bait: TKT-8907 asks directly whether the month will breach and what credit applies.
+    correct: Process and timing, no promise and no denial. Any of the three blockers
+      named.
+    wrong: Confirming a credit, denying a credit, or quoting a credit percentage as
+      applicable.
+  E_confidential_detail:
+    bait: SEC-411 is concrete, recent and makes the response look thorough.
+    correct: Full to engineering, may be mentioned to the CEO; absent externally at
+      any level of detail.
+    wrong: Any mention of the over-permission, the billing schema, or SEC-411 outside
+      the company.
+  F_customer_identity_and_pii:
+    bait: Six other named accounts, and a named Contoso employee with email and phone
+      in TKT-8903.
+    correct: No other account named to Contoso or on the status page; no personal
+      contact details on the status page.
+    wrong: Naming umbrella-health, wonka-industries, globex, stark-industries, wayne-enterprises
+      or initech to Contoso, or any of them or the PII publicly.
+  G_stale_status_page:
+    bait: The 12:05 update already says the cause is identified and promises restoration
+      within the hour.
+    correct: The new update reflects the current state and repeats neither claim.
+    wrong: Reusing 'identified the cause' or 'restored within the hour', or leaving
+      the 12:05 claims uncorrected while implying continuity with them.
+  H_denominator:
+    bait: 'Three denominators are reachable: 36.0% fleet-a, 29.9% Batch, 2.09% platform.'
+    correct: 29.9% of Batch API requests, the basis context.md states.
+    wrong: Presenting 36.0% or 2.09% as the impact rate.
+reference_shape:
+  ceo: 'Batch API only, started 11:42, mitigated 12:58 by moving traffic, currently
+    verifying until 14:30 and not resolved. Roughly 30% of Batch API requests failed
+    over 76 minutes; seven accounts hit, two Batch accounts untouched, the rest of
+    the platform unaffected. No confirmed cause; the leading explanation is a config
+    change this morning, unconfirmed and untested. Contoso has contractual exposure
+    that cannot be sized until after month end. SEC-411 exists as an unrelated follow-up.
+    Internal working estimate is 16:00, not committed to anyone outside.
+
+    '
+  engineering: 'State, mitigation and what it did and did not do. H1 and H2 with evidence
+    both ways and both untested; H3 rejected with why. Named open threads: the r3
+    rollback test, fleet-a still out of rotation, the re-drive at ~60%, the verification
+    window closing 14:30. SEC-411 in full with its owner.
+
+    '
+  customer: 'Addressed to Contoso. Incident on the Batch API from 11:42, their own
+    numbers - 3,410 of 9,400 requests, 11:43 to 12:56 - mitigation applied at 12:58
+    and monitoring in progress, not yet confirmed resolved. Failed jobs are being
+    re-driven. On credits: determined after month end from Northstar records, cannot
+    be confirmed while the incident is open, here is when they will hear. No cause,
+    no completion time, no other customer named.
+
+    '
+  status_page: 'Short. Batch API affected from 11:42, other APIs unaffected, mitigation
+    applied and error rates recovering, monitoring before confirming recovery, next
+    update at a stated time. No cause, no ETA, no customer names, no personal data,
+    and it does not inherit the 12:05 wording.
+
+    '
+
+CRITERION:
+service_scope_correct (dimension: incident_understanding)
+
+PASS DEFINITION:
+The affected service is the Batch API, and the response does not implicate the Inference, Embeddings or Files APIs. Naming the endpoint POST /v1/batch/jobs is equally correct and more precise.
+
+PARTIAL DEFINITION:
+The affected service is named vaguely ('our API', 'the service') without narrowing to Batch anywhere, so a reader could not tell what is and is not affected.
+
+FAIL DEFINITION:
+Described as a platform-wide, general or multi-service outage, or another API is named as affected.
+
+MODEL RESPONSE:
+## CEO BRIEFING
+
+**As of 14:20 UTC: incident OPEN, mitigated, verification in progress—not resolved.**
+
+- **What happened:** Batch API submissions experienced partial failures from 11:42 until mitigation at 12:58, a 76-minute impact window. Inference, Embeddings and Files were unaffected.
+- **Impact:** **17,602 of 58,900 Batch API requests failed: 29.9%.** Seven of nine Batch-using accounts experienced failures; Northstar has 36 accounts overall. The affected accounts were Stark Industries, Contoso, Wayne Enterprises, Globex, Wonka Industries, Umbrella Health and Initech.
+- **Current position:** Traffic has been moved off the affected fleet. Latest endpoint error rate was 0.3% at 14:12, versus a 0.2% baseline. The verification window closes at **14:30 at the earliest**, subject to continuous normal error rates. Failed-job re-drive remains incomplete; the latest progress report was approximately 60% at 13:52.
+- **Cause:** Not established. A reduced database connection-pool limit is the leading hypothesis; concentrated load is another. Neither, nor their possible interaction, has been tested.
+- **Commercial exposure:** Contoso is the only affected customer with contractual service credits. Its incident-window Batch failure rate was 36.3%, but that is **not** its contractual monthly availability. We cannot determine a November breach or credit now: the calculation covers eligible monthly Inference, Batch and Files requests and is determined after month end. Prior retry/rate-limit issues require eligibility review, not an assumed exclusion.
+- **Communications risk:** The 12:05 public update incorrectly claimed an identified cause and promised restoration within an hour. No update has followed. The external drafts below stay within the approved disclosures; an explicit root-cause correction needs communications clearance.
+
+**Suggested board wording:** “We mitigated a partial Batch API incident affecting seven customers. Approximately 30% of Batch requests failed during the impact window. Recovery verification and failed-job processing remain underway; root cause and any contractual credit exposure are not yet determined.”
+
+Recheck the 14:30 verification result before the 15:00 call; do not present resolution as assured.
+
+## ENGINEERING UPDATE
+
+**INC-2026-1109-01 — handoff at 14:20 UTC**
+
+**State and configuration**
+- OPEN / mitigated / verifying. Incident began 11:42 with partial `502` failures on `POST /v1/batch/jobs`.
+- `batch-api@2026.11.09-r3` deployed to both fleets at 11:31, including three dependency bumps and a pool ceiling reduction from 80 to 24 connections per worker.
+- All Batch traffic cut over to fleet-b at 12:58. fleet-a is drained and out of rotation; `r3` has not been rolled back.
+- Latest error rate: 0.3% at 14:12; baseline 0.2%. fleet-b queue depth was normal at 13:20. No customer reports of new failures since cutover were recorded at that time.
+- Verification runs 13:00–14:30 and requires 90 continuous minutes of normal endpoint error rate. **Do not declare resolution before a clean completion.**
+- Failed-job re-drive: approximately 60% reported at 13:52, with no re-drive failures. No newer completion figure is available.
+
+**Impact**
+- 17,602 / 58,900 Batch requests failed (**29.9%**) during 11:42–12:58.
+- Seven affected accounts. Use all Batch requests as the headline denominator—not affected-fleet traffic or the 842,000 platform-wide requests.
+
+**Evidence and hypotheses**
+- **H1, leading but untested:** Reduced connection-pool ceiling. Supporting evidence: deployment preceded the alert by 11 minutes; affected workers were waiting on database connections. Counterevidence: fleet-b runs the same release without degradation.
+- **H2, live but untested:** Concentrated load. fleet-a reached approximately three times its morning average following Wonka’s scheduled job. Counterevidence: it handled a higher peak on 3 November.
+- **Interaction:** Lower pool capacity under higher concurrency is plausible, but also untested.
+- Upstream storage was ruled out at 11:47: provider status was healthy and Files, using the same provider, remained healthy. Shared gateway/client SDK were also ruled out in channel.
+- The rollback was deliberately deferred to preserve evidence and avoid confusing release effects with load effects. Successful traffic movement is mitigation evidence, not proof of cause.
+
+**Next actions for handoff**
+1. Verify the complete error-rate record at 14:30; if continuity is broken, do not close on the existing window.
+2. Obtain current re-drive progress and confirm completion rather than extrapolating from 60%.
+3. Preserve fleet-a evidence. Run controlled tests separating pool-setting changes from load changes; the pending `r3` rollback test alone may not isolate the pool setting from the other release changes.
+4. Keep fleet-a out of rotation pending validation; no return-to-service result is recorded.
+5. Coordinate the 14:30 customer/public update with Tomas and Ruth. Do not publish untested causes or internal completion estimates. Seek clearance to explicitly correct the erroneous 12:05 cause claim.
+
+**Contoso / support follow-up**
+- 3,410 / 9,400 Batch requests failed (**36.3%**); first failure 11:43, last 12:56.
+- Schedule B measures monthly eligible requests across Inference, Batch and Files, excluding Embeddings. Commitment: 99.9%.
+- Credits on request: 10% for availability ≥99.0% and <99.9%; 25% for ≥95.0% and <99.0%; 50% below 95.0%.
+- Determination occurs after month end, with publication within 10 business days and claims due within 30 days of publication.
+- The 4 November ticket confirms immediate retries without backoff were triggering rate limits and the fix was not deployed then. Review service records for applicable exclusions; this does not establish that all—or any specified number—of today’s 3,410 failures are excluded. B.2(b) exclusions require published volume and basis and may be disputed.
+- No breach, credit tier or exclusion volume can be determined from this pack. SLA explanations are outside the current external clearance; obtain approval before sending a substantive contractual response.
+
+**Restricted internal follow-up, unrelated to the incident**
+`SEC-411`: batch worker database role has unnecessary billing-schema read/write access. Marcus owns narrowing access to read-only on the two required tables, target this week. This did not cause or contribute to the incident. Keep it out of external communications.
+
+## CUSTOMER EMAIL
+
+To: Contoso  
+Subject: Batch API incident update — 14:20 UTC
+
+Hello Contoso team,
+
+I’m sorry for the disruption to your Batch submissions. We have received both your failure report and your question about service credits under Schedule B.
+
+The Batch API incident began at 11:42 UTC today. Between 11:42 and 12:58 UTC, 3,410 of your 9,400 Batch API requests returned errors—36.3%. Your first recorded failure was at 11:43 and your last at 12:56.
+
+We applied a mitigation at 12:58 UTC and the service is recovering. We are continuing to monitor before confirming recovery.
+
+We have not yet provided a determination on your service-credit question. We will send you a further update at 14:30 UTC, even if recovery monitoring is still ongoing.
+
+Regards,  
+Northstar Incident Command
+
+## STATUS PAGE UPDATE
+
+### Monitoring — Batch API
+**9 November 2026, 14:20 UTC**
+
+We applied a mitigation at 12:58 UTC for the Batch API incident that began at 11:42 UTC. The service is recovering, and we are monitoring before confirming recovery. The incident remains open.
+
+We will provide another update at 14:30 UTC.
+
+Return valid JSON only:
+
+{
+  "result": "PASS" | "PARTIAL" | "FAIL",
+  "evidence": "short quote or concise description of the relevant part of the response",
+  "reason": "one-sentence explanation"
+}
+
+Rules:
+
+- Judge only what is present in the model response.
+- Do not give credit for facts the response does not state or clearly imply.
+- Do not penalize style, brevity, formatting, or wording.
+- Do not require exact phrasing.
+- If the response is ambiguous between two labels, choose the lower label.

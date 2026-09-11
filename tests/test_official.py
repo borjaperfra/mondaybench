@@ -527,10 +527,24 @@ def test_three_distinct_responses_are_all_official(tmp_path):
 
 
 def test_caching_is_disabled_for_every_configured_model():
-    """A missing flag here silently turns run 3 into a copy of run 2."""
+    """A missing flag here silently turns run 3 into a copy of run 2.
+
+    Scoped to the models this harness can actually generate. An entry with
+    neither an endpoint nor a key cannot reach the provider adapter at all, so
+    there is no request for the flag to ride on, and declaring `caching: false`
+    for one would assert a transport property that was never observable. Those
+    entries carry a stricter obligation instead: they must also declare no
+    output ceiling, so nothing in the config can be read as a generation
+    parameter that was actually sent.
+    """
     from mondaybench.config import load_models
 
     for slug, cfg in load_models().items():
+        if cfg.base_url_env is None and cfg.api_key_env is None:
+            assert cfg.max_output_tokens is None, (
+                f"{slug} has no API route but declares a generation ceiling"
+            )
+            continue
         assert cfg.extra_body.get("caching") is False, f"{slug} may serve cached responses"
 
 

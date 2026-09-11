@@ -164,12 +164,35 @@ def test_E_monday_005_official_samples_are_mutually_distinct():
 
 
 def test_E2_every_monday_005_run_carries_a_provider_request_id():
-    """Corroborating identity present on the real battery, both sides."""
+    """Corroborating identity present on the real battery, both sides.
+
+    A content hash alone cannot distinguish two samples that happen to produce
+    identical text, so every run carries a second, independent identity. For an
+    API route that is the provider's request id.
+
+    A runtime that exposes no request id must still carry one: the rule is that
+    corroborating identity exists, not that it came from an API. Such a run has
+    to say so explicitly - `request_id` null AND the field listed among the
+    values the runtime did not expose - and supply a session identity in its
+    place. A run that is simply missing a request id, with no such record, still
+    fails.
+    """
     paths = sorted((REPO_ROOT / "runs" / "monday-005").glob("*/run-*.json")) + archived_run_paths(
         "monday-005", REPO_ROOT
     )
-    missing = [p for p in paths if not sample_identity(read_run_record(p))[1]]
-    assert not missing, f"runs without a request_id: {missing[:3]}"
+    missing = []
+    for path in paths:
+        record = read_run_record(path)
+        if sample_identity(record)[1]:
+            continue
+        runtime = ((record.get("provider_metadata") or {}).get("raw_usage") or {}).get(
+            "codex_runtime"
+        ) or {}
+        declared = "request_id" in (runtime.get("unobservable") or [])
+        session = runtime.get("codex_thread_id")
+        if not (declared and session):
+            missing.append(path)
+    assert not missing, f"runs without a request_id or a declared substitute: {missing[:3]}"
 
 
 # --------------------------------------------------------------------------

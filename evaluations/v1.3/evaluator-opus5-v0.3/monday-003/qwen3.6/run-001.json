@@ -1,0 +1,249 @@
+{
+  "schema_version": "1",
+  "evaluator_id": "evaluator-opus5-v0.3",
+  "benchmark_version": "0.3",
+  "rubric_version": "0.3",
+  "scenario_id": "monday-003",
+  "run_id": "monday-003__qwen3.6__001",
+  "model_slug": "qwen3.6",
+  "scenario_prompt_sha256": "aaf788f309d955d2b427c86fe7d95d2bbf88575fde7306adcfd74b0ec4a4103f",
+  "timestamp_utc": "2026-09-11T11:36:12Z",
+  "judge": {
+    "provider": "anthropic",
+    "model_id": "claude-opus-5",
+    "temperature": 0.0,
+    "effort": null,
+    "unsupported_parameters": [],
+    "prompt_fingerprint": "45998b3c03939498",
+    "route": "recorded",
+    "verdict_source": "qwen3.6.verdicts.jsonl",
+    "contract_fingerprint": "db0cb9aa9b9d8272",
+    "contract_schema_version": "1",
+    "judge_session_id": null
+  },
+  "suite_version": "1.3",
+  "migrated_from": "evaluations/v1.2/evaluator-opus5-v0.3/monday-003/qwen3.6/run-001.json",
+  "dimensions": {
+    "critical_path_and_dependencies": {
+      "score": 11.5,
+      "max_score": 21.0
+    },
+    "resource_allocation": {
+      "score": 19.5,
+      "max_score": 25.0
+    },
+    "planning_and_parallelization": {
+      "score": 14.5,
+      "max_score": 18.0
+    },
+    "decision_quality": {
+      "score": 9.0,
+      "max_score": 14.0
+    },
+    "state_reconstruction": {
+      "score": 8.0,
+      "max_score": 10.0
+    },
+    "accuracy_and_uncertainty": {
+      "score": 2.0,
+      "max_score": 12.0
+    }
+  },
+  "criteria": {
+    "sso_chain": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'Elena performs Billing Schema Migration (3h) -> Marcus performs SSO Compatibility Patch (4h). Depends on #1 -> QA performs Regression (2h). Depends on #2 -> Marcus performs Production Rollout (1h). Depends on #3'",
+      "reason": "'Elena performs Billing Schema Migration (3h) -> Marcus performs SSO Compatibility Patch (4h). Depends on #1 -> QA performs Regression (2h). Depends on #2 -> Marcus performs Production Rollout (1h). Depends on #3'"
+    },
+    "contoso_blocker_chain": {
+      "result": "PASS",
+      "points_awarded": 6.0,
+      "points_possible": 6.0,
+      "evidence": "'The Contoso Permission Patch... is technically dependent on the same account-mapping layer that Elena's migration lands', with Julia producing the file after Daniel's patch; the formatter is separate",
+      "reason": "'The Contoso Permission Patch... is technically dependent on the same account-mapping layer that Elena's migration lands', with Julia producing the file after Daniel's patch; the formatter is separate"
+    },
+    "pricing_dependency": {
+      "result": "FAIL",
+      "points_awarded": 0.0,
+      "points_possible": 5.0,
+      "evidence": "'Packaging Approval Pack (Sarah): 1.5 hours. Independent.' Neither half is addressed: no gate on the public page and no use of the mockup allowance",
+      "reason": "'Packaging Approval Pack (Sarah): 1.5 hours. Independent.' Neither half is addressed: no gate on the public page and no use of the mockup allowance"
+    },
+    "security_state_stale": {
+      "result": "PARTIAL",
+      "points_awarded": 1.5,
+      "points_possible": 3.0,
+      "evidence": "'Assume approved... but Noah/Product must confirm with Maya if there is any ambiguity', and the risk section still asks whether the patch touches the auth flow",
+      "reason": "'Assume approved... but Noah/Product must confirm with Maya if there is any ambiguity', and the risk section still asks whether the patch touches the auth flow"
+    },
+    "board_dependency": {
+      "result": "FAIL",
+      "points_awarded": 0.0,
+      "points_possible": 3.0,
+      "evidence": "the backfill appears nowhere; the board revenue dependency is not raised at all",
+      "reason": "the backfill appears nowhere; the board revenue dependency is not raised at all"
+    },
+    "scarce_resource_allocation": {
+      "result": "PASS",
+      "points_awarded": 10.0,
+      "points_possible": 10.0,
+      "evidence": "'Reassign contoso_permission_patch from Marcus to Daniel. Reasoning: Marcus explicitly stated Daniel can take it (3.5h) and Daniel was in the relevant SCIM work. Marcus is needed for the SSO patch which is on the critical path'",
+      "reason": "'Reassign contoso_permission_patch from Marcus to Daniel. Reasoning: Marcus explicitly stated Daniel can take it (3.5h) and Daniel was in the relevant SCIM work. Marcus is needed for the SSO patch which is on the critical path'"
+    },
+    "marcus_reserved_for_sso": {
+      "result": "PARTIAL",
+      "points_awarded": 3.0,
+      "points_possible": 6.0,
+      "evidence": "keeps Marcus on the SSO work and cites 'Marcus's specific code ownership', but never releases the three hours he is holding for the instrumentation",
+      "reason": "keeps Marcus on the SSO work and cites 'Marcus's specific code ownership', but never releases the three hours he is holding for the instrumentation"
+    },
+    "formatter_ownership": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'Julia executes the Contoso Export Formatter fix (2h). This is independent of the backend permission patch and can be done in parallel'",
+      "reason": "'Julia executes the Contoso Export Formatter fix (2h). This is independent of the backend permission patch and can be done in parallel'"
+    },
+    "elena_migration_fallback": {
+      "result": "PARTIAL",
+      "points_awarded": 2.5,
+      "points_possible": 5.0,
+      "evidence": "'She is available until 12:00 Wednesday, but doing it Monday clears the path' names the constraint, but the production-permission transfer and the Daniel fallback are missing",
+      "reason": "'She is available until 12:00 Wednesday, but doing it Monday clears the path' names the constraint, but the production-permission transfer and the Daniel fallback are missing"
+    },
+    "monday_plan": {
+      "result": "PARTIAL",
+      "points_awarded": 3.5,
+      "points_possible": 7.0,
+      "evidence": "the handoff sequencing contradicts itself - Daniel is told to work 13:00-17:30 while the Marcus walkthrough is described as 'likely sequential' after the four-hour patch",
+      "reason": "the handoff sequencing contradicts itself - Daniel is told to work 13:00-17:30 while the Marcus walkthrough is described as 'likely sequential' after the four-hour patch"
+    },
+    "concurrent_sso_and_contoso": {
+      "result": "PASS",
+      "points_awarded": 7.0,
+      "points_possible": 7.0,
+      "evidence": "'Daniel's Contoso Permission Patch: 3.5 hours. Runs in parallel with Marcus's SSO Patch (after the 30-min handoff)'",
+      "reason": "'Daniel's Contoso Permission Patch: 3.5 hours. Runs in parallel with Marcus's SSO Patch (after the 30-min handoff)'"
+    },
+    "pricing_board_parallel": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'Board Pack (Sarah): Non-revenue sections (4h) and Pricing Page (3h). Independent of billing migration'",
+      "reason": "'Board Pack (Sarah): Non-revenue sections (4h) and Pricing Page (3h). Independent of billing migration'"
+    },
+    "formatting_urgent_not_blocking": {
+      "result": "PARTIAL",
+      "points_awarded": 2.5,
+      "points_possible": 5.0,
+      "evidence": "'Independent of backend permission fixes. Can be done Monday' keeps it off the committed work, but the response never characterises it as a preference against a working export",
+      "reason": "'Independent of backend permission fixes. Can be done Monday' keeps it off the committed work, but the response never characterises it as a preference against a working export"
+    },
+    "contoso_compliance_is_urgent": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'Contoso Compliance Export: Tuesday 16:00 CET... Can be completed Monday. Julia can generate the file Monday afternoon'",
+      "reason": "'Contoso Compliance Export: Tuesday 16:00 CET... Can be completed Monday. Julia can generate the file Monday afternoon'"
+    },
+    "stale_task_list_overridden": {
+      "result": "PARTIAL",
+      "points_awarded": 2.5,
+      "points_possible": 5.0,
+      "evidence": "the Contoso ticket is split into its two real items, but Security is left as something to confirm, the instrumentation is not addressed, and the pricing entry is untouched",
+      "reason": "the Contoso ticket is split into its two real items, but Security is left as something to confirm, the instrumentation is not addressed, and the pricing entry is untouched"
+    },
+    "sso_state_reconstructed": {
+      "result": "PARTIAL",
+      "points_awarded": 2.0,
+      "points_possible": 4.0,
+      "evidence": "the chain and the Wednesday commitment are right; Security is left unresolved",
+      "reason": "the chain and the Wednesday commitment are right; Security is left unresolved"
+    },
+    "onboarding_state_reconstructed": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "'Onboarding Launch (Julia): 2 hours. Marcus is no longer blocking this (Julia confirmed analytics are sufficient). Julia can own this'",
+      "reason": "'Onboarding Launch (Julia): 2 hours. Marcus is no longer blocking this (Julia confirmed analytics are sufficient). Julia can own this'"
+    },
+    "contoso_state_separated": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "the formatter is independent of the backend fix; only the permission patch gates the compliance export",
+      "reason": "the formatter is independent of the backend fix; only the permission patch gates the compliance export"
+    },
+    "factual_plan_accuracy": {
+      "result": "FAIL",
+      "points_awarded": 0.0,
+      "points_possible": 5.0,
+      "evidence": "two substitutions. 'Marcus still needs 2h to walk Daniel through the delegated-admin path' - the walkthrough is 30 minutes, as the same response says twice elsewhere. And the delivery arithmetic runs QA to 18:00 on a Monday when the QA window closes at 17:30",
+      "reason": "two substitutions. 'Marcus still needs 2h to walk Daniel through the delegated-admin path' - the walkthrough is 30 minutes, as the same response says twice elsewhere. And the delivery arithmetic runs QA to 18:00 on a Monday when the QA window closes at 17:30"
+    },
+    "earliest_feasible_delivery": {
+      "result": "FAIL",
+      "points_awarded": 0.0,
+      "points_possible": 3.0,
+      "evidence": "'Enterprise SSO (Atlas): Monday EOD... Rollout at 18:00+.' Ten hours of dependent work cannot fit into Monday from 09:10, and the fallback offered, 'Tuesday morning', is a window in which the rollout owner is in the Atlas session",
+      "reason": "'Enterprise SSO (Atlas): Monday EOD... Rollout at 18:00+.' Ten hours of dependent work cannot fit into Monday from 09:10, and the fallback offered, 'Tuesday morning', is a window in which the rollout owner is in the Atlas session"
+    },
+    "uncertainty_discipline": {
+      "result": "PARTIAL",
+      "points_awarded": 2.0,
+      "points_possible": 4.0,
+      "evidence": "the risk section is otherwise sound, but the plan rests on an invented two-hour walkthrough that the same response contradicts",
+      "reason": "the risk section is otherwise sound, but the plan rests on an invented two-hour walkthrough that the same response contradicts"
+    }
+  },
+  "false_actions": {},
+  "penalties": {
+    "items": [],
+    "dismissed": [],
+    "raw_total": 0.0,
+    "total": 0.0,
+    "capped": false
+  },
+  "deterministic_checks": [
+    {
+      "id": "contoso_11_00",
+      "matched": false,
+      "detail": "'11:00' appears near a mention of Contoso"
+    },
+    {
+      "id": "churn_3_1_to_4_4",
+      "matched": false,
+      "detail": "both churn figures 3.1 and 4.4 are present"
+    },
+    {
+      "id": "umbrella_metrics_present",
+      "matched": false,
+      "detail": "at least two of 163 / 1821 / 41 appear near a mention of Umbrella"
+    },
+    {
+      "id": "umbrella_named",
+      "matched": false,
+      "detail": "Umbrella is named in the response"
+    },
+    {
+      "id": "wednesday_present",
+      "matched": true,
+      "detail": "'Wednesday' appears in the response"
+    },
+    {
+      "id": "julia_present",
+      "matched": true,
+      "detail": "'Julia' appears in the response"
+    },
+    {
+      "id": "pied_piper_and_hooli",
+      "matched": false,
+      "detail": "both known cancellations are named"
+    }
+  ],
+  "disagreements": [],
+  "base_score": 64.5,
+  "final_score": 64.5
+}

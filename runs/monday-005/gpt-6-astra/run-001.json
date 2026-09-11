@@ -1,0 +1,107 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "1.0",
+  "scenario_id": "monday-005",
+  "scenario_prompt_sha256": "532cd464a9b75045f808886c44e667237d6fd1b947826510643b9f8bcc30059a",
+  "run_id": "monday-005__gpt-6-astra__001",
+  "run_number": 1,
+  "model": {
+    "slug": "gpt-6-astra",
+    "display_name": "GPT-6 Astra",
+    "provider": "codex",
+    "model_id": "gpt-6-astra"
+  },
+  "generation": {
+    "temperature": null,
+    "max_output_tokens": null,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": "medium",
+    "system_prompt_sha256": null,
+    "extra_body": {},
+    "config_sha256": "a402d5307bc1f27f26b763f6ce2af52fe2ef43039667e03f6228fa6664d0b25c",
+    "safety_ceiling_tokens": null,
+    "ceiling_semantics": "unobservable: the runtime does not expose an output ceiling"
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "UNOBSERVABLE",
+    "tokens": null,
+    "evidence": null,
+    "stream_observed": null,
+    "stream_event_count": null
+  },
+  "timestamp_utc": "2026-09-10T17:44:43.785724+00:00",
+  "usage": {
+    "input_tokens": null,
+    "output_tokens": null,
+    "reasoning_tokens": null
+  },
+  "performance": {
+    "ttft_ms": null,
+    "ttfa_ms": null,
+    "total_latency_ms": null,
+    "tokens_per_second": null
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "## CEO BRIEFING\n\n**14:20 UTC — incident OPEN: mitigated, verification in progress.**\n\n- **Impact:** From 11:42–12:58, **17,602 of 58,900 Batch API requests failed (29.9%)**, affecting seven of nine Batch-using accounts. Northstar has 36 accounts overall. Inference, Embeddings and Files were unaffected.\n- **Current position:** Traffic was moved off the affected workers at 12:58. Latest endpoint error rate is 0.3%, against a 0.2% baseline. The verification window ends at **14:30 at the earliest**; resolution is not yet confirmed. Failed-job re-drive was approximately 60% complete at 13:52.\n- **Cause:** Unconfirmed. A reduced database connection-pool limit is the leading hypothesis; concentrated load remains a live alternative, and the two may interact. Neither has been tested.\n- **Commercial exposure:** Contoso is the only affected customer with contractual service credits. Its incident-window failure rate was **36.3%**, but that does **not** establish monthly SLA availability or a credit tier. The contract measures eligible requests across Inference, Batch and Files for the whole month, with exclusions. Contoso’s previously reported retry behaviour requires review—not automatic exclusion.\n- **Communications risk:** The 12:05 public update incorrectly claimed an identified cause and promised restoration within an hour. No subsequent update has been published. Current external clearance permits a mitigation/monitoring update, not a cause claim or SLA determination. A substantive credit response and explicit correction require clearance.\n- **Separate confidential follow-up:** Marcus owns SEC-411 for unnecessary worker database permissions on the billing schema, targeted this week. This did not contribute to the incident.\n\n**Board wording within current external clearance:** “A Batch API incident began at 11:42 UTC. Mitigation has been applied and the service is recovering. We are monitoring before confirming recovery.”\n\nDo not describe the incident as resolved on the 15:00 call without a fresh verification result.\n\n## ENGINEERING UPDATE\n\n**INC-2026-1109-01 | Handoff at 14:20 UTC | OPEN / mitigated**\n\n**Impact and state**\n- Partial `502` failures on `POST /v1/batch/jobs`, starting 11:42.\n- Incident-window impact: **17,602 / 58,900 Batch requests = 29.9%**, across seven accounts. Use all Batch requests as the denominator, not fleet-a traffic or platform-wide traffic.\n- All Batch traffic cut over to fleet-b at 12:58. fleet-a remains drained and out of rotation; `r3` has not been rolled back.\n- Latest error rate: 0.3% at 14:12; baseline 0.2%. fleet-b queue depth was normal at 13:20. No customer reports of new failures since cutover.\n- Verification runs **13:00–14:30**, requiring 90 continuous minutes of normal endpoint error rate. Do not declare resolution before it closes cleanly.\n- Re-drive was approximately 60% complete at 13:52, with no re-drive failures. Completion remains unconfirmed.\n\n**Investigation**\n- **H1, leading but untested:** `r3`, deployed to both fleets at 11:31, reduced pool size from 80 to 24 per worker. fleet-a workers were waiting on database connections. Counterevidence: fleet-b ran the same release without degradation.\n- **H2, live but untested:** fleet-a volume rose to roughly three times its morning average, driven mainly by wonka-industries’ scheduled job. Counterevidence: fleet-a handled a higher peak on 3 November without elevated errors.\n- A pool-limit/load interaction is also untested.\n- Object storage was ruled out at 11:47: provider status was healthy and Files remained healthy. Shared gateway/client SDK were also ruled out in-channel.\n- Rollback was deferred to preserve fleet-a’s diagnostic state and avoid confusing recovery with proof of cause.\n\n**Next actions**\n- Priya: continue endpoint and queue monitoring through the verification gate; establish current re-drive progress and confirm completion.\n- Marcus: test the competing explanations using the preserved fleet-a state, including the outstanding rollback test. Do not treat traffic cutover as causal evidence.\n- Keep fleet-a out of service pending validated return-to-service readiness.\n- IC: reassess at 14:30; distinguish verification outcome, backlog completion and fleet restoration rather than assuming all three are complete.\n- Ruth/Tomas: publish the monitoring update below at 14:20 and provide the next update at 14:30. Obtain clearance for an explicit correction of the 12:05 claims and a substantive SLA reply.\n\n**Contoso SLA assessment — internal**\n- Observed impact: 3,410 failures / 9,400 Batch requests, **36.3%**; first failure 11:43, last 12:56.\n- Monthly commitment is 99.9% across eligible Inference, Batch and Files requests; Embeddings is excluded.\n- Credit bands: 10% for availability ≥99.0% and <99.9%; 25% for ≥95.0% and <99.0%; 50% below 95.0%.\n- November availability is determined after month end and published within 10 business days. Claims are due within 30 days of publication.\n- TKT-8841 documents immediate retries causing rate-limit issues, with backoff not yet deployed as of 4 November. Investigate attributable exclusions under B.2; do not exclude all incident failures on that basis. Any B.2(b) exclusion needs a volume and justification, and is disputable.\n- Month-wide records and an exclusion assessment are missing; no breach or credit tier can currently be established. The customer email below acknowledges the question without communicating uncleared contractual conclusions.\n\n**Confidential, unrelated:** SEC-411, Marcus, target this week: narrow the batch worker database role to read-only on the two tables it uses. Existing billing-schema read/write access is not an incident cause.\n\n## CUSTOMER EMAIL\n\nSubject: Update on your Batch API reports\n\nHello Contoso team,\n\nThank you for both messages reporting Batch submission failures and asking about Schedule B service credits. I’m sorry for the disruption.\n\nThe Batch API incident began at 11:42 UTC today. Between 11:42 and 12:58 UTC, your account made 9,400 Batch API requests, of which 3,410 returned errors (36.3%). Your first recorded failure was at 11:43 UTC and your last in that window was at 12:56 UTC.\n\nWe applied a mitigation at 12:58 UTC, and the service is recovering. We are monitoring before confirming recovery; the incident remains open.\n\nWe will send another update at 14:30 UTC.\n\nNorthstar Incident Response\n\n## STATUS PAGE UPDATE\n\n**14:20 UTC — Monitoring**\n\nThe Batch API incident that began at 11:42 UTC remains open. A mitigation was applied at 12:58 UTC, and the service is recovering.\n\nWe are monitoring before confirming recovery. This update supersedes the restoration estimate in our previous update.\n\nWe will provide another update at 14:30 UTC.",
+  "finish_reason": null,
+  "provider_metadata": {
+    "request_id": null,
+    "raw_usage": {
+      "codex_runtime": {
+        "runtime": "Codex",
+        "requested_model_id": "gpt-6-astra",
+        "resolved_model_id": null,
+        "reasoning_effort": "medium",
+        "reasoning_effort_note": "highest available",
+        "codex_thread_id": "01a08c6c-0762-73b0-9be5-9b72f273e4e9",
+        "codex_usage": {
+          "input_tokens": 9956,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 1774,
+          "reasoning_output_tokens": 265
+        },
+        "codex_usage_note": "counters as Codex reported them, not independently verified provider accounting",
+        "latency_ms_host_wall_clock": 66599.33520000005,
+        "latency_semantics": "host wall clock including session startup and retries",
+        "retries": 0,
+        "tools_used_by_candidate": 0,
+        "tools_available_to_runtime": "UNOBSERVABLE; configured tool families disabled but complete backend tool inventory not exposed",
+        "system_prompt_equivalence": "UNOBSERVABLE; benchmark instruction requested via model_instructions_file; Codex may add system/developer context",
+        "qualification": {
+          "state": "VALID_CODEX_CANDIDATE",
+          "scope": "user-authorized Codex challenger, not API-route equivalence",
+          "completed": true,
+          "tool_events": [],
+          "independent_session": true
+        },
+        "unobservable": [
+          "temperature",
+          "top_p",
+          "caching",
+          "max_output_tokens",
+          "model_id",
+          "finish_reason",
+          "request_id",
+          "response_id",
+          "TTFT",
+          "TTFA",
+          "reasoning_tokens",
+          "reasoning_delivery_state",
+          "provider_truncation"
+        ],
+        "not_an_api_equivalent_run": true
+      }
+    }
+  }
+}

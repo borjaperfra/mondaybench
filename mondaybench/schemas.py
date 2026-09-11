@@ -67,7 +67,10 @@ class RunModel(Strict):
 
 class RunGeneration(Strict):
     temperature: float | None
-    max_output_tokens: int
+    # None where the runtime does not expose it. `generation_ceiling_status`
+    # already reads a missing ceiling as UNOBSERVABLE, so nothing downstream has
+    # to invent a number to stand in for one that was never observable.
+    max_output_tokens: int | None
     # Kept for the runs written before the reasoning audit. It held the model's
     # *declared* capability and was mistaken for an observation; new runs carry
     # `reasoning_requested` and `RunReasoning` instead. Never read this to

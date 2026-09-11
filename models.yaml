@@ -318,6 +318,140 @@ models:
       therefore distinguishable from the incumbent's by date and by
       provider_metadata.request_id, not by the id that was called.
 
+  # ---------------------------------------------------------------------------
+  # A VARIANCE PROBE, NOT A COMPETITOR. NEVER PUT THIS SLUG ON A BOARD.
+  #
+  # Same endpoint, same model_id, same generation config as
+  # deepseek-v4.1-flash. It exists so a second battery can be generated and
+  # judged WITHOUT touching the fifteen official runs behind the published
+  # Monday Score of 84.63, which is live in Overall v3.1.
+  #
+  # Why a separate slug rather than runs 004-006 under the official one:
+  # `official.build_plan` returns EVERY qualifying run, not the first three, so
+  # a later `leaderboard --official` rebuild would average six runs instead of
+  # three and silently move a published number. A frozen suite exists to stop
+  # exactly that. A distinct slug cannot be selected into a battery unless
+  # someone names it, and nobody should.
+  #
+  # What it is for: answering whether the three official runs of a scenario
+  # were an unlucky draw. Its scores are evidence about VARIANCE and are not a
+  # Monday Score, not comparable with any published row, and must never be
+  # published as one.
+  # ---------------------------------------------------------------------------
+  deepseek-v4.1-flash-probe:
+    display_name: "DeepSeek V4.1 Flash (variance probe)"
+    provider: helmcode
+    api_style: openai_compatible
+    model_id: "deepseek-v4-flash"
+    base_url_env: HELMCODE_BASE_URL
+    api_key_env: HELMCODE_API_KEY
+    generation:
+      temperature: 0
+      max_output_tokens: 32000
+    extra_body:
+      # Without this the second battery could return the first battery's bytes.
+      caching: false
+    capabilities:
+      reasoning: true
+    notes: >
+      Variance probe for deepseek-v4.1-flash. Not a competitor, not on any
+      board. See the block above before using it for anything.
+
+  # ---------------------------------------------------------------------------
+  # THIRD BATTERY. A CONTROLLED EXPERIMENT, NOT A COMPETITOR.
+  #
+  # Identical to deepseek-v4.1-flash in every generation parameter - same
+  # provider, same model_id, same temperature, same ceiling, same extra_body,
+  # same retry policy, same prompt assembly. ONE thing differs: a general
+  # reliability system prompt replaces the harness default "You are a helpful
+  # assistant."
+  #
+  # The prompt is generic by construction. It carries no scenario, no rubric
+  # criterion, no reference answer and no known failure of any previous
+  # battery, so the model still has to solve each scenario from the scenario
+  # sources alone. It was frozen and hashed before the first call and has not
+  # been edited since:
+  #
+  #   experiments/deepseek-v4.1-flash-reliability-v1/frozen-system-prompt.txt
+  #   sha256 eb136804970c72fa214521a341fdde95294393990fae0a5e86bd15614794653d
+  #
+  # Its runs live under the experiment directory, not under runs/, so no
+  # leaderboard rebuild can reach them. Its scores, when someone judges them,
+  # are evidence about a PROMPT and are not a Monday Score for this model.
+  # ---------------------------------------------------------------------------
+  deepseek-v4.1-flash-reliability-v1:
+    display_name: "DeepSeek V4.1 Flash (reliability prompt v1)"
+    provider: helmcode
+    api_style: openai_compatible
+    model_id: "deepseek-v4-flash"
+    base_url_env: HELMCODE_BASE_URL
+    api_key_env: HELMCODE_API_KEY
+    generation:
+      temperature: 0
+      max_output_tokens: 32000
+    extra_body:
+      # Same as both previous batteries. A cached completion would return the
+      # wrong battery's bytes.
+      caching: false
+    capabilities:
+      reasoning: true
+    system_prompt_file: experiments/deepseek-v4.1-flash-reliability-v1/frozen-system-prompt.txt
+    notes: >
+      Reliability-prompt variant of deepseek-v4.1-flash. The only intended
+      difference from that slug is the system prompt; see the block above and
+      the control check in experiments/deepseek-v4.1-flash-reliability-v1/.
+      PUBLISHED AS ITS OWN ROW from suite v1.4, never merged into the
+      incumbent's: a Monday Score is the mean of a model's own runs, and these
+      fifteen ran under a system prompt the other batteries did not use. Its
+      number is comparable with the incumbent's only as the treated arm of that
+      comparison, which is the point of publishing both.
+
+  # ---------------------------------------------------------------------------
+  # A CODEX CHALLENGER, NOT AN API-EQUIVALENT RUN.
+  #
+  # Astra's fifteen responses were generated through the Codex CLI, not through
+  # this harness's provider adapter, because no authenticated Astra API route
+  # was available. The challenger pack says so in its own words - "This is a
+  # Codex challenger, not an API-equivalent MondayBench run" - and its
+  # generation-summary.json records temperature, top_p, caching, the output
+  # ceiling, the resolved model id, finish reason, request ids, TTFT, TTFA and
+  # reasoning tokens as UNOBSERVABLE for every run.
+  #
+  # What IS established: the scenario prompt hash matches the frozen suite on
+  # all five scenarios, each candidate ran in its own ephemeral session with no
+  # carry-over, no tool events were recorded, and every response is preserved
+  # byte-exact with its sha256.
+  #
+  # The fields below record that state rather than papering over it. temperature
+  # is null because it was never observable, not because it was unset. There is
+  # no base_url_env or api_key_env because there is no API route; this entry
+  # cannot be used to generate runs and `mondaybench run` will fail on it by
+  # design.
+  #
+  # QUALIFICATION: with this entry present, qualify_run rejects all fifteen runs
+  # on exactly one check - the run records no output ceiling, so it cannot be
+  # compared with the scenario's configured one. Every other check passes.
+  # ---------------------------------------------------------------------------
+  gpt-6-astra:
+    display_name: "GPT-6 Astra"
+    provider: codex
+    api_style: openai_compatible
+    model_id: "gpt-6-astra"
+    generation:
+      # Never observable through the Codex runtime. Null is "not measured",
+      # never "unset"; see the header note on this entry.
+      temperature: null
+      max_output_tokens: null
+    capabilities:
+      reasoning: true
+    notes: >
+      Codex challenger. Responses generated through the Codex CLI at reasoning
+      effort medium (the highest available there), not through this harness's
+      provider adapter. Not an API-equivalent run: temperature, top_p, caching,
+      the output ceiling and system-prompt equivalence are all unobservable, and
+      recorded as null rather than guessed. Runs, verdicts and evaluations live
+      in astra-mondaybench-challenger/.
+
   glm5.2:
     display_name: "GLM 5.2"
     provider: helmcode

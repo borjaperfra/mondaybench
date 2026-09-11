@@ -95,7 +95,7 @@ class ModelConfig:
     base_url_env: str | None
     api_key_env: str | None
     temperature: float | None
-    max_output_tokens: int
+    max_output_tokens: int | None
     reasoning_enabled: bool
     # Not sent unless a model pins it. None means "not sent, provider default
     # applied" - recorded as such so an audit can tell that apart from a value
@@ -107,6 +107,17 @@ class ModelConfig:
     pricing: Pricing = field(default_factory=Pricing)
     extra_body: dict[str, Any] = field(default_factory=dict)
     notes: str | None = None
+    # Replaces the harness default system prompt for this model only. None means
+    # "use the default", which is every model that does not set it, so adding
+    # the field changes nothing on the wire for an existing config.
+    #
+    # Loaded from a file rather than inline YAML on purpose: a system prompt is
+    # an experimental variable and has to be byte-exact, and YAML block scalars
+    # rewrite trailing whitespace and line endings. The file's bytes are the
+    # prompt, and its sha256 travels with every run in
+    # `generation.system_prompt_sha256`.
+    system_prompt: str | None = None
+    system_prompt_file: str | None = None
 
     def base_url(self) -> str | None:
         return resolve_env(self.base_url_env, required=self.api_style == "openai_compatible")
@@ -148,7 +159,23 @@ def load_models(path: Path | None = None) -> dict[str, ModelConfig]:
         generation = cfg.get("generation") or {}
         if "max_output_tokens" not in generation:
             raise ConfigError(f"model {slug!r} is missing generation.max_output_tokens")
+        # An explicit null is allowed and means "this runtime exposes no output
+        # ceiling", which is different from a ceiling of zero. It must still be
+        # written out deliberately: the key is required, only its value may be
+        # null. A model configured this way cannot be used to generate runs.
         capabilities = cfg.get("capabilities") or {}
+        system_prompt_file = cfg.get("system_prompt_file")
+        system_prompt = None
+        if system_prompt_file is not None:
+            prompt_path = (path.parent / str(system_prompt_file)).resolve()
+            if not prompt_path.is_file():
+                raise ConfigError(
+                    f"model {slug!r}: system_prompt_file {system_prompt_file!r} not found "
+                    f"at {prompt_path}"
+                )
+            # Read as bytes and decode, so nothing normalises line endings on the
+            # way in. What is on disk is what the model is sent.
+            system_prompt = prompt_path.read_bytes().decode("utf-8")
         models[slug] = ModelConfig(
             slug=slug,
             display_name=cfg.get("display_name", slug),
@@ -159,12 +186,15 @@ def load_models(path: Path | None = None) -> dict[str, ModelConfig]:
             api_key_env=cfg.get("api_key_env"),
             temperature=generation.get("temperature"),
             top_p=generation.get("top_p"),
-            max_output_tokens=int(generation["max_output_tokens"]),
+            max_output_tokens=(int(generation["max_output_tokens"])
+                               if generation["max_output_tokens"] is not None else None),
             reasoning_enabled=bool(capabilities.get("reasoning", False)),
             capabilities=dict(capabilities),
             pricing=_parse_pricing(cfg.get("pricing")),
             extra_body=cfg.get("extra_body") or {},
             notes=cfg.get("notes"),
+            system_prompt=system_prompt,
+            system_prompt_file=str(system_prompt_file) if system_prompt_file else None,
         )
     return models
 

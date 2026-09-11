@@ -1,0 +1,235 @@
+{
+  "experiment": "deepseek-v4.1-flash-reliability-v1",
+  "purpose": "Does a general-purpose reliability system prompt improve this model's consistency on MondayBench, without giving it any benchmark-specific information?",
+  "benchmark_suite": "MondayBench v1.2",
+  "suite_digest": "17fdf08f7412ebebbf8f6e0f9da870f6aa747b31a7ad24fd48d3f75aacc81f0a",
+  "baseline_battery": "deepseek-v4.1-flash",
+  "published": false,
+  "on_any_leaderboard": false,
+  "model": {
+    "slug": "deepseek-v4.1-flash-reliability-v1",
+    "display_name": "DeepSeek V4.1 Flash (reliability prompt v1)",
+    "provider": "helmcode",
+    "api_style": "openai_compatible",
+    "model_id": "deepseek-v4-flash",
+    "base_url_env": "HELMCODE_BASE_URL",
+    "route_note": "The gateway serves V4.1 under the V4 id; there is no 4.1 id to call. Same id, same endpoint, as both previous batteries."
+  },
+  "generation": {
+    "temperature": 0,
+    "top_p": null,
+    "top_p_note": "null - not pinned, so not sent; the provider default applies. Same as both previous batteries.",
+    "max_output_tokens_default": 32000,
+    "ceiling_semantics": "provider_specific",
+    "reasoning_enabled": true,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "extra_body": {
+      "caching": false
+    },
+    "stream": true,
+    "tools": [],
+    "tool_choice": null,
+    "tool_policy": "The OpenAI-compatible payload carries no tools key and never has. No browsing, no code execution, no retrieval, no calculator. Same as both previous batteries.",
+    "response_format": null
+  },
+  "retry_policy": {
+    "max_attempts": 3,
+    "backoff_seconds": [
+      2.0,
+      6.0
+    ],
+    "retries_on": "transient provider errors only (ProviderError.transient)",
+    "never_retries_on": "a weak, incomplete, surprising or truncated-but-valid response; no best-of-N; no candidate selection"
+  },
+  "system_prompt": {
+    "is_the_experimental_variable": true,
+    "file": "experiments/deepseek-v4.1-flash-reliability-v1/frozen-system-prompt.txt",
+    "sha256": "eb136804970c72fa214521a341fdde95294393990fae0a5e86bd15614794653d",
+    "bytes": 2321,
+    "line_endings": "LF",
+    "frozen_before_generation": true,
+    "baseline_system_prompt": "You are a helpful assistant.",
+    "baseline_system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+    "contains_scenario_specific_content": false,
+    "derived_from_rubric_or_ground_truth_or_prior_verdicts": false
+  },
+  "run_independence": {
+    "requests_per_run": 1,
+    "messages_per_request": [
+      "system",
+      "user"
+    ],
+    "conversation_state_between_runs": false,
+    "prior_responses_in_context": false
+  },
+  "generation_blind_to_evaluation": {
+    "rubric_files_in_context": false,
+    "criterion_definitions_in_context": false,
+    "ground_truth_in_context": false,
+    "prior_verdicts_or_scores_in_context": false,
+    "prior_responses_in_context": false,
+    "leaderboard_data_in_context": false,
+    "judge_packs_in_context": false,
+    "what_the_model_received": [
+      "frozen system prompt",
+      "canonical assembled scenario prompt"
+    ],
+    "note": "The assembled prompt is prompt.md plus the files in scenario.yaml source_order. Rubrics and ground truth are not in source_order for any scenario, so they cannot enter generation through the canonical path."
+  },
+  "output_location": {
+    "runs": "experiments/deepseek-v4.1-flash-reliability-v1/runs/<scenario>/deepseek-v4.1-flash-reliability-v1/run-00N.json",
+    "not_in_repository_runs_tree": true,
+    "reason": "official.build_plan returns every qualifying run under a slug. Keeping this battery out of runs/ means no leaderboard rebuild can reach it."
+  },
+  "harness_change": {
+    "files": [
+      "mondaybench/config.py",
+      "mondaybench/runner.py"
+    ],
+    "change": "optional per-model system_prompt_file, applied in runner.apply_system_prompt",
+    "inert_for_existing_models": true,
+    "affects_scenario_prompt_sha256": false,
+    "affects_recorded_scores": false,
+    "note": "harness is a mutable group in the suite release policy; a change there does not invalidate a recorded score, because verdicts are recorded rather than recomputed."
+  },
+  "scenarios": {
+    "monday-001": {
+      "scenario_name": "Back to Work",
+      "scenario_prompt_sha256": "ed4d7beb1d7d1029c36eb8533e449027e0dc1a1047f8a38951a91781a0a5e398",
+      "frozen_release_prompt_sha256": "ed4d7beb1d7d1029c36eb8533e449027e0dc1a1047f8a38951a91781a0a5e398",
+      "matches_frozen_release": true,
+      "source_order": [
+        "slack.md",
+        "emails.md",
+        "meetings.md",
+        "tasks.md",
+        "metrics.csv"
+      ],
+      "source_sha256": {
+        "slack.md": "ca3af81ab44360f1c5f9c1f427cef8a1180f5eb4e3fff2d8a281225f4002ed76",
+        "emails.md": "f1de0046ba22237fa08fec9ba783727ee9618f20ddc415f3f5bfbe98205a7ef4",
+        "meetings.md": "e389bcbed5c923896180495dab5dce3d6b34f76dca0dfe8a3129941716c31d5a",
+        "tasks.md": "f80f6b381d659ecbf204e78e5ba90484178f1123af5e8e4d078474e54426e516",
+        "metrics.csv": "d8f6c792108f5010fb55d9d41bfc4af09c2b10f4e27dbe08117c35f922c7a876"
+      },
+      "safety_ceiling_tokens": 32000,
+      "endpoint_override": null,
+      "runs_planned": 3
+    },
+    "monday-002": {
+      "scenario_name": "Moving Targets",
+      "scenario_prompt_sha256": "740e627cbc7413c321ede0d54000504de54821d34ff4677f82731b89600423a8",
+      "frozen_release_prompt_sha256": "740e627cbc7413c321ede0d54000504de54821d34ff4677f82731b89600423a8",
+      "matches_frozen_release": true,
+      "source_order": [
+        "slack.md",
+        "emails.md",
+        "meetings.md",
+        "tasks.md",
+        "release-options.csv",
+        "calendars.csv",
+        "accounts.csv",
+        "contracts.csv",
+        "support.csv"
+      ],
+      "source_sha256": {
+        "slack.md": "97d2e195123ea2ce12289c09d2d80438adc21522b7244e137a892340cd7083a8",
+        "emails.md": "2529597cbf1fc547c3c7aa0e43294db0b5d74b4186eaf93b2997ce72fa83db77",
+        "meetings.md": "1ea88e4c61f89c22793c6a441b6d93cfcaaf09476ed5425f4d8a86da3dcba9b3",
+        "tasks.md": "4921175fbad23633be26a1b9a533b67826de75e7bd1c547b393c2ca06584a18d",
+        "release-options.csv": "b4f9d195f06715429c8fd73f69a293583b05a70087c008a64a000da6dedc2bfd",
+        "calendars.csv": "e626b98b420df408da0c15bf4ea0d86c7472aa05ba3f0f492981eb8fa34ccbbb",
+        "accounts.csv": "ecec455264db69567430b51c7d6c9e949de7b417939c5cd26354f77a3ecfdb30",
+        "contracts.csv": "22fbe0aa6b0d4c1b92b5f195140378100203b33e1d72d39ccfa4512efd60719c",
+        "support.csv": "306f928f0a3c3ce980b78c17d51522d2b01d17080d6cc7946b37d04d07a5032d"
+      },
+      "safety_ceiling_tokens": 32000,
+      "endpoint_override": null,
+      "runs_planned": 3
+    },
+    "monday-003": {
+      "scenario_name": "Blockers",
+      "scenario_prompt_sha256": "aaf788f309d955d2b427c86fe7d95d2bbf88575fde7306adcfd74b0ec4a4103f",
+      "frozen_release_prompt_sha256": "aaf788f309d955d2b427c86fe7d95d2bbf88575fde7306adcfd74b0ec4a4103f",
+      "matches_frozen_release": true,
+      "source_order": [
+        "slack.md",
+        "emails.md",
+        "meetings.md",
+        "tasks.md",
+        "work-items.csv",
+        "availability.csv"
+      ],
+      "source_sha256": {
+        "slack.md": "8032759f951f1a4efb6608f0420d8d711c17251b3bbf97f4dbd81faf26f59ed7",
+        "emails.md": "b2016b8e941eb4942a616cd215e3e92a6a973f500bad9ecdc0cfc526f3dce222",
+        "meetings.md": "a56906247829f9db6959db68ecc011254fb1e2aee1d122b745aa2ec8825d414c",
+        "tasks.md": "a9c120a1d12ab4006077853760fdf5e94dfc0a10661f7361657b3dac766eba61",
+        "work-items.csv": "f8d446530cd9b4004e936c0ba76c6aca856d13c595d2f414c4e971e6c5d5b876",
+        "availability.csv": "0c12cf79d3de6d628afb9cf6f829ba8c2fd9f1fd7c0838847dcd10d94387ece4"
+      },
+      "safety_ceiling_tokens": 32000,
+      "endpoint_override": null,
+      "runs_planned": 3
+    },
+    "monday-004": {
+      "scenario_name": "Numbers Don't Lie",
+      "scenario_prompt_sha256": "3a0cbb569ca4f711b8907177af9204cec267d26f35f732829df56b03ed23ef99",
+      "frozen_release_prompt_sha256": "3a0cbb569ca4f711b8907177af9204cec267d26f35f732829df56b03ed23ef99",
+      "matches_frozen_release": true,
+      "source_order": [
+        "context.md",
+        "customers.csv",
+        "revenue.csv",
+        "usage.csv",
+        "plans.csv",
+        "acquisition.csv",
+        "funnel.csv",
+        "support.csv"
+      ],
+      "source_sha256": {
+        "context.md": "f2275cc97936356386c6c8d961feeda10cf6f740ab709e6ea97b4419ad4526dd",
+        "customers.csv": "7f5604887f196c445e71d8c618537e857f1f0b7573576eb13150ae94562e4081",
+        "revenue.csv": "865665d5d3153433935ef746b9e446df67ab9b9797ad7d58974b54f623b1fc53",
+        "usage.csv": "c7d2aae74cc7d9d373464ac5d2ec6252e0acbb323cf2cbd2d35050d22da6e230",
+        "plans.csv": "b1808a4aec315f5792afabf6403012494789ed7d5ce90d131583d8bbcf09a713",
+        "acquisition.csv": "a8d38c3f017c18c212ee62ce521ad436929db7753e019fe587118e2e6bd162d3",
+        "funnel.csv": "2ec3de3b4750b54b3bd87c80e3bc35397488c6f751343444adfc3b1a9fef4ede",
+        "support.csv": "d6f7701d4a917ce7597eb11c4a80e3163c1d9396a6e0f5b2fb7074a36c7dfda3"
+      },
+      "safety_ceiling_tokens": 96000,
+      "endpoint_override": null,
+      "runs_planned": 3
+    },
+    "monday-005": {
+      "scenario_name": "Read the Room",
+      "scenario_prompt_sha256": "532cd464a9b75045f808886c44e667237d6fd1b947826510643b9f8bcc30059a",
+      "frozen_release_prompt_sha256": "532cd464a9b75045f808886c44e667237d6fd1b947826510643b9f8bcc30059a",
+      "matches_frozen_release": true,
+      "source_order": [
+        "context.md",
+        "incident-timeline.md",
+        "slack-engineering.md",
+        "incident-notes.md",
+        "customer-impact.csv",
+        "sla-contract.md",
+        "support-tickets.csv",
+        "status-page-history.md"
+      ],
+      "source_sha256": {
+        "context.md": "74197b2c67ba8a486f80b2e2e30c406c153c4f70368b2d1940b73cc6add479a3",
+        "incident-timeline.md": "aa929b0b7affd353ce0fb41ce3191ea9fbf753f72be12eda567415e95cd7211c",
+        "slack-engineering.md": "0255d55c259d68f54fac74f7c059ce587891c9faf39482220907d2d94bc63ba1",
+        "incident-notes.md": "3432bc7eea303ad74991ad36232de32024f03bcbe51afe4c4975b6809901c637",
+        "customer-impact.csv": "7966151e7808aaf938abc85c5d6ec8ff84f502934bd9838ab959a751f7af1bbe",
+        "sla-contract.md": "12ca54a9a6c0c3e9d53caf18aa7e893da0aab9de1da5e14efa41e3caafa387a4",
+        "support-tickets.csv": "4039362866788f8f25bfa330a33967131d6aeac7f0ec9c3fc3016b7f8bddc614",
+        "status-page-history.md": "3abd90a1b97081b98e9cab87eac9fa730e9320f98493a56ba67bfdc647255bf6"
+      },
+      "safety_ceiling_tokens": 131072,
+      "endpoint_override": null,
+      "runs_planned": 3
+    }
+  }
+}

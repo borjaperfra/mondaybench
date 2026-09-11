@@ -1,0 +1,107 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "1.0",
+  "scenario_id": "monday-004",
+  "scenario_prompt_sha256": "3a0cbb569ca4f711b8907177af9204cec267d26f35f732829df56b03ed23ef99",
+  "run_id": "monday-004__gpt-6-astra__001",
+  "run_number": 1,
+  "model": {
+    "slug": "gpt-6-astra",
+    "display_name": "GPT-6 Astra",
+    "provider": "codex",
+    "model_id": "gpt-6-astra"
+  },
+  "generation": {
+    "temperature": null,
+    "max_output_tokens": null,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": "medium",
+    "system_prompt_sha256": null,
+    "extra_body": {},
+    "config_sha256": "a402d5307bc1f27f26b763f6ce2af52fe2ef43039667e03f6228fa6664d0b25c",
+    "safety_ceiling_tokens": null,
+    "ceiling_semantics": "unobservable: the runtime does not expose an output ceiling"
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "UNOBSERVABLE",
+    "tokens": null,
+    "evidence": null,
+    "stream_observed": null,
+    "stream_event_count": null
+  },
+  "timestamp_utc": "2026-09-10T17:42:39.288193+00:00",
+  "usage": {
+    "input_tokens": null,
+    "output_tokens": null,
+    "reasoning_tokens": null
+  },
+  "performance": {
+    "ttft_ms": null,
+    "ttfa_ms": null,
+    "total_latency_ms": null,
+    "tokens_per_second": null
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "## 1. EXECUTIVE SUMMARY\n\n- **The apparent revenue growth is mostly a billing artefact.** Raw invoice totals rise **12.0%**, but include a duplicate and an annual prepayment. After deduplication and monthly normalisation, recurring revenue rises only **1.6%**.\n- **October billing conceals churn later in the month.** Five customers leave, removing **€25,300 monthly recurring revenue**. Based on active contracts, the exit run rate is **€732,400/month**, down **1.8%** from September.\n- **A broad segment cut is not supported.** Enterprise demand is healthier than request counts suggest. SMB has serious Starter churn, but new customers offset its lost recurring revenue. Mid-market has the clearest revenue deterioration.\n- **Paid search has not demonstrated superior acquisition economics.** Most of its October attributed value comes from existing-customer expansion. No channel spend or matched customer cohorts are supplied, so CAC and CAC payback cannot be calculated.\n- **Enterprise deserves the largest cost-efficiency focus; Pro deserves targeted product work.** Enterprise generates the most contribution but drives its decline. Pro has the highest contribution margin, alongside growing rate-limit friction.\n\n## 2. REVENUE & CUSTOMER HEALTH\n\n### Reconcile billing before interpreting growth\n\n| Measure | September | October | Change |\n|---|---:|---:|---:|\n| Raw invoice totals | €797,100 | €892,900 | +12.0% |\n| Deduplicated invoice totals | €797,100 | €873,400 | +9.6% |\n| Monthly-equivalent subscriptions | €746,100 | €757,700 | +1.6% |\n| Professional services | €51,000 | €5,700 | −88.8% |\n| Monthly-equivalent subscriptions + services | €797,100 | €763,400 | −4.2% |\n\nAdjustments:\n\n- Soylent transaction `INV-2026-10-0209` appears twice across two sources: remove **€19,500**.\n- Gringotts’ **€120,000 annual invoice** represents **€10,000/month**, not €120,000 of monthly recurring revenue: remove **€110,000** from the monthly comparison.\n- Services are non-recurring and should remain separate.\n\nThe **€11,600 recurring increase** consists of:\n\n> **€11,100 new customers + €3,000 Hooli expansion − €2,500 Soylent contraction.**\n\n### October invoices do not represent the closing customer base\n\nInvoices were issued before all five October churns:\n\n- Nakatomi: **€15,000/month**\n- Four SMB Starter customers: **€10,300/month combined**\n\nThus:\n\n> **€757,700 − €25,300 = €732,400 exit monthly run rate**\n\nEquivalently:\n\n> **€746,100 + €11,100 + €3,000 − €2,500 − €25,300 = €732,400**\n\nThis uses active current contracts; it does not include October expansion bookings scheduled for a later cycle.\n\n| Customer segment | September recurring baseline | October billed monthly equivalent | Active-contract exit run rate |\n|---|---:|---:|---:|\n| Enterprise | €565,000 | €565,000 | €565,000 |\n| Mid-market | €142,000 | €142,500 | €127,500 |\n| SMB | €39,100 | €50,200 | €39,900 |\n| **Total** | **€746,100** | **€757,700** | **€732,400** |\n\n**What this means:**\n\n- **Mid-market:** exit revenue falls **10.2%**, driven by Nakatomi churn and Soylent contraction, partly offset by Hooli.\n- **SMB:** exit revenue rises only **2.0%**, despite billed recurring revenue rising **28.4%**. New sales mask retention problems.\n- **Enterprise:** recurring revenue is stable; no recorded customer churn.\n\nCustomer count also masks turnover: **31 opening customers + 5 new − 5 churned = 31 closing customers**.\n\nOctober opening-base logo churn is:\n\n- Enterprise: **0/8**\n- Mid-market: **1/10 = 10.0%**\n- SMB: **4/13 = 30.8%**\n- Starter plan specifically: **4/9 = 44.4%**\n\nThese are one-month observations on small populations, not established long-term churn rates.\n\n### Usage: distinguish workload changes from customer deterioration\n\nJoin usage through **`customers.usage_account_id`**, including `wayne_ent` and `prestige_ww`.\n\n**Enterprise segment requests decline 1.9%, but that is concentrated in Acme:**\n\n- Acme requests: **−45%**, consistent with the implementation estimate of a 40–50% decline after batching.\n- Acme tokens: **−12.0%**; active users: **−3.3%**.\n- The other seven Enterprise customers’ combined requests rise **8.3%**.\n- Enterprise segment tokens rise **4.4% overall**.\n\nAcme’s request decline is therefore **not sufficient evidence of deteriorating customer health**. The workload change is a credible explanation, though not proof that all risk has disappeared.\n\n**Soylent is a stronger intervention candidate:**\n\n- Requests **−27%**\n- Recurring revenue **€22,000 → €19,500**, or **−11.4%**\n- Tickets **3 → 8**, including one critical and four high-severity tickets in October\n\nThese signals justify investigation, but do not prove support incidents caused the contraction.\n\nWayne’s **30 November renewal** also merits near-term attention given its size and unresolved October issues.\n\n## 3. ACQUISITION\n\n### Separate new customers from expansion\n\n**September–October combined:**\n\n| Channel | New logos | New-logo annualised value | Expansion annualised value | Total attributed value |\n|---|---:|---:|---:|---:|\n| Paid search | 2 | €64,800 | €210,000 | €274,800 |\n| Content | 3 | €91,200 | €18,000 | €109,200 |\n| Partner | 2 | €166,800 | €0 | €166,800 |\n| Outbound | 2 | €56,400 | €24,000 | €80,400 |\n\nPaid search leads on **total attribution**, not new-customer value.\n\nIn October:\n\n> **€174,000 / €238,800 = 72.9%** of paid-search attributed value is expansion.\n\nThose customers existed years before the campaign. Marketing attribution does not establish that paid search caused the expansions.\n\nAcross all channels, new-logo annualised value falls from **€246,000 to €133,200**, despite new-logo count rising from four to five. The two-month sample is too small to establish a durable trend.\n\n### Funnel “conversions” are paid trials, not acquired customers\n\n| Channel | September lead-to-paid-trial rate | October rate |\n|---|---:|---:|\n| Paid search | 44/520 = **8.46%** | 58/900 = **6.44%** |\n| Content | **11.92%** | **10.30%** |\n| Partner | **25.00%** | **22.67%** |\n| Outbound | **6.25%** | **5.64%** |\n\nPaid-search leads grow **73.1%**, but paid trials grow only **31.8%**. Every channel’s same-month trial rate declines.\n\n**Supported conclusions:**\n\n- Partner has the highest observed lead-to-trial rate and new-logo contract value.\n- Paid search produces more trials, but at a lower observed conversion rate.\n- Neither finding establishes profitability, incrementality or scalability.\n- October’s zero partner customer conversions do not mean its October leads failed: the sales cycle extends beyond the month.\n\n### CFO request: CAC payback is not calculable\n\nRequired inputs are missing:\n\n- Channel spend and attributable acquisition costs\n- Cohort-matched acquired customers\n- Monthly contribution from those acquired customers over time\n\nThe relevant calculation is:\n\n> **CAC payback months = acquisition cost ÷ monthly contribution from the acquired cohort**\n\nAnnualised attributed revenue is neither acquisition cost nor monthly contribution. Expansion bookings must also be separated from new-logo acquisition.\n\n## 4. PLAN ECONOMICS\n\nDefine **direct contribution = recurring revenue − infrastructure cost − support cost**. Support already includes assigned customer-success staff.\n\n| Plan | September contribution | September margin | October contribution | October margin |\n|---|---:|---:|---:|---:|\n| Enterprise | €212,000 | 32.2% | €194,700 | 29.5% |\n| Pro | €42,500 | 67.5% | €41,500 | 62.7% |\n| Starter | €8,400 | 34.9% | €10,300 | 32.2% |\n| **Total** | **€262,900** | **35.2%** | **€246,500** | **32.5%** |\n\nDespite recurring revenue increasing **€11,600**, direct costs increase **€28,000**. Contribution therefore falls **€16,400**, or **6.2%**.\n\n### Enterprise: largest contribution, largest deterioration\n\n- Generates **79.0%** of October direct contribution.\n- Contribution falls **€17,300**, more than the total business decline.\n- Revenue rises only **€500**, while infrastructure and support costs rise **€17,800**.\n- Has the lowest October contribution margin.\n\n**Priority:** investigate infrastructure efficiency, workload mix and customer-success effort. This supports cost-focused engineering—not abandoning the Enterprise customer segment.\n\nThe Enterprise **plan** includes six Mid-market customers; plan costs cannot be treated as Enterprise **segment** costs.\n\n### Pro: strongest margin, growing product friction\n\n- Highest October margin: **62.7%**.\n- Revenue rises **5.1%**, but direct costs rise **20.5%**.\n- Support tickets increase **19 → 28**; rate-limit tickets increase **5 → 13**.\n\nThe average **441,889 requests/customer** hides concentration against a **600,000** allowance:\n\n| Customer | October requests | Above included volume |\n|---|---:|---:|\n| Wonka | 1,020,000 | 420,000 |\n| Aperture | 705,000 | 105,000 |\n| Vandelay | 690,000 | 90,000 |\n\nOverages are billed at renewal, so current costs can precede associated revenue. However, no overage prices are provided.\n\n**Priority:** targeted rate-limit, capacity and packaging work. Do not infer customer-level profitability or assume every rate-limit ticket results from exceeding the monthly allowance.\n\n### Starter: acquisition growth masks retention weakness\n\n- Contribution rises **€1,900**, but margin falls **2.7 percentage points**.\n- Four of nine opening customers churn.\n- Reported October revenue includes those customers’ invoices; active-contract exit recurring revenue is only **€21,700**, versus the reported €32,000.\n- Average usage falls partly because new, low-usage customers enter and churned customers remain in monthly counts.\n\n**Priority:** retention and onboarding diagnosis before expanding investment. A post-churn margin cannot be calculated without knowing which costs disappear.\n\n## 5. RECOMMENDATIONS\n\n1. **Do not approve a blanket customer-segment cut.** Address Mid-market revenue losses and SMB Starter churn directly. Obtain segment-level costs before making segment profitability decisions.\n2. **Do not approve a broad paid-search spending increase yet.** Separate expansion attribution, collect spend and track matched cohorts through paying-customer conversion. Use controlled incremental tests.\n3. **Make Enterprise-plan efficiency the largest engineering workstream**, because it offers the largest observed contribution exposure. Validate specific causes before committing the full quarter.\n4. **Give Pro targeted capacity and rate-limit attention**, protecting the strongest-margin plan and investigating renewal overage economics.\n5. **Run immediate customer-health actions:** Soylent investigation, Nakatomi and Starter churn reviews, and Wayne renewal preparation.\n6. **Replace the headline dashboard** with separate measures for invoices, monthly recurring revenue, exit run rate, bookings, churn and direct contribution.\n\n## 6. UNCERTAINTIES / DATA ISSUES\n\n- **Duplicate invoice:** deduplicate Soylent by transaction ID and reconcile the conflicting source/date records.\n- **Identifier mismatch:** joining usage directly on customer ID would omit Wayne and Prestige.\n- **Snapshot mismatch:** October plan counts include customers who later churned; they are not closing active counts.\n- **Forward bookings versus current contracts:** October expansions total **€216,000 annualised**, equivalent to **€18,000/month** from the following cycle. They are absent from October invoices and current ARR values. Reconcile their effective status before publishing a forward run rate.\n- **Billing is not cash collection or accounting revenue recognition.** The normalised figures above are analytical monthly equivalents.\n- **Churn timing affects usage:** lower full-month usage for customers leaving mid-month is not necessarily an advance warning signal.\n- **No causal proof:** tickets do not establish churn causes; attribution does not establish incremental channel impact.\n- **No reliable CAC, payback, LTV or segment profit:** necessary spend, cohort history and cost allocation are missing. Plan contribution also excludes unspecified shared overhead.\n- **Only two months are supplied.** Seasonality, durable trends and engineering ROI cannot be established.\n- **Date inconsistency:** the environment date precedes the pack’s completed October period. This analysis follows the pack’s explicit instruction that both months are complete; the actual review date should be corrected.",
+  "finish_reason": null,
+  "provider_metadata": {
+    "request_id": null,
+    "raw_usage": {
+      "codex_runtime": {
+        "runtime": "Codex",
+        "requested_model_id": "gpt-6-astra",
+        "resolved_model_id": null,
+        "reasoning_effort": "medium",
+        "reasoning_effort_note": "highest available",
+        "codex_thread_id": "01a08c6a-226b-74d1-afd9-4b159e4f8220",
+        "codex_usage": {
+          "input_tokens": 14907,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 3932,
+          "reasoning_output_tokens": 1034
+        },
+        "codex_usage_note": "counters as Codex reported them, not independently verified provider accounting",
+        "latency_ms_host_wall_clock": 124494.86350000006,
+        "latency_semantics": "host wall clock including session startup and retries",
+        "retries": 0,
+        "tools_used_by_candidate": 0,
+        "tools_available_to_runtime": "UNOBSERVABLE; configured tool families disabled but complete backend tool inventory not exposed",
+        "system_prompt_equivalence": "UNOBSERVABLE; benchmark instruction requested via model_instructions_file; Codex may add system/developer context",
+        "qualification": {
+          "state": "VALID_CODEX_CANDIDATE",
+          "scope": "user-authorized Codex challenger, not API-route equivalence",
+          "completed": true,
+          "tool_events": [],
+          "independent_session": true
+        },
+        "unobservable": [
+          "temperature",
+          "top_p",
+          "caching",
+          "max_output_tokens",
+          "model_id",
+          "finish_reason",
+          "request_id",
+          "response_id",
+          "TTFT",
+          "TTFA",
+          "reasoning_tokens",
+          "reasoning_delivery_state",
+          "provider_truncation"
+        ],
+        "not_an_api_equivalent_run": true
+      }
+    }
+  }
+}

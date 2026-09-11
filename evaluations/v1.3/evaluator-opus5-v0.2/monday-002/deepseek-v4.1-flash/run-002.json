@@ -1,0 +1,242 @@
+{
+  "schema_version": "1",
+  "evaluator_id": "evaluator-opus5-v0.2",
+  "benchmark_version": "0.2",
+  "rubric_version": "0.2",
+  "scenario_id": "monday-002",
+  "run_id": "monday-002__deepseek-v4.1-flash__002",
+  "model_slug": "deepseek-v4.1-flash",
+  "scenario_prompt_sha256": "740e627cbc7413c321ede0d54000504de54821d34ff4677f82731b89600423a8",
+  "timestamp_utc": "2026-09-11T11:36:11Z",
+  "judge": {
+    "provider": "anthropic",
+    "model_id": "claude-opus-5",
+    "temperature": 0.0,
+    "effort": null,
+    "unsupported_parameters": [],
+    "prompt_fingerprint": "45998b3c03939498",
+    "route": "recorded",
+    "verdict_source": "deepseek-v4.1-flash.verdicts.jsonl",
+    "contract_fingerprint": "d06759a2a96216cd",
+    "contract_schema_version": "1",
+    "judge_session_id": null
+  },
+  "suite_version": "1.3",
+  "migrated_from": "evaluations/v1.2/evaluator-opus5-v0.2/monday-002/deepseek-v4.1-flash/run-002.json",
+  "dimensions": {
+    "state_reconstruction": {
+      "score": 15.0,
+      "max_score": 15.0
+    },
+    "temporal_supersession": {
+      "score": 15.0,
+      "max_score": 15.0
+    },
+    "planning_dependencies": {
+      "score": 22.0,
+      "max_score": 25.0
+    },
+    "decision_prioritization": {
+      "score": 17.5,
+      "max_score": 20.0
+    },
+    "cross_source_data_reasoning": {
+      "score": 15.0,
+      "max_score": 15.0
+    },
+    "uncertainty_epistemic": {
+      "score": 10.0,
+      "max_score": 10.0
+    }
+  },
+  "criteria": {
+    "launch_state": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "both options laid out with Priya's policy and Sam's 15 minutes; 'no additional executive gate'; rollout gated on verification",
+      "reason": "both options laid out with Priya's policy and Sam's 15 minutes; 'no additional executive gate'; rollout gated on verification"
+    },
+    "stale_external_actions": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'Do not call Zenith'; 'Do not send Enterprise pricing to Initech'; 'Do not send customer announcement until Sam confirms rollout is open', with Daniel as sender",
+      "reason": "'Do not call Zenith'; 'Do not send Enterprise pricing to Initech'; 'Do not send customer announcement until Sam confirms rollout is open', with Daniel as sender"
+    },
+    "current_owners": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'Submit diff to Priya', 'Marcus deploys 2.9.5-patch', 'Priya performs post-deploy verification', 'Sam opens and sanity-checks rollout', 'Daniel sends customer announcement'",
+      "reason": "'Submit diff to Priya', 'Marcus deploys 2.9.5-patch', 'Priya performs post-deploy verification', 'Sam opens and sanity-checks rollout', 'Daniel sends customer announcement'"
+    },
+    "executive_gate_superseded": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'Do not ask Maya for approval - she explicitly said no additional executive gate'",
+      "reason": "'Do not ask Maya for approval - she explicitly said no additional executive gate'"
+    },
+    "pricing_authority": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'Enterprise pricing workbook is not authoritative; internal scenario planning only (EUR2,500 platform / 40 seats / EUR55 extra seat). No external quoting or announcement date'",
+      "reason": "'Enterprise pricing workbook is not authoritative; internal scenario planning only (EUR2,500 platform / 40 seats / EUR55 extra seat). No external quoting or announcement date'"
+    },
+    "ownership_supersession": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'After confirmation, Daniel sends customer announcement'",
+      "reason": "'After confirmation, Daniel sends customer announcement'"
+    },
+    "choose_option_b": {
+      "result": "PASS",
+      "points_awarded": 8.0,
+      "points_possible": 8.0,
+      "evidence": "'Choose recovery path B (2.9.5-patch) due to lower risk and sufficient time', with 8% against <1% stated in CURRENT STATE",
+      "reason": "'Choose recovery path B (2.9.5-patch) due to lower risk and sufficient time', with 8% against <1% stated in CURRENT STATE"
+    },
+    "option_b_sequence": {
+      "result": "PASS",
+      "points_awarded": 7.0,
+      "points_possible": 7.0,
+      "evidence": "'Submit diff to Priya for delta review' -> 'Priya reviews diff asynchronously (25 min)' -> 'Marcus deploys 2.9.5-patch (45 min)' -> 'Priya performs post-deploy verification (20 min)' -> 'Sam opens and sanity-checks rollout (15 min)'",
+      "reason": "'Submit diff to Priya for delta review' -> 'Priya reviews diff asynchronously (25 min)' -> 'Marcus deploys 2.9.5-patch (45 min)' -> 'Priya performs post-deploy verification (20 min)' -> 'Sam opens and sanity-checks rollout (15 min)'"
+    },
+    "schedule_feasibility": {
+      "result": "PARTIAL",
+      "points_awarded": 3.0,
+      "points_possible": 6.0,
+      "evidence": "every constraint is right and the chain lands rollout at 11:00 inside the window, but '09:15-09:32 - Priya reviews diff asynchronously (25 min)' is a 17-minute block for a 25-minute review; the deploy start that keeps Marcus's 10:20 stop only holds if the review actually begins at 09:07",
+      "reason": "every constraint is right and the chain lands rollout at 11:00 inside the window, but '09:15-09:32 - Priya reviews diff asynchronously (25 min)' is a 17-minute block for a 25-minute review; the deploy start that keeps Marcus's 10:20 stop only holds if the review actually begins at 09:07"
+    },
+    "parallelize_work": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'Priya reviews diff asynchronously (25 min). Meanwhile, draft expansion explanation for Maya'",
+      "reason": "'Priya reviews diff asynchronously (25 min). Meanwhile, draft expansion explanation for Maya'"
+    },
+    "immediate_release_decision": {
+      "result": "PASS",
+      "points_awarded": 6.0,
+      "points_possible": 6.0,
+      "evidence": "'09:07-09:15 - Choose recovery path B... Submit diff to Priya for delta review' is the first action, with '(Marcus leaves at 10:20, so this fits)'",
+      "reason": "'09:07-09:15 - Choose recovery path B... Submit diff to Priya for delta review' is the first action, with '(Marcus leaves at 10:20, so this fits)'"
+    },
+    "expansion_before_11": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'11:00 - Send expansion explanation to Maya (before deadline)', drafted from 09:15",
+      "reason": "'11:00 - Send expansion explanation to Maya (before deadline)', drafted from 09:15"
+    },
+    "globex_priority": {
+      "result": "PARTIAL",
+      "points_awarded": 2.5,
+      "points_possible": 5.0,
+      "evidence": "'High-priority support tickets (SSO setup, SCIM sync, audit export) and usage down 18% / admin logins down 61%. Expansion pending procurement' - the 18-day renewal is absent",
+      "reason": "'High-priority support tickets (SSO setup, SCIM sync, audit export) and usage down 18% / admin logins down 61%. Expansion pending procurement' - the 18-day renewal is absent"
+    },
+    "avoid_acme_false_positive": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'Acme - Usage reduction expected due to approved shift to annual batch-processing; not a problem'",
+      "reason": "'Acme - Usage reduction expected due to approved shift to annual batch-processing; not a problem'"
+    },
+    "expansion_fully_reconciled": {
+      "result": "PASS",
+      "points_awarded": 6.0,
+      "points_possible": 6.0,
+      "evidence": "'gap EUR54k. Wayne and Globex explain EUR30k. Remaining EUR24k from Soylent (expected 18k vs previous 28k) and Wonka (expected 10k vs previous 24k)'",
+      "reason": "'gap EUR54k. Wayne and Globex explain EUR30k. Remaining EUR24k from Soylent (expected 18k vs previous 28k) and Wonka (expected 10k vs previous 24k)'"
+    },
+    "causal_boundary": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "'with no contract explanation'; 'Do not invent causes for Soylent/Wonka reductions - state only what data establishes'",
+      "reason": "'with no contract explanation'; 'Do not invent causes for Soylent/Wonka reductions - state only what data establishes'"
+    },
+    "customer_signal_integration": {
+      "result": "PASS",
+      "points_awarded": 6.0,
+      "points_possible": 6.0,
+      "evidence": "Globex over accounts, contracts and support; Acme on its contract; Soylent crossed against its own tickets; Wonka noted as having neither tickets nor a contract cause",
+      "reason": "Globex over accounts, contracts and support; Acme on its contract; Soylent crossed against its own tickets; Wonka noted as having neither tickets nor a contract cause"
+    },
+    "orion_missing_evidence": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'Which is correct - org_71A or org_17A?'; 'What is the actual value for the correct org? Need to read it'; the reply is blocked until both are answered",
+      "reason": "'Which is correct - org_71A or org_17A?'; 'What is the actual value for the correct org? Need to read it'; the reply is blocked until both are answered"
+    },
+    "conditional_launch_timing": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "no external time is committed at all; the announcement waits on Sam's confirmation",
+      "reason": "no external time is committed at all; the announcement waits on Sam's confirmation"
+    },
+    "no_unsupported_causality": {
+      "result": "PASS",
+      "points_awarded": 2.0,
+      "points_possible": 2.0,
+      "evidence": "'Investigate if support issues are driving the reduction' for Soylent is posed as a question, and 'likely org_17A' is an identity lean, not a cause",
+      "reason": "'Investigate if support issues are driving the reduction' for Soylent is posed as a question, and 'likely org_17A' is an identity lean, not a cause"
+    }
+  },
+  "false_actions": {},
+  "penalties": {
+    "items": [],
+    "dismissed": [],
+    "raw_total": 0.0,
+    "total": 0.0,
+    "capped": false
+  },
+  "deterministic_checks": [
+    {
+      "id": "contoso_11_00",
+      "matched": false,
+      "detail": "'11:00' appears near a mention of Contoso"
+    },
+    {
+      "id": "churn_3_1_to_4_4",
+      "matched": false,
+      "detail": "both churn figures 3.1 and 4.4 are present"
+    },
+    {
+      "id": "umbrella_metrics_present",
+      "matched": false,
+      "detail": "at least two of 163 / 1821 / 41 appear near a mention of Umbrella"
+    },
+    {
+      "id": "umbrella_named",
+      "matched": false,
+      "detail": "Umbrella is named in the response"
+    },
+    {
+      "id": "wednesday_present",
+      "matched": false,
+      "detail": "'Wednesday' appears in the response"
+    },
+    {
+      "id": "julia_present",
+      "matched": false,
+      "detail": "'Julia' appears in the response"
+    },
+    {
+      "id": "pied_piper_and_hooli",
+      "matched": false,
+      "detail": "both known cancellations are named"
+    }
+  ],
+  "disagreements": [],
+  "base_score": 94.5,
+  "final_score": 94.5
+}

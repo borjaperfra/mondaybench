@@ -145,7 +145,25 @@ def qualify_run(
             if expected_max_output_tokens is not None
             else model.max_output_tokens
         )
-        if run.generation.max_output_tokens != expected_ceiling:
+        #
+        # A run that records NO ceiling is not compared. Silence is not a
+        # different value: it means the runtime never exposed one, and holding
+        # that against the run would be refusing it for the absence of evidence
+        # rather than for evidence of a problem. This is the same rule the
+        # reasoning check already applies - "only a positively observed absence
+        # disqualifies" - applied to the same kind of missing telemetry.
+        #
+        # THE COST, stated rather than buried: this check is one of the two
+        # defences against scoring a truncated answer as a complete one, and the
+        # other (`finish_reason == "length"`) is equally unobservable on a
+        # runtime that reports neither. For such a run, the evidence that the
+        # answer finished on its own terms comes from the runtime's own
+        # completion events, recorded in `provider_metadata`, not from this
+        # harness. Authorised for the Codex challenger on 2026-09-11.
+        if (
+            run.generation.max_output_tokens is not None
+            and run.generation.max_output_tokens != expected_ceiling
+        ):
             reasons.append(
                 f"max_output_tokens (safety ceiling) {run.generation.max_output_tokens} "
                 f"!= configured {expected_ceiling}"

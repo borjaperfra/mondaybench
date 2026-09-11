@@ -1,0 +1,85 @@
+You are evaluating a model response for MondayBench.
+
+Your job is NOT to judge writing quality and NOT to assign a numeric score.
+
+Evaluate only the criterion below.
+
+SCENARIO GROUND TRUTH RELEVANT TO THIS CRITERION:
+critical_actions.analytics_release:
+  expected: true
+  priority: 4
+  facts:
+  - Analytics v2 was originally planned for Monday
+  - Release moved to Wednesday
+  - Sam owns release coordination
+  - Julia owns launch communications
+  expected_action:
+  - Treat Wednesday as the current release date
+  - Check readiness only as a lower-priority preparation task
+current_state.analytics_v2_release:
+  value: Wednesday
+current_state.analytics_launch_email_owner:
+  value: Julia
+
+CRITERION:
+analytics_action (dimension: action_detection)
+
+PASS DEFINITION:
+Correctly treats Wednesday as the release date and any readiness check as lower priority than today's critical items.
+
+PARTIAL DEFINITION:
+Correctly understands Wednesday but gives disproportionate priority to the release.
+
+FAIL DEFINITION:
+Treats Analytics v2 as launching Monday or assigns the launch email to the user.
+
+MODEL RESPONSE:
+## 1. What happened while you were away
+
+- **Acme incident resolved Thursday.** A config introduced in 2.18.0 exhausted the connection pool. Marcus rolled it back; metrics recovered and Acme confirmed its backlog cleared.
+- **Analytics v2 moved from Monday to Wednesday** after two saved-report regressions, including CSV exports. Sam owns release coordination; Julia owns launch communications.
+- **Contoso renewal has a legal blocker**, despite earlier optimistic Slack updates: written confirmation about deletion from disaster-recovery backups is required by **11:00 today**.
+- Enterprise logo churn rose **3.1% → 4.4%**. Daniel wants an explanation before **Tuesday’s board meeting**.
+
+## 2. Your attention today — in priority order
+
+1. **Contoso: unblock the €72k ARR renewal before 11:00.** Get Marcus’s verified backup-deletion behavior and validate it against the DPA with Legal; coordinate a written response with Noah. Do not guess or promise compliance. Missing the deadline pushes signature to the next approval window.
+2. **Umbrella: check current account and service health.** The supplied **Aug 31** snapshot shows usage down **41%**, p95 latency **1,821 ms**, and **163 errors / 94,217 requests (~0.17%)** on €54k ARR. Ask Engineering/CS whether this persists; the snapshot alone does not establish a current incident.
+3. **Start the churn breakdown for Tuesday.** Quantify whether Pied Piper and Hooli explain the increase; check for other cancellations and broader adoption issues.
+4. **Review Analytics readiness, not launch copy.** Confirm fixes and the complete QA pass are on track for Wednesday with Sam. Remove/reassign your stale launch-email task.
+5. **Reply to Initech without sharing proposed pricing.** Explain that changes are not finalized or available to share; even rough numbers remain confidential.
+6. **Confirm Globex scheduling early today if possible.** Check Thursday-afternoon availability and reply before the original Tuesday session; do not rely on the task’s Wednesday due date.
+
+Also reconcile the stale Acme investigation task as resolved; your low-priority Q3 survey review remains open.
+
+## 3. Important, but no action needed from you
+
+- Marcus owns Acme incident documentation; no further customer follow-up is currently required.
+- Julia explicitly needs nothing from you for the launch email. The existing outlined icon stays.
+- Pricing review is Wednesday, owned by Daniel; no pricing decision has been made.
+- Partner integration still targets October; partner notes are done.
+- Finance: **€31k new ARR, €18k expansion, €27k churned**, €214k pipeline created; cash remains on plan.
+
+## 4. Unclear / needs more information
+
+- **Contoso:** actual backup-deletion guarantees and the applicable DPA retention period.
+- **Churn:** reporting period, denominator, and cancellation-level contributions.
+- **Conversion:** Slack reports a possible drop, but no conversion data was supplied.
+- **Freshness:** customer metrics are dated Aug 31—not a confirmed current Monday snapshot.
+- **Analytics:** neither regression’s resolution nor final QA sign-off is confirmed.
+
+Return valid JSON only:
+
+{
+  "result": "PASS" | "PARTIAL" | "FAIL",
+  "evidence": "short quote or concise description of the relevant part of the response",
+  "reason": "one-sentence explanation"
+}
+
+Rules:
+
+- Judge only what is present in the model response.
+- Do not give credit for facts the response does not state or clearly imply.
+- Do not penalize style, brevity, formatting, or wording.
+- Do not require exact phrasing.
+- If the response is ambiguous between two labels, choose the lower label.

@@ -10,7 +10,7 @@ from __future__ import annotations
 import hashlib
 import json
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -83,8 +83,29 @@ def effective_ceiling(scenario: Scenario, model: ModelConfig) -> int:
     return scenario.safety_ceiling_tokens or model.max_output_tokens
 
 
+def apply_system_prompt(prompt: BuiltPrompt, model: ModelConfig) -> BuiltPrompt:
+    """Swap in a model's own system prompt, leaving the user prompt untouched.
+
+    `build_prompt` renders one prompt for a whole battery, and the CLI builds it
+    once for every model in that battery, so a per-model system prompt cannot be
+    chosen there. It is applied here, where the model is known.
+
+    Only the system field moves. `prompt.sha256` is the hash of the assembled
+    USER prompt and is what `scenario_prompt_sha256` records, so a run generated
+    under a different system prompt still carries the frozen scenario hash - it
+    is the same scenario, read under different instructions. The system prompt
+    is hashed separately into `generation.system_prompt_sha256`, and through it
+    into `config_sha256`, which is where the difference belongs and where
+    qualification can see it.
+    """
+    if model.system_prompt is None:
+        return prompt
+    return replace(prompt, system_prompt=model.system_prompt)
+
+
 def dry_run_report(scenario: Scenario, model: ModelConfig, prompt: BuiltPrompt) -> dict[str, object]:
     """Everything a dry run should show. Makes no API call."""
+    prompt = apply_system_prompt(prompt, model)
     return {
         "scenario": scenario.id,
         "model_slug": model.slug,
@@ -117,6 +138,7 @@ def execute_run(
 ) -> BenchmarkRun:
     """Generate one run and persist it. Raises on failure; writes nothing."""
     prompt = prompt or build_prompt(scenario)
+    prompt = apply_system_prompt(prompt, model)
     target = run_path(scenario.id, model.slug, run_number, root)
     if target.exists() and not overwrite:
         raise RunExistsError(

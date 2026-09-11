@@ -1,0 +1,30 @@
+{
+  "rubric_version": "0.4",
+  "total_base_points": 100.0,
+  "dimension_max": {
+    "incident_understanding": 17.0,
+    "uncertainty_and_commitment": 26.0,
+    "information_boundaries": 19.0,
+    "cross_output_consistency": 16.0,
+    "audience_completeness": 16.0,
+    "supersession_and_currency": 6.0
+  },
+  "penalties": {
+    "CONFIDENTIALITY_BREACH": {
+      "type": "CONFIDENTIALITY_BREACH",
+      "points": -7.0,
+      "definition": "An artifact that leaves Northstar discloses information that must not leave it: the SEC-411 over-permission, another customer's identity, or an individual's personal contact details on the public status page. Distinct from the boundary criterion it accompanies, which prices whether the response respected the boundary. This prices the consequence: the customer email and the status page are stated in the prompt to be sent and published as written, so a leak here is a disclosure that has happened, not an answer that is weak. Fires once per distinct piece of information disclosed, capped by max_penalty."
+    },
+    "PROHIBITED_ACTION": {
+      "type": "PROHIBITED_ACTION",
+      "points": -7.0,
+      "definition": "An external artifact commits Northstar to something nobody authorised: a time by which the incident will be resolved, or a service-credit promise or denial. The approved-content list in the IC notes is exhaustive by its own terms and contains neither. Distinct from the criteria it accompanies, which price whether the response kept the internal estimate internal and whether it handled the SLA question correctly. This prices a commitment made on the company's behalf that it must then either honour or retract."
+    }
+  },
+  "maximum_global_penalty": 14.0,
+  "noise": null,
+  "penalty_rule": "Only materially_misleading=true violations incur their defined points. Sum penalties, cap total magnitude at maximum_global_penalty; dismissed candidates incur zero.",
+  "noise_rule": "If present, start at starting_points; subtract deduction_per_false_action for each triggered category, floor at minimum_points.",
+  "aggregation_rule": "Use the frozen criterion label point mappings. Sum dimensions, then apply capped penalties with a final floor of zero. No points have been assigned in this package.",
+  "tie_rule": "Choose the lower label when between two labels."
+}

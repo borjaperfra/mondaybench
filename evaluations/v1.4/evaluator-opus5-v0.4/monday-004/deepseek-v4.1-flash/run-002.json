@@ -1,0 +1,298 @@
+{
+  "schema_version": "1",
+  "evaluator_id": "evaluator-opus5-v0.4",
+  "benchmark_version": "0.4",
+  "rubric_version": "0.3",
+  "scenario_id": "monday-004",
+  "run_id": "monday-004__deepseek-v4.1-flash__002",
+  "model_slug": "deepseek-v4.1-flash",
+  "scenario_prompt_sha256": "3a0cbb569ca4f711b8907177af9204cec267d26f35f732829df56b03ed23ef99",
+  "timestamp_utc": "2026-09-11T12:05:17Z",
+  "judge": {
+    "provider": "anthropic",
+    "model_id": "claude-opus-5",
+    "temperature": 0.0,
+    "effort": null,
+    "unsupported_parameters": [],
+    "prompt_fingerprint": "45998b3c03939498",
+    "route": "recorded",
+    "verdict_source": "deepseek-v4.1-flash.verdicts.jsonl",
+    "contract_fingerprint": "5ef5dc8dc34221ac",
+    "contract_schema_version": "1",
+    "judge_session_id": null
+  },
+  "suite_version": "1.4",
+  "migrated_from": "evaluations/v1.3/evaluator-opus5-v0.4/monday-004/deepseek-v4.1-flash/run-002.json",
+  "dimensions": {
+    "revenue_reasoning": {
+      "score": 12.0,
+      "max_score": 20.0
+    },
+    "customer_health": {
+      "score": 11.0,
+      "max_score": 15.0
+    },
+    "acquisition_reasoning": {
+      "score": 7.0,
+      "max_score": 19.0
+    },
+    "plan_economics": {
+      "score": 11.0,
+      "max_score": 19.0
+    },
+    "cross_table_data_quality": {
+      "score": 10.0,
+      "max_score": 18.0
+    },
+    "decision_quality": {
+      "score": 3.5,
+      "max_score": 9.0
+    }
+  },
+  "criteria": {
+    "duplicate_detected": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'INV-2026-10-0209 for soylent appears twice (stripe and billing_sync). We treated it as one invoice'",
+      "reason": "'INV-2026-10-0209 for soylent appears twice (stripe and billing_sync). We treated it as one invoice'"
+    },
+    "annual_prepayment_normalized": {
+      "result": "PARTIAL",
+      "points_awarded": 3.0,
+      "points_possible": 6.0,
+      "evidence": "the analysis runs on plans.csv MRR, which already carries the annual contract at its monthly equivalent, so October is restated on a recurring basis - but the EUR120,000 Gringotts invoice is never identified, and nothing in the response shows it was seen",
+      "reason": "the analysis runs on plans.csv MRR, which already carries the annual contract at its monthly equivalent, so October is restated on a recurring basis - but the EUR120,000 Gringotts invoice is never identified, and nothing in the response shows it was seen"
+    },
+    "headline_vs_recurring_growth": {
+      "result": "PARTIAL",
+      "points_awarded": 3.0,
+      "points_possible": 6.0,
+      "evidence": "gives one correct normalised figure with its basis stated - 'Headline MRR (from plans data): Sep EUR746,100, Oct EUR757,700 (+1.6%)' - but never computes the invoice-sum headline, so there is no +12% and nothing for the normalised figure to refute",
+      "reason": "gives one correct normalised figure with its basis stated - 'Headline MRR (from plans data): Sep EUR746,100, Oct EUR757,700 (+1.6%)' - but never computes the invoice-sum headline, so there is no +12% and nothing for the normalised figure to refute"
+    },
+    "revenue_conclusion": {
+      "result": "PARTIAL",
+      "points_awarded": 2.0,
+      "points_possible": 4.0,
+      "evidence": "the +1.6% and its drivers are correct and the underlying picture is right, but no conclusion about the reported number reaches the executive summary, which opens on SMB churn instead",
+      "reason": "the +1.6% and its drivers are correct and the underlying picture is right, but no conclusion about the reported number reaches the executive summary, which opens on SMB churn instead"
+    },
+    "segment_retention_quantified": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "logo churn with denominators, labelled and correctly ranked: 'SMB: 4 churns (22% of 18 SMB customers at start of month); Mid-market: 1 churn (nakatomi, 10% of 10); Enterprise: 0 churns'",
+      "reason": "logo churn with denominators, labelled and correctly ranked: 'SMB: 4 churns (22% of 18 SMB customers at start of month); Mid-market: 1 churn (nakatomi, 10% of 10); Enterprise: 0 churns'"
+    },
+    "sample_size_arr_context": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'4 of 18 SMB customers churned in October (22% monthly churn)' gives the denominator and the event count, and 'The 22% SMB churn is based on a single month; it may not be representative' puts it in context",
+      "reason": "'4 of 18 SMB customers churned in October (22% monthly churn)' gives the denominator and the event count, and 'The 22% SMB churn is based on a single month; it may not be representative' puts it in context"
+    },
+    "acme_false_positive_avoided": {
+      "result": "FAIL",
+      "points_awarded": 0.0,
+      "points_possible": 4.0,
+      "evidence": "Acme is not mentioned anywhere in the response; the -45% request decline is never engaged",
+      "reason": "Acme is not mentioned anywhere in the response; the -45% request decline is never engaged"
+    },
+    "no_churn_overreach": {
+      "result": "PASS",
+      "points_awarded": 2.0,
+      "points_possible": 2.0,
+      "evidence": "no cause is asserted for the churn that happened; the Starter improvements are offered forward-looking as things that 'could reduce support tickets and improve retention'",
+      "reason": "no cause is asserted for the churn that happened; the Starter improvements are offered forward-looking as things that 'could reduce support tickets and improve retention'"
+    },
+    "raw_attribution_not_equivalent_new_business": {
+      "result": "FAIL",
+      "points_awarded": 0.0,
+      "points_possible": 5.0,
+      "evidence": "'Paid search: EUR274,800 (6 conversions)' is carried straight into the channel ranking and into 'paid search generates the most total attributed revenue'. New logo is never separated from expansion for any channel",
+      "reason": "'Paid search: EUR274,800 (6 conversions)' is carried straight into the channel ranking and into 'paid search generates the most total attributed revenue'. New logo is never separated from expansion for any channel"
+    },
+    "existing_customer_expansion_removed": {
+      "result": "FAIL",
+      "points_awarded": 0.0,
+      "points_possible": 5.0,
+      "evidence": "no new-logo view of the channels anywhere",
+      "reason": "no new-logo view of the channels anywhere"
+    },
+    "conversion_rate_vs_absolute_volume": {
+      "result": "PARTIAL",
+      "points_awarded": 2.0,
+      "points_possible": 4.0,
+      "evidence": "neither movement is reported. The response builds a different metric - acquisition rows over funnel leads, 'Paid search: 6/1420 = 0.42%' - across both months combined, so the 10.0% to 8.0% rate fall and the 100 to 120 conversion rise are both absent",
+      "reason": "neither movement is reported. The response builds a different metric - acquisition rows over funnel leads, 'Paid search: 6/1420 = 0.42%' - across both months combined, so the 10.0% to 8.0% rate fall and the 100 to 120 conversion rise are both absent"
+    },
+    "no_unsupported_channel_scale_decision": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "'Do not increase spend on any acquisition channel yet. Without marketing cost data, CAC payback cannot be computed. Obtain spend per channel and then evaluate'",
+      "reason": "'Do not increase spend on any acquisition channel yet. Without marketing cost data, CAC payback cannot be computed. Obtain spend per channel and then evaluate'"
+    },
+    "cac_payback_unavailable": {
+      "result": "PASS",
+      "points_awarded": 2.0,
+      "points_possible": 2.0,
+      "evidence": "'CAC payback cannot be calculated because marketing spend per channel is not provided'",
+      "reason": "'CAC payback cannot be calculated because marketing spend per channel is not provided'"
+    },
+    "contribution_calculated": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "October contribution exact for all three plans: EUR194,700 / EUR41,500 / EUR10,300",
+      "reason": "October contribution exact for all three plans: EUR194,700 / EUR41,500 / EUR10,300"
+    },
+    "margin_calculated_or_correctly_compared": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "29.5% / 62.7% / 32.2%, exact, with per-customer profit alongside",
+      "reason": "29.5% / 62.7% / 32.2%, exact, with per-customer profit alongside"
+    },
+    "absolute_vs_scalable_economics": {
+      "result": "PARTIAL",
+      "points_awarded": 2.5,
+      "points_possible": 5.0,
+      "evidence": "the margin table and the per-customer profit table carry both halves, but the response never says which question each figure answers, and 'Enterprise is stable but has high absolute costs' is the whole of the contrast",
+      "reason": "the margin table and the per-customer profit table carry both halves, but the response never says which question each figure answers, and 'Enterprise is stable but has high absolute costs' is the whole of the contrast"
+    },
+    "plan_trajectory_evidence": {
+      "result": "FAIL",
+      "points_awarded": 0.0,
+      "points_possible": 3.0,
+      "evidence": "no usage trajectory anywhere. 'Pro plan is the most efficient and growing (+5% MRR)' is revenue growth, and the included-request ceiling is never mentioned",
+      "reason": "no usage trajectory anywhere. 'Pro plan is the most efficient and growing (+5% MRR)' is revenue growth, and the included-request ceiling is never mentioned"
+    },
+    "product_focus_supported": {
+      "result": "PARTIAL",
+      "points_awarded": 2.5,
+      "points_possible": 5.0,
+      "evidence": "recommends the Starter plan on the support-cost ratio and 'highest churn (all churned customers were on starter)' - the second of which is false, since Nakatomi churned on Pro. One sound cost-adjusted signal and one that does not hold",
+      "reason": "recommends the Starter plan on the support-cost ratio and 'highest churn (all churned customers were on starter)' - the second of which is false, since Nakatomi churned on Pro. One sound cost-adjusted signal and one that does not hold"
+    },
+    "customer_id_alias_resolved": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'Usage account ID mismatches: wayne_ent vs wayne-enterprises, prestige_ww vs prestige-worldwide - we mapped these correctly'",
+      "reason": "'Usage account ID mismatches: wayne_ent vs wayne-enterprises, prestige_ww vs prestige-worldwide - we mapped these correctly'"
+    },
+    "support_normalized": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'Support cost as % of revenue: Enterprise 25.5%, Pro 13.0%, Starter 32.2%' - all three plans on one denominator, all exact, with Starter and not Enterprise at the bottom",
+      "reason": "'Support cost as % of revenue: Enterprise 25.5%, Pro 13.0%, Starter 32.2%' - all three plans on one denominator, all exact, with Starter and not Enterprise at the bottom"
+    },
+    "cross_table_customer_signal": {
+      "result": "PARTIAL",
+      "points_awarded": 2.0,
+      "points_possible": 4.0,
+      "evidence": "'Hooli expansion added EUR3k MRR' and 'New logos added EUR11.1k MRR (5 SMB customers)' each cross two tables with correct figures, but no account-level finding reaches three",
+      "reason": "'Hooli expansion added EUR3k MRR' and 'New logos added EUR11.1k MRR (5 SMB customers)' each cross two tables with correct figures, but no account-level finding reaches three"
+    },
+    "figures_carried_correctly": {
+      "result": "FAIL",
+      "points_awarded": 0.0,
+      "points_possible": 3.0,
+      "evidence": "'all churned customers were on starter' is false - Nakatomi churned on Pro - and the Starter engineering recommendation rests on it. The October segment ticket counts are also wrong in two of three places: mid-market is 23 rather than 21 and SMB is 26 rather than 24, so the three lines sum to 70 against the pack's 74. An LTV of '~EUR5k per customer' is estimated with no basis and then used to argue the SMB reduction",
+      "reason": "'all churned customers were on starter' is false - Nakatomi churned on Pro - and the Starter engineering recommendation rests on it. The October segment ticket counts are also wrong in two of three places: mid-market is 23 rather than 21 and SMB is 26 rather than 24, so the three lines sum to 70 against the pack's 74. An LTV of '~EUR5k per customer' is estimated with no basis and then used to argue the SMB reduction"
+    },
+    "causal_boundary": {
+      "result": "FAIL",
+      "points_awarded": 0.0,
+      "points_possible": 3.0,
+      "evidence": "only one of the three Soylent movements is reported - 'Soylent downgrade reduced MRR by EUR2.5k' - with no usage figure, no ticket movement and no statement about what the data does or does not establish",
+      "reason": "only one of the three Soylent movements is reported - 'Soylent downgrade reduced MRR by EUR2.5k' - with no usage figure, no ticket movement and no statement about what the data does or does not establish"
+    },
+    "segment_recommendation": {
+      "result": "FAIL",
+      "points_awarded": 0.0,
+      "points_possible": 3.0,
+      "evidence": "'Reduce investment in the SMB segment - The 22% monthly churn rate and low LTV make SMB unattractive... Focus sales and marketing efforts on Mid-market and Enterprise'",
+      "reason": "'Reduce investment in the SMB segment - The 22% monthly churn rate and low LTV make SMB unattractive... Focus sales and marketing efforts on Mid-market and Enterprise'"
+    },
+    "acquisition_recommendation": {
+      "result": "PARTIAL",
+      "points_awarded": 1.5,
+      "points_possible": 3.0,
+      "evidence": "'Partner shows the best quality signals, but volume is too low to justify scaling without more data' names the right channel and conditions the spend, but the view behind it is uncorrected: it rests on conversion rate and revenue per conversion, not on new-logo revenue",
+      "reason": "'Partner shows the best quality signals, but volume is too low to justify scaling without more data' names the right channel and conditions the spend, but the view behind it is uncorrected: it rests on conversion rate and revenue per conversion, not on new-logo revenue"
+    },
+    "product_recommendation": {
+      "result": "PASS",
+      "points_awarded": 1.0,
+      "points_possible": 1.0,
+      "evidence": "'Focus engineering on the Starter plan' - stated, actionable, and consistent with the plan economics section above it",
+      "reason": "'Focus engineering on the Starter plan' - stated, actionable, and consistent with the plan economics section above it"
+    },
+    "uncertainty_discipline": {
+      "result": "PARTIAL",
+      "points_awarded": 1.0,
+      "points_possible": 2.0,
+      "evidence": "names several real gaps - missing acquisition cost, one-month churn, cost-allocation assumptions, expansion timing, trial-to-paid untracked - but invents figures elsewhere: an LTV estimate of '~EUR5k per customer' and a mid-market margin of '~7.6%' from a self-built allocation",
+      "reason": "names several real gaps - missing acquisition cost, one-month churn, cost-allocation assumptions, expansion timing, trial-to-paid untracked - but invents figures elsewhere: an LTV estimate of '~EUR5k per customer' and a mid-market margin of '~7.6%' from a self-built allocation"
+    }
+  },
+  "false_actions": {},
+  "penalties": {
+    "items": [
+      {
+        "type": "PROHIBITED_ACTION",
+        "points": -7.0,
+        "evidence": "'Reduce investment in the SMB segment - The 22% monthly churn rate and low LTV (estimated ~EUR5k per customer) make SMB unattractive... Focus sales and marketing efforts on Mid-market and Enterprise, where churn is lower and LTV is higher.'",
+        "reason": "The penalty prompt names defunding SMB on the strength of the 22.2% logo churn rate as the canonical prohibited action, and this is that recommendation made to leadership by name, with acquisition effort redirected away from the segment. It is not named in order to be rejected."
+      }
+    ],
+    "dismissed": [],
+    "raw_total": -7.0,
+    "total": -7.0,
+    "capped": false
+  },
+  "deterministic_checks": [
+    {
+      "id": "contoso_11_00",
+      "matched": false,
+      "detail": "'11:00' appears near a mention of Contoso"
+    },
+    {
+      "id": "churn_3_1_to_4_4",
+      "matched": false,
+      "detail": "both churn figures 3.1 and 4.4 are present"
+    },
+    {
+      "id": "umbrella_metrics_present",
+      "matched": false,
+      "detail": "at least two of 163 / 1821 / 41 appear near a mention of Umbrella"
+    },
+    {
+      "id": "umbrella_named",
+      "matched": false,
+      "detail": "Umbrella is named in the response"
+    },
+    {
+      "id": "wednesday_present",
+      "matched": false,
+      "detail": "'Wednesday' appears in the response"
+    },
+    {
+      "id": "julia_present",
+      "matched": false,
+      "detail": "'Julia' appears in the response"
+    },
+    {
+      "id": "pied_piper_and_hooli",
+      "matched": false,
+      "detail": "both known cancellations are named"
+    }
+  ],
+  "disagreements": [],
+  "base_score": 54.5,
+  "final_score": 47.5
+}

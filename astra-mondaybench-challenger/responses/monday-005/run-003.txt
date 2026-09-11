@@ -1,0 +1,82 @@
+## CEO BRIEFING
+
+**As of 14:20 UTC: incident OPEN, mitigated, verification in progress—not resolved.**
+
+- **What happened:** Batch API submissions experienced partial failures from 11:42 until mitigation at 12:58, a 76-minute impact window. Inference, Embeddings and Files were unaffected.
+- **Impact:** **17,602 of 58,900 Batch API requests failed: 29.9%.** Seven of nine Batch-using accounts experienced failures; Northstar has 36 accounts overall. The affected accounts were Stark Industries, Contoso, Wayne Enterprises, Globex, Wonka Industries, Umbrella Health and Initech.
+- **Current position:** Traffic has been moved off the affected fleet. Latest endpoint error rate was 0.3% at 14:12, versus a 0.2% baseline. The verification window closes at **14:30 at the earliest**, subject to continuous normal error rates. Failed-job re-drive remains incomplete; the latest progress report was approximately 60% at 13:52.
+- **Cause:** Not established. A reduced database connection-pool limit is the leading hypothesis; concentrated load is another. Neither, nor their possible interaction, has been tested.
+- **Commercial exposure:** Contoso is the only affected customer with contractual service credits. Its incident-window Batch failure rate was 36.3%, but that is **not** its contractual monthly availability. We cannot determine a November breach or credit now: the calculation covers eligible monthly Inference, Batch and Files requests and is determined after month end. Prior retry/rate-limit issues require eligibility review, not an assumed exclusion.
+- **Communications risk:** The 12:05 public update incorrectly claimed an identified cause and promised restoration within an hour. No update has followed. The external drafts below stay within the approved disclosures; an explicit root-cause correction needs communications clearance.
+
+**Suggested board wording:** “We mitigated a partial Batch API incident affecting seven customers. Approximately 30% of Batch requests failed during the impact window. Recovery verification and failed-job processing remain underway; root cause and any contractual credit exposure are not yet determined.”
+
+Recheck the 14:30 verification result before the 15:00 call; do not present resolution as assured.
+
+## ENGINEERING UPDATE
+
+**INC-2026-1109-01 — handoff at 14:20 UTC**
+
+**State and configuration**
+- OPEN / mitigated / verifying. Incident began 11:42 with partial `502` failures on `POST /v1/batch/jobs`.
+- `batch-api@2026.11.09-r3` deployed to both fleets at 11:31, including three dependency bumps and a pool ceiling reduction from 80 to 24 connections per worker.
+- All Batch traffic cut over to fleet-b at 12:58. fleet-a is drained and out of rotation; `r3` has not been rolled back.
+- Latest error rate: 0.3% at 14:12; baseline 0.2%. fleet-b queue depth was normal at 13:20. No customer reports of new failures since cutover were recorded at that time.
+- Verification runs 13:00–14:30 and requires 90 continuous minutes of normal endpoint error rate. **Do not declare resolution before a clean completion.**
+- Failed-job re-drive: approximately 60% reported at 13:52, with no re-drive failures. No newer completion figure is available.
+
+**Impact**
+- 17,602 / 58,900 Batch requests failed (**29.9%**) during 11:42–12:58.
+- Seven affected accounts. Use all Batch requests as the headline denominator—not affected-fleet traffic or the 842,000 platform-wide requests.
+
+**Evidence and hypotheses**
+- **H1, leading but untested:** Reduced connection-pool ceiling. Supporting evidence: deployment preceded the alert by 11 minutes; affected workers were waiting on database connections. Counterevidence: fleet-b runs the same release without degradation.
+- **H2, live but untested:** Concentrated load. fleet-a reached approximately three times its morning average following Wonka’s scheduled job. Counterevidence: it handled a higher peak on 3 November.
+- **Interaction:** Lower pool capacity under higher concurrency is plausible, but also untested.
+- Upstream storage was ruled out at 11:47: provider status was healthy and Files, using the same provider, remained healthy. Shared gateway/client SDK were also ruled out in channel.
+- The rollback was deliberately deferred to preserve evidence and avoid confusing release effects with load effects. Successful traffic movement is mitigation evidence, not proof of cause.
+
+**Next actions for handoff**
+1. Verify the complete error-rate record at 14:30; if continuity is broken, do not close on the existing window.
+2. Obtain current re-drive progress and confirm completion rather than extrapolating from 60%.
+3. Preserve fleet-a evidence. Run controlled tests separating pool-setting changes from load changes; the pending `r3` rollback test alone may not isolate the pool setting from the other release changes.
+4. Keep fleet-a out of rotation pending validation; no return-to-service result is recorded.
+5. Coordinate the 14:30 customer/public update with Tomas and Ruth. Do not publish untested causes or internal completion estimates. Seek clearance to explicitly correct the erroneous 12:05 cause claim.
+
+**Contoso / support follow-up**
+- 3,410 / 9,400 Batch requests failed (**36.3%**); first failure 11:43, last 12:56.
+- Schedule B measures monthly eligible requests across Inference, Batch and Files, excluding Embeddings. Commitment: 99.9%.
+- Credits on request: 10% for availability ≥99.0% and <99.9%; 25% for ≥95.0% and <99.0%; 50% below 95.0%.
+- Determination occurs after month end, with publication within 10 business days and claims due within 30 days of publication.
+- The 4 November ticket confirms immediate retries without backoff were triggering rate limits and the fix was not deployed then. Review service records for applicable exclusions; this does not establish that all—or any specified number—of today’s 3,410 failures are excluded. B.2(b) exclusions require published volume and basis and may be disputed.
+- No breach, credit tier or exclusion volume can be determined from this pack. SLA explanations are outside the current external clearance; obtain approval before sending a substantive contractual response.
+
+**Restricted internal follow-up, unrelated to the incident**
+`SEC-411`: batch worker database role has unnecessary billing-schema read/write access. Marcus owns narrowing access to read-only on the two required tables, target this week. This did not cause or contribute to the incident. Keep it out of external communications.
+
+## CUSTOMER EMAIL
+
+To: Contoso  
+Subject: Batch API incident update — 14:20 UTC
+
+Hello Contoso team,
+
+I’m sorry for the disruption to your Batch submissions. We have received both your failure report and your question about service credits under Schedule B.
+
+The Batch API incident began at 11:42 UTC today. Between 11:42 and 12:58 UTC, 3,410 of your 9,400 Batch API requests returned errors—36.3%. Your first recorded failure was at 11:43 and your last at 12:56.
+
+We applied a mitigation at 12:58 UTC and the service is recovering. We are continuing to monitor before confirming recovery.
+
+We have not yet provided a determination on your service-credit question. We will send you a further update at 14:30 UTC, even if recovery monitoring is still ongoing.
+
+Regards,  
+Northstar Incident Command
+
+## STATUS PAGE UPDATE
+
+### Monitoring — Batch API
+**9 November 2026, 14:20 UTC**
+
+We applied a mitigation at 12:58 UTC for the Batch API incident that began at 11:42 UTC. The service is recovering, and we are monitoring before confirming recovery. The incident remains open.
+
+We will provide another update at 14:30 UTC.

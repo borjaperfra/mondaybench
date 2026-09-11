@@ -1,0 +1,461 @@
+You are the Product & Growth Lead at Northstar.
+
+It is Monday morning. The leadership team is reviewing the latest customer, revenue, usage, acquisition and support data.
+
+Three decisions are being discussed:
+
+1. whether to reduce investment in one customer segment;
+2. whether to increase spend on one acquisition channel;
+3. which product plan deserves the most attention.
+
+Using only the supplied data, determine what is actually happening and which decisions are supported.
+
+Your response must include:
+
+1. EXECUTIVE SUMMARY — the most important findings.
+2. REVENUE & CUSTOMER HEALTH — what is really driving the headline numbers.
+3. ACQUISITION — what can and cannot be concluded about channel performance.
+4. PLAN ECONOMICS — which plans look strongest or weakest after considering cost, not just revenue.
+5. RECOMMENDATIONS — what leadership should do next.
+6. UNCERTAINTIES / DATA ISSUES — data quality problems, unsupported causal claims, or metrics that cannot be calculated reliably.
+
+Show your reasoning with relevant calculations where useful.
+
+Do not assume information that is not provided.
+
+---
+
+## Context
+
+# Northstar — Monday business review pack
+
+Northstar sells an AI inference platform to businesses. This is the data pack
+behind this morning's business review. It covers September and October 2026.
+Both months are complete.
+
+## What leadership wants to decide this week
+
+- Finance is asking whether to reduce investment in one customer segment.
+- Growth is asking whether to increase spend on one acquisition channel.
+- Product is asking which plan should get the next quarter's engineering focus.
+- The CFO has separately asked for CAC payback by acquisition channel.
+
+## How to read the files
+
+**customers.csv** — one row per customer, current as of this morning.
+`usage_account_id` is the identifier the usage pipeline writes for that customer
+and is the authoritative link between billing records and usage records.
+`arr_eur` is the annualised value of the customer's current contract.
+
+**revenue.csv** — one row per invoice, recorded at its full value in the month
+it is dated. Subscriptions are invoiced in advance for the period they cover:
+`billing_period_months` is the number of months an invoice covers, and is 0 for
+invoices that do not cover a period. October's invoices were issued between the
+1st and the 3rd. `source` is the system the record was loaded from.
+
+**usage.csv** — one row per usage account per month. `requests` counts API calls
+and `tokens_m` counts tokens processed, in millions. `usage_change_pct` is the
+change in requests against the previous month, where there is one.
+
+**plans.csv** — one row per plan per month. `revenue_eur` is monthly recurring
+revenue on that plan, with annual contracts counted at their monthly equivalent.
+`infra_cost_eur` and `support_cost_eur` are the infrastructure and support costs
+directly attributable to the plan; `support_cost_eur` includes the fully loaded
+cost of the customer-success staff assigned to it. `included_requests_per_customer`
+is the request volume included in the plan price; usage beyond it is billed
+separately at renewal.
+
+**acquisition.csv** — one row per lead that converted. `attributed_revenue_eur`
+is the annualised contract value the marketing platform credited to the channel
+at the point of conversion. Expansion bookings take effect from the following
+billing cycle.
+
+**funnel.csv** — marketing leads by channel and month, and the number of those
+leads that reached a paid trial in the same month. Trial-to-paid conversion runs
+on a longer cycle and is not tracked in this pack.
+
+**support.csv** — one row per support ticket raised in the month.
+
+## Operational notes
+
+- Acme moved its reporting workload from interactive API calls to two scheduled
+  batch runs per day in late September. The implementation plan estimated a
+  40–50% reduction in interactive request volume.
+
+---
+
+## Customers
+
+customer_id,usage_account_id,segment,plan,start_date,status,churn_date,arr_eur,renewal_date
+acme-corp,acme-corp,Enterprise,enterprise,2023-02-14,active,,936000,2027-02-14
+stark-industries,stark-industries,Enterprise,enterprise,2023-06-02,active,,1140000,2027-06-02
+wayne-enterprises,wayne_ent,Enterprise,enterprise,2022-11-30,active,,1008000,2026-11-30
+umbrella-health,umbrella-health,Enterprise,enterprise,2024-01-15,active,,792000,2027-01-15
+contoso,contoso,Enterprise,enterprise,2023-09-01,active,,852000,2027-09-01
+globex,globex,Enterprise,enterprise,2024-03-11,active,,696000,2027-03-11
+initech,initech,Enterprise,enterprise,2024-07-22,active,,624000,2027-07-22
+cyberdyne,cyberdyne,Enterprise,enterprise,2023-04-18,active,,732000,2027-04-18
+gringotts,gringotts,Mid-market,enterprise,2024-10-01,active,,120000,2027-10-01
+soylent,soylent,Mid-market,enterprise,2024-05-20,active,,234000,2027-05-20
+hooli,hooli,Mid-market,enterprise,2024-03-11,active,,252000,2027-03-11
+massive-dynamic,massive-dynamic,Mid-market,enterprise,2025-01-09,active,,198000,2027-01-09
+tyrell-corp,tyrell-corp,Mid-market,enterprise,2025-02-27,active,,168000,2027-02-27
+duff-brewing,duff-brewing,Mid-market,enterprise,2024-12-05,active,,162000,2026-12-05
+aperture-labs,aperture-labs,Mid-market,pro,2025-04-14,active,,150000,2027-04-14
+nakatomi,nakatomi,Mid-market,pro,2024-08-08,churned,2026-10-19,180000,
+vandelay,vandelay,Mid-market,pro,2026-09-01,active,,132000,2027-09-01
+prestige-worldwide,prestige_ww,Mid-market,pro,2025-06-30,active,,114000,2027-06-30
+wonka-industries,wonka-industries,SMB,pro,2025-03-17,active,,50400,2027-03-17
+oscorp-labs,oscorp-labs,SMB,pro,2025-08-11,active,,43200,2027-08-11
+pied-piper,pied-piper,SMB,pro,2025-09-23,active,,40800,2027-09-23
+planet-express,planet-express,SMB,pro,2026-09-01,active,,45600,2027-09-01
+spacely-sprockets,spacely-sprockets,SMB,pro,2026-10-01,active,,38400,2027-10-01
+bluth-company,bluth-company,SMB,starter,2025-05-06,active,,28800,2027-05-06
+dunder-mifflin,dunder-mifflin,SMB,starter,2025-02-11,active,,37200,2027-02-11
+sterling-cooper,sterling-cooper,SMB,starter,2025-07-19,active,,31200,2027-07-19
+monsters-inc,monsters-inc,SMB,starter,2026-09-01,active,,33600,2027-09-01
+clampett-oil,clampett-oil,SMB,starter,2026-09-01,active,,34800,2027-09-01
+cogswell-cogs,cogswell-cogs,SMB,starter,2026-10-01,active,,25200,2027-10-01
+bishop-co,bishop-co,SMB,starter,2026-10-01,active,,20400,2027-10-01
+gekko-co,gekko-co,SMB,starter,2026-10-01,active,,26400,2027-10-01
+paper-street-soap,paper-street-soap,SMB,starter,2026-10-01,active,,22800,2027-10-01
+slate-rock,slate-rock,SMB,starter,2025-01-28,churned,2026-10-08,24000,
+mega-lo-mart,mega-lo-mart,SMB,starter,2025-04-02,churned,2026-10-15,32400,
+dinoco,dinoco,SMB,starter,2025-10-13,churned,2026-10-22,27600,
+buy-n-large,buy-n-large,SMB,starter,2024-09-09,churned,2026-10-27,39600,
+
+---
+
+## Revenue
+
+transaction_id,customer_id,date,invoice_type,billing_period_months,amount_eur,source
+INV-2026-09-0001,acme-corp,2026-09-01,subscription,1,78000,stripe
+INV-2026-09-0002,stark-industries,2026-09-01,subscription,1,95000,stripe
+INV-2026-09-0003,wayne-enterprises,2026-09-01,subscription,1,84000,stripe
+INV-2026-09-0004,umbrella-health,2026-09-01,subscription,1,66000,stripe
+INV-2026-09-0005,contoso,2026-09-01,subscription,1,71000,stripe
+INV-2026-09-0006,globex,2026-09-01,subscription,1,58000,stripe
+INV-2026-09-0007,initech,2026-09-01,subscription,1,52000,stripe
+INV-2026-09-0008,cyberdyne,2026-09-01,subscription,1,61000,stripe
+INV-2026-09-0009,gringotts,2026-09-01,subscription,1,10000,stripe
+INV-2026-09-0010,soylent,2026-09-01,subscription,1,22000,stripe
+INV-2026-09-0011,hooli,2026-09-01,subscription,1,18000,stripe
+INV-2026-09-0012,massive-dynamic,2026-09-01,subscription,1,16500,stripe
+INV-2026-09-0013,tyrell-corp,2026-09-01,subscription,1,14000,stripe
+INV-2026-09-0014,duff-brewing,2026-09-01,subscription,1,13500,stripe
+INV-2026-09-0015,aperture-labs,2026-09-01,subscription,1,12500,stripe
+INV-2026-09-0016,nakatomi,2026-09-01,subscription,1,15000,stripe
+INV-2026-09-0017,vandelay,2026-09-01,subscription,1,11000,stripe
+INV-2026-09-0018,prestige-worldwide,2026-09-01,subscription,1,9500,stripe
+INV-2026-09-0019,wonka-industries,2026-09-01,subscription,1,4200,stripe
+INV-2026-09-0020,oscorp-labs,2026-09-01,subscription,1,3600,stripe
+INV-2026-09-0021,pied-piper,2026-09-01,subscription,1,3400,stripe
+INV-2026-09-0022,planet-express,2026-09-01,subscription,1,3800,stripe
+INV-2026-09-0023,bluth-company,2026-09-01,subscription,1,2400,stripe
+INV-2026-09-0024,dunder-mifflin,2026-09-01,subscription,1,3100,stripe
+INV-2026-09-0025,sterling-cooper,2026-09-01,subscription,1,2600,stripe
+INV-2026-09-0026,monsters-inc,2026-09-01,subscription,1,2800,stripe
+INV-2026-09-0027,clampett-oil,2026-09-01,subscription,1,2900,stripe
+INV-2026-09-0028,slate-rock,2026-09-01,subscription,1,2000,stripe
+INV-2026-09-0029,mega-lo-mart,2026-09-01,subscription,1,2700,stripe
+INV-2026-09-0030,dinoco,2026-09-01,subscription,1,2300,stripe
+INV-2026-09-0031,buy-n-large,2026-09-01,subscription,1,3300,stripe
+INV-2026-09-0032,globex,2026-09-02,professional_services,0,33000,stripe
+INV-2026-09-0033,hooli,2026-09-02,professional_services,0,18000,stripe
+INV-2026-10-0201,acme-corp,2026-10-01,subscription,1,78000,stripe
+INV-2026-10-0202,stark-industries,2026-10-01,subscription,1,95000,stripe
+INV-2026-10-0203,wayne-enterprises,2026-10-01,subscription,1,84000,stripe
+INV-2026-10-0204,umbrella-health,2026-10-01,subscription,1,66000,stripe
+INV-2026-10-0205,contoso,2026-10-01,subscription,1,71000,stripe
+INV-2026-10-0206,globex,2026-10-01,subscription,1,58000,stripe
+INV-2026-10-0207,initech,2026-10-01,subscription,1,52000,stripe
+INV-2026-10-0208,cyberdyne,2026-10-01,subscription,1,61000,stripe
+INV-2026-10-0209,soylent,2026-10-01,subscription,1,19500,stripe
+INV-2026-10-0210,hooli,2026-10-01,subscription,1,21000,stripe
+INV-2026-10-0211,massive-dynamic,2026-10-01,subscription,1,16500,stripe
+INV-2026-10-0212,tyrell-corp,2026-10-01,subscription,1,14000,stripe
+INV-2026-10-0213,duff-brewing,2026-10-01,subscription,1,13500,stripe
+INV-2026-10-0214,aperture-labs,2026-10-01,subscription,1,12500,stripe
+INV-2026-10-0215,nakatomi,2026-10-01,subscription,1,15000,stripe
+INV-2026-10-0216,vandelay,2026-10-01,subscription,1,11000,stripe
+INV-2026-10-0217,prestige-worldwide,2026-10-01,subscription,1,9500,stripe
+INV-2026-10-0218,wonka-industries,2026-10-01,subscription,1,4200,stripe
+INV-2026-10-0219,oscorp-labs,2026-10-01,subscription,1,3600,stripe
+INV-2026-10-0220,pied-piper,2026-10-01,subscription,1,3400,stripe
+INV-2026-10-0221,planet-express,2026-10-01,subscription,1,3800,stripe
+INV-2026-10-0222,spacely-sprockets,2026-10-01,subscription,1,3200,stripe
+INV-2026-10-0223,bluth-company,2026-10-01,subscription,1,2400,stripe
+INV-2026-10-0224,dunder-mifflin,2026-10-01,subscription,1,3100,stripe
+INV-2026-10-0225,sterling-cooper,2026-10-01,subscription,1,2600,stripe
+INV-2026-10-0226,monsters-inc,2026-10-01,subscription,1,2800,stripe
+INV-2026-10-0227,clampett-oil,2026-10-01,subscription,1,2900,stripe
+INV-2026-10-0228,cogswell-cogs,2026-10-01,subscription,1,2100,stripe
+INV-2026-10-0229,bishop-co,2026-10-01,subscription,1,1700,stripe
+INV-2026-10-0230,gekko-co,2026-10-01,subscription,1,2200,stripe
+INV-2026-10-0231,paper-street-soap,2026-10-01,subscription,1,1900,stripe
+INV-2026-10-0232,slate-rock,2026-10-01,subscription,1,2000,stripe
+INV-2026-10-0233,mega-lo-mart,2026-10-01,subscription,1,2700,stripe
+INV-2026-10-0234,dinoco,2026-10-01,subscription,1,2300,stripe
+INV-2026-10-0235,buy-n-large,2026-10-01,subscription,1,3300,stripe
+INV-2026-10-0236,gringotts,2026-10-01,annual_subscription,12,120000,stripe
+INV-2026-10-0237,aperture-labs,2026-10-03,professional_services,0,5700,stripe
+INV-2026-10-0209,soylent,2026-10-02,subscription,1,19500,billing_sync
+
+---
+
+## Usage
+
+month,usage_account_id,requests,tokens_m,active_users,usage_change_pct
+2026-09,acme-corp,4200000,4620.0,240,
+2026-09,stark-industries,3900000,4290.0,223,
+2026-09,wayne_ent,3100000,3410.0,177,
+2026-09,umbrella-health,2400000,2640.0,137,
+2026-09,contoso,2800000,3080.0,160,
+2026-09,globex,1900000,2090.0,109,
+2026-09,initech,1600000,1760.0,91,
+2026-09,cyberdyne,2100000,2310.0,120,
+2026-09,gringotts,640000,704.0,37,
+2026-09,soylent,980000,1078.0,56,
+2026-09,hooli,810000,891.0,46,
+2026-09,massive-dynamic,720000,792.0,41,
+2026-09,tyrell-corp,690000,759.0,39,
+2026-09,duff-brewing,700000,770.0,40,
+2026-09,aperture-labs,580000,406.0,48,
+2026-09,nakatomi,560000,392.0,47,
+2026-09,vandelay,520000,364.0,43,
+2026-09,prestige_ww,480000,336.0,40,
+2026-09,wonka-industries,900000,630.0,75,
+2026-09,oscorp-labs,180000,126.0,15,
+2026-09,pied-piper,170000,119.0,14,
+2026-09,planet-express,75000,52.5,6,
+2026-09,bluth-company,120000,60.0,13,
+2026-09,dunder-mifflin,155000,77.5,17,
+2026-09,sterling-cooper,130000,65.0,14,
+2026-09,monsters-inc,55000,27.5,6,
+2026-09,clampett-oil,60000,30.0,7,
+2026-09,slate-rock,95000,47.5,11,
+2026-09,mega-lo-mart,140000,70.0,16,
+2026-09,dinoco,110000,55.0,12,
+2026-09,buy-n-large,165000,82.5,18,
+2026-10,acme-corp,2310000,4066.0,232,-45.0
+2026-10,stark-industries,4290000,4719.0,245,10.0
+2026-10,wayne_ent,3410000,3751.0,195,10.0
+2026-10,umbrella-health,2592000,2851.2,148,8.0
+2026-10,contoso,2940000,3234.0,168,5.0
+2026-10,globex,2090000,2299.0,119,10.0
+2026-10,initech,1712000,1883.2,98,7.0
+2026-10,cyberdyne,2247000,2471.7,128,7.0
+2026-10,gringotts,700000,770.0,40,9.4
+2026-10,soylent,715400,786.9,41,-27.0
+2026-10,hooli,990000,1089.0,57,22.2
+2026-10,massive-dynamic,845000,929.5,48,17.4
+2026-10,tyrell-corp,780000,858.0,45,13.0
+2026-10,duff-brewing,815000,896.5,47,16.4
+2026-10,aperture-labs,705000,493.5,59,21.6
+2026-10,nakatomi,470000,329.0,39,-16.1
+2026-10,vandelay,690000,483.0,58,32.7
+2026-10,prestige_ww,545000,381.5,45,13.5
+2026-10,wonka-industries,1020000,714.0,85,13.3
+2026-10,oscorp-labs,198000,138.6,16,10.0
+2026-10,pied-piper,186000,130.2,16,9.4
+2026-10,planet-express,112000,78.4,9,49.3
+2026-10,spacely-sprockets,51000,35.7,4,
+2026-10,bluth-company,132000,66.0,15,10.0
+2026-10,dunder-mifflin,168000,84.0,19,8.4
+2026-10,sterling-cooper,141000,70.5,16,8.5
+2026-10,monsters-inc,84000,42.0,9,52.7
+2026-10,clampett-oil,88000,44.0,10,46.7
+2026-10,cogswell-cogs,42000,21.0,5,
+2026-10,bishop-co,38000,19.0,4,
+2026-10,gekko-co,33000,16.5,4,
+2026-10,paper-street-soap,46000,23.0,5,
+2026-10,slate-rock,62000,31.0,7,-34.7
+2026-10,mega-lo-mart,88000,44.0,10,-37.1
+2026-10,dinoco,71000,35.5,8,-35.5
+2026-10,buy-n-large,104000,52.0,12,-37.0
+
+---
+
+## Plans
+
+month,plan,customers,revenue_eur,infra_cost_eur,support_cost_eur,included_requests_per_customer,avg_requests_per_customer
+2026-09,enterprise,14,659000,288000,159000,3000000,1895714
+2026-09,pro,8,63000,13600,6900,600000,433125
+2026-09,starter,9,24100,8400,7300,200000,114444
+2026-10,enterprise,14,659500,296800,168000,3000000,1888314
+2026-10,pro,9,66200,16100,8600,600000,441889
+2026-10,starter,13,32000,11400,10300,200000,84385
+
+---
+
+## Acquisition
+
+month,lead_id,customer_id,channel,campaign_start,first_customer_date,conversion_date,new_logo,expansion,attributed_revenue_eur
+2026-09,L-2026-0912,vandelay,partner,2026-08-03,2026-09-01,2026-09-01,true,false,132000
+2026-09,L-2026-0918,clampett-oil,partner,2026-08-03,2026-09-01,2026-09-01,true,false,34800
+2026-09,L-2026-0931,planet-express,content,2026-07-20,2026-09-01,2026-09-01,true,false,45600
+2026-09,L-2026-0944,monsters-inc,outbound,2026-08-17,2026-09-01,2026-09-01,true,false,33600
+2026-09,L-2026-0957,hooli,paid_search,2026-09-07,2024-03-11,2026-09-24,false,true,36000
+2026-10,L-2026-1006,cogswell-cogs,content,2026-09-14,2026-10-01,2026-10-01,true,false,25200
+2026-10,L-2026-1013,bishop-co,content,2026-09-14,2026-10-01,2026-10-01,true,false,20400
+2026-10,L-2026-1021,spacely-sprockets,paid_search,2026-09-28,2026-10-01,2026-10-01,true,false,38400
+2026-10,L-2026-1034,gekko-co,paid_search,2026-09-28,2026-10-01,2026-10-01,true,false,26400
+2026-10,L-2026-1042,paper-street-soap,outbound,2026-09-21,2026-10-01,2026-10-01,true,false,22800
+2026-10,L-2026-1055,stark-industries,paid_search,2026-09-28,2023-06-02,2026-10-13,false,true,84000
+2026-10,L-2026-1063,umbrella-health,paid_search,2026-09-28,2024-01-15,2026-10-20,false,true,48000
+2026-10,L-2026-1071,globex,paid_search,2026-09-28,2024-03-11,2026-10-26,false,true,42000
+2026-10,L-2026-1084,massive-dynamic,content,2026-09-14,2025-01-09,2026-10-09,false,true,18000
+2026-10,L-2026-1092,cyberdyne,outbound,2026-09-21,2023-04-18,2026-10-15,false,true,24000
+
+---
+
+## Funnel
+
+month,channel,leads,conversions
+2026-09,paid_search,520,44
+2026-09,content,260,31
+2026-09,partner,60,15
+2026-09,outbound,160,10
+2026-10,paid_search,900,58
+2026-10,content,330,34
+2026-10,partner,75,17
+2026-10,outbound,195,11
+
+---
+
+## Support
+
+month,ticket_id,customer_id,severity,category,status
+2026-09,TCK-09-0001,acme-corp,high,api_errors,resolved
+2026-09,TCK-09-0002,acme-corp,high,performance,resolved
+2026-09,TCK-09-0003,acme-corp,medium,integration,open
+2026-09,TCK-09-0004,acme-corp,low,how_to,resolved
+2026-09,TCK-09-0005,stark-industries,high,api_errors,pending
+2026-09,TCK-09-0006,stark-industries,high,performance,resolved
+2026-09,TCK-09-0007,stark-industries,medium,integration,resolved
+2026-09,TCK-09-0008,stark-industries,low,how_to,resolved
+2026-09,TCK-09-0009,stark-industries,low,billing,open
+2026-09,TCK-09-0010,wayne-enterprises,high,api_errors,resolved
+2026-09,TCK-09-0011,wayne-enterprises,medium,integration,pending
+2026-09,TCK-09-0012,wayne-enterprises,low,how_to,resolved
+2026-09,TCK-09-0013,wayne-enterprises,high,performance,resolved
+2026-09,TCK-09-0014,umbrella-health,high,api_errors,resolved
+2026-09,TCK-09-0015,umbrella-health,medium,integration,open
+2026-09,TCK-09-0016,umbrella-health,low,how_to,resolved
+2026-09,TCK-09-0017,contoso,high,api_errors,pending
+2026-09,TCK-09-0018,contoso,high,performance,resolved
+2026-09,TCK-09-0019,contoso,low,how_to,resolved
+2026-09,TCK-09-0020,globex,medium,integration,resolved
+2026-09,TCK-09-0021,globex,low,how_to,open
+2026-09,TCK-09-0022,initech,high,api_errors,resolved
+2026-09,TCK-09-0023,initech,low,how_to,pending
+2026-09,TCK-09-0024,cyberdyne,high,api_errors,resolved
+2026-09,TCK-09-0025,cyberdyne,medium,integration,resolved
+2026-09,TCK-09-0026,cyberdyne,high,performance,resolved
+2026-09,TCK-09-0027,soylent,high,api_errors,open
+2026-09,TCK-09-0028,soylent,medium,integration,resolved
+2026-09,TCK-09-0029,soylent,low,how_to,pending
+2026-09,TCK-09-0030,hooli,medium,integration,resolved
+2026-09,TCK-09-0031,massive-dynamic,low,how_to,resolved
+2026-09,TCK-09-0032,tyrell-corp,low,billing,resolved
+2026-09,TCK-09-0033,duff-brewing,low,how_to,open
+2026-09,TCK-09-0034,aperture-labs,medium,rate_limits,resolved
+2026-09,TCK-09-0035,aperture-labs,medium,integration,pending
+2026-09,TCK-09-0036,aperture-labs,low,how_to,resolved
+2026-09,TCK-09-0037,nakatomi,high,api_errors,resolved
+2026-09,TCK-09-0038,nakatomi,high,performance,resolved
+2026-09,TCK-09-0039,nakatomi,low,how_to,open
+2026-09,TCK-09-0040,vandelay,medium,integration,resolved
+2026-09,TCK-09-0041,vandelay,low,how_to,pending
+2026-09,TCK-09-0042,prestige-worldwide,medium,rate_limits,resolved
+2026-09,TCK-09-0043,prestige-worldwide,low,how_to,resolved
+2026-09,TCK-09-0044,wonka-industries,medium,rate_limits,resolved
+2026-09,TCK-09-0045,wonka-industries,medium,rate_limits,open
+2026-09,TCK-09-0046,wonka-industries,medium,integration,resolved
+2026-09,TCK-09-0047,wonka-industries,low,how_to,pending
+2026-09,TCK-09-0048,oscorp-labs,medium,rate_limits,resolved
+2026-09,TCK-09-0049,oscorp-labs,low,how_to,resolved
+2026-09,TCK-09-0050,pied-piper,medium,integration,resolved
+2026-09,TCK-09-0051,pied-piper,low,how_to,open
+2026-09,TCK-09-0052,planet-express,low,how_to,resolved
+2026-09,TCK-09-0053,bluth-company,low,how_to,pending
+2026-09,TCK-09-0054,dunder-mifflin,low,billing,resolved
+2026-09,TCK-09-0055,sterling-cooper,low,how_to,resolved
+2026-09,TCK-09-0056,monsters-inc,medium,integration,resolved
+2026-09,TCK-09-0057,slate-rock,high,api_errors,open
+2026-09,TCK-09-0058,mega-lo-mart,low,how_to,resolved
+2026-09,TCK-09-0059,buy-n-large,low,billing,pending
+2026-10,TCK-10-0060,acme-corp,medium,integration,resolved
+2026-10,TCK-10-0061,acme-corp,low,how_to,resolved
+2026-10,TCK-10-0062,acme-corp,low,billing,resolved
+2026-10,TCK-10-0063,stark-industries,high,api_errors,open
+2026-10,TCK-10-0064,stark-industries,high,performance,resolved
+2026-10,TCK-10-0065,stark-industries,medium,integration,pending
+2026-10,TCK-10-0066,stark-industries,low,how_to,resolved
+2026-10,TCK-10-0067,stark-industries,low,billing,resolved
+2026-10,TCK-10-0068,wayne-enterprises,high,api_errors,resolved
+2026-10,TCK-10-0069,wayne-enterprises,medium,integration,open
+2026-10,TCK-10-0070,wayne-enterprises,low,how_to,resolved
+2026-10,TCK-10-0071,wayne-enterprises,high,performance,pending
+2026-10,TCK-10-0072,umbrella-health,high,api_errors,resolved
+2026-10,TCK-10-0073,umbrella-health,medium,integration,resolved
+2026-10,TCK-10-0074,umbrella-health,low,how_to,resolved
+2026-10,TCK-10-0075,contoso,high,api_errors,open
+2026-10,TCK-10-0076,contoso,high,performance,resolved
+2026-10,TCK-10-0077,contoso,low,how_to,pending
+2026-10,TCK-10-0078,globex,medium,integration,resolved
+2026-10,TCK-10-0079,globex,low,how_to,resolved
+2026-10,TCK-10-0080,initech,high,api_errors,resolved
+2026-10,TCK-10-0081,initech,low,how_to,open
+2026-10,TCK-10-0082,cyberdyne,high,api_errors,resolved
+2026-10,TCK-10-0083,cyberdyne,medium,integration,pending
+2026-10,TCK-10-0084,cyberdyne,high,performance,resolved
+2026-10,TCK-10-0085,soylent,high,api_errors,resolved
+2026-10,TCK-10-0086,soylent,critical,api_errors,resolved
+2026-10,TCK-10-0087,soylent,high,api_errors,open
+2026-10,TCK-10-0088,soylent,high,performance,resolved
+2026-10,TCK-10-0089,soylent,medium,integration,pending
+2026-10,TCK-10-0090,soylent,low,how_to,resolved
+2026-10,TCK-10-0091,soylent,high,performance,resolved
+2026-10,TCK-10-0092,soylent,low,billing,resolved
+2026-10,TCK-10-0093,hooli,medium,integration,open
+2026-10,TCK-10-0094,tyrell-corp,low,billing,resolved
+2026-10,TCK-10-0095,aperture-labs,medium,rate_limits,pending
+2026-10,TCK-10-0096,aperture-labs,medium,rate_limits,resolved
+2026-10,TCK-10-0097,aperture-labs,medium,integration,resolved
+2026-10,TCK-10-0098,aperture-labs,low,how_to,resolved
+2026-10,TCK-10-0099,nakatomi,high,api_errors,open
+2026-10,TCK-10-0100,nakatomi,low,billing,resolved
+2026-10,TCK-10-0101,vandelay,medium,rate_limits,pending
+2026-10,TCK-10-0102,vandelay,medium,integration,resolved
+2026-10,TCK-10-0103,vandelay,low,how_to,resolved
+2026-10,TCK-10-0104,vandelay,high,performance,resolved
+2026-10,TCK-10-0105,prestige-worldwide,medium,rate_limits,open
+2026-10,TCK-10-0106,prestige-worldwide,medium,rate_limits,resolved
+2026-10,TCK-10-0107,prestige-worldwide,low,how_to,pending
+2026-10,TCK-10-0108,wonka-industries,medium,rate_limits,resolved
+2026-10,TCK-10-0109,wonka-industries,medium,rate_limits,resolved
+2026-10,TCK-10-0110,wonka-industries,medium,rate_limits,resolved
+2026-10,TCK-10-0111,wonka-industries,medium,rate_limits,open
+2026-10,TCK-10-0112,wonka-industries,medium,integration,resolved
+2026-10,TCK-10-0113,wonka-industries,low,how_to,pending
+2026-10,TCK-10-0114,wonka-industries,high,performance,resolved
+2026-10,TCK-10-0115,oscorp-labs,medium,rate_limits,resolved
+2026-10,TCK-10-0116,oscorp-labs,medium,rate_limits,resolved
+2026-10,TCK-10-0117,oscorp-labs,low,how_to,open
+2026-10,TCK-10-0118,pied-piper,medium,rate_limits,resolved
+2026-10,TCK-10-0119,pied-piper,medium,integration,pending
+2026-10,TCK-10-0120,pied-piper,low,how_to,resolved
+2026-10,TCK-10-0121,planet-express,medium,rate_limits,resolved
+2026-10,TCK-10-0122,spacely-sprockets,low,how_to,resolved
+2026-10,TCK-10-0123,bluth-company,low,how_to,open
+2026-10,TCK-10-0124,dunder-mifflin,low,billing,resolved
+2026-10,TCK-10-0125,sterling-cooper,low,how_to,pending
+2026-10,TCK-10-0126,monsters-inc,medium,integration,resolved
+2026-10,TCK-10-0127,clampett-oil,low,how_to,resolved
+2026-10,TCK-10-0128,cogswell-cogs,low,how_to,resolved
+2026-10,TCK-10-0129,gekko-co,medium,integration,open
+2026-10,TCK-10-0130,slate-rock,high,api_errors,resolved
+2026-10,TCK-10-0131,mega-lo-mart,low,billing,pending
+2026-10,TCK-10-0132,dinoco,high,api_errors,resolved
+2026-10,TCK-10-0133,buy-n-large,low,billing,resolved

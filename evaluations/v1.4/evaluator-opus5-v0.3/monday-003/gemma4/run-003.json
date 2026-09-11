@@ -1,0 +1,256 @@
+{
+  "schema_version": "1",
+  "evaluator_id": "evaluator-opus5-v0.3",
+  "benchmark_version": "0.3",
+  "rubric_version": "0.3",
+  "scenario_id": "monday-003",
+  "run_id": "monday-003__gemma4__003",
+  "model_slug": "gemma4",
+  "scenario_prompt_sha256": "aaf788f309d955d2b427c86fe7d95d2bbf88575fde7306adcfd74b0ec4a4103f",
+  "timestamp_utc": "2026-09-11T12:05:17Z",
+  "judge": {
+    "provider": "anthropic",
+    "model_id": "claude-opus-5",
+    "temperature": 0.0,
+    "effort": null,
+    "unsupported_parameters": [],
+    "prompt_fingerprint": "45998b3c03939498",
+    "route": "recorded",
+    "verdict_source": "gemma4.verdicts.jsonl",
+    "contract_fingerprint": "db0cb9aa9b9d8272",
+    "contract_schema_version": "1",
+    "judge_session_id": null
+  },
+  "suite_version": "1.4",
+  "migrated_from": "evaluations/v1.3/evaluator-opus5-v0.3/monday-003/gemma4/run-003.json",
+  "dimensions": {
+    "critical_path_and_dependencies": {
+      "score": 13.5,
+      "max_score": 21.0
+    },
+    "resource_allocation": {
+      "score": 20.0,
+      "max_score": 25.0
+    },
+    "planning_and_parallelization": {
+      "score": 11.0,
+      "max_score": 18.0
+    },
+    "decision_quality": {
+      "score": 9.5,
+      "max_score": 14.0
+    },
+    "state_reconstruction": {
+      "score": 8.0,
+      "max_score": 10.0
+    },
+    "accuracy_and_uncertainty": {
+      "score": 7.0,
+      "max_score": 12.0
+    }
+  },
+  "criteria": {
+    "sso_chain": {
+      "result": "PARTIAL",
+      "points_awarded": 2.0,
+      "points_possible": 4.0,
+      "evidence": "the four SSO steps are in order, but the chain reads 'Elena: Billing schema migration (3h) -> Elena: Reconciliation backfill (1.5h) -> Marcus: Contoso permission patch AND SSO compatibility patch -> QA -> Marcus rollout', and the blocker list repeats it: 'SSO Compatibility Patch: Blocked by Elena's schema migration and backfill'. The backfill gates the board revenue charts, not the patch, and the insertion adds 90 minutes to the path",
+      "reason": "the four SSO steps are in order, but the chain reads 'Elena: Billing schema migration (3h) -> Elena: Reconciliation backfill (1.5h) -> Marcus: Contoso permission patch AND SSO compatibility patch -> QA -> Marcus rollout', and the blocker list repeats it: 'SSO Compatibility Patch: Blocked by Elena's schema migration and backfill'. The backfill gates the board revenue charts, not the patch, and the insertion adds 90 minutes to the path"
+    },
+    "contoso_blocker_chain": {
+      "result": "PASS",
+      "points_awarded": 6.0,
+      "points_possible": 6.0,
+      "evidence": "'Contoso's compliance export is also on a tight path, requiring the permission patch to land before Julia can finish the file (1h)'",
+      "reason": "'Contoso's compliance export is also on a tight path, requiring the permission patch to land before Julia can finish the file (1h)'"
+    },
+    "pricing_dependency": {
+      "result": "PARTIAL",
+      "points_awarded": 2.5,
+      "points_possible": 5.0,
+      "evidence": "'Pricing Page Launch: Blocked by Priya's committee approval' gives the gate; the mockup allowance is not used",
+      "reason": "'Pricing Page Launch: Blocked by Priya's committee approval' gives the gate; the mockup allowance is not used"
+    },
+    "security_state_stale": {
+      "result": "FAIL",
+      "points_awarded": 0.0,
+      "points_possible": 3.0,
+      "evidence": "'Check the status of the Security Review on the release checklist. If it is still outstanding, I must resolve this to prevent a late-week stall', with 'We do not know why it is outstanding or how long it will take to clear'",
+      "reason": "'Check the status of the Security Review on the release checklist. If it is still outstanding, I must resolve this to prevent a late-week stall', with 'We do not know why it is outstanding or how long it will take to clear'"
+    },
+    "board_dependency": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "'Board Revenue Charts: Blocked by the billing backfill'",
+      "reason": "'Board Revenue Charts: Blocked by the billing backfill'"
+    },
+    "scarce_resource_allocation": {
+      "result": "PARTIAL",
+      "points_awarded": 5.0,
+      "points_possible": 10.0,
+      "evidence": "'Reassign contoso_permission_patch to Daniel. While Marcus is the owner, Daniel is available and the task is a blocker for both Contoso and SSO' makes the right call, but the half-hour walkthrough Daniel needs is never scheduled, and section 1 still shows Marcus doing both patches",
+      "reason": "'Reassign contoso_permission_patch to Daniel. While Marcus is the owner, Daniel is available and the task is a blocker for both Contoso and SSO' makes the right call, but the half-hour walkthrough Daniel needs is never scheduled, and section 1 still shows Marcus doing both patches"
+    },
+    "marcus_reserved_for_sso": {
+      "result": "PASS",
+      "points_awarded": 6.0,
+      "points_possible": 6.0,
+      "evidence": "'Marcus is the single point of failure for the SSO compatibility patch' with 'Onboarding Instrumentation: it is not a launch blocker and should be deprioritized if he is needed for SSO'",
+      "reason": "'Marcus is the single point of failure for the SSO compatibility patch' with 'Onboarding Instrumentation: it is not a launch blocker and should be deprioritized if he is needed for SSO'"
+    },
+    "formatter_ownership": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'Task Julia to complete the contoso_export_formatter (2h) today. This satisfies the nice-to-have demo request for Tuesday'",
+      "reason": "'Task Julia to complete the contoso_export_formatter (2h) today. This satisfies the nice-to-have demo request for Tuesday'"
+    },
+    "elena_migration_fallback": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'If Elena's migration slips to Wednesday, we rely on a 30-minute handover before she leaves at noon. If that fails, the entire critical path shifts to Thursday/Friday'",
+      "reason": "'If Elena's migration slips to Wednesday, we rely on a 30-minute handover before she leaves at noon. If that fails, the entire critical path shifts to Thursday/Friday'"
+    },
+    "monday_plan": {
+      "result": "PARTIAL",
+      "points_awarded": 3.5,
+      "points_possible": 7.0,
+      "evidence": "five instructions, no clock times, and the reassignment is issued before the migration is confirmed started",
+      "reason": "five instructions, no clock times, and the reassignment is issued before the migration is confirmed started"
+    },
+    "concurrent_sso_and_contoso": {
+      "result": "PARTIAL",
+      "points_awarded": 3.5,
+      "points_possible": 7.0,
+      "evidence": "the allocation puts Daniel on Contoso and Marcus on SSO, but section 1 contradicts it by giving Marcus both patches",
+      "reason": "the allocation puts Daniel on Contoso and Marcus on SSO, but section 1 contradicts it by giving Marcus both patches"
+    },
+    "pricing_board_parallel": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'Sarah can build the pricing page and prepare the approval pack while waiting for committee windows' and 'Sarah can complete all non-revenue sections of the board pack'",
+      "reason": "'Sarah can build the pricing page and prepare the approval pack while waiting for committee windows' and 'Sarah can complete all non-revenue sections of the board pack'"
+    },
+    "formatting_urgent_not_blocking": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'This satisfies the nice-to-have demo request for Tuesday and clears her plate'",
+      "reason": "'This satisfies the nice-to-have demo request for Tuesday and clears her plate'"
+    },
+    "contoso_compliance_is_urgent": {
+      "result": "PARTIAL",
+      "points_awarded": 2.0,
+      "points_possible": 4.0,
+      "evidence": "'ensure Contoso's Tuesday deadline is met' with 'Contoso Compliance Export: Tuesday morning' - named but left undated",
+      "reason": "'ensure Contoso's Tuesday deadline is met' with 'Contoso Compliance Export: Tuesday morning' - named but left undated"
+    },
+    "stale_task_list_overridden": {
+      "result": "PARTIAL",
+      "points_awarded": 2.5,
+      "points_possible": 5.0,
+      "evidence": "the instrumentation is deprioritised and the Contoso ticket split, but Security is re-raised and the pricing entry is untouched",
+      "reason": "the instrumentation is deprioritised and the Contoso ticket split, but Security is re-raised and the pricing entry is untouched"
+    },
+    "sso_state_reconstructed": {
+      "result": "PARTIAL",
+      "points_awarded": 2.0,
+      "points_possible": 4.0,
+      "evidence": "chain outstanding and Wednesday intact, but Security is reported as unknown",
+      "reason": "chain outstanding and Wednesday intact, but Security is reported as unknown"
+    },
+    "onboarding_state_reconstructed": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "'Julia can proceed with the onboarding_launch (2h) as Marcus's instrumentation is no longer a blocker'",
+      "reason": "'Julia can proceed with the onboarding_launch (2h) as Marcus's instrumentation is no longer a blocker'"
+    },
+    "contoso_state_separated": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "'Contoso Compliance Export: Blocked by the permission patch' while the formatter is parallel work with no dependant",
+      "reason": "'Contoso Compliance Export: Blocked by the permission patch' while the formatter is parallel work with no dependant"
+    },
+    "factual_plan_accuracy": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "the values it uses are right - the 2-hour formatter, the 1-hour export, the 30-minute handover, Elena leaving at noon, the three hours Marcus is holding. Its backfill claim is a wrong relationship, priced by sso_chain, and its Security claim a wrong state, priced by security_state_stale",
+      "reason": "the values it uses are right - the 2-hour formatter, the 1-hour export, the 30-minute handover, Elena leaving at noon, the three hours Marcus is holding. Its backfill claim is a wrong relationship, priced by sso_chain, and its Security claim a wrong state, priced by security_state_stale"
+    },
+    "earliest_feasible_delivery": {
+      "result": "FAIL",
+      "points_awarded": 0.0,
+      "points_possible": 3.0,
+      "evidence": "'Enterprise SSO: Wednesday EOD (matches Atlas commitment, provided Marcus is not further delayed by the Tuesday technical session)'. Tuesday 14:00 is reachable and no schedule is offered",
+      "reason": "'Enterprise SSO: Wednesday EOD (matches Atlas commitment, provided Marcus is not further delayed by the Tuesday technical session)'. Tuesday 14:00 is reachable and no schedule is offered"
+    },
+    "uncertainty_discipline": {
+      "result": "PARTIAL",
+      "points_awarded": 2.0,
+      "points_possible": 4.0,
+      "evidence": "no inventions, and the Elena handover risk is stated well, but a settled fact is filed as an open question",
+      "reason": "no inventions, and the Elena handover risk is stated well, but a settled fact is filed as an open question"
+    }
+  },
+  "false_actions": {},
+  "penalties": {
+    "items": [
+      {
+        "type": "PROHIBITED_ACTION",
+        "points": -7.0,
+        "evidence": "'Unblock SSO (Immediate): Check the status of the Security Review on the release checklist. If it is still outstanding, I must resolve this to prevent a late-week stall.'",
+        "reason": "Maya's Friday 16:48 email closes the review for the current scope. The response directs work against a gate that is shut and reports its status as unknown in the risks, spending product time on a precondition that has already been met."
+      }
+    ],
+    "dismissed": [],
+    "raw_total": -7.0,
+    "total": -7.0,
+    "capped": false
+  },
+  "deterministic_checks": [
+    {
+      "id": "contoso_11_00",
+      "matched": false,
+      "detail": "'11:00' appears near a mention of Contoso"
+    },
+    {
+      "id": "churn_3_1_to_4_4",
+      "matched": false,
+      "detail": "both churn figures 3.1 and 4.4 are present"
+    },
+    {
+      "id": "umbrella_metrics_present",
+      "matched": false,
+      "detail": "at least two of 163 / 1821 / 41 appear near a mention of Umbrella"
+    },
+    {
+      "id": "umbrella_named",
+      "matched": false,
+      "detail": "Umbrella is named in the response"
+    },
+    {
+      "id": "wednesday_present",
+      "matched": true,
+      "detail": "'Wednesday' appears in the response"
+    },
+    {
+      "id": "julia_present",
+      "matched": true,
+      "detail": "'Julia' appears in the response"
+    },
+    {
+      "id": "pied_piper_and_hooli",
+      "matched": false,
+      "detail": "both known cancellations are named"
+    }
+  ],
+  "disagreements": [],
+  "base_score": 69.0,
+  "final_score": 62.0
+}

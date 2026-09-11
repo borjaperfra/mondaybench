@@ -1,0 +1,76 @@
+## 1. CRITICAL PATH
+
+**Start with billing, but protect Marcus for SSO.**
+
+| Work | Owner | Earliest planned slot |
+|---|---|---|
+| Billing schema migration | Elena | Monday 09:10–12:10 |
+| Delegated-admin handoff | Marcus → Daniel | Monday 09:10–09:40 |
+| SSO compatibility patch, after migration | Marcus | Monday 12:10–16:10 |
+| SSO regression | Sam / QA | Monday 16:10–17:30; Tuesday 09:00–09:40 |
+| SSO production rollout | Marcus | Tuesday 13:00–14:00 |
+
+**Contractual export branch:** migration → Daniel’s permission patch Monday 12:10–15:40 → Julia produces and sends the compliance export 15:40–16:40.
+
+Delegating the permission patch takes longer individually but allows both commitments to progress simultaneously. Marcus remains the sole viable owner of SSO compatibility.
+
+## 2. MY PLAN FOR TODAY
+
+1. **09:10 — Product: reset priorities and correct the tracker.**
+   - Separate Contoso’s real access failure from its cosmetic formatting request.
+   - Reassign the permission patch to Daniel.
+   - Remove onboarding instrumentation and Security review as current launch blockers.
+   - Confirm Julia owns onboarding launch support.
+
+2. **Immediately — Elena: start migration.** Reserve Marcus/Daniel’s 30-minute handoff concurrently. Protect Marcus’s post-migration time from instrumentation and other requests.
+
+3. **09:10 — Sarah: prepare packaging approval first**, using mockups rather than waiting for a built page. Target submission at **10:40**, before noon, provided required inputs exist. Then build the pricing page; publish only after approval.
+
+4. **09:10 — Julia: formatting, then onboarding.**
+   - Formatter: 09:10–11:10.
+   - Onboarding launch: 11:10–13:10.
+   - Keep 15:40–16:40 reserved for the contractual export.
+
+5. **12:10 — Elena: start automated backfill**, expected complete 13:40. Marcus and Daniel begin their separate patches; neither needs to wait for backfill.
+
+6. **Product / Noah / Rachel: communicate today.**
+   - Tell Anja the planned compliance delivery is Monday, subject to successful implementation.
+   - Confirm Wednesday’s Atlas commitment remains protected.
+   - Give Peter a separate formatting update.
+   - Track migration completion, permission-fix completion, file delivery and QA outcome.
+
+## 3. PARALLEL WORK
+
+- **Sarah:** approval pack → pricing build, while Priya reviews. Non-revenue board work can proceed independently; revenue work becomes eligible after backfill.
+- **Julia:** formatting and onboarding do not depend on SSO or new instrumentation.
+- **Elena:** backfill runs automatically alongside both engineering patches.
+- **Marcus:** defer optional instrumentation until critical deliveries are safe.
+
+Sarah’s listed work totals **10.5 hours**; it cannot all finish today, but fits comfortably across Monday and Tuesday absent additional work.
+
+## 4. BLOCKERS & DEPENDENCIES
+
+- **Real:** schema migration blocks both compatibility and permission-patch landing. The schedule conservatively places both patches after migration.
+- **Real:** completed compatibility → regression → rollout.
+- **Real:** permission fix → Julia’s compliance export. The tenant-owner workaround is unavailable.
+- **Real:** migration + backfill → final revenue charts.
+- **Real:** packaging approval → public pricing launch; **page construction is not an approval prerequisite**.
+- **Not blockers:** onboarding instrumentation; Security re-review for fixes within the approved scope; Contoso date formatting for the compliance export.
+- **Fallback:** Daniel cannot take over migration until Elena transfers permissions and the runbook in a 30-minute handoff, before Wednesday noon.
+
+## 5. EARLIEST DELIVERY
+
+- **Contoso compliance export:** Monday **16:40**.
+- **Main SSO path:** Tuesday **14:00**, because Marcus is unavailable Tuesday 09:00–13:00.
+- **Reconciled billing data:** Monday **13:40**.
+
+These are earliest planned times, assuming immediate starts, successful work and the supplied estimates.
+
+## 6. RISKS / UNKNOWNS
+
+- **Calendar conflict:** the dated schedule describes Monday **21 September**, whereas the environment says **10 September**. The plan provisionally uses the work schedule; confirm the actual date.
+- **Deadline timezone conflict:** Anja says “16:00 CET”; the work item specifies **16:00 +02:00**. Confirm; plan against the earlier explicit timestamp.
+- QA’s overnight split needs confirmation. Even a fresh two-hour Tuesday regression finishes before Marcus returns at 13:00.
+- Packaging inputs—tier/prices, mockups and margin summary—are required but not confirmed available.
+- Permission-fix validation/deployment overhead and interactions between the two patches are not separately estimated.
+- No evidence confirms completed work beyond the reported statuses; validate these at kickoff.

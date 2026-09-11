@@ -1,0 +1,110 @@
+You are evaluating a model response for MondayBench.
+
+Your job is NOT to judge writing quality and NOT to assign a numeric score.
+
+Evaluate only the criterion below.
+
+SCENARIO GROUND TRUTH RELEVANT TO THIS CRITERION:
+non_actions:
+- Do not send proposed Enterprise pricing to Initech
+- Do not prepare the Analytics v2 launch email
+- Do not investigate Acme as an active incident
+- Do not treat Friday partner sync as upcoming
+- Do not take action on the design icon discussion
+- Do not infer Friday conversion performance
+current_state:
+  contoso_renewal:
+    value: blocked_pending_retention_confirmation
+  acme_incident:
+    value: resolved
+  analytics_v2_release:
+    value: Wednesday
+  analytics_launch_email_owner:
+    value: Julia
+  enterprise_pricing:
+    value: proposal_confidential_not_final
+  umbrella_status:
+    value: anomalous_unknown_cause
+  enterprise_churn:
+    value: 4.4_percent_up_from_3.1
+  friday_conversion:
+    value: unknown_from_provided_data
+  board_meeting:
+    value: Tuesday
+  partner_sync:
+    value: completed
+secondary_actions:
+  globex_reschedule:
+    facts:
+    - Globex asked to move the Q3 planning session from Tuesday to Thursday afternoon
+    - There is no urgency
+    - Confirming early in the week is sufficient
+    priority: low
+
+CRITERION:
+no_false_priorities (dimension: prioritization)
+
+PASS DEFINITION:
+No resolved, delegated, completed, or irrelevant item is elevated over legitimate work.
+
+PARTIAL DEFINITION:
+One unnecessary item receives moderate priority.
+
+FAIL DEFINITION:
+Multiple stale or irrelevant items are presented as priorities.
+
+MODEL RESPONSE:
+## 1. What happened while you were away
+
+- **Acme incident resolved Thursday.** Release 2.18.0 introduced a connection-pool configuration problem. Marcus rolled it back; metrics recovered and Acme confirmed its backlog cleared. Incident documentation remains with Marcus.
+- **Analytics v2 moved from Monday to Wednesday** because of two saved-report regressions, including CSV exports. Sam owns release coordination; Julia owns launch communications.
+- **Contoso’s €72k ARR renewal still has a legal blocker**, despite Friday morning’s optimistic sales update.
+- **Enterprise logo churn rose from 3.1% to 4.4%.** Daniel wants the drivers understood before Tuesday’s board meeting.
+- **Enterprise pricing remains a confidential proposal**, not an approved customer offer.
+
+## 2. Your attention today — in priority order
+
+1. **Unblock Contoso before 11:00.** Get Marcus to verify actual deletion behaviour in disaster-recovery backups and have the DPA requirement checked with the appropriate legal owner. Coordinate a written response with Noah. Do not promise compliance without verification; missing the deadline pushes signature to Contoso’s next approval window.
+
+2. **Validate and investigate Umbrella’s warning signs.** The supplied snapshot shows 163 errors across 94,217 requests, 1,821 ms p95 latency and usage down 41% over seven days on a €54k ARR account. Get current metrics and engineering/customer-success context before concluding this is an active incident or churn risk.
+
+3. **Start the enterprise churn breakdown for Tuesday.** Establish the reporting period, customer counts and all cancellations. Test whether Pied Piper and Hooli explain the increase; that has not been established.
+
+4. **Review Analytics v2 readiness for Wednesday.** Check both regressions, fix status and the complete QA pass with Sam. Update the stale Monday task; do not prepare the launch email yourself.
+
+5. **Reply to Initech’s pricing request.** Explain that changes are still under review and cannot be shared yet. Do not send tentative tiers or numbers.
+
+6. **Reply to Globex about Thursday afternoon.** Check availability and confirm a time; their request is not yet an agreed reschedule.
+
+**Task cleanup:** Close the resolved Acme investigation, remove/reassign your launch-email task, and check whether the still-open Q3 research survey task due Friday needs rescheduling.
+
+## 3. Important, but no action required from you
+
+- Julia explicitly needs nothing from you on launch copy. The existing outlined Analytics icon stays.
+- Finance reports €31k new ARR, €18k expansion and €27k churned ARR; cash remains in line with plan.
+- Partners still target the October integration; partner-sync notes are done.
+- Daniel owns the next pricing review on Wednesday.
+
+## 4. Unclear or missing
+
+- **Contoso:** Actual backup-deletion behaviour and whether it satisfies the DPA.
+- **Metrics freshness:** The customer snapshot is dated **2026-08-31**, not Monday morning; it cannot establish current health.
+- **Conversion:** Slack reports a possible drop, but no conversion data is supplied. Validate before treating it as a confirmed problem.
+- **Churn:** Reporting window, denominator and full causal breakdown are missing.
+- **Analytics:** Final QA clearance and resolution of both regressions are not confirmed.
+
+Return valid JSON only:
+
+{
+  "result": "PASS" | "PARTIAL" | "FAIL",
+  "evidence": "short quote or concise description of the relevant part of the response",
+  "reason": "one-sentence explanation"
+}
+
+Rules:
+
+- Judge only what is present in the model response.
+- Do not give credit for facts the response does not state or clearly imply.
+- Do not penalize style, brevity, formatting, or wording.
+- Do not require exact phrasing.
+- If the response is ambiguous between two labels, choose the lower label.

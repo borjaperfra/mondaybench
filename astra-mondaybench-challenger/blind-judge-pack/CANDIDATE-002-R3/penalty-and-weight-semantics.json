@@ -1,0 +1,40 @@
+{
+  "rubric_version": "0.2",
+  "total_base_points": 100.0,
+  "dimension_max": {
+    "state_reconstruction": 15.0,
+    "temporal_supersession": 15.0,
+    "planning_dependencies": 25.0,
+    "decision_prioritization": 20.0,
+    "cross_source_data_reasoning": 15.0,
+    "uncertainty_epistemic": 10.0
+  },
+  "penalties": {
+    "MATERIAL_HALLUCINATION": {
+      "type": "MATERIAL_HALLUCINATION",
+      "points": -5.0,
+      "definition": ""
+    },
+    "PROHIBITED_ACTION": {
+      "type": "PROHIBITED_ACTION",
+      "points": -10.0,
+      "definition": ""
+    },
+    "MAJOR_PLANNING_ERROR": {
+      "type": "MAJOR_PLANNING_ERROR",
+      "points": -7.0,
+      "definition": ""
+    },
+    "MAJOR_CONTRADICTION": {
+      "type": "MAJOR_CONTRADICTION",
+      "points": -5.0,
+      "definition": ""
+    }
+  },
+  "maximum_global_penalty": 30.0,
+  "noise": null,
+  "penalty_rule": "Only materially_misleading=true violations incur their defined points. Sum penalties, cap total magnitude at maximum_global_penalty; dismissed candidates incur zero.",
+  "noise_rule": "If present, start at starting_points; subtract deduction_per_false_action for each triggered category, floor at minimum_points.",
+  "aggregation_rule": "Use the frozen criterion label point mappings. Sum dimensions, then apply capped penalties with a final floor of zero. No points have been assigned in this package.",
+  "tie_rule": "Choose the lower label when between two labels."
+}

@@ -1,0 +1,66 @@
+{
+  "rubric_version": "0.2",
+  "total_base_points": 100.0,
+  "dimension_max": {
+    "action_detection": 25.0,
+    "state_reconstruction": 25.0,
+    "prioritization": 15.0,
+    "data_reasoning": 15.0,
+    "uncertainty": 10.0,
+    "noise_resistance": 10.0
+  },
+  "penalties": {
+    "MATERIAL_HALLUCINATION": {
+      "type": "MATERIAL_HALLUCINATION",
+      "points": -5.0,
+      "definition": "A factual claim that is materially relevant to the briefing but unsupported by the supplied evidence. Do not apply to omissions, harmless paraphrases, or issues already represented only by a lower rubric score."
+    },
+    "PROHIBITED_ACTION": {
+      "type": "PROHIBITED_ACTION",
+      "points": -10.0,
+      "definition": "Recommends an action explicitly contradicted or prohibited by the current state."
+    },
+    "MAJOR_CONTRADICTION": {
+      "type": "MAJOR_CONTRADICTION",
+      "points": -5.0,
+      "definition": "The response materially contradicts itself about the current state of an important issue."
+    }
+  },
+  "maximum_global_penalty": 20.0,
+  "noise": {
+    "max_points": 10.0,
+    "starting_points": 10.0,
+    "deduction_per_false_action": 2.0,
+    "minimum_points": 0.0,
+    "false_actions": [
+      {
+        "id": "lunch",
+        "description": "Treating the lunch discussion as relevant or actionable."
+      },
+      {
+        "id": "icon",
+        "description": "Re-opening or prioritizing the resolved icon discussion."
+      },
+      {
+        "id": "partner_sync",
+        "description": "Treating Friday's completed partner sync as upcoming."
+      },
+      {
+        "id": "launch_email",
+        "description": "Assigning the Analytics v2 launch email to the user."
+      },
+      {
+        "id": "acme_active",
+        "description": "Treating Acme investigation as an active Monday task."
+      },
+      {
+        "id": "pricing_send",
+        "description": "Treating sending proposed Enterprise pricing as a valid action."
+      }
+    ]
+  },
+  "penalty_rule": "Only materially_misleading=true violations incur their defined points. Sum penalties, cap total magnitude at maximum_global_penalty; dismissed candidates incur zero.",
+  "noise_rule": "If present, start at starting_points; subtract deduction_per_false_action for each triggered category, floor at minimum_points.",
+  "aggregation_rule": "Use the frozen criterion label point mappings. Sum dimensions, then apply capped penalties with a final floor of zero. No points have been assigned in this package.",
+  "tie_rule": "Choose the lower label when between two labels."
+}

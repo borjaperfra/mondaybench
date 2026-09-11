@@ -1,0 +1,199 @@
+You are returning to work Monday at 09:07 after being offline since Wednesday 17:30. You are Product & Growth Lead at Northstar.
+
+Using the supplied Slack, email, meeting, task, release, calendar, account, contract and support data, decide what should happen next. Reconstruct the current state, but do not merely summarize sources.
+
+Produce exactly:
+1. CURRENT STATE — resolve superseded information where evidence supports it.
+2. MY PLAN FOR TODAY — ordered; choose the viable Enterprise Controls release path, sequence it, and give approximate timing. Respect owners, availability, deadlines, dependencies and policies.
+3. CUSTOMER / REVENUE PRIORITIES — identify which accounts deserve attention today using account + contract + support data together. Do not treat every negative metric as a problem.
+4. DO NOT DO — stale, superseded, unsafe, confidential or premature actions to avoid.
+5. UNCLEAR / MUST VERIFY — only genuinely unresolved information; identify the missing evidence.
+
+Be concise, practical, decisive where evidence is sufficient, and do not assume information not provided.
+
+---
+
+## Slack
+
+# Slack
+## Thursday, September 10
+### #enterprise-launch
+09:08 — Maya (CEO)
+> I don't want Enterprise Controls opened broadly without Security being comfortable with the migration. If we change the build after their review, follow Priya's release policy.
+09:41 — Sam (Release Manager)
+> Atlas's migration window is Monday morning. If rollout hasn't begun by 12:00 Monday, their admins aren't available again until Thursday.
+11:18 — Priya (Security)
+> Release policy: exact build already verified in staging = production post-deploy check only. A code-changing patch after staging verification = 25-minute Security delta review before production deploy, then 20-minute post-deploy verification. I can do delta reviews asynchronously from a submitted diff.
+16:52 — Maya
+> I'm not adding another executive gate. Follow Security's release policy and Sam's rollout process.
+### #customer-atlas
+10:27 — Laura (CS)
+> Atlas renewal is signed. Missing Monday's migration window doesn't threaten renewal, but pushes migration to Thursday and creates executive noise.
+### #pricing
+15:06 — Daniel (Finance)
+> The pricing workbook is still being revised. Don't quote it externally.
+
+## Friday, September 11
+### #enterprise-launch
+08:51 — Marcus
+> Staging build 2.9.4 passed the session-preservation test.
+09:37 — Priya
+> 2.9.4 staging verification complete.
+13:46 — Marcus
+> Production attempt with 2.9.4 failed on shard eu-03 before rollout opened. No customer impact.
+14:18 — Marcus
+> I have two safe recovery approaches for Monday; details are in release-options. One changes code, one doesn't.
+14:26 — Priya
+> If the chosen recovery changes code from 2.9.4, I need the delta review before production.
+15:03 — Sam
+> After production is healthy and Priya completes required verification, I need 15 minutes to open and sanity-check rollout.
+### #launch-comms
+09:21 — Julia
+> Sarah has the customer announcement draft.
+11:44 — Sarah
+> I'm out Monday. Daniel — forwarding you Julia's final draft and Atlas recipient list.
+11:51 — Daniel
+> Received both. I'll watch Sam's rollout channel Monday.
+### #customer-zenith
+08:42 — Laura
+> Zenith validated the audit-log export fix.
+10:58 — Finance Bot
+> Contract countersigned: Zenith — 24 months — €96k ARR.
+12:13 — Laura
+> Moving Zenith back to normal CS cadence.
+### #pricing
+08:35 — Daniel
+> Yesterday's workbook numbers are obsolete.
+09:07 — Daniel
+> Internal scenario planning: €2,500 platform / 40 seats / €55 extra seat. Still not external.
+13:32 — Sales Bot
+> enterprise-pricing-v4-final.xlsx pinned by Sales Ops.
+### #orion
+15:58 — Laura
+> Orion admin says SCIM provisioning worked.
+16:00 — Rollout Bot
+> Orion / org_71A / scim_enabled=false
+16:03 — Laura
+> Their support ticket lists org_17A. I may have looked at the wrong account in CRM.
+16:05 — Sam
+> Don't send another status until we confirm which org ID is theirs and read the live flag for that org.
+### #leadership
+16:32 — Maya
+> I need the expansion explanation before 11:00 Monday. Board pack locks 11:30.
+16:36 — Daniel
+> The two slipped expansions are only part of it. Account files have the rest.
+16:41 — Maya
+> Keep it to actual arithmetic. If a customer's reduction has no stated cause, don't invent one.
+
+---
+
+## Emails
+
+# Emails
+## Monday staffing — Marcus — Fri 17:22
+I can start 09:15 Monday but must leave at 10:20. Both recovery options are ready. Product needs to pick the path.
+
+## Security Monday availability — Priya — Fri 17:29
+Available 09:00–09:35; unavailable 09:35–10:25; available after 10:25. Delta review can be asynchronous from a submitted diff and does not require Marcus to stay online. Post-deploy verification requires me and takes ~20 minutes.
+
+## Customer announcement — Daniel — Fri 12:02
+I have the final draft and recipient list. I'll send after Sam confirms rollout is open.
+
+## Zenith — Laura — Fri 12:20
+All resolved. Signed €96k ARR for 24 months. No Monday escalation needed.
+
+## Enterprise pricing — Daniel — Fri 09:14
+Pinned workbook is not authoritative. Use my 09:07 Slack values internally only. Nothing to procurement/customers until public announcement. No announcement date.
+
+## Board pack — Maya — Fri 16:47
+Send September enterprise expansion reconciliation by 11:00 Monday. Separate what data establishes from causal hypotheses.
+
+---
+
+## Meetings
+
+# Meeting notes
+## Friday 09:45 — Release readiness
+- 2.9.4 passed staging Security verification.
+- Code-changing recovery requires: 25m delta review → production deploy → 20m post-deploy verification.
+- Recovery without code change requires: production deploy → 20m post-deploy verification.
+- Sam needs 15m after verification to open/sanity-check rollout.
+- Atlas rollout must BEGIN before 12:00 Monday.
+- Product chooses path; Marcus deploys; Priya reviews/verifies; Sam opens rollout.
+
+## Friday 14:45 — Revenue prep
+- September expansion target €180k; expected €126k; gap €54k.
+- Wayne + Globex explain €30k.
+- Remaining €24k must be reconciled from account-level changes.
+- State causes only when explicitly supported.
+
+---
+
+## Tasks
+
+# Task list — Monday 08:55
+| Priority | Task | Owner | Due |
+|---|---|---|---|
+| Urgent | Get Maya approval for Enterprise Controls | You | 09:15 |
+| Urgent | Choose Enterprise Controls recovery path | You | 09:15 |
+| Urgent | Call Zenith about renewal risk | You | 09:30 |
+| High | Send expansion explanation to Maya | You | 11:00 |
+| High | Confirm Enterprise Controls launch at 10:30 to Atlas | You | 09:45 |
+| High | Send Enterprise Controls customer announcement | You | Monday |
+| Medium | Send Enterprise pricing to Initech procurement | You | Monday |
+| Medium | Verify Orion SCIM before replying | You | Monday |
+
+---
+
+## Release Options
+
+option,build,code_change,deploy_minutes,session_reset_risk,notes
+A,2.9.4,false,20,8%,retry verified build with shard precheck
+B,2.9.5-patch,true,45,<1%,patch avoids failing migration path
+
+---
+
+## Calendars
+
+person,available_from,available_until,notes
+Marcus,2026-09-14T09:15:00+02:00,2026-09-14T10:20:00+02:00,must leave 10:20
+Priya,2026-09-14T09:00:00+02:00,2026-09-14T09:35:00+02:00,available
+Priya,2026-09-14T10:25:00+02:00,2026-09-14T12:30:00+02:00,available
+Sam,2026-09-14T09:00:00+02:00,2026-09-14T12:30:00+02:00,available
+Daniel,2026-09-14T09:00:00+02:00,2026-09-14T12:30:00+02:00,available
+
+---
+
+## Accounts
+
+account,current_arr_eur,sept_expansion_previous_eur,sept_expansion_expected_eur,usage_change_30d_pct,admin_logins_change_30d_pct,open_support_tickets
+Wayne Enterprises,120000,18000,0,-3,-4,0
+Globex,84000,12000,0,-18,-61,3
+Stark Industries,156000,32000,32000,4,2,1
+Soylent,60000,28000,18000,-22,-28,2
+Wonka,48000,24000,10000,-35,-49,0
+Acme,150000,0,0,-45,-42,0
+
+---
+
+## Contracts
+
+account,renewal_days,contract_status,commercial_context
+Wayne Enterprises,210,renewed,expansion moved to October by signed amendment
+Globex,18,active,September expansion pending procurement
+Stark Industries,160,active,on plan
+Soylent,44,active,no contract explanation for reduced expansion
+Wonka,31,active,no contract explanation for reduced expansion
+Acme,9,active,approved shift to annual batch-processing; expected interactive usage reduction 40-50%
+
+---
+
+## Support
+
+account,ticket_id,severity,status,summary
+Globex,G-441,high,open,admins intermittently cannot complete SSO setup
+Globex,G-447,medium,open,SCIM sync delayed for some groups
+Globex,G-451,medium,open,audit export times out on large range
+Stark Industries,S-120,low,open,documentation question
+Soylent,SO-19,medium,open,team reports slower onboarding
+Soylent,SO-22,low,open,reporting question

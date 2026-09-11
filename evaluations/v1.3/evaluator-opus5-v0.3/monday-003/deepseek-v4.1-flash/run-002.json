@@ -1,0 +1,249 @@
+{
+  "schema_version": "1",
+  "evaluator_id": "evaluator-opus5-v0.3",
+  "benchmark_version": "0.3",
+  "rubric_version": "0.3",
+  "scenario_id": "monday-003",
+  "run_id": "monday-003__deepseek-v4.1-flash__002",
+  "model_slug": "deepseek-v4.1-flash",
+  "scenario_prompt_sha256": "aaf788f309d955d2b427c86fe7d95d2bbf88575fde7306adcfd74b0ec4a4103f",
+  "timestamp_utc": "2026-09-11T11:36:11Z",
+  "judge": {
+    "provider": "anthropic",
+    "model_id": "claude-opus-5",
+    "temperature": 0.0,
+    "effort": null,
+    "unsupported_parameters": [],
+    "prompt_fingerprint": "45998b3c03939498",
+    "route": "recorded",
+    "verdict_source": "deepseek-v4.1-flash.verdicts.jsonl",
+    "contract_fingerprint": "db0cb9aa9b9d8272",
+    "contract_schema_version": "1",
+    "judge_session_id": null
+  },
+  "suite_version": "1.3",
+  "migrated_from": "evaluations/v1.2/evaluator-opus5-v0.3/monday-003/deepseek-v4.1-flash/run-002.json",
+  "dimensions": {
+    "critical_path_and_dependencies": {
+      "score": 16.0,
+      "max_score": 21.0
+    },
+    "resource_allocation": {
+      "score": 17.0,
+      "max_score": 25.0
+    },
+    "planning_and_parallelization": {
+      "score": 16.0,
+      "max_score": 18.0
+    },
+    "decision_quality": {
+      "score": 14.0,
+      "max_score": 14.0
+    },
+    "state_reconstruction": {
+      "score": 10.0,
+      "max_score": 10.0
+    },
+    "accuracy_and_uncertainty": {
+      "score": 12.0,
+      "max_score": 12.0
+    }
+  },
+  "criteria": {
+    "sso_chain": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'Billing schema migration (Elena, 3h) -> SSO API compatibility patch (Marcus, 4h) -> SSO regression (QA, 2h) -> SSO production rollout (Marcus, 1h)... determines the earliest delivery of Enterprise SSO'",
+      "reason": "'Billing schema migration (Elena, 3h) -> SSO API compatibility patch (Marcus, 4h) -> SSO regression (QA, 2h) -> SSO production rollout (Marcus, 1h)... determines the earliest delivery of Enterprise SSO'"
+    },
+    "contoso_blocker_chain": {
+      "result": "PASS",
+      "points_awarded": 6.0,
+      "points_possible": 6.0,
+      "evidence": "'shares the first step (billing migration) but then branches into a shorter path: permission patch (Daniel, 3.5h) -> compliance export (Julia, 1h)', with the formatter listed as independent parallel work",
+      "reason": "'shares the first step (billing migration) but then branches into a shorter path: permission patch (Daniel, 3.5h) -> compliance export (Julia, 1h)', with the formatter listed as independent parallel work"
+    },
+    "pricing_dependency": {
+      "result": "FAIL",
+      "points_awarded": 0.0,
+      "points_possible": 5.0,
+      "evidence": "'Packaging approval pack depends on pricing page' and 'Sarah builds packaging approval pack (1.5h) after pricing page' reproduce the stale assumption. Neither half is addressed: no gate on the public page, and the mockup allowance is never used",
+      "reason": "'Packaging approval pack depends on pricing page' and 'Sarah builds packaging approval pack (1.5h) after pricing page' reproduce the stale assumption. Neither half is addressed: no gate on the public page, and the mockup allowance is never used"
+    },
+    "security_state_stale": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "'Security review is closed (email from Maya) - no longer a blocker'",
+      "reason": "'Security review is closed (email from Maya) - no longer a blocker'"
+    },
+    "board_dependency": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "'Board pack revenue depends on backfill (which depends on migration)'",
+      "reason": "'Board pack revenue depends on backfill (which depends on migration)'"
+    },
+    "scarce_resource_allocation": {
+      "result": "PASS",
+      "points_awarded": 10.0,
+      "points_possible": 10.0,
+      "evidence": "'12:00 Marcus walks Daniel through delegated-admin path (0.5h)' then '12:30 Daniel starts Contoso permission patch (3.5h)' against '12:30 Marcus starts SSO API compatibility patch (4h)' - the canonical allocation with the handoff priced, and the critical-path section gives the ground",
+      "reason": "'12:00 Marcus walks Daniel through delegated-admin path (0.5h)' then '12:30 Daniel starts Contoso permission patch (3.5h)' against '12:30 Marcus starts SSO API compatibility patch (4h)' - the canonical allocation with the handoff priced, and the critical-path section gives the ground"
+    },
+    "marcus_reserved_for_sso": {
+      "result": "PARTIAL",
+      "points_awarded": 3.0,
+      "points_possible": 6.0,
+      "evidence": "Marcus keeps the compatibility patch and the rollout and the instrumentation is released as 'not a blocker, can be deferred', but the ground that this work has no substitute is never stated",
+      "reason": "Marcus keeps the compatibility patch and the rollout and the instrumentation is released as 'not a blocker, can be deferred', but the ground that this work has no substitute is never stated"
+    },
+    "formatter_ownership": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'09:00 Start Contoso export formatter (date format) - Julia', independent, off both chains",
+      "reason": "'09:00 Start Contoso export formatter (date format) - Julia', independent, off both chains"
+    },
+    "elena_migration_fallback": {
+      "result": "FAIL",
+      "points_awarded": 0.0,
+      "points_possible": 5.0,
+      "evidence": "Elena's Wednesday-noon departure, the production-permission transfer and the Daniel migration fallback are all absent",
+      "reason": "Elena's Wednesday-noon departure, the production-permission transfer and the Daniel migration fallback are all absent"
+    },
+    "monday_plan": {
+      "result": "PASS",
+      "points_awarded": 7.0,
+      "points_possible": 7.0,
+      "evidence": "migration at 09:00 first, the pricing page and formatter handed out in the same slot, and the dependent engineering behind the migration at 12:30",
+      "reason": "migration at 09:00 first, the pricing page and formatter handed out in the same slot, and the dependent engineering behind the migration at 12:30"
+    },
+    "concurrent_sso_and_contoso": {
+      "result": "PASS",
+      "points_awarded": 7.0,
+      "points_possible": 7.0,
+      "evidence": "'12:30 Daniel starts Contoso permission patch' and '12:30 Marcus starts SSO API compatibility patch' run concurrently with owners named",
+      "reason": "'12:30 Daniel starts Contoso permission patch' and '12:30 Marcus starts SSO API compatibility patch' run concurrently with owners named"
+    },
+    "pricing_board_parallel": {
+      "result": "PARTIAL",
+      "points_awarded": 2.0,
+      "points_possible": 4.0,
+      "evidence": "the pricing page starts at 09:00, but the approval pack is queued behind it at 12:00-13:30 and the board non-revenue sections are left as 'any time before Friday' rather than started",
+      "reason": "the pricing page starts at 09:00, but the approval pack is queued behind it at 12:00-13:30 and the board non-revenue sections are left as 'any time before Friday' rather than started"
+    },
+    "formatting_urgent_not_blocking": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'Contoso export broken issue is resolved (format only, not blocking)'",
+      "reason": "'Contoso export broken issue is resolved (format only, not blocking)'"
+    },
+    "contoso_compliance_is_urgent": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'Contoso compliance export (Tuesday 16:00)' with Julia owning it and delivery Monday 17:00",
+      "reason": "'Contoso compliance export (Tuesday 16:00)' with Julia owning it and delivery Monday 17:00"
+    },
+    "stale_task_list_overridden": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "three of four overridden: instrumentation deferred, Security closed, and the broken-export escalation resolved as formatting only",
+      "reason": "three of four overridden: instrumentation deferred, Security closed, and the broken-export escalation resolved as formatting only"
+    },
+    "sso_state_reconstructed": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "chain outstanding, Security closed, 'Atlas commitment, Wednesday EOD' intact",
+      "reason": "chain outstanding, Security closed, 'Atlas commitment, Wednesday EOD' intact"
+    },
+    "onboarding_state_reconstructed": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "'Onboarding instrumentation is no longer a launch blocker (Julia confirmed)' with 'Onboarding launch (Julia)'",
+      "reason": "'Onboarding instrumentation is no longer a launch blocker (Julia confirmed)' with 'Onboarding launch (Julia)'"
+    },
+    "contoso_state_separated": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "the formatter sits with Julia as independent work while the permission patch is what gates the Tuesday 16:00 delivery",
+      "reason": "the formatter sits with Julia as independent work while the permission patch is what gates the Tuesday 16:00 delivery"
+    },
+    "factual_plan_accuracy": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "no substituted values: 3h migration, 0.5h walkthrough, 3.5h Daniel, 4h patch, 1.5h backfill, 2h QA, 1h rollout and 1h export all carried, Marcus's Tuesday session respected, and Priya's before-12:00 rule applied correctly",
+      "reason": "no substituted values: 3h migration, 0.5h walkthrough, 3.5h Daniel, 4h patch, 1.5h backfill, 2h QA, 1h rollout and 1h export all carried, Marcus's Tuesday session respected, and Priya's before-12:00 rule applied correctly"
+    },
+    "earliest_feasible_delivery": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "'Enterprise SSO: Tuesday 14:00 (after Marcus's Atlas session ends at 13:00)' with the full schedule behind it",
+      "reason": "'Enterprise SSO: Tuesday 14:00 (after Marcus's Atlas session ends at 13:00)' with the full schedule behind it"
+    },
+    "uncertainty_discipline": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "risks are genuine and nothing is invented; the wrong approval ordering is priced under pricing_dependency, not here",
+      "reason": "risks are genuine and nothing is invented; the wrong approval ordering is priced under pricing_dependency, not here"
+    }
+  },
+  "false_actions": {},
+  "penalties": {
+    "items": [],
+    "dismissed": [],
+    "raw_total": 0.0,
+    "total": 0.0,
+    "capped": false
+  },
+  "deterministic_checks": [
+    {
+      "id": "contoso_11_00",
+      "matched": true,
+      "detail": "'11:00' appears near a mention of Contoso"
+    },
+    {
+      "id": "churn_3_1_to_4_4",
+      "matched": false,
+      "detail": "both churn figures 3.1 and 4.4 are present"
+    },
+    {
+      "id": "umbrella_metrics_present",
+      "matched": false,
+      "detail": "at least two of 163 / 1821 / 41 appear near a mention of Umbrella"
+    },
+    {
+      "id": "umbrella_named",
+      "matched": false,
+      "detail": "Umbrella is named in the response"
+    },
+    {
+      "id": "wednesday_present",
+      "matched": true,
+      "detail": "'Wednesday' appears in the response"
+    },
+    {
+      "id": "julia_present",
+      "matched": true,
+      "detail": "'Julia' appears in the response"
+    },
+    {
+      "id": "pied_piper_and_hooli",
+      "matched": false,
+      "detail": "both known cancellations are named"
+    }
+  ],
+  "disagreements": [],
+  "base_score": 85.0,
+  "final_score": 85.0
+}
