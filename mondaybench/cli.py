@@ -732,8 +732,21 @@ def evaluate(
     ),
     review: bool = typer.Option(False, "--review", help="Also write a human-audit review file"),
     overwrite: bool = typer.Option(False, "--overwrite", help="Re-evaluate runs already evaluated"),
+    suite_version: str | None = typer.Option(
+        None,
+        "--suite-version",
+        help="Write under evaluations/v<version>/ instead of the v1.0 unversioned tree",
+    ),
 ) -> None:
-    """Classify every stored run against the rubric and score it deterministically."""
+    """Classify every stored run against the rubric and score it deterministically.
+
+    `--suite-version` decides WHERE the evaluations land, and a new battery
+    should always pass it. Without it they land in the unversioned v1.0 tree and
+    have to be re-stamped into their suite's subtree afterwards - and if the
+    release is cut between those two steps, its manifest pins a path that the
+    re-stamp leaves behind. That is how the v1.5 manifest came to list 30
+    evaluations that are not on disk.
+    """
     evaluator = _evaluator_for(scenario, evaluator, fallback=DEFAULT_EVALUATOR)
     try:
         evaluator_cfg = load_evaluator(evaluator)
@@ -776,7 +789,10 @@ def evaluate(
         if not run_paths:
             console.print(f"[yellow]skip[/yellow] {slug}: no runs found")
             continue
-        already = {p.name for p in find_evaluations(evaluator, loaded.id, slug)}
+        already = {
+            p.name
+            for p in find_evaluations(evaluator, loaded.id, slug, suite_version=suite_version)
+        }
         for path in run_paths:
             if path.name in already and not overwrite:
                 console.print(f"[yellow]skip[/yellow] {slug} {path.name}: already evaluated")
@@ -786,7 +802,11 @@ def evaluate(
                 if recorded:
                     judge.bind(raw.run_id)  # type: ignore[attr-defined]
                 evaluation = evaluate_run(
-                    scenario=loaded, evaluator=evaluator_cfg, run=raw, judge=judge
+                    scenario=loaded,
+                    evaluator=evaluator_cfg,
+                    run=raw,
+                    judge=judge,
+                    suite_version=suite_version,
                 )
             except (JudgeError, KeyError) as exc:
                 failures += 1

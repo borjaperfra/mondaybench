@@ -1,28 +1,29 @@
-# MondayBench suite v1.5 — Overall v3.4, published 2026-09-11
+# MondayBench suite v1.6 — Overall v3.4, published 2026-09-12
 
 Five scenarios, ten models, 150 official runs, all judged, one board. The suite
-is released as `v1.5` and the board it carries is Overall v3.4. Everything below
-was verified on 2026-09-12 against this working tree, not remembered — including
-the one check that does not pass.
+is released as `v1.6` and the board it carries is Overall v3.4, unchanged.
+Everything below was verified on 2026-09-12 against this working tree, not
+remembered.
 
 ## Verified state
 
 ```
-pytest                                             963 passed
+pytest                                             970 passed
+verify-release --version 1.6 --strict              identical, 1,763 artefacts
 freeze check, all five scenarios                   frozen content intact
 official runs behind the v3.4 board                150 / 150
 recorded evaluations, v1.5 subtree                 151
 criterion verdicts behind them                     3,560
-suite v1.5 manifest                                1,789 artefacts, 13 groups
-verify-release --version 1.5 --strict              FAILS — 30 evaluations missing
 ```
 
-**`verify-release` is the one check that does not pass.** It is a manifest
-defect, not lost board evidence: every artefact behind every published score is
-present and identical. See *The v1.5 manifest over-claims* below. Until it is
-resolved, `v1.5` cannot be asserted to a third party as a verifying release.
+**v1.6 is a manifest repair, not a new measurement.** No run was generated, no
+response was re-judged, no score moved, and the board is the same Overall v3.4
+that v1.5 published. What changed is that the manifest no longer pins 30
+evaluation paths that do not exist — see *The v1.5 defect, repaired in v1.6*
+below — plus the harness and test changes that stop it recurring. v1.5 remains
+published and remains non-verifying; that is the honest record.
 
-The suite digest is recorded in `releases/v1.5/SUITE-FROZEN.yaml` and nowhere
+The suite digest is recorded in `releases/v1.6/SUITE-FROZEN.yaml` and nowhere
 else. It must not be quoted in a file the manifest hashes — this one included —
 or re-cutting the release changes the file that states the digest, which changes
 the digest.
@@ -91,6 +92,7 @@ and different suite versions, not superseded views of this one.
 | v1.3 | 2026-09-11 | Overall v3.2 | GPT-6 Astra |
 | v1.4 | 2026-09-11 | Overall v3.3 | The DeepSeek reliability-prompt row |
 | v1.5 | 2026-09-11 | Overall v3.4 | DeepSeek re-measured; two batteries dropped |
+| v1.6 | 2026-09-12 | Overall v3.4 | Manifest repair; no measurement changed |
 
 **Why DeepSeek was re-measured.** The gateway serves V4.1 Flash under the same
 id as V4 Flash and replaced the deployment in place rather than publishing a
@@ -107,11 +109,11 @@ a permutation test. What moves is the floor — worst run 87.5 against 80.5, sd
 4.00 against 6.08 — which is what the prompt was written to do and is not what a
 mean can show. It stays under `experiments/`.
 
-## The v1.5 manifest over-claims
+## The v1.5 defect, repaired in v1.6
 
-Found 2026-09-12. **Nothing behind a published score is missing.** The manifest
-lists 30 evaluation files that are not on disk, and `evaluations` is
-`append_only`, so verification fails.
+Found and repaired 2026-09-12. **Nothing behind a published score was ever
+missing.** The v1.5 manifest listed 30 evaluation files that are not on disk,
+and `evaluations` is `append_only`, so verification failed.
 
 The 30 split into two unrelated cases.
 
@@ -130,17 +132,30 @@ The 30 split into two unrelated cases.
    match a recorded hash. **This battery is on no board**, so no published
    number depends on it.
 
-v1.3 and v1.4 carry case 2 as well and do not verify either. v1.2 is the last
-release that verifies within policy.
+v1.3 and v1.4 carry case 2 as well and do not verify either. They stay that way:
+a published manifest is not edited to make a check pass, which is what
+`SUITE-FROZEN.yaml` says in its own header and why the digest exists.
 
-**This cannot be repaired by editing the manifest** — `SUITE-FROZEN.yaml` says
-so in its own header, and the digest is the reason. It needs a `v1.6` cut from
-a correct scan, which is a version bump and a decision, not a cleanup. Until
-then the defect is documented here and the board is unaffected.
+**The repair is `v1.6`, cut 2026-09-12 from a correct scan.** 1,763 artefacts,
+strict-identical. It carries the same scenarios, the same evidence and the same
+Overall v3.4 board; the 952 evaluations it pins are the 982 v1.5 claimed minus
+the 30 that were never there. Nothing was regenerated and no score moved.
 
-The bug itself is in the writer, not the manifest: `evaluations_root()` returns
-the versioned subtree only when a `suite_version` is passed, and the judging
-path that produced these two batteries did not pass one.
+**Three things now stop it recurring.**
+
+- `evaluate --suite-version` writes a new battery straight into its suite
+  subtree. The unversioned tree was the v1.0 default, and everything since has
+  been re-stamped into place by `migrate` afterwards — which is what left a
+  window where a release could be cut against paths the re-stamp abandons.
+- `write_review` reads the suite version off the evaluation instead of taking it
+  as an argument, so a review cannot land in a different tree from the
+  evaluation it explains.
+- `tests/test_latest_release_verifies.py` asserts the newest release still
+  verifies, that it pins nothing absent, that it covers every evaluation on
+  disk, and that no evaluation is filed under a version it does not claim. v1.3,
+  v1.4 and v1.5 are named there as known-broken with their reason, and the test
+  fails if one of them ever starts verifying — a stale exception teaches a
+  reader that a check is expected to fail when it no longer is.
 
 ## What v1.0 repaired
 
@@ -176,7 +191,11 @@ sees it.
 
 ## Known, documented, not repaired
 
-- **The v1.5 manifest over-claims 30 evaluations.** Above. Needs a v1.6.
+- **15 `deepseek-v4.1-flash-probe` evaluations are gone and cannot come back.**
+  Their runs and verdicts survive, so the scores are reconstructible in
+  substance, but `Evaluation.timestamp_utc` means a regenerated file can never
+  match the hash v1.3 recorded. That battery is on no board. v1.3, v1.4 and v1.5
+  therefore stay non-verifying, permanently.
 - **`evaluator-opus5-v0.1` declares no `scenario_id`**, so scenario-to-evaluator
   resolution for monday-001 falls through to a hardcoded fallback. Read the
   evaluator from the published leaderboard instead, as
@@ -201,9 +220,14 @@ publishing one is a suite release: the new evidence has to be a member of a
 version before a board can show it.
 
 ```
-mondaybench challenge --model <slug>       # what exists, what qualifies, what is left
-mondaybench verify-release --version 1.5   # frozen content intact, evidence may only grow
+mondaybench challenge --model <slug>            # what exists, what qualifies, what is left
+mondaybench evaluate --scenario <id> --model <slug> --suite-version 1.7
+mondaybench verify-release --version 1.6        # frozen content intact, evidence may only grow
 ```
+
+Pass `--suite-version` to `evaluate` from the first run of the battery. It is
+the difference between evidence that is already where its release will look for
+it and evidence that has to be moved afterwards.
 
 Full runbook in `docs/benchmarking-a-new-model.md`. New models publish as
 Overall **v3.5, v3.6, …** against a new suite version. Every earlier board stays
@@ -218,10 +242,13 @@ byte-frozen.
 - **Do not edit a released manifest to make verification pass.** Cut a new
   version. `SUITE-FROZEN.yaml` says this in its own header, and the v1.5 defect
   above is the case it was written for.
-- **Pass `suite_version` when judging a new battery.** Without it the
+- **Pass `--suite-version` when judging a new battery.** Without it the
   evaluations land at the v1.0 unversioned path, and a release cut before the
   re-stamp records a path that will not exist afterwards. This is what broke
   v1.3 through v1.5.
+- **Do not cut a release between judging and re-stamping.** If a battery is
+  still being moved, the manifest will pin where it used to be. Cut after
+  `migrate`, never between.
 - **Do not rewrite a published board.** They are cited and hashed. Publish a
   revision instead.
 - **Do not delete anything under `archive/`.** It holds every superseded

@@ -345,8 +345,15 @@ def build_review(evaluation: Evaluation, response: str) -> str:
 def write_review(
     evaluation: Evaluation, response: str, run_number: int, root: Path | None = None
 ) -> Path:
+    # The suite version comes off the evaluation rather than a parameter: a
+    # review belongs beside the evaluation it explains, and a caller that has to
+    # repeat the version is a caller that can put them in different trees.
     directory = evaluations_dir(
-        evaluation.evaluator_id, evaluation.scenario_id, evaluation.model_slug, root
+        evaluation.evaluator_id,
+        evaluation.scenario_id,
+        evaluation.model_slug,
+        root,
+        evaluation.suite_version,
     )
     directory.mkdir(parents=True, exist_ok=True)
     target = directory / f"run-{run_number:03d}.review.md"
