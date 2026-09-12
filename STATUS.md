@@ -1,21 +1,28 @@
-# MondayBench v1.0 — published 2026-08-31
+# MondayBench suite v1.5 — Overall v3.4, published 2026-09-11
 
-Five scenarios, seven models, 105 official runs, all judged, every publication
-gate passed. The suite is frozen and tagged `v1.0`. Everything below is
-verified, not remembered.
+Five scenarios, ten models, 150 official runs, all judged, one board. The suite
+is released as `v1.5` and the board it carries is Overall v3.4. Everything below
+was verified on 2026-09-12 against this working tree, not remembered — including
+the one check that does not pass.
 
 ## Verified state
 
 ```
-pytest                                              835 passed
-mondaybench verify-release --version 1.0 --strict   identical, 617 artefacts
-freeze check, all five scenarios                    clean, in tree and in a fresh clone
-official runs                                       105 / 105
-criterion verdicts, all recorded                    2478
-Overall v0 / v1 / v2                                all three still build
+pytest                                             963 passed
+freeze check, all five scenarios                   frozen content intact
+official runs behind the v3.4 board                150 / 150
+recorded evaluations, v1.5 subtree                 151
+criterion verdicts behind them                     3,560
+suite v1.5 manifest                                1,789 artefacts, 13 groups
+verify-release --version 1.5 --strict              FAILS — 30 evaluations missing
 ```
 
-The suite digest is recorded in `releases/v1.0/SUITE-FROZEN.yaml` and nowhere
+**`verify-release` is the one check that does not pass.** It is a manifest
+defect, not lost board evidence: every artefact behind every published score is
+present and identical. See *The v1.5 manifest over-claims* below. Until it is
+resolved, `v1.5` cannot be asserted to a third party as a verifying release.
+
+The suite digest is recorded in `releases/v1.5/SUITE-FROZEN.yaml` and nowhere
 else. It must not be quoted in a file the manifest hashes — this one included —
 or re-cutting the release changes the file that states the digest, which changes
 the digest.
@@ -30,40 +37,110 @@ the digest.
 | 004 | Numbers Don't Lie | 0.3 | 27 | `evaluator-opus5-v0.4` | 62.8 | `3a0cbb569ca4…` |
 | 005 | Read the Room | 0.4 | 31 | `evaluator-opus5-v0.5` | 19.2 | `532cd464a9b7…` |
 
-monday-001's atomic criteria sum to 90; the remaining 10 points are the
-noise-resistance dimension, scored at dimension granularity. All five scenarios
-contribute exactly 100.
+Unchanged since v1.0. monday-001's atomic criteria sum to 90; the remaining 10
+points are the noise-resistance dimension, scored at dimension granularity. All
+five scenarios contribute exactly 100. A model that clears all five records 354
+criterion verdicts.
 
-## Overall v2
+## Overall v3.4
 
 ```
- #  model              Monday   001   002   003   004   005   range   sigma
- 1  Qwen 3.8 Flash       95.1  92.5  94.8  94.5  96.5  97.0     4.5     1.8
- 2  GLM 5.3 Flash        94.9  98.0  87.3  92.8  98.0  98.5    11.2     4.8
- 3  DeepSeek V4 Flash    91.7  90.8  89.3  95.0  86.0  97.3    11.3     4.5
- 4  MIMO v2.5            86.7  88.2  81.2  90.3  78.5  95.2    16.7     6.8
- 5  GLM 5.2              86.5  84.3  91.2  87.3  71.2  98.5    27.3    10.1
- 6  Qwen 3.6             68.8  82.8  70.2  65.5  46.0  79.3    36.8    14.5
- 7  Gemma 4              63.0  70.7  54.2  65.3  35.2  89.7    54.5    20.2
+ #  model                 Monday    001    002    003    004    005   range   sigma
+ 1  GPT-6 Astra            98.80  100.0  100.0  100.0   98.0   96.0    4.00    1.79
+ 2  Qwen 3.8 Flash         95.07   92.5   94.8   94.5   96.5   97.0    4.50    1.79
+ 3  GLM 5.3 Flash          94.93   98.0   87.3   92.8   98.0   98.5   11.17    4.84
+ 4  DeepSeek V4.1 Flash    94.53   95.0   93.0   96.3   90.0   98.3    8.33    3.19
+ 5  GLM 5.3                93.73   97.5   87.7   94.8   91.7   97.0    9.83    4.10
+ 6  DeepSeek V4 Flash      91.70   90.8   89.3   95.0   86.0   97.3   11.33    4.51
+ 7  MIMO v2.5              86.67   88.2   81.2   90.3   78.5   95.2   16.67    6.80
+ 8  GLM 5.2                86.50   84.3   91.2   87.3   71.2   98.5   27.33   10.08
+ 9  Qwen 3.6               68.77   82.8   70.2   65.5   46.0   79.3   36.83   14.49
+10  Gemma 4                63.00   70.7   54.2   65.3   35.2   89.7   54.50   20.17
 ```
 
 Monday Score is the arithmetic mean of the five scenario scores, equal weight,
 nothing else folded in. Range and sigma describe dispersion **across
-scenarios** and are published beside the score, never inside it.
+scenarios** and are published beside the score, never inside it. Run-to-run
+stability is a separate table in `leaderboard/overall/overall-v3.4.md`.
 
-Overall v0 (three scenarios) and v1 (four) are untouched and still build. They
-are different claims about different scenario sets, not superseded views of
-this one.
+Overall v0 (three scenarios), v1 (four), v2, and v3 through v3.3 are untouched
+and stay byte-frozen. They are different claims about different scenario sets
+and different suite versions, not superseded views of this one.
 
-**The 0.2 between first and second is not a ranking.** Qwen 3.8 Flash never
-drops below 92.5 on any Monday; GLM 5.3 Flash wins four of five and loses 11
-points on the second. See `analysis/capability-taxonomy-v0.2.md`.
+**Two caveats travel with this board.**
 
-**Serving caveat that travels with the result.** qwen3.6's three official
-monday-004 runs came from NaN, not Helmcode, which was unreachable during
-generation. NaN serves that model as a *reasoning* model and Helmcode does not,
-on a byte-identical request. Recorded as a scenario-scoped override in
-`models.yaml`.
+- **GPT-6 Astra was generated through the Codex CLI**, because no authenticated
+  Astra API route exists. The frozen prompts match by sha256 and each candidate
+  ran in its own ephemeral session, but everything the runtime does not expose
+  — temperature, top_p, caching, the output ceiling, the resolved model id,
+  finish reason, every token count — is recorded as `null` and never as a
+  number. For that row, non-truncation rests on the Codex completion events and
+  not on this harness.
+- **qwen3.6's three official monday-004 runs came from NaN, not Helmcode**,
+  which was unreachable during generation. NaN serves that model as a
+  *reasoning* model and Helmcode does not, on a byte-identical request.
+  Recorded as a scenario-scoped override in `models.yaml`.
+
+## The release line
+
+| Suite | Released | Board | What it added |
+|---|---|---|---|
+| v1.0 | 2026-08-31 | Overall v2 | Seven models, the first frozen suite |
+| v1.1 | 2026-09-03 | Overall v3 | The judge contract; GLM 5.3 |
+| v1.2 | 2026-09-10 | Overall v3.1 | DeepSeek V4.1 Flash, first battery |
+| v1.3 | 2026-09-11 | Overall v3.2 | GPT-6 Astra |
+| v1.4 | 2026-09-11 | Overall v3.3 | The DeepSeek reliability-prompt row |
+| v1.5 | 2026-09-11 | Overall v3.4 | DeepSeek re-measured; two batteries dropped |
+
+**Why DeepSeek was re-measured.** The gateway serves V4.1 Flash under the same
+id as V4 Flash and replaced the deployment in place rather than publishing a
+second id, so the same request reached different weights on different days.
+Measured on 2026-09-11, the five frozen prompts return 1.3x to 2.5x the
+reasoning of the 2026-09-10 battery at equal or better throughput. The 09-10
+battery therefore no longer describes what the id serves. It and its
+reliability-prompt variant are not members of v1.5; their runs, verdicts and
+v1.4 evaluations are untouched on disk.
+
+**The reliability prompt is on no board.** Re-run against the current
+deployment: +0.04 points under one blind judge, +1.57 under another, p = 0.42 on
+a permutation test. What moves is the floor — worst run 87.5 against 80.5, sd
+4.00 against 6.08 — which is what the prompt was written to do and is not what a
+mean can show. It stays under `experiments/`.
+
+## The v1.5 manifest over-claims
+
+Found 2026-09-12. **Nothing behind a published score is missing.** The manifest
+lists 30 evaluation files that are not on disk, and `evaluations` is
+`append_only`, so verification fails.
+
+The 30 split into two unrelated cases.
+
+1. **15 phantom paths for `deepseek-v4.1-flash-rerun-v1`.** The judge wrote
+   these at the unversioned `evaluations/<evaluator>/<scenario>/<slug>/`
+   default and they were re-stamped into `evaluations/v1.5/` afterwards — but
+   the manifest was cut from the pre-re-stamp scan, so it records both
+   locations. The 15 real files are present, identical, and also in the
+   manifest. Nothing is lost; the manifest names a path that no longer exists.
+
+2. **15 genuinely absent evaluations for `deepseek-v4.1-flash-probe`.** Same
+   cause, one release earlier — they entered the v1.3 manifest at the
+   unversioned path and were never written anywhere else. The probe's runs and
+   verdicts survive, so its scores are reconstructible in substance but not
+   byte-identically: `Evaluation.timestamp_utc` means a regenerated file cannot
+   match a recorded hash. **This battery is on no board**, so no published
+   number depends on it.
+
+v1.3 and v1.4 carry case 2 as well and do not verify either. v1.2 is the last
+release that verifies within policy.
+
+**This cannot be repaired by editing the manifest** — `SUITE-FROZEN.yaml` says
+so in its own header, and the digest is the reason. It needs a `v1.6` cut from
+a correct scan, which is a version bump and a decision, not a cleanup. Until
+then the defect is documented here and the board is unaffected.
+
+The bug itself is in the writer, not the manifest: `evaluations_root()` returns
+the versioned subtree only when a `suite_version` is passed, and the judging
+path that produced these two batteries did not pass one.
 
 ## What v1.0 repaired
 
@@ -90,31 +167,46 @@ rather than claimed.
    source was affected, so no `prompt_sha256` moved and no run was invalidated.
    `tests/test_line_endings.py`.
 
+**Defect 3 recurred and was repaired again on 2026-09-12.** 34 tracked files,
+all written by the DeepSeek probe scripts under `experiments/`, carried CRLF in
+the working tree while git stored LF. Nothing under a manifest group was
+affected and the repair produced no diff — the index was already correct. The
+test catches it because it reads bytes from disk, which is the only thing that
+sees it.
+
 ## Known, documented, not repaired
 
+- **The v1.5 manifest over-claims 30 evaluations.** Above. Needs a v1.6.
 - **`evaluator-opus5-v0.1` declares no `scenario_id`**, so scenario-to-evaluator
   resolution for monday-001 falls through to a hardcoded fallback. Read the
   evaluator from the published leaderboard instead, as
-  `challenge.official_evaluator` does. Recommended for v1.1 with a re-freeze.
+  `challenge.official_evaluator` does. Recommended for v1.1 with a re-freeze and
+  not done there; still open at v1.5, and the evaluator group is `immutable`, so
+  it needs a new evaluator id rather than an edit.
 - **`run --runs N` ignores archived run numbers.** `--reuse-valid-runs` handles
   it correctly.
 - **Penalties are excluded from capability profiles.** A scenario penalty is a
   global deduction; attributing it to a capability would mean inventing the
   attribution. qwen3.6's −7 monday-005 breach shows in its Monday Score and not
   in its `information_boundaries` profile.
+- **Capability profiles have not been published for the models added since
+  v1.1.** The board ranks them; `capabilities` does not cover them.
 
 ## Benchmarking a new model
 
 A Monday Score is the mean of a model's own runs, so a challenger needs 15
-generations and 354 criterion verdicts and moves no incumbent number.
+generations and 354 criterion verdicts and moves no incumbent number. Because
+`runs`, `verdicts`, `evaluations` and `leaderboards` are all `append_only`,
+publishing one is a suite release: the new evidence has to be a member of a
+version before a board can show it.
 
 ```
 mondaybench challenge --model <slug>       # what exists, what qualifies, what is left
-mondaybench verify-release --version 1.0   # frozen content intact, evidence may only grow
+mondaybench verify-release --version 1.5   # frozen content intact, evidence may only grow
 ```
 
 Full runbook in `docs/benchmarking-a-new-model.md`. New models publish as
-Overall **v2.1, v2.2, …** — same five scenarios, one more competitor. `v2` stays
+Overall **v3.5, v3.6, …** against a new suite version. Every earlier board stays
 byte-frozen.
 
 ## Things not to redo
@@ -123,7 +215,14 @@ byte-frozen.
   frozen; `verify-release` marks those groups `immutable`.
 - **Do not regenerate or rejudge an incumbent.** Judge state is not reproducible
   across sessions, and a mixed-vintage board is not one measurement.
-- **Do not rewrite `overall-v2.json`.** It is cited and hashed. Publish a
+- **Do not edit a released manifest to make verification pass.** Cut a new
+  version. `SUITE-FROZEN.yaml` says this in its own header, and the v1.5 defect
+  above is the case it was written for.
+- **Pass `suite_version` when judging a new battery.** Without it the
+  evaluations land at the v1.0 unversioned path, and a release cut before the
+  re-stamp records a path that will not exist afterwards. This is what broke
+  v1.3 through v1.5.
+- **Do not rewrite a published board.** They are cited and hashed. Publish a
   revision instead.
 - **Do not delete anything under `archive/`.** It holds every superseded
   battery — the earlier prompt hashes, the gateway cache hits, the
@@ -135,9 +234,11 @@ byte-frozen.
 - **`mondaybench results` writes files** and prints no summary. Run it only at
   publication time, or it overwrites the per-model cards.
 - **Do not write files with CRLF.** `tests/test_line_endings.py` will fail, and
-  it is right to.
+  it is right to. It has now caught this twice.
+- **Do not re-run a battery to explain a bad result before checking the
+  gateway.** Identical requests have returned 0/6 and 24/26 on the same day.
 
-## What v1.0 does not measure
+## What the suite does not measure
 
 Ranked in `analysis/capability-taxonomy-v0.2.md`:
 
@@ -154,10 +255,11 @@ Ranked in `analysis/capability-taxonomy-v0.2.md`:
 `RECOMMEND #006` — temporal reasoning under a moving clock, delivered
 multi-turn. Gaps 1 and 2 compose rather than compete. Not started.
 
-The v0.1 open item about **noise resistance not discriminating** is now
-confirmed at suite scale: `ownership_and_delegation` has never separated two
-models across three scenarios and 105 runs, and `action_safety` is 87%
-constant-pass. #006 should not spend points there.
+The v0.1 open item about **noise resistance not discriminating** was confirmed
+at v1.0 suite scale — `ownership_and_delegation` had never separated two models
+across three scenarios and 105 runs, and `action_safety` was 87%
+constant-pass — and three more models have not changed it. #006 should not
+spend points there.
 
 ---
 
