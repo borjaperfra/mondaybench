@@ -424,16 +424,23 @@ def write_suite_manifest(
     if manifest.notes:
         payload["notes"] = manifest.notes
 
+    # `newline="\n"` on both, as every other writer in this harness does. Without
+    # it Python translates on Windows and the release manifest - the one file
+    # whose whole job is to say what the tree contains - is itself written with
+    # line endings the tree forbids. That is how v1.5's two release files came to
+    # be CRLF in a working copy git stores as LF.
     manifest_path = directory / MANIFEST_NAME
     manifest_path.write_text(
         HEADER + yaml.safe_dump(payload, sort_keys=False, allow_unicode=True, width=100),
         encoding="utf-8",
+        newline="\n",
     )
 
     index_path = directory / f"v{manifest.version}.files.json"
     index_path.write_text(
         json.dumps({"suite_version": manifest.version, "files": index}, indent=2) + "\n",
         encoding="utf-8",
+        newline="\n",
     )
     return manifest_path, index_path
 

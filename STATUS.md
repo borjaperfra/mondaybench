@@ -1,29 +1,31 @@
-# MondayBench suite v1.6 — Overall v3.4, published 2026-09-12
+# MondayBench suite v1.7 — Overall v3.4, published 2026-09-12
 
 Five scenarios, ten models, 150 official runs, all judged, one board. The suite
-is released as `v1.6` and the board it carries is Overall v3.4, unchanged.
+is released as `v1.7` and the board it carries is Overall v3.4, unchanged.
 Everything below was verified on 2026-09-12 against this working tree, not
 remembered.
 
 ## Verified state
 
 ```
-pytest                                             970 passed
-verify-release --version 1.6 --strict              identical, 1,763 artefacts
+pytest                                             974 passed
+verify-release --version 1.7 --strict              identical, 1,764 artefacts
 freeze check, all five scenarios                   frozen content intact
 official runs behind the v3.4 board                150 / 150
 recorded evaluations, v1.5 subtree                 151
 criterion verdicts behind them                     3,560
 ```
 
-**v1.6 is a manifest repair, not a new measurement.** No run was generated, no
+**v1.6 and v1.7 are repairs, not new measurements.** No run was generated, no
 response was re-judged, no score moved, and the board is the same Overall v3.4
-that v1.5 published. What changed is that the manifest no longer pins 30
-evaluation paths that do not exist — see *The v1.5 defect, repaired in v1.6*
-below — plus the harness and test changes that stop it recurring. v1.5 remains
-published and remains non-verifying; that is the honest record.
+that v1.5 published. v1.6 stopped the manifest pinning 30 evaluation paths that
+do not exist — see *The v1.5 defect, repaired in v1.6 and v1.7* below. v1.7 is
+the same tree with the release writer fixed: it was the last writer in the
+harness not pinning LF, so on Windows it wrote the release manifest itself with
+line endings this repository forbids. v1.5 remains published and remains
+non-verifying; that is the honest record.
 
-The suite digest is recorded in `releases/v1.6/SUITE-FROZEN.yaml` and nowhere
+The suite digest is recorded in `releases/v1.7/SUITE-FROZEN.yaml` and nowhere
 else. It must not be quoted in a file the manifest hashes — this one included —
 or re-cutting the release changes the file that states the digest, which changes
 the digest.
@@ -93,6 +95,7 @@ and different suite versions, not superseded views of this one.
 | v1.4 | 2026-09-11 | Overall v3.3 | The DeepSeek reliability-prompt row |
 | v1.5 | 2026-09-11 | Overall v3.4 | DeepSeek re-measured; two batteries dropped |
 | v1.6 | 2026-09-12 | Overall v3.4 | Manifest repair; no measurement changed |
+| v1.7 | 2026-09-12 | Overall v3.4 | The release writer now writes LF |
 
 **Why DeepSeek was re-measured.** The gateway serves V4.1 Flash under the same
 id as V4 Flash and replaced the deployment in place rather than publishing a
@@ -109,7 +112,7 @@ a permutation test. What moves is the floor — worst run 87.5 against 80.5, sd
 4.00 against 6.08 — which is what the prompt was written to do and is not what a
 mean can show. It stays under `experiments/`.
 
-## The v1.5 defect, repaired in v1.6
+## The v1.5 defect, repaired in v1.6 and v1.7
 
 Found and repaired 2026-09-12. **Nothing behind a published score was ever
 missing.** The v1.5 manifest listed 30 evaluation files that are not on disk,
@@ -136,12 +139,13 @@ v1.3 and v1.4 carry case 2 as well and do not verify either. They stay that way:
 a published manifest is not edited to make a check pass, which is what
 `SUITE-FROZEN.yaml` says in its own header and why the digest exists.
 
-**The repair is `v1.6`, cut 2026-09-12 from a correct scan.** 1,763 artefacts,
-strict-identical. It carries the same scenarios, the same evidence and the same
-Overall v3.4 board; the 952 evaluations it pins are the 982 v1.5 claimed minus
+**The repair is `v1.6`, cut 2026-09-12 from a correct scan**, and `v1.7` the
+same day when the writer defect below turned up. 1,764 artefacts,
+strict-identical. They carry the same scenarios, the same evidence and the same
+Overall v3.4 board; the 952 evaluations they pin are the 982 v1.5 claimed minus
 the 30 that were never there. Nothing was regenerated and no score moved.
 
-**Three things now stop it recurring.**
+**Four things now stop it recurring.**
 
 - `evaluate --suite-version` writes a new battery straight into its suite
   subtree. The unversioned tree was the v1.0 default, and everything since has
@@ -156,6 +160,12 @@ the 30 that were never there. Nothing was regenerated and no score moved.
   v1.4 and v1.5 are named there as known-broken with their reason, and the test
   fails if one of them ever starts verifying — a stale exception teaches a
   reader that a check is expected to fail when it no longer is.
+- `tests/test_harness_writes_lf.py` reads every `write_text` call in the package
+  and fails on any that does not pin `newline="\n"`. `write_suite_manifest` was
+  the only one left, which is why v1.5's two release files were CRLF in a
+  working copy git stores as LF — and why `test_line_endings.py` could not catch
+  it until those files were committed. A writer is checked where it is written,
+  not where its output eventually lands.
 
 ## What v1.0 repaired
 
@@ -221,8 +231,8 @@ version before a board can show it.
 
 ```
 mondaybench challenge --model <slug>            # what exists, what qualifies, what is left
-mondaybench evaluate --scenario <id> --model <slug> --suite-version 1.7
-mondaybench verify-release --version 1.6        # frozen content intact, evidence may only grow
+mondaybench evaluate --scenario <id> --model <slug> --suite-version 1.8
+mondaybench verify-release --version 1.7        # frozen content intact, evidence may only grow
 ```
 
 Pass `--suite-version` to `evaluate` from the first run of the battery. It is
