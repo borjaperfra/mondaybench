@@ -8,41 +8,72 @@ One question:
 
 ## Scenarios
 
-**Five scenarios are published and official**, frozen together as suite
-[`v1.0`](releases/v1.0/RELEASE.md). Each is frozen independently and scored
-against its own rubric.
+**Five scenarios are published and official**, frozen together since suite
+v1.0. The current release is **suite v1.7**
+([`releases/v1.7/SUITE-FROZEN.yaml`](releases/v1.7/SUITE-FROZEN.yaml)): ten
+models, 150 official runs, 3,560 criterion verdicts. Each scenario is frozen
+independently and scored against its own rubric.
 
 | # | Scenario | Rubric | What it tests | Leader | Spread | Results |
 |---|---|---|---|---|---:|---|
-| 001 | **Back to Work** | 0.2 | Reconstructing a state that changed while you were away | GLM 5.3 Flash — 98.0 | 27.3 | [`leaderboard/`](leaderboard/leaderboard.md) |
-| 002 | **Moving Targets** | 0.2 | Release-path choice under hard scheduling, cross-source customer risk, arithmetic vs causality | Qwen 3.8 Flash — 94.8 | 40.7 | [`leaderboard/monday-002/`](leaderboard/monday-002/leaderboard.md) |
-| 003 | **Blockers** | 0.3 | Prioritisation and resource allocation against a hard limit | DeepSeek V4 Flash — 95.0 | 29.7 | [`leaderboard/monday-003/`](leaderboard/monday-003/leaderboard.md) |
-| 004 | **Numbers Don't Lie** | 0.3 | Reconciling contradictory data, and what leadership is told about it | GLM 5.3 Flash — 98.0 | 62.8 | [`leaderboard/monday-004/`](leaderboard/monday-004/leaderboard.md) |
-| 005 | **Read the Room** | 0.4 | One incident, four audiences, four different right answers | GLM 5.2 — 98.5 | 19.2 | [`leaderboard/monday-005/`](leaderboard/monday-005/leaderboard.md) |
+| 001 | **Back to Work** | 0.2 | Reconstructing a state that changed while you were away | GPT-6 Astra — 100.0 | 29.3 | [`leaderboard/v1.5/monday-001/`](leaderboard/v1.5/monday-001/leaderboard.md) |
+| 002 | **Moving Targets** | 0.2 | Release-path choice under hard scheduling, cross-source customer risk, arithmetic vs causality | GPT-6 Astra — 100.0 | 45.8 | [`leaderboard/v1.5/monday-002/`](leaderboard/v1.5/monday-002/leaderboard.md) |
+| 003 | **Blockers** | 0.3 | Prioritisation and resource allocation against a hard limit | GPT-6 Astra — 100.0 | 34.7 | [`leaderboard/v1.5/monday-003/`](leaderboard/v1.5/monday-003/leaderboard.md) |
+| 004 | **Numbers Don't Lie** | 0.3 | Reconciling contradictory data, and what leadership is told about it | GLM 5.3 Flash and GPT-6 Astra — 98.0 | 62.8 | [`leaderboard/v1.5/monday-004/`](leaderboard/v1.5/monday-004/leaderboard.md) |
+| 005 | **Read the Room** | 0.4 | One incident, four audiences, four different right answers | GLM 5.2 and GLM 5.3 Flash — 98.5 | 19.2 | [`leaderboard/v1.5/monday-005/`](leaderboard/v1.5/monday-005/leaderboard.md) |
 
 `monday-004` is the scenario that separates the field — 62.8 points between
-first and last, and the worst Monday for five of the seven models.
+first and last, and the worst Monday for six of the ten models.
+
+The scenario boards live under `leaderboard/v1.5/` because v1.6 and v1.7 are
+manifest repairs that carry the v1.5 evidence unchanged. The unversioned
+`leaderboard/<scenario>/` files are the v1.0 boards, kept byte-frozen.
 
 ## Overall
 
 A model's **Monday Score** is the arithmetic mean of its official score on every
 scenario in a release. Equal weight per scenario; nothing else folded in.
 
+**Current board: [Overall v3.4](leaderboard/overall/overall-v3.4.md)**, suite v1.5–v1.7.
+
+| # | Model | Monday Score | #001 | #002 | #003 | #004 | #005 |
+|---:|---|---:|---:|---:|---:|---:|---:|
+| 1 | GPT-6 Astra | **98.80** | 100.0 | 100.0 | 100.0 | 98.0 | 96.0 |
+| 2 | Qwen 3.8 Flash | **95.07** | 92.5 | 94.8 | 94.5 | 96.5 | 97.0 |
+| 3 | GLM 5.3 Flash | **94.93** | 98.0 | 87.3 | 92.8 | 98.0 | 98.5 |
+| 4 | DeepSeek V4.1 Flash | **94.53** | 95.0 | 93.0 | 96.3 | 90.0 | 98.3 |
+| 5 | GLM 5.3 | **93.73** | 97.5 | 87.7 | 94.8 | 91.7 | 97.0 |
+| 6 | DeepSeek V4 Flash | **91.70** | 90.8 | 89.3 | 95.0 | 86.0 | 97.3 |
+| 7 | MIMO v2.5 | **86.67** | 88.2 | 81.2 | 90.3 | 78.5 | 95.2 |
+| 8 | GLM 5.2 | **86.50** | 84.3 | 91.2 | 87.3 | 71.2 | 98.5 |
+| 9 | Qwen 3.6 | **68.77** | 82.8 | 70.2 | 65.5 | 46.0 | 79.3 |
+| 10 | Gemma 4 | **63.00** | 70.7 | 54.2 | 65.3 | 35.2 | 89.7 |
+
+Two routing caveats travel with this board. **GPT-6 Astra was generated through
+the Codex CLI**, because no authenticated API route exists; the frozen prompts
+match by SHA-256, but temperature, token counts and finish reason are recorded
+as `null`, never as numbers. **Qwen 3.6's three monday-004 runs came from NaN,
+not Helmcode**, which was unreachable during generation; the override is
+recorded in `models.yaml`.
+
 | Overall | Scenarios | Leader | Artefacts |
 |---|---|---|---|
 | [v0](leaderboard/overall/overall-v0.md) | 001–003 | Qwen 3.8 Flash | frozen |
 | [v1](leaderboard/overall/overall-v1.md) | 001–004 | Qwen 3.8 Flash | frozen |
-| **[v2](leaderboard/overall/overall-v2.md)** | **001–005** | **Qwen 3.8 Flash — 95.1** | current |
+| [v2](leaderboard/overall/overall-v2.md) | 001–005 | Qwen 3.8 Flash — 95.1 | frozen, suite v1.0 |
+| [v3](leaderboard/overall/overall-v3.md) – [v3.3](leaderboard/overall/overall-v3.3.md) | 001–005 | see each board | frozen, suites v1.1–v1.4 |
+| **[v3.4](leaderboard/overall/overall-v3.4.md)** | **001–005** | **GPT-6 Astra — 98.80** | **current, suites v1.5–v1.7** |
 
 Each release names its scenarios explicitly and pins their prompt hashes, so
-adding a scenario later cannot move a number already published. v0, v1 and v2
-are different claims about different scenario sets, not successive corrections
-of one. A model is ranked only if it has an official score on *every* scenario
-in the release.
+adding a scenario later cannot move a number already published. v0, v1, v2 and
+v3 are different claims about different scenario sets or suite versions, not
+successive corrections of one. A model is ranked only if it has an official
+score on *every* scenario in the release.
 
-Adding a **model** to a fixed scenario set publishes a revision — v2.1, v2.2 —
-and leaves `overall-v2.json` byte-frozen. See
-[`docs/benchmarking-a-new-model.md`](docs/benchmarking-a-new-model.md).
+Adding a **model** to a fixed scenario set is a new suite release plus an
+Overall revision — v3.5, v3.6 — and leaves every earlier board byte-frozen. See
+[`docs/benchmarking-a-new-model.md`](docs/benchmarking-a-new-model.md) and
+[`STATUS.md`](STATUS.md) for the release line.
 
 ## What each model is actually good at
 
@@ -184,9 +215,29 @@ raw response  ->  per-criterion label + evidence  ->  deterministic points  ->  
 > `model_id: claude-opus-5` fields in the evaluator config record *which model
 > reasoned about the responses*; they are not an instruction to call an API.
 
-`evaluator-opus5-v0.1` is the **official** evaluator for v0.1. The others ship
-alongside it for calibration and for anyone without an Anthropic key. They are
-never mixed in one ranking — that is what evaluator versioning is for.
+Each scenario has its own official evaluator, `evaluator-opus5-v0.1` through
+`evaluator-opus5-v0.5` for monday-001 through monday-005; since suite v1.1 a
+per-scenario judge contract (`mondaybench/contract.py`) pins what each one may
+change. The others below ship alongside them for calibration and for anyone
+without an Anthropic key. They are never mixed in one ranking — that is what
+evaluator versioning is for.
+
+**How much the judge moves a score has been measured, not assumed.** Two
+independent blind passes over the same 15 responses — same rubric, no access to
+each other's labels — give:
+
+| Battery | Monday Score, official judge / second blind judge | Record |
+|---|---|---|
+| Claude Opus 5 (off-board) | 97.10 / 97.07 — 96.9% of criteria agree, κ 0.74, no PASS↔FAIL | [`audits/blind-rejudge/inter-judge/`](audits/blind-rejudge/inter-judge/README.md) |
+| DeepSeek V4.1 Flash (on the board) | 93.03 / **94.53** — 317 of 354 criteria agree, largest single-run gap 10.0 | Opus labels in [`experiments/deepseek-v4.1-flash-rerun-v1/blind-verdicts/`](experiments/deepseek-v4.1-flash-rerun-v1/blind-verdicts/); GPT-5.6 Sol labels in `verdicts/monday-00N/deepseek-v4.1-flash-rerun-v1.verdicts.jsonl` |
+| DeepSeek V4.1 Flash, reliability prompt (off-board) | 90.33 / 93.47 | stated in [`overall-v3.3.md`](leaderboard/overall/overall-v3.3.md); the second pass's labels are not published |
+
+**The DeepSeek V4.1 Flash board row is scored from the second judge's labels**
+(GPT-5.6 Sol, 94.53); every other row is scored by the official Opus judge, which
+gives this battery 93.03. The aggregate can agree while individual runs do not:
+on the Opus battery the largest single-run disagreement was 1.5 points, on the
+DeepSeek one 10.0. Read the board with that in mind — gaps of one or two points
+between adjacent models are not established by this suite.
 
 Measured judge cost, not estimated: one seven-model sweep is roughly **465k input
 and 35k output tokens**, or about 21 judge calls per run.
@@ -293,212 +344,48 @@ the configuration expected it.
 
 ## Limitations
 
-MondayBench v0.1:
+Suite v1.7, five scenarios, ten models. The full list is in
+[`docs/methodology.md`](docs/methodology.md#limitations); the ones that matter
+most when reading the board:
 
-- is **one scenario**;
-- is **English-only**;
-- reflects office / knowledge-work tasks, not engineering, clinical, legal or physical work;
-- uses an **LLM judge** for semantic classification, with human audit for the first official release;
-- measures cost, latency and throughput but **excludes them from the score**;
-- should **not** be treated as a measurement of general intelligence.
+- **The top of the board is compressed.** Six models sit between 91.7 and 98.8,
+  GPT-6 Astra scores 100 on three scenarios, and none of the suite's 500 points
+  is failed by every model — so the suite carries no evidence about where the
+  frontier is.
+- **One official judge.** Every board label comes from the same judge. Two
+  blind cross-checks have been run (see *The judge*); they disagree by up to
+  3.14 points on a Monday Score.
+- **Three runs per scenario.** A scenario score rests on three samples, and some
+  models move by more than 15 points between runs of the same prompt.
+- **Single-turn.** Every scenario is one prompt and one response.
+- **English only**, and **office knowledge work** only.
+- **Cost, latency and throughput are measured but excluded from the score.**
+- **Every input is public**, so future models may have seen it in training.
+  There is no held-out set.
+- **Not a measure of general intelligence.**
 
 ## Layout
 
 ```
-scenarios/monday-001/   canonical benchmark inputs, rubric, ground truth
-evaluators/             judge configuration, versioned
+scenarios/monday-00N/   canonical inputs, rubric, ground truth, FROZEN.yaml
+evaluators/             judge configuration, versioned and immutable
+verdicts/               recorded judge labels, one file per scenario and model
 mondaybench/            the implementation
 runs/                   raw model responses (immutable evidence)
-evaluations/            judge classifications + deterministic scores
-leaderboard/            leaderboard.json and leaderboard.csv
+evaluations/            scored evaluations, versioned by suite
+leaderboard/            scenario boards (v1.5/ is current) and overall/ boards
+releases/               one frozen manifest per suite version
+taxonomy/, analysis/    capability taxonomy and profiles
+audits/, experiments/   cross-judge audits and off-board experiments
+archive/                every superseded battery; never deleted
 tests/                  offline test suite (no credentials needed)
-IMPLEMENTATION.md       the full v0.1 specification
+STATUS.md               where the suite stands, and the release line
 ```
 
 ## License
 
 MIT. The scenario, rubric and ground truth are published as an open benchmark.
 
----
-
-# Methodology
-
-## What MondayBench measures
-
-One realistic task, scored on six axes at once. The model receives a weekend's
-accumulation of workplace information and must produce a Monday briefing: what
-happened, what needs attention today in priority order, what is informational,
-and what is unclear.
-
-The difficulty is not retrieval. The material contains decisions that were
-reversed, work already reassigned to someone else, an incident already closed,
-speculation with no supporting data, and ordinary chatter — mixed in with the
-three things that genuinely need doing. A model that extracts urgent-sounding
-keywords scores badly. A model that reconstructs the current state scores well.
-
-## Why three runs
-
-**Because one run does not represent a model.** This is not a theoretical
-concern; it was measured during calibration.
-
-`glm5.3-flash` was run twice on the same scenario at `temperature: 0`. On the
-first run it reasoned about Umbrella's error *rate* explicitly — "163 API errors
-(~0.17% error rate vs <0.01% for every other customer)" — a PASS on
-`umbrella_error_rate`. On the second run, same model, same prompt, same settings,
-it compared latencies across customers but never derived Umbrella's own rate — a
-PARTIAL. One criterion, 1.5 points, flipped purely on run-to-run variance.
-
-A single run would have reported that model as either capable or incapable of
-rate reasoning, and either report would have been half wrong. Three runs with a
-published `run_range` show the reader how much to trust the number.
-
-Models are not deterministic even at `temperature: 0`, and thinking models are
-less so. The official score is therefore the **plain mean of three runs**. The
-worst run is not dropped, best-of-N is not used, and min, max, `run_range` and
-standard deviation are published beside the mean so a lucky run is visible as
-one.
-
-## How the score is calculated
-
-```
-raw response
-  → judge assigns PASS / PARTIAL / FAIL per criterion, with evidence
-  → scoring.py converts labels to points (deterministic Python, no model)
-  → dimensions sum to a base score out of 100
-  → global penalties subtract, capped at −20, floored at 0
-  → Monday Score = mean of the three runs
-```
-
-The judge is **never asked for a number**. It classifies 19 atomic criteria
-against fixed definitions and returns the evidence in the response that
-justifies each label. Every point is assigned by `mondaybench/scoring.py`, which
-imports no provider and calls no model.
-
-Two further judge calls run per response: one classifying six named false-action
-categories, and one identifying material hallucinations, prohibited actions and
-self-contradictions. For penalties the judge classifies each candidate with a
-`materially_misleading` boolean rather than being asked to stay silent about what
-it noticed; Python drops the ones marked false and keeps them visible under
-`penalties.dismissed`. That design came from calibration, where the judge
-returned penalties whose own stated reasons read "Not a violation-level issue on
-its own" and still cost 5 points each.
-
-| Dimension | Max |
-|---|---:|
-| Action detection | 25 |
-| State reconstruction | 25 |
-| Prioritization | 15 |
-| Data reasoning | 15 |
-| Uncertainty | 10 |
-| Noise resistance | 10 |
-| **Base** | **100** |
-
-## Why TTFA and latency sit outside the score
-
-The Monday Score measures task quality only. Speed and cost are recorded next to
-it and never folded into it, because combining them would bury a judgement the
-reader should make themselves.
-
-The calibration data shows exactly why. `glm5.3-flash` scores highest — and takes
-**about two minutes before it emits its first visible word**, because it spends
-that budget thinking. `glm5.2` scores several points lower and starts answering
-in about five seconds. Whether those points are worth two minutes of blank screen
-depends entirely on the reader's situation, and no weighting we invented would be
-honest about that.
-
-So the leaderboard publishes both, separately:
-
-- **TTFA** — time to first *answer* token: what a user actually waits.
-- **TTFT** — time to first token of any kind, the API-level metric. For a
-  thinking model, the gap between TTFT and TTFA *is* the thinking time.
-- **Total latency** and **cost per run**, when the provider reports a price.
-
-Medians, not means: with three runs one outlier drags a mean somewhere no run
-actually was.
-
-The only stability metric is `run_range = max_score − min_score`. There is
-deliberately no "efficiency score" and no combined speed/quality number.
-
-## The official evaluator
-
-`evaluator-opus5-v0.1` pins the judge model (`claude-opus-5`), the provider route
-(native Anthropic Messages API), the rubric (`rubric-0.2.yaml`), the generation
-parameters and the expected output shape. Every evaluation records the exact
-judge `model_id`, a `prompt_fingerprint` of the judge instructions, and the
-`rubric_version`.
-
-The model behind that id never changes. A different judge model, a different
-route, or an edited judge prompt each require a new evaluator id, and the
-leaderboard refuses to aggregate across any of them.
-
-One caveat stated openly: Claude Opus 5 rejects `temperature`, so the requested
-`temperature: 0` cannot take effect. The provider drops it and records
-`"temperature"` in `judge.unsupported_parameters` on every evaluation. The judge
-is therefore not bit-deterministic, which is why verdicts are stored as
-artifacts — a published evaluation is reproducible as a *record*, and disputes
-are settled by reading the stored evidence.
-
-## Everything is public
-
-Scenario inputs, the assembled prompt and its SHA-256, the ground truth, the
-rubric, every raw model response, every judge label with its evidence and
-reasoning, the scoring code, and the leaderboard. Any published number traces
-back through the chain above, and every file it depends on is in this repository.
-
-`scenarios/monday-001/FROZEN.yaml` records the SHA-256 of every canonical file.
-`mondaybench validate` fails if any of them changes, and
-`mondaybench leaderboard --official` refuses to publish against drifted content.
-
-## Limitations of monday-001
-
-- **One scenario.** A single task, however realistic, is not a general measure.
-- **English only.**
-- **Office knowledge work.** Nothing here tests engineering, clinical, legal or
-  physical work.
-- **An LLM judge** does the semantic classification. Human audit covered the
-  calibration phase, and the judge's own reasoning is published for every label
-  so a disputed call can be checked rather than trusted.
-- **No headroom at the top.** Calibration found the scenario separates models
-  well through the middle of the range but compresses at the ceiling. See
-  `CALIBRATION.md`.
-- **Noise resistance does not discriminate.** Every model in the calibration
-  sweep scored 10/10. The false-action categories catch a failure mode these
-  models simply do not have.
-- **Not a measure of general intelligence.** It answers one question: can this
-  model handle your Monday?
-
-## Reproducing the official evaluation
-
-```bash
-# 1. Verify the published scenario has not drifted
-mondaybench freeze --scenario monday-001 --check
-mondaybench validate --scenario monday-001 --evaluator evaluator-opus5-v0.1
-
-# 2. See what already counts as official and what is missing
-mondaybench plan --scenario monday-001 --runs 3
-
-# 3. Reach three official runs per model, generating only the shortfall
-mondaybench run --scenario monday-001 \
-    --models glm5.3-flash,glm5.2,mimo-v2.5,deepseek-v4-flash,qwen3.8-flash,qwen3.6,gemma4 \
-    --runs 3 --reuse-valid-runs
-
-# 4. Replay the recorded judge labels (no API key, no credits)
-mondaybench evaluate --scenario monday-001 \
-    --models glm5.3-flash,glm5.2,mimo-v2.5,deepseek-v4-flash,qwen3.8-flash,qwen3.6,gemma4 \
-    --evaluator evaluator-opus5-v0.1 --review
-
-# 5. Publish, with every integrity gate enforced
-mondaybench leaderboard --scenario monday-001 \
-    --evaluator evaluator-opus5-v0.1 --official --runs 3
-mondaybench results --scenario monday-001 --evaluator evaluator-opus5-v0.1
-```
-
-`--reuse-valid-runs` counts existing official runs, generates only the shortfall,
-never reuses a run number, and rejects any stored run whose prompt hash, model
-id, temperature, output budget or provider does not match the published
-configuration — printing the reason for each rejection.
-
-`--official` writes nothing unless every gate passes: three official runs per
-model, one prompt hash, one rubric version, one judge model and prompt
-fingerprint, no integrity warning, no missing evaluation, and scores that
-re-derive correctly from their own dimensions and penalties.
+The full methodology — why three runs, how a score is computed, the official
+evaluator, generation limits and reproduction — is in
+[`docs/methodology.md`](docs/methodology.md).
