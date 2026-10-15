@@ -1,15 +1,15 @@
-# MondayBench suite v1.10 — Overall v3.5, published 2026-10-15
+# MondayBench suite v1.11 — Overall v3.5, published 2026-10-15
 
 Five scenarios, thirteen models, 195 official runs, all judged, one board. The
-suite is released as `v1.10` and the board it carries is Overall v3.5. Everything
+suite is released as `v1.11` and the board it carries is Overall v3.5. Everything
 below was verified on 2026-10-15 against this working tree, not remembered.
 
 ## Verified state
 
 ```
 pytest                                             985 passed
-verify-release --version 1.10 --strict             identical, 2,042 artefacts
-verify-release --version 1.9                       verified within policy
+verify-release --version 1.11 --strict             identical, 2,042 artefacts
+verify-release --version 1.10                      verified within policy
 freeze check, all five scenarios                   frozen content intact
 official runs behind the v3.5 board                195 / 195
 recorded evaluations, v1.10 subtree                196
@@ -184,6 +184,7 @@ and different suite versions, not superseded views of this one.
 | v1.8 | 2026-10-15 | Overall v3.4 | Documentation brought up to v1.7 |
 | v1.9 | 2026-10-15 | Overall v3.4 | Gemini 3.8 Flash re-judged with criterion labels, and its capability profile |
 | v1.10 | 2026-10-15 | Overall v3.5 | Claude Opus 5, Claude Fable 5.1 and Gemini 3.8 Flash as official rows |
+| v1.11 | 2026-10-15 | Overall v3.5 | Cost artefacts and the new-model runbook brought up to v1.10; no measurement changed |
 
 **Why DeepSeek was re-measured.** The gateway serves V4.1 Flash under the same
 id as V4 Flash and replaced the deployment in place rather than publishing a
@@ -323,8 +324,8 @@ version before a board can show it.
 
 ```
 mondaybench challenge --model <slug>            # what exists, what qualifies, what is left
-mondaybench evaluate --scenario <id> --model <slug> --suite-version 1.11
-mondaybench verify-release --version 1.10       # frozen content intact, evidence may only grow
+mondaybench evaluate --scenario <id> --model <slug> --suite-version 1.12
+mondaybench verify-release --version 1.11       # frozen content intact, evidence may only grow
 ```
 
 Pass `--suite-version` to `evaluate` from the first run of the battery. It is
