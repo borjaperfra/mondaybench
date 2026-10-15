@@ -1,20 +1,26 @@
-# MondayBench suite v1.7 — Overall v3.4, published 2026-09-12
+# MondayBench suite v1.8 — Overall v3.4, published 2026-10-15
 
 Five scenarios, ten models, 150 official runs, all judged, one board. The suite
-is released as `v1.7` and the board it carries is Overall v3.4, unchanged.
-Everything below was verified on 2026-09-12 against this working tree, not
+is released as `v1.8` and the board it carries is Overall v3.4, unchanged.
+Everything below was verified on 2026-10-15 against this working tree, not
 remembered.
 
 ## Verified state
 
 ```
 pytest                                             974 passed
-verify-release --version 1.7 --strict              identical, 1,764 artefacts
+verify-release --version 1.8 --strict              identical, 1,764 artefacts
 freeze check, all five scenarios                   frozen content intact
 official runs behind the v3.4 board                150 / 150
 recorded evaluations, v1.5 subtree                 151
 criterion verdicts behind them                     3,560
 ```
+
+**v1.8 is documentation, not a measurement.** The README, `docs/methodology.md`
+and `docs/benchmarking-a-new-model.md` were still written for v1.0 — seven
+models, Overall v2 as current, a judge whose variance "cannot be estimated".
+v1.8 brings them up to this board and to what the cross-judge checks actually
+show (see *The judge* below). No run, label, evaluation or score changed.
 
 **v1.6 and v1.7 are repairs, not new measurements.** No run was generated, no
 response was re-judged, no score moved, and the board is the same Overall v3.4
@@ -70,7 +76,16 @@ Overall v0 (three scenarios), v1 (four), v2, and v3 through v3.3 are untouched
 and stay byte-frozen. They are different claims about different scenario sets
 and different suite versions, not superseded views of this one.
 
-**Two caveats travel with this board.**
+**Three caveats travel with this board.**
+
+- **DeepSeek V4.1 Flash is scored from a different judge's labels.** Its
+  battery was judged blind twice: 93.03 by the Opus session judge that scored
+  every other row (labels in
+  `experiments/deepseek-v4.1-flash-rerun-v1/blind-verdicts/`), and 94.53 by
+  GPT-5.6 Sol (labels in `verdicts/monday-00N/deepseek-v4.1-flash-rerun-v1.verdicts.jsonl`).
+  The board publishes 94.53. Under the Opus labels the row would rank 5th, below
+  GLM 5.3. Kept as published and declared, by decision on 2026-10-15; the site
+  brackets positions 2–5 as one group whose order is not established.
 
 - **GPT-6 Astra was generated through the Codex CLI**, because no authenticated
   Astra API route exists. The frozen prompts match by sha256 and each candidate
@@ -96,6 +111,7 @@ and different suite versions, not superseded views of this one.
 | v1.5 | 2026-09-11 | Overall v3.4 | DeepSeek re-measured; two batteries dropped |
 | v1.6 | 2026-09-12 | Overall v3.4 | Manifest repair; no measurement changed |
 | v1.7 | 2026-09-12 | Overall v3.4 | The release writer now writes LF |
+| v1.8 | 2026-10-15 | Overall v3.4 | Documentation brought up to v1.7 |
 
 **Why DeepSeek was re-measured.** The gateway serves V4.1 Flash under the same
 id as V4 Flash and replaced the deployment in place rather than publishing a
@@ -107,8 +123,10 @@ reliability-prompt variant are not members of v1.5; their runs, verdicts and
 v1.4 evaluations are untouched on disk.
 
 **The reliability prompt is on no board.** Re-run against the current
-deployment: +0.04 points under one blind judge, +1.57 under another, p = 0.42 on
-a permutation test. What moves is the floor — worst run 87.5 against 80.5, sd
+deployment: +1.57 points under the Opus judge (labels in
+`experiments/deepseek-v4.1-flash-rerun-guardrail-v1/claude-blind-verdicts/`),
++0.04 under GPT-5.6 Sol (whose guardrail labels are not in this repository),
+p = 0.42 on a permutation test. What moves is the floor — worst run 87.5 against 80.5, sd
 4.00 against 6.08 — which is what the prompt was written to do and is not what a
 mean can show. It stays under `experiments/`.
 
@@ -231,8 +249,8 @@ version before a board can show it.
 
 ```
 mondaybench challenge --model <slug>            # what exists, what qualifies, what is left
-mondaybench evaluate --scenario <id> --model <slug> --suite-version 1.8
-mondaybench verify-release --version 1.7        # frozen content intact, evidence may only grow
+mondaybench evaluate --scenario <id> --model <slug> --suite-version 1.9
+mondaybench verify-release --version 1.8        # frozen content intact, evidence may only grow
 ```
 
 Pass `--suite-version` to `evaluate` from the first run of the battery. It is
@@ -274,6 +292,25 @@ byte-frozen.
   it is right to. It has now caught this twice.
 - **Do not re-run a battery to explain a bad result before checking the
   gateway.** Identical requests have returned 0/6 and 24/26 on the same day.
+
+## The judge
+
+Every board label except DeepSeek V4.1 Flash's comes from one judge: Claude
+Opus 5 reading each response in a recorded session. Two cross-checks have
+criterion-level labels on disk:
+
+| Battery | Opus judge | Second blind judge | Agreement | Largest run gap |
+|---|---:|---:|---|---:|
+| Claude Opus 5 (off-board) | 97.10 | 97.07 (GPT-5.6 Sol) | 343 / 354, κ 0.74 | 1.5 |
+| DeepSeek V4.1 Flash (board row) | 93.03 | 94.53 (GPT-5.6 Sol) | 317 / 354 | 10.0 |
+
+Two more pairs are stated without their second label set:
+`overall-v3.3.md` gives 90.33 / 93.47 on the reliability-prompt battery, and the
+guardrail figures above. Quote them as stated, not as checked.
+
+**What this supports.** No evidence of self-judge inflation on the Opus battery.
+On a board row the choice of judge moved the Monday Score by 1.50 and one run by
+10.0, so positions 2–5 (1.34 points apart) are not ordered by this suite.
 
 ## What the suite does not measure
 

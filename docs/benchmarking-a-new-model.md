@@ -1,10 +1,16 @@
 # Benchmarking a new model against the frozen suite
 
-**Applies to:** MondayBench suite v1.0 — monday-001 … monday-005, 500 rubric
-points, 7 incumbent models.
+**Applies to:** MondayBench suite v1.7 — monday-001 … monday-005, 500 rubric
+points, 10 incumbent models, current board Overall v3.4.
 
-The suite is closed. This is how an eighth model gets a Monday Score **without
+The suite is closed. This is how an eleventh model gets a Monday Score **without
 regenerating or rejudging a single incumbent run.**
+
+**Publishing a model is a suite release.** `runs`, `verdicts`, `evaluations` and
+`leaderboards` are `append_only` in the release manifest, and a scenario board is
+a ranking — it cannot gain a row without changing. So the new evidence goes into
+suite **v1.8**, the board becomes Overall **v3.5**, and every earlier release and
+board stays byte-frozen. Below, `<N>` is the next suite version (1.8 today).
 
 ---
 
@@ -54,7 +60,7 @@ per platform.
 already dirty you will not be able to tell your drift from someone else's.
 
 ```bash
-uv run mondaybench verify-release --version 1.0 --strict
+uv run mondaybench verify-release --version 1.7 --strict
 ```
 
 **3. Look at where you stand.** This is safe to run at any point and generates
@@ -115,12 +121,25 @@ leaderboard, not a fallback:
 | monday-004 | `evaluator-opus5-v0.4` | `rubric-0.3.yaml` (0.3) | 27 |
 | monday-005 | `evaluator-opus5-v0.5` | `rubric-0.4.yaml` (0.4) | 31 |
 
-Verdicts are appended to `verdicts/<scenario>/…` and replayed:
+Write the challenger's labels as a standalone
+`verdicts/<scenario>/<slug>.verdicts.jsonl`. For monday-001 … monday-003 a
+scenario generator (`verdicts/<scenario>/_generate.py`) can produce that file,
+but **do not commit edits to a generator** — it is `append_only` evidence.
+Revert the edit and keep only the `.jsonl` it produced.
+
+Then replay, **writing straight into the next suite's subtree**:
 
 ```bash
 uv run mondaybench evaluate --scenario monday-001 --model <slug> \
-    --evaluator evaluator-opus5-v0.1 --verdicts
+    --evaluator evaluator-opus5-v0.1 \
+    --verdicts verdicts/monday-001/<slug>.verdicts.jsonl \
+    --suite-version <N>
 ```
+
+Pass `--suite-version` from the first evaluation. Without it the evaluation
+lands at the unversioned v1.0 path and has to be re-stamped later — and a
+release cut between the two pins a path that stops existing. That is exactly
+what left v1.3, v1.4 and v1.5 permanently non-verifying (see `STATUS.md`).
 
 **Judge the challenger under the same rubric version as the incumbents.** If a
 rubric is revised, that is a new scenario version and a new Overall version —
@@ -129,21 +148,28 @@ not a revision. Never rejudge incumbents to "match" a challenger.
 ### Step 4 — rebuild each scenario leaderboard
 
 ```bash
-uv run mondaybench leaderboard --scenario monday-001 --official
+uv run mondaybench leaderboard --scenario monday-001 --official \
+    --evaluator evaluator-opus5-v0.1 \
+    --models <the ten incumbent slugs>,<slug> --suite-version <N>
 ```
 
-This appends a row. It recomputes every row from the same stored evaluations,
+Pass `--evaluator` explicitly for monday-001: `evaluator-opus5-v0.1` declares no
+scenario, so resolution would fall through to a fallback. Pass `--models`
+explicitly too: without it the command uses the hardcoded `OFFICIAL_MODELS` in
+`cli_official.py`, which is the original seven.
+
+This adds a row. It recomputes every row from the same stored evaluations,
 so incumbent scores must come out identical — step 6 checks that they did.
 
 ### Step 5 — publish an Overall revision
 
-Overall v2 is **byte-frozen forever**. A new model is published as a *revision*
-of the same scenario set:
+Overall v3.4 is **byte-frozen forever**. A new model is published as the next
+*revision* of the same scenario set, pinned to the new suite:
 
 ```
 leaderboard/overall/
-  overall-v2.json     7 models   frozen, still the citable artifact
-  overall-v2.1.json   8 models   same 5 scenarios, same arithmetic
+  overall-v3.4.json   10 models   frozen, still the citable artifact
+  overall-v3.5.json   11 models   same 5 scenarios, same arithmetic, suite <N>
 ```
 
 Get the block to append to `overall-releases.yaml`:
@@ -160,7 +186,7 @@ scenario set or aggregation differs from the release it extends.
 Flip `status: draft` → `released` only after step 6, then:
 
 ```bash
-uv run mondaybench overall --version 2.1
+uv run mondaybench overall --version 3.5
 ```
 
 ### Step 6 — verify nothing moved
@@ -169,7 +195,7 @@ Four checks. Run all four.
 
 ```bash
 # 1. Frozen content is untouched; evidence grew but was not rewritten.
-uv run mondaybench verify-release --version 1.0
+uv run mondaybench verify-release --version 1.7
 #    scenarios / evaluators / taxonomy -> must be "identical"
 #    runs / verdicts / evaluations / leaderboards -> "N added" is expected
 
@@ -181,11 +207,27 @@ for s in ['monday-001','monday-002','monday-003','monday-004','monday-005']:
 print('sample provenance clean')"
 
 # 3. Every incumbent's Monday Score is unchanged.
-uv run pytest tests/test_overall_v2.py tests/test_suite_release.py -q
+uv run pytest tests/test_overall_v2.py tests/test_deepseek_v41_single_battery.py \
+    tests/test_suite_release.py tests/test_latest_release_verifies.py -q
 
 # 4. The full suite.
 uv run pytest -q
 ```
+
+Then, and only then, cut the release — **last**, after every evaluation is where
+it will stay:
+
+```bash
+uv run mondaybench release --version <N>
+uv run mondaybench verify-release --version <N> --strict
+```
+
+`tests/test_latest_release_verifies.py` fails if the newest release pins a path
+that is not on disk or misses an evaluation that is.
+
+Expect the tests that hardcode the incumbent count to need the new model added
+(`test_capabilities`, `test_sample_provenance`, `test_cli_endpoints`). The test
+that must stay green untouched are the ones in check 3, which pin incumbent scores.
 
 If check 1 reports a **changed** or **missing** file under `runs`, `verdicts`,
 `evaluations` or `leaderboards`, stop. Something overwrote incumbent evidence,
@@ -207,7 +249,9 @@ does not change, because the mapping is per-criterion, not per-model.
 | Regenerate an incumbent run | It is published evidence. A re-run is a different sample and silently changes a published score. |
 | Rejudge an incumbent | Judge state is not reproducible across sessions. A mixed-vintage board is not one measurement. |
 | Edit a scenario, rubric, ground truth or evaluator | Those are `immutable` in the release manifest. Changing one invalidates all five batteries, not just the challenger's. |
-| Rewrite `overall-v2.json` | It is cited and hashed. Publish `v2.1`. |
+| Rewrite a published Overall board | It is cited and hashed. Publish the next revision. |
+| Cut a release before every evaluation is in its final path | The manifest pins where things were, under `append_only`, and the release never verifies. |
+| Edit a released manifest to make verification pass | Cut a new version instead. |
 | Promote calibration runs to official | `check_calibration_overlap` and `check_sample_provenance` will refuse, and correctly. |
 | Average a model over the scenarios it finished | Rewards not competing. A model ranks only with an official score on all five. |
 
@@ -221,7 +265,7 @@ uv run mondaybench challenge --model <slug>
 
 reports `generations needed`, `runs to judge` and `criterion verdicts` for the
 whole campaign — including runs that do not exist yet, which is what a plan
-needs. For a model starting from zero against v1.0 that is **15 / 15 / 354**.
+needs. For a model starting from zero against the suite that is **15 / 15 / 354**.
 
 Generation cost varies by model and is reported per run in
 `provider_metadata.cost_details` where the gateway supplies it. Cost never
@@ -234,5 +278,5 @@ affects the Monday Score and is published beside it.
 Report it beside the score, never inside it. If the model is served
 intermittently, or a run needed several attempts, that belongs in
 `mondaybench serving` and in the release note — as qwen3.6's NaN caveat is
-recorded for Overall v1 and v2. A model that scores well but serves badly is a
+recorded for every Overall board since v1. A model that scores well but serves badly is a
 different fact from a model that scores badly, and the score must not blur them.

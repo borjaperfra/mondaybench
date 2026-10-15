@@ -121,9 +121,15 @@ deliberately no "efficiency score" and no combined speed/quality number.
 > `model_id: claude-opus-5` fields in the evaluator config record *which model
 > reasoned about the responses*; they are not an instruction to call an API.
 
-`evaluator-opus5-v0.1` pins the judge model (`claude-opus-5`), the provider route
-(native Anthropic Messages API), the rubric (`rubric-0.2.yaml`), the generation
-parameters and the expected output shape. Every evaluation records the exact
+Each scenario has its own official evaluator: `evaluator-opus5-v0.1` through
+`evaluator-opus5-v0.5` for monday-001 through monday-005. Since suite v1.1 a
+per-scenario judge contract (`mondaybench/contract.py`) hashes only what applies
+to one scenario, rubric and evaluator, so adding a penalty type for one scenario
+no longer changes another scenario's judge stamp.
+
+`evaluator-opus5-v0.1`, for example, pins the judge model (`claude-opus-5`), the
+provider route (native Anthropic Messages API), the rubric (`rubric-0.2.yaml`),
+the generation parameters and the expected output shape. Every evaluation records the exact
 judge `model_id`, a `prompt_fingerprint` of the judge instructions, and the
 `rubric_version`.
 
@@ -272,7 +278,7 @@ battery. Two things follow:
 
 ## Limitations
 
-Suite v1.0, five scenarios.
+Suite v1.7, five scenarios, ten models.
 
 - **Five scenarios, one Monday each.** Broader than one task, still narrow. Nine
   of the 22 capabilities in the taxonomy rest on a single scenario.
@@ -281,9 +287,12 @@ Suite v1.0, five scenarios.
   new information arrives mid-task, or when the model should ask before acting.
   This is the largest structural gap and no rubric change closes it.
 - **Nothing is out of reach.** Zero of the 500 points are failed by every model,
-  so the suite carries no evidence about where the frontier is.
-- **Seven models, three runs each.** A "range" is a max-minus-min over seven
-  points; a scenario score rests on three samples.
+  so the suite carries no evidence about where the frontier is. The top is
+  compressed: six models sit between 91.7 and 98.8, and GPT-6 Astra scores 100
+  on three of the five scenarios.
+- **Ten models, three runs each.** A scenario score rests on three samples,
+  and some models move by more than 15 points between runs of the same prompt
+  (see the run-stability table in `leaderboard/overall/overall-v3.4.md`).
 - **English only.**
 - **Office knowledge work.** Nothing here tests engineering, clinical, legal or
   physical work.
@@ -300,9 +309,26 @@ Suite v1.0, five scenarios.
   `action_safety` is 87% constant-pass. The false-action categories catch a
   failure mode these models do not have.
 - **The judge is recorded, not sampled.** Every verdict was produced in-session
-  and is replayed from disk. Scores reproduce exactly; judge variance cannot be
-  estimated from these artefacts, and re-judging would be a new measurement
-  rather than a reproduction.
+  and is replayed from disk. Scores reproduce exactly, but re-judging in the
+  same session would be anchored and measures nothing. Judge variance has
+  instead been measured with a second judge working blind from the same pack:
+  on the Claude Opus 5 battery, GPT-5.6 Sol landed 0.03 points away (96.9% of
+  criteria agree, κ 0.74, no PASS↔FAIL; `audits/blind-rejudge/inter-judge/`).
+  Opus 5 is not on the board. One board row has been cross-judged: DeepSeek V4.1
+  Flash, where the Opus judge gives 93.03 and GPT-5.6 Sol, judging blind, 94.53
+  (317 of 354 criteria agree; largest single-run gap 10.0). **That row is
+  published from Sol's labels; every other row from the Opus judge's.**
+  `overall-v3.3.md` also states a second blind pass 3.14 points away on an
+  off-board DeepSeek battery; its labels are not published. Adjacent positions a
+  point or two apart are not separated by this suite.
+- **One official judge for every board label.** The same judge built the
+  harness and labelled every incumbent. The audit trail and the blind
+  cross-checks mitigate that; they do not remove it.
+- **Generation routes are not uniform.** GPT-6 Astra ran through the Codex CLI
+  with its sampling parameters unobservable, and Qwen 3.6's monday-004 runs came
+  from a different provider. Both are recorded, not hidden.
+- **Every input is public.** There is no held-out set, so a future model may
+  have seen these scenarios in training.
 - **Not a measure of general intelligence.** It answers one question: can this
   model handle your Monday?
 
