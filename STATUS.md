@@ -1,7 +1,7 @@
-# MondayBench suite v1.8 — Overall v3.4, published 2026-10-15
+# MondayBench suite v1.9 — Overall v3.4, published 2026-10-15
 
 Five scenarios, ten models, 150 official runs, all judged, one board. The suite
-is released as `v1.8` and the board it carries is Overall v3.4, unchanged.
+is released as `v1.9` and the board it carries is Overall v3.4, unchanged.
 Everything below was verified on 2026-10-15 against this working tree, not
 remembered.
 
@@ -9,12 +9,22 @@ remembered.
 
 ```
 pytest                                             974 passed
-verify-release --version 1.8 --strict              identical, 1,764 artefacts
+verify-release --version 1.9 --strict              identical, 1,765 artefacts
 freeze check, all five scenarios                   frozen content intact
 official runs behind the v3.4 board                150 / 150
 recorded evaluations, v1.5 subtree                 151
 criterion verdicts behind them                     3,560
 ```
+
+**v1.9 adds an off-board result and nothing on the board.** Gemini 3.8 Flash
+(High), a provisional row on the site, had a published 88.37 and no
+criterion-level labels, so it could not enter the capability profiles. Its
+fifteen responses were re-judged blind, criterion by criterion, by Claude Opus
+5.5 (not the Opus 5 that labelled the board): **86.00**, with labels, scores and
+the brief in `experiments/gemini-3.8-flash-high-opus-judge/` and its profile in
+`audits/capabilities/gemini-3-8-flash-high.json`. Most of the 2.37-point drop is
+monday-004, where every run now carries an `UNSUPPORTED_CAUSALITY` penalty for
+inventing why customers churned. No board row moved.
 
 **v1.8 is documentation, not a measurement.** The README, `docs/methodology.md`
 and `docs/benchmarking-a-new-model.md` were still written for v1.0 — seven
@@ -112,6 +122,7 @@ and different suite versions, not superseded views of this one.
 | v1.6 | 2026-09-12 | Overall v3.4 | Manifest repair; no measurement changed |
 | v1.7 | 2026-09-12 | Overall v3.4 | The release writer now writes LF |
 | v1.8 | 2026-10-15 | Overall v3.4 | Documentation brought up to v1.7 |
+| v1.9 | 2026-10-15 | Overall v3.4 | Gemini 3.8 Flash re-judged off-board, with its capability profile |
 
 **Why DeepSeek was re-measured.** The gateway serves V4.1 Flash under the same
 id as V4 Flash and replaced the deployment in place rather than publishing a
@@ -249,8 +260,8 @@ version before a board can show it.
 
 ```
 mondaybench challenge --model <slug>            # what exists, what qualifies, what is left
-mondaybench evaluate --scenario <id> --model <slug> --suite-version 1.9
-mondaybench verify-release --version 1.8        # frozen content intact, evidence may only grow
+mondaybench evaluate --scenario <id> --model <slug> --suite-version 1.10
+mondaybench verify-release --version 1.9        # frozen content intact, evidence may only grow
 ```
 
 Pass `--suite-version` to `evaluate` from the first run of the battery. It is

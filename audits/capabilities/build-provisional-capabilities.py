@@ -58,6 +58,7 @@ GPT_JSON = BLIND / "inter-judge/source/independent-blind-rejudge-gpt-5.6-sol.jso
 
 FABLE_PRESENTATION = 94.90
 OPUS_PRESENTATION = 97.07
+GEMINI_EXP = ROOT / "experiments/gemini-3.8-flash-high-opus-judge"
 
 # The POST-AUDIT corrections, transcribed from the correction table in
 # experiments/fable-5.1-full-mondaybench/AUDIT.md section 5. The summary's
@@ -236,6 +237,49 @@ opus_overall = round(statistics.mean(opus_means), 2) if len(opus_means) == 5 els
 if opus_overall is None or abs(opus_overall - OPUS_PRESENTATION) > 0.005:
     problems.append(f"Opus overall recomputed {opus_overall} != {OPUS_PRESENTATION}")
 
+# ---------------------------------------------------------------------------
+# Gemini 3.8 Flash (High): the blind Opus-judge label set, joined to runs by
+# the experiment's own join-and-score.py. Must reproduce its scores.json.
+# ---------------------------------------------------------------------------
+gemini_scores = json.loads((GEMINI_EXP / "scores.json").read_text(encoding="utf-8"))
+GEMINI_PRESENTATION = round(gemini_scores["monday_score"], 2)
+gemini_labels: dict[str, dict[str, dict[str, str]]] = defaultdict(dict)
+gemini_noise: dict[tuple[str, str], list[str]] = {}
+gemini_penalties: dict[tuple[str, str], list] = {}
+for line in (GEMINI_EXP / "verdicts.jsonl").read_text(encoding="utf-8").splitlines():
+    if not line.strip():
+        continue
+    row = json.loads(line)
+    sid = row["run_id"].split("__", 1)[0]
+    run_key = row["run_id"]
+    if row.get("kind") == "penalties":
+        gemini_penalties[(sid, run_key)] = row.get("violations") or []
+    elif row.get("kind") == "noise":
+        gemini_noise[(sid, run_key)] = [i["id"] for i in row["items"] if i.get("triggered")]
+    else:
+        gemini_labels[sid].setdefault(run_key, {})[row["criterion_id"]] = row["result"]
+
+gemini_breakdowns: dict[tuple[str, str], object] = {}
+gemini_means = []
+for sid in SCEN:
+    scores = []
+    for run_key in sorted(gemini_labels[sid]):
+        bd = score_run(sid, gemini_labels[sid][run_key],
+                       noise_triggered=gemini_noise.get((sid, run_key)),
+                       violations=gemini_penalties.get((sid, run_key)))
+        gemini_breakdowns[(sid, run_key)] = bd
+        stored = gemini_scores["scenarios"][sid]["runs"][run_key]["final_score"]
+        if abs(bd.final_score - stored) > 0.005:
+            problems.append(f"Gemini {sid}/{run_key}: recomputed {bd.final_score} != stored {stored}")
+        scores.append(bd.final_score)
+    if len(scores) != 3:
+        problems.append(f"Gemini {sid}: {len(scores)} runs, expected 3")
+    if scores:
+        gemini_means.append(statistics.mean(scores))
+gemini_overall = round(statistics.mean(gemini_means), 2) if len(gemini_means) == 5 else None
+if gemini_overall is None or abs(gemini_overall - GEMINI_PRESENTATION) > 0.005:
+    problems.append(f"Gemini overall recomputed {gemini_overall} != {GEMINI_PRESENTATION}")
+
 if problems:
     print("STOP - verdict sets are not consistent with their presentation scores:\n")
     for p in problems:
@@ -315,6 +359,17 @@ MODELS = {
         "judge_basis": "INDEPENDENT_BLIND_REJUDGE",
         "provisional_reason": "Claude Code generation route rather than standard MondayBench provider route.",
     },
+    "gemini-3-8-flash-high": {
+        "display_name": "Gemini 3.8 Flash (High)*",
+        "presentation_score": GEMINI_PRESENTATION,
+        "results": to_results(gemini_breakdowns, "gemini-3-8-flash-high"),
+        "verdict_source": [
+            "experiments/gemini-3.8-flash-high-opus-judge/blind-verdicts/ (354 criterion verdicts, 3 noise and 15 penalty rows, written blind)",
+            "experiments/gemini-3.8-flash-high-opus-judge/verdicts.jsonl (joined to runs via gemini-3.8-mondaybench-challenger/judge-pack/provenance-map.json)",
+        ],
+        "judge_basis": "BLIND_REJUDGE_CLAUDE_OPUS_5_5",
+        "provisional_reason": "Antigravity generation route; route equivalence NON_EQUIVALENT (served model id, system prompt and temperature unobservable).",
+    },
 }
 
 artifacts = []
@@ -373,7 +428,7 @@ for slug, meta in MODELS.items():
         "capabilities": caps,
     }
     out = HERE / f"{slug}.json"
-    out.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
+    out.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8", newline="\n")
     artifacts.append(out)
 
 if problems:
@@ -407,7 +462,7 @@ for slug, p in prov.items():
         "capabilities": {c: p["capabilities"][c]["percent"] for c in all_caps
                          if c in p["capabilities"]}}
 (HERE / "comparison.json").write_text(json.dumps(comparison, indent=2, ensure_ascii=False),
-                                      encoding="utf-8")
+                                      encoding="utf-8", newline="\n")
 artifacts.append(HERE / "comparison.json")
 
 # ---------------------------------------------------------------------------
@@ -429,6 +484,7 @@ print(f"  ALL SEVEN EXACT: {all(v['exact_match'] for v in repro.values())}")
 print("\nPresentation score reproduction:")
 print(f"  Claude Fable 5.1*   recomputed {fable_overall:.2f}  target {FABLE_PRESENTATION}  OK")
 print(f"  Claude Opus 5*      recomputed {opus_overall:.2f}  target {OPUS_PRESENTATION}  OK")
+print(f"  Gemini 3.8 Flash*   recomputed {gemini_overall:.2f}  target {GEMINI_PRESENTATION}  OK")
 for slug in MODELS:
     p = prov[slug]
     print(f"\n{p['display_name']}  (presentation score {p['presentation_score']}, "
