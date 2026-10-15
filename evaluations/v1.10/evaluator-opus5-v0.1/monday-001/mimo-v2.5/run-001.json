@@ -1,0 +1,272 @@
+{
+  "schema_version": "1",
+  "evaluator_id": "evaluator-opus5-v0.1",
+  "benchmark_version": "0.1",
+  "rubric_version": "0.2",
+  "scenario_id": "monday-001",
+  "run_id": "monday-001__mimo-v2.5__001",
+  "model_slug": "mimo-v2.5",
+  "scenario_prompt_sha256": "ed4d7beb1d7d1029c36eb8533e449027e0dc1a1047f8a38951a91781a0a5e398",
+  "timestamp_utc": "2026-10-15T17:40:24Z",
+  "judge": {
+    "provider": "recorded",
+    "model_id": "claude-opus-5",
+    "temperature": null,
+    "effort": null,
+    "unsupported_parameters": [],
+    "prompt_fingerprint": "45998b3c03939498",
+    "route": "recorded",
+    "verdict_source": "mimo-v2.5.verdicts.jsonl",
+    "contract_fingerprint": "60d8f16cacb11db3",
+    "contract_schema_version": "1",
+    "judge_session_id": null
+  },
+  "suite_version": "1.10",
+  "migrated_from": "evaluations/v1.5/evaluator-opus5-v0.1/monday-001/mimo-v2.5/run-001.json",
+  "dimensions": {
+    "action_detection": {
+      "score": 21.5,
+      "max_score": 25.0
+    },
+    "state_reconstruction": {
+      "score": 25.0,
+      "max_score": 25.0
+    },
+    "prioritization": {
+      "score": 12.5,
+      "max_score": 15.0
+    },
+    "data_reasoning": {
+      "score": 13.5,
+      "max_score": 15.0
+    },
+    "uncertainty": {
+      "score": 8.5,
+      "max_score": 10.0
+    },
+    "noise_resistance": {
+      "score": 10.0,
+      "max_score": 10.0
+    }
+  },
+  "criteria": {
+    "contoso_action": {
+      "result": "PASS",
+      "points_awarded": 8.0,
+      "points_possible": 8.0,
+      "evidence": "#1, 'deadline 11:00 today', 'Noah flagged this as the only blocker on a EUR72k ARR renewal'",
+      "reason": "#1, 'deadline 11:00 today', 'Noah flagged this as the only blocker on a EUR72k ARR renewal'"
+    },
+    "umbrella_action": {
+      "result": "PARTIAL",
+      "points_awarded": 3.5,
+      "points_possible": 7.0,
+      "evidence": "only under 'Unclear': 'Worth investigating - is there an active issue, or was this just a quiet week?' - never enters today's list",
+      "reason": "only under 'Unclear': 'Worth investigating - is there an active issue, or was this just a quiet week?' - never enters today's list"
+    },
+    "churn_action": {
+      "result": "PASS",
+      "points_awarded": 6.0,
+      "points_possible": 6.0,
+      "evidence": "third in today's list, 'needed before Tuesday's board meeting', 'You should start pulling data today'",
+      "reason": "third in today's list, 'needed before Tuesday's board meeting', 'You should start pulling data today'"
+    },
+    "analytics_action": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "Wednesday correct; no readiness item competing with today's critical work",
+      "reason": "Wednesday correct; no readiness item competing with today's critical work"
+    },
+    "acme_resolved": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'Acme confirmed full recovery via email (Rachel Kim, Thursday 12:37)'; 'resolved and stable'",
+      "reason": "'Acme confirmed full recovery via email (Rachel Kim, Thursday 12:37)'; 'resolved and stable'"
+    },
+    "release_wednesday": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'moving the release from Monday to Wednesday'; 'releasing Wednesday, not Monday'",
+      "reason": "'moving the release from Monday to Wednesday'; 'releasing Wednesday, not Monday'"
+    },
+    "contoso_blocked": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'the only blocker on a EUR72k ARR renewal'",
+      "reason": "'the only blocker on a EUR72k ARR renewal'"
+    },
+    "launch_email_julia": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'Julia confirmed she does not need anything from you on the launch email'",
+      "reason": "'Julia confirmed she does not need anything from you on the launch email'"
+    },
+    "pricing_confidential": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'All numbers remain strictly confidential'; 'Do not share any pricing details'",
+      "reason": "'All numbers remain strictly confidential'; 'Do not share any pricing details'"
+    },
+    "contoso_first": {
+      "result": "PASS",
+      "points_awarded": 6.0,
+      "points_possible": 6.0,
+      "evidence": "#1, marked urgent, at the top of the priority list",
+      "reason": "#1, marked urgent, at the top of the priority list"
+    },
+    "umbrella_and_churn_high": {
+      "result": "PARTIAL",
+      "points_awarded": 2.5,
+      "points_possible": 5.0,
+      "evidence": "churn actionable in today's list; Umbrella appears only under 'Unclear'",
+      "reason": "churn actionable in today's list; Umbrella appears only under 'Unclear'"
+    },
+    "no_false_priorities": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "Globex is last in the list, below the churn analysis, and the stale Acme and launch-email tasks are named as cleanup rather than priorities",
+      "reason": "Globex is last in the list, below the churn analysis, and the stale Acme and launch-email tasks are named as cleanup rather than priorities"
+    },
+    "umbrella_detected": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'Umbrella is not mentioned anywhere in Slack, emails, or meetings, but their metrics are concerning'",
+      "reason": "'Umbrella is not mentioned anywhere in Slack, emails, or meetings, but their metrics are concerning'"
+    },
+    "umbrella_metrics": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "163 API errors, 1,821 ms p95, 41% drop in usage over 7 days",
+      "reason": "163 API errors, 1,821 ms p95, 41% drop in usage over 7 days"
+    },
+    "churn_numbers": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "3.1% to 4.4%",
+      "reason": "3.1% to 4.4%"
+    },
+    "umbrella_error_rate": {
+      "result": "PARTIAL",
+      "points_awarded": 1.5,
+      "points_possible": 3.0,
+      "evidence": "'roughly 6x higher than any other customer' positions Umbrella against the rest of the table, but on latency only - no request volume and no error rate",
+      "reason": "'roughly 6x higher than any other customer' positions Umbrella against the rest of the table, but on latency only - no request volume and no error rate"
+    },
+    "umbrella_unknown_cause": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'Nobody flagged this. Worth investigating - is there an active issue, or was this just a quiet week?'",
+      "reason": "'Nobody flagged this. Worth investigating - is there an active issue, or was this just a quiet week?'"
+    },
+    "friday_conversion_unknown": {
+      "result": "PARTIAL",
+      "points_awarded": 1.5,
+      "points_possible": 3.0,
+      "evidence": "'flagged as potentially noisy Friday traffic. Worth revisiting next week' - not repeated as fact, but no data-gap statement",
+      "reason": "'flagged as potentially noisy Friday traffic. Worth revisiting next week' - not repeated as fact, but no data-gap statement"
+    },
+    "churn_causality_unknown": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "'Unclear if these fully explain the increase'; 'Are there other cancellations beyond Pied Piper and Hooli?'",
+      "reason": "'Unclear if these fully explain the increase'; 'Are there other cancellations beyond Pied Piper and Hooli?'"
+    }
+  },
+  "false_actions": {
+    "lunch": {
+      "triggered": false,
+      "points": 0.0,
+      "evidence": null,
+      "description": "Treating the lunch discussion as relevant or actionable."
+    },
+    "icon": {
+      "triggered": false,
+      "points": 0.0,
+      "evidence": null,
+      "description": "Re-opening or prioritizing the resolved icon discussion."
+    },
+    "partner_sync": {
+      "triggered": false,
+      "points": 0.0,
+      "evidence": null,
+      "description": "Treating Friday's completed partner sync as upcoming."
+    },
+    "launch_email": {
+      "triggered": false,
+      "points": 0.0,
+      "evidence": null,
+      "description": "Assigning the Analytics v2 launch email to the user."
+    },
+    "acme_active": {
+      "triggered": false,
+      "points": 0.0,
+      "evidence": null,
+      "description": "Treating Acme investigation as an active Monday task."
+    },
+    "pricing_send": {
+      "triggered": false,
+      "points": 0.0,
+      "evidence": null,
+      "description": "Treating sending proposed Enterprise pricing as a valid action."
+    }
+  },
+  "penalties": {
+    "items": [],
+    "dismissed": [],
+    "raw_total": 0.0,
+    "total": 0.0,
+    "capped": false
+  },
+  "deterministic_checks": [
+    {
+      "id": "contoso_11_00",
+      "matched": true,
+      "detail": "'11:00' appears near a mention of Contoso"
+    },
+    {
+      "id": "churn_3_1_to_4_4",
+      "matched": true,
+      "detail": "both churn figures 3.1 and 4.4 are present"
+    },
+    {
+      "id": "umbrella_metrics_present",
+      "matched": true,
+      "detail": "at least two of 163 / 1821 / 41 appear near a mention of Umbrella"
+    },
+    {
+      "id": "umbrella_named",
+      "matched": true,
+      "detail": "Umbrella is named in the response"
+    },
+    {
+      "id": "wednesday_present",
+      "matched": true,
+      "detail": "'Wednesday' appears in the response"
+    },
+    {
+      "id": "julia_present",
+      "matched": true,
+      "detail": "'Julia' appears in the response"
+    },
+    {
+      "id": "pied_piper_and_hooli",
+      "matched": true,
+      "detail": "both known cancellations are named"
+    }
+  ],
+  "disagreements": [],
+  "base_score": 91.0,
+  "final_score": 91.0
+}

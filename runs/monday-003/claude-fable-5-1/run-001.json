@@ -1,0 +1,121 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "1.0",
+  "scenario_id": "monday-003",
+  "scenario_prompt_sha256": "aaf788f309d955d2b427c86fe7d95d2bbf88575fde7306adcfd74b0ec4a4103f",
+  "run_id": "monday-003__claude-fable-5-1__001",
+  "run_number": 1,
+  "model": {
+    "slug": "claude-fable-5-1",
+    "display_name": "Claude Fable 5.1",
+    "provider": "claude-code",
+    "model_id": "claude-fable-5-1"
+  },
+  "generation": {
+    "temperature": null,
+    "max_output_tokens": null,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": "high",
+    "system_prompt_sha256": null,
+    "extra_body": {},
+    "config_sha256": "131c10c70517c8b8638f855ced5a84a7b391a2e735d384ffa3e7fc6deda79385",
+    "safety_ceiling_tokens": 64000,
+    "ceiling_semantics": "route-reported, not configured by this battery: Claude Code reports a 64000-token output ceiling for claude-fable-5-1. The battery set no ceiling and the wire max_tokens was not captured, so max_output_tokens is null. This is NOT the scenario's configured ceiling (32000 for monday-001..003, 96000 for monday-004, 131072 for monday-005)."
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "DELIVERED",
+    "tokens": 4064,
+    "evidence": "explicit_reasoning_tokens",
+    "stream_observed": null,
+    "stream_event_count": null
+  },
+  "timestamp_utc": "2026-09-02T08:14:16Z",
+  "usage": {
+    "input_tokens": 5229,
+    "output_tokens": 6713,
+    "reasoning_tokens": 4064
+  },
+  "performance": {
+    "ttft_ms": null,
+    "ttfa_ms": null,
+    "total_latency_ms": null,
+    "tokens_per_second": null
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "# Northstar — Monday 09:10 execution plan\n\n**First, what's stale (fix the tracker):**\n- Security review is **not** outstanding — Maya approved SEC-4471 Friday 16:48. Permission-check fixes inside scope need no re-review.\n- Onboarding instrumentation is **not** a launch blocker (Julia, Fri 17:06). Marcus's 3h is freed.\n- Onboarding launch support is Julia's, not Marcus's.\n- \"Broken Contoso export\" is two different things: (a) a cosmetic date-format request for Peter's Tuesday demo, and (b) a real, **contractual** bug — delegated admins get a scope error, and the export is due **Tue 22 Sept 16:00**.\n- `contoso_permission_patch` is auto-assigned to Marcus; he doesn't have the hours. Reassign to Daniel.\n- Sarah's pricing approval does **not** need the live page — Priya accepts mockups.\n\n---\n\n## 1. CRITICAL PATH\n\nEverything important hangs off Elena's migration, and Marcus is the bottleneck behind it.\n\n```\nElena: billing schema migration (3h)  Mon ~09:15 → ~12:30\n  └─ Marcus: SSO compatibility patch (4h)  Mon ~12:30 → ~17:00\n       └─ QA: regression (2h)  Tue 09:00 → 11:00  (Marcus in Atlas session, not needed)\n            └─ Marcus: production rollout (1h)  Tue 13:00 → 14:00\n                 → Atlas deadline Wed 17:00  ✔ ~1 day buffer\n```\n\nSecond chain off the same head — tightest deadline in the week:\n```\nElena migration lands (~12:30)\n  └─ Daniel: delegated-admin permission patch (3.5h, after 0.5h walkthrough w/ Marcus this morning)  ~12:30 → ~16:00\n       └─ Julia: produce & send compliance export (1h)  ~16:00 → ~17:00 Mon (Tue AM at latest)\n            → Contoso contractual deadline Tue 16:00  ✔\n```\n\nBackfill (Elena, 1.5h automated, ~12:30 → ~14:00) only gates Sarah's revenue charts — not SSO, not Contoso.\n\n## 2. MY PLAN FOR TODAY (in order)\n\n| # | Action | Owner |\n|---|---|---|\n| 1 | **Confirm Elena has started the migration right now.** Nothing else moves until it lands. | Elena |\n| 2 | Reassign `contoso_permission_patch` Marcus → Daniel. Book Marcus+Daniel 30-min delegated-admin walkthrough **this morning** (before migration lands). | Me / Rachel |\n| 3 | Reply to Anja (Contoso) confirming delivery of the compliance export by **Tuesday midday**, ahead of 16:00. Ask which date format the auditor needs (see risk). | Me |\n| 4 | Reply to CEO: export isn't broken; format is a 2h cosmetic fix landing today; the real contractual issue is in hand with a plan. | Me |\n| 5 | Tell Marcus: instrumentation de-prioritised; morning = Daniel walkthrough + compat-patch prep; afternoon = compat patch, finish today. | Marcus |\n| 6 | Tell Sarah: build packaging approval pack from mockups **now** and submit to Priya **before 12:00** → cleared today. Pricing page afterwards. | Sarah |\n| 7 | Julia: export date-format change (2h) this morning; hold 16:00–17:00 to produce/send the Contoso file once Daniel's patch is in. | Julia |\n| 8 | Sam/QA: reserve Tue 09:00–11:00 for SSO regression. | Sam |\n| 9 | Clean the tracker (items above) so nobody works stale priorities. Book Elena→Daniel 30-min migration-permissions handover Tuesday as insurance. | Me |\n| 10 | Send Laura (Atlas) a confirmation once compat patch is in QA (Mon EOD): on track for Wed, targeting Tue. | Noah |\n\n## 3. PARALLEL WORK (no dependencies)\n\n- **Julia:** export formatter (2h) — Peter's demo Tue afternoon; onboarding launch (2h) any time before Fri 12:00.\n- **Sarah:** approval pack (1.5h, before noon today); pricing page (3h); board pack non-revenue (4h).\n- **Marcus:** Daniel walkthrough + compat-patch groundwork while waiting on migration.\n- **Daniel:** prep on permission model this morning; Tue handover with Elena.\n- **Sam:** QA env ready for Tue 09:00.\n\n## 4. BLOCKERS & DEPENDENCIES\n\n| Blocker | Blocks | Resolution |\n|---|---|---|\n| Schema migration not landed | Compat patch, permission patch, backfill | Elena starts now → ~12:30 |\n| Marcus single-threaded on compat branch; out Tue 09–13 | SSO | Take permission patch off him (Daniel); QA runs during his Tue session |\n| Permission patch assigned to Marcus | Contoso Tue 16:00 | Reassign to Daniel today |\n| Stale tracker (security review, instrumentation) | Wastes Marcus's time | Close/re-label now |\n| Sarah waiting on page for screenshots | Pricing approval | Mockups accepted; submit before 12:00 |\n| Backfill (~14:00) | Board revenue charts only | Sarah does revenue charts after 14:00 or tomorrow |\n| Elena out Wed 12:00 | Migration contingency | Only matters if migration slips; 30-min handover to Daniel Tue covers it |\n\n## 5. EARLIEST DELIVERY\n\n- **Enterprise SSO in production: Tuesday ~14:00** (rollout 13:00–14:00), if regression is clean. Wednesday is buffer for one fix/retest cycle. Atlas deadline Wed 17:00 met.\n- **Contoso compliance export: Monday ~17:00**, commit externally to Tuesday midday.\n- **Contoso demo format:** today.\n- **Packaging approval:** cleared today if submitted before 12:00; pricing page live Tue/Wed.\n- **Board pack:** revenue charts can be frozen from Mon ~14:00; whole pack comfortably before Fri 10:00.\n\n## 6. RISKS / UNKNOWNS\n\n- **Elena's \"once I start\"** — not confirmed she's started. Every hour of delay shifts both chains.\n- **Does the permission patch need its own production deploy?** Unstated. If it can only ship with the SSO rollout (Tue 14:00), Julia's window shrinks to 14:00–16:00. Push for an independent deploy Mon evening.\n- **Branch conflicts:** Daniel's patch and Marcus's rewrite touch the same account-mapping layer; merge friction not assessed.\n- **Date format for the compliance export:** the formatter change and the compliance file use the same exporter. Auditor's expected format unknown — confirm with Anja before Julia sends.\n- **Sarah's approval inputs:** margin impact summary and mockups assumed to exist; not confirmed.\n- **QA surprises:** 2h estimate is \"if nothing surprising\". Marcus has Tue 14:00–17:30 + Wed to fix.\n- **Daniel's 3.5h estimate** is his first time in this exact path; slippage lands Julia's export Tue morning — still inside the deadline but with less margin.\n- **Timezone:** Anja says CET; work items use +02:00. Treat 16:00 local as the hard stop.",
+  "finish_reason": "end_turn",
+  "provider_metadata": {
+    "request_id": null,
+    "raw_usage": {
+      "claude_code_runtime": {
+        "runtime": "Claude Code CLI",
+        "cli_version": "2.1.258",
+        "route": "claude -p (Claude Code CLI 2.1.258), OAuth subscription",
+        "cli_invocation": "documented in experiments/fable-5.1-full-mondaybench/METHODOLOGY.md (not recorded per run)",
+        "requested_model_id": "claude-fable-5-1",
+        "served_model_id": "claude-fable-5-1",
+        "served_model_provider": "firstParty",
+        "generation_as_recorded": {
+          "system_prompt_requested": "You are a helpful assistant.",
+          "effort_requested": "high",
+          "temperature": null,
+          "top_p": null,
+          "route_max_output_tokens": 64000,
+          "tools": []
+        },
+        "reasoning_effort": "high",
+        "system_prompt_as_sent": "NOT the frozen bytes: the route prepends the Agent SDK preamble to the requested system prompt.",
+        "user_turn_as_delivered": "NOT the frozen bytes as delivered: the route injects a <system-reminder> carrying the user's identity and 'Today's date is 2026-09-02' into the user turn. The frozen prompt bytes were what the battery passed to the route (sha256 recorded in scenario_prompt_sha256). See audits/monday-002/fable-5.1-preflight.md.",
+        "route_max_output_tokens": 64000,
+        "usage_as_recorded": {
+          "input_tokens": 2,
+          "output_tokens": 6713,
+          "thinking_tokens": 4064,
+          "cache_read_input_tokens": 0,
+          "cache_creation_input_tokens": 5227
+        },
+        "input_tokens_semantics": "usage_as_recorded.input_tokens is EXCLUSIVE of cache; the run's usage.input_tokens is input + cache_creation + cache_read",
+        "finish_reason": "end_turn",
+        "is_error": false,
+        "num_turns": 1,
+        "timing_host_measured_ms": {
+          "ttft_ms": 4912.2,
+          "ttfa_ms": 56987.7,
+          "total_latency_ms": 89630.7,
+          "duration_api_ms": 89573
+        },
+        "timing_semantics": "host wall clock around the claude -p process, TTFT/TTFA from stream-json deltas; not the harness adapter's measurement, so not published in `performance`",
+        "economics_as_recorded": {
+          "cost_usd_route_reported": 0.44021,
+          "cost_basis": "list",
+          "models_billed": [
+            "claude-fable-5-1",
+            "claude-haiku-4-5-20251001"
+          ]
+        },
+        "cost_note": "list-price figure the route reports for a subscription call; not a price this battery paid, so `economics` is empty",
+        "source_file": "experiments/fable-5.1-full-mondaybench/raw/monday-003-run1.json",
+        "source_label": "M003_RUN1",
+        "unobservable": [
+          "temperature",
+          "top_p",
+          "max_output_tokens (wire)",
+          "system_prompt bytes as sent",
+          "request_id"
+        ],
+        "not_an_api_equivalent_run": true,
+        "source_scenario_id_field": "the source file records scenario_id 'monday-002'; its label, prompt_file and prompt_sha256 all say monday-003, which is used"
+      }
+    }
+  }
+}

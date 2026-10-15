@@ -9,52 +9,72 @@ One question:
 ## Scenarios
 
 **Five scenarios are published and official**, frozen together since suite
-v1.0. The current release is **suite v1.7**
-([`releases/v1.7/SUITE-FROZEN.yaml`](releases/v1.7/SUITE-FROZEN.yaml)): ten
-models, 150 official runs, 3,560 criterion verdicts. Each scenario is frozen
-independently and scored against its own rubric.
+v1.0. The current release is **suite v1.10**
+([`releases/v1.10/SUITE-FROZEN.yaml`](releases/v1.10/SUITE-FROZEN.yaml)):
+thirteen models, 195 official runs, 4,602 criterion verdicts. Each scenario is
+frozen independently and scored against its own rubric.
 
 | # | Scenario | Rubric | What it tests | Leader | Spread | Results |
 |---|---|---|---|---|---:|---|
-| 001 | **Back to Work** | 0.2 | Reconstructing a state that changed while you were away | GPT-6 Astra — 100.0 | 29.3 | [`leaderboard/v1.5/monday-001/`](leaderboard/v1.5/monday-001/leaderboard.md) |
-| 002 | **Moving Targets** | 0.2 | Release-path choice under hard scheduling, cross-source customer risk, arithmetic vs causality | GPT-6 Astra — 100.0 | 45.8 | [`leaderboard/v1.5/monday-002/`](leaderboard/v1.5/monday-002/leaderboard.md) |
-| 003 | **Blockers** | 0.3 | Prioritisation and resource allocation against a hard limit | GPT-6 Astra — 100.0 | 34.7 | [`leaderboard/v1.5/monday-003/`](leaderboard/v1.5/monday-003/leaderboard.md) |
-| 004 | **Numbers Don't Lie** | 0.3 | Reconciling contradictory data, and what leadership is told about it | GLM 5.3 Flash and GPT-6 Astra — 98.0 | 62.8 | [`leaderboard/v1.5/monday-004/`](leaderboard/v1.5/monday-004/leaderboard.md) |
-| 005 | **Read the Room** | 0.4 | One incident, four audiences, four different right answers | GLM 5.2 and GLM 5.3 Flash — 98.5 | 19.2 | [`leaderboard/v1.5/monday-005/`](leaderboard/v1.5/monday-005/leaderboard.md) |
+| 001 | **Back to Work** | 0.2 | Reconstructing a state that changed while you were away | GPT-6 Astra — 100.0 | 29.3 | [`leaderboard/v1.10/monday-001/`](leaderboard/v1.10/monday-001/leaderboard.md) |
+| 002 | **Moving Targets** | 0.2 | Release-path choice under hard scheduling, cross-source customer risk, arithmetic vs causality | GPT-6 Astra — 100.0 | 45.8 | [`leaderboard/v1.10/monday-002/`](leaderboard/v1.10/monday-002/leaderboard.md) |
+| 003 | **Blockers** | 0.3 | Prioritisation and resource allocation against a hard limit | GPT-6 Astra — 100.0 | 34.7 | [`leaderboard/v1.10/monday-003/`](leaderboard/v1.10/monday-003/leaderboard.md) |
+| 004 | **Numbers Don't Lie** | 0.3 | Reconciling contradictory data, and what leadership is told about it | GLM 5.3 Flash and GPT-6 Astra — 98.0 | 62.8 | [`leaderboard/v1.10/monday-004/`](leaderboard/v1.10/monday-004/leaderboard.md) |
+| 005 | **Read the Room** | 0.4 | One incident, four audiences, four different right answers | Claude Fable 5.1 — 100.0 | 20.7 | [`leaderboard/v1.10/monday-005/`](leaderboard/v1.10/monday-005/leaderboard.md) |
 
 `monday-004` is the scenario that separates the field — 62.8 points between
-first and last, and the worst Monday for six of the ten models.
+first and last, and the worst Monday for nine of the thirteen models.
 
-The scenario boards live under `leaderboard/v1.5/` because v1.6 and v1.7 are
-manifest repairs that carry the v1.5 evidence unchanged. The unversioned
-`leaderboard/<scenario>/` files are the v1.0 boards, kept byte-frozen.
+The scenario boards live under `leaderboard/v1.10/`. Earlier suites keep their
+own boards (`leaderboard/v1.1/` to `v1.5/`; v1.6 to v1.9 carried the v1.5
+evidence unchanged), and the unversioned `leaderboard/<scenario>/` files are the
+v1.0 boards, all kept byte-frozen.
 
 ## Overall
 
 A model's **Monday Score** is the arithmetic mean of its official score on every
 scenario in a release. Equal weight per scenario; nothing else folded in.
 
-**Current board: [Overall v3.4](leaderboard/overall/overall-v3.4.md)**, suite v1.5–v1.7.
+**Current board: [Overall v3.5](leaderboard/overall/overall-v3.5.md)**, suite v1.10.
 
 | # | Model | Monday Score | #001 | #002 | #003 | #004 | #005 |
 |---:|---|---:|---:|---:|---:|---:|---:|
 | 1 | GPT-6 Astra | **98.80** | 100.0 | 100.0 | 100.0 | 98.0 | 96.0 |
-| 2 | Qwen 3.8 Flash | **95.07** | 92.5 | 94.8 | 94.5 | 96.5 | 97.0 |
-| 3 | GLM 5.3 Flash | **94.93** | 98.0 | 87.3 | 92.8 | 98.0 | 98.5 |
-| 4 | DeepSeek V4.1 Flash | **94.53** | 95.0 | 93.0 | 96.3 | 90.0 | 98.3 |
-| 5 | GLM 5.3 | **93.73** | 97.5 | 87.7 | 94.8 | 91.7 | 97.0 |
-| 6 | DeepSeek V4 Flash | **91.70** | 90.8 | 89.3 | 95.0 | 86.0 | 97.3 |
-| 7 | MIMO v2.5 | **86.67** | 88.2 | 81.2 | 90.3 | 78.5 | 95.2 |
-| 8 | GLM 5.2 | **86.50** | 84.3 | 91.2 | 87.3 | 71.2 | 98.5 |
-| 9 | Qwen 3.6 | **68.77** | 82.8 | 70.2 | 65.5 | 46.0 | 79.3 |
-| 10 | Gemma 4 | **63.00** | 70.7 | 54.2 | 65.3 | 35.2 | 89.7 |
+| 2 | Claude Opus 5 | **97.07** | 98.5 | 98.0 | 98.3 | 90.8 | 99.7 |
+| 3 | Qwen 3.8 Flash | **95.07** | 92.5 | 94.8 | 94.5 | 96.5 | 97.0 |
+| 4 | GLM 5.3 Flash | **94.93** | 98.0 | 87.3 | 92.8 | 98.0 | 98.5 |
+| 5 | Claude Fable 5.1 | **94.90** | 97.5 | 91.0 | 96.7 | 89.3 | 100.0 |
+| 6 | DeepSeek V4.1 Flash | **94.53** | 95.0 | 93.0 | 96.3 | 90.0 | 98.3 |
+| 7 | GLM 5.3 | **93.73** | 97.5 | 87.7 | 94.8 | 91.7 | 97.0 |
+| 8 | DeepSeek V4 Flash | **91.70** | 90.8 | 89.3 | 95.0 | 86.0 | 97.3 |
+| 9 | MIMO v2.5 | **86.67** | 88.2 | 81.2 | 90.3 | 78.5 | 95.2 |
+| 10 | GLM 5.2 | **86.50** | 84.3 | 91.2 | 87.3 | 71.2 | 98.5 |
+| 11 | Gemini 3.8 Flash (High) | **86.00** | 95.3 | 80.0 | 84.7 | 72.2 | 97.8 |
+| 12 | Qwen 3.6 | **68.77** | 82.8 | 70.2 | 65.5 | 46.0 | 79.3 |
+| 13 | Gemma 4 | **63.00** | 70.7 | 54.2 | 65.3 | 35.2 | 89.7 |
 
-Two routing caveats travel with this board. **GPT-6 Astra was generated through
-the Codex CLI**, because no authenticated API route exists; the frozen prompts
-match by SHA-256, but temperature, token counts and finish reason are recorded
-as `null`, never as numbers. **Qwen 3.6's three monday-004 runs came from NaN,
-not Helmcode**, which was unreachable during generation; the override is
-recorded in `models.yaml`.
+These caveats travel with this board, one for each row that did not run through
+this harness's own adapter or was not labelled by its usual judge:
+
+- **GPT-6 Astra was generated through the Codex CLI**, because no authenticated
+  API route exists; the frozen prompts match by SHA-256, but temperature, token
+  counts and finish reason are recorded as `null`, never as numbers.
+- **Claude Opus 5 and Claude Fable 5.1 were generated through `claude -p`**
+  (Claude Code CLI, OAuth subscription, effort high). The frozen prompt bytes
+  were passed to the route, but the route prepends its own system-prompt
+  preamble, injects the runtime date into the user turn, and applies its own
+  64,000-token output ceiling; temperature is not settable. Opus 5's labels are
+  **GPT-5.6 Sol**'s blind re-judge (the Opus 5 judge would be judging itself);
+  Fable 5.1's are the board's **Claude Opus 5** judge after a ten-label audit.
+- **Gemini 3.8 Flash (High) was generated through Antigravity**, which sends no
+  system prompt and exposes no temperature, token usage, finish reason or served
+  model id. Its labels are a blind re-judge by **Claude Opus 5.5**.
+- **DeepSeek V4.1 Flash is scored from GPT-5.6 Sol's labels** (see *The judge*).
+- **Qwen 3.6's three monday-004 runs came from NaN, not Helmcode**, which was
+  unreachable during generation; the override is recorded in `models.yaml`.
+
+Every field a route did not expose is `null` in its run files, and each closed
+row's route and judge is stated in its `models.yaml` entry.
 
 | Overall | Scenarios | Leader | Artefacts |
 |---|---|---|---|
@@ -62,7 +82,8 @@ recorded in `models.yaml`.
 | [v1](leaderboard/overall/overall-v1.md) | 001–004 | Qwen 3.8 Flash | frozen |
 | [v2](leaderboard/overall/overall-v2.md) | 001–005 | Qwen 3.8 Flash — 95.1 | frozen, suite v1.0 |
 | [v3](leaderboard/overall/overall-v3.md) – [v3.3](leaderboard/overall/overall-v3.3.md) | 001–005 | see each board | frozen, suites v1.1–v1.4 |
-| **[v3.4](leaderboard/overall/overall-v3.4.md)** | **001–005** | **GPT-6 Astra — 98.80** | **current, suites v1.5–v1.7** |
+| [v3.4](leaderboard/overall/overall-v3.4.md) | 001–005 | GPT-6 Astra — 98.80 | frozen, suites v1.5–v1.9 |
+| **[v3.5](leaderboard/overall/overall-v3.5.md)** | **001–005** | **GPT-6 Astra — 98.80** | **current, suite v1.10** |
 
 Each release names its scenarios explicitly and pins their prompt hashes, so
 adding a scenario later cannot move a number already published. v0, v1, v2 and
@@ -206,8 +227,9 @@ raw response  ->  per-criterion label + evidence  ->  deterministic points  ->  
 ## The judge
 
 > **Judging never uses the Anthropic API.** Every official label in this
-> repository was produced by Claude Opus 5 reading each response against the
-> rubric in a recorded Claude Code session, and written into
+> repository was produced in a recorded session - by Claude Opus 5 for ten of the
+> thirteen board rows, by GPT-5.6 Sol for DeepSeek V4.1 Flash and Claude Opus 5,
+> and by Claude Opus 5.5 for Gemini 3.8 Flash - and written into
 > `verdicts/<scenario>/<model>.verdicts.jsonl`. `mondaybench evaluate
 > --verdicts` then scores those labels deterministically. **Do not set
 > `ANTHROPIC_API_KEY` and do not spend Anthropic API credits on this project** -
@@ -228,13 +250,16 @@ each other's labels — give:
 
 | Battery | Monday Score, official judge / second blind judge | Record |
 |---|---|---|
-| Claude Opus 5 (off-board) | 97.10 / 97.07 — 96.9% of criteria agree, κ 0.74, no PASS↔FAIL | [`audits/blind-rejudge/inter-judge/`](audits/blind-rejudge/inter-judge/README.md) |
+| Claude Opus 5 (on the board from v1.10) | 97.10 / **97.07** — 96.9% of criteria agree, κ 0.74, no PASS↔FAIL | [`audits/blind-rejudge/inter-judge/`](audits/blind-rejudge/inter-judge/README.md) |
 | DeepSeek V4.1 Flash (on the board) | 93.03 / **94.53** — 317 of 354 criteria agree, largest single-run gap 10.0 | Opus labels in [`experiments/deepseek-v4.1-flash-rerun-v1/blind-verdicts/`](experiments/deepseek-v4.1-flash-rerun-v1/blind-verdicts/); GPT-5.6 Sol labels in `verdicts/monday-00N/deepseek-v4.1-flash-rerun-v1.verdicts.jsonl` |
 | DeepSeek V4.1 Flash, reliability prompt (off-board) | 90.33 / 93.47 | stated in [`overall-v3.3.md`](leaderboard/overall/overall-v3.3.md); the second pass's labels are not published |
 
-**The DeepSeek V4.1 Flash board row is scored from the second judge's labels**
-(GPT-5.6 Sol, 94.53); every other row is scored by the official Opus judge, which
-gives this battery 93.03. The aggregate can agree while individual runs do not:
+**Two board rows are scored from the second judge's labels**: DeepSeek V4.1
+Flash (GPT-5.6 Sol, 94.53; the Opus judge gives 93.03) and Claude Opus 5
+(GPT-5.6 Sol, 97.07; the Opus judge, the same model as the candidate, gives
+97.10). Gemini 3.8 Flash (High) is scored from a blind re-judge by Claude Opus
+5.5, with no second label set. Every other row is scored by the official Opus
+judge. The aggregate can agree while individual runs do not:
 on the Opus battery the largest single-run disagreement was 1.5 points, on the
 DeepSeek one 10.0. Read the board with that in mind — gaps of one or two points
 between adjacent models are not established by this suite.
@@ -344,17 +369,18 @@ the configuration expected it.
 
 ## Limitations
 
-Suite v1.7, five scenarios, ten models. The full list is in
+Suite v1.10, five scenarios, thirteen models. The full list is in
 [`docs/methodology.md`](docs/methodology.md#limitations); the ones that matter
 most when reading the board:
 
-- **The top of the board is compressed.** Six models sit between 91.7 and 98.8,
+- **The top of the board is compressed.** Eight models sit between 91.7 and 98.8,
   GPT-6 Astra scores 100 on three scenarios, and none of the suite's 500 points
   is failed by every model — so the suite carries no evidence about where the
   frontier is.
-- **One official judge.** Every board label comes from the same judge. Two
-  blind cross-checks have been run (see *The judge*); they disagree by up to
-  3.14 points on a Monday Score.
+- **Three judges on one board.** Ten rows are labelled by Claude Opus 5, two by
+  GPT-5.6 Sol and one by Claude Opus 5.5 (see *The judge*). Where both label
+  sets are on disk, two judges differ by 0.03 and 1.50 points on a Monday Score
+  and by up to 10.0 on a single run.
 - **Three runs per scenario.** A scenario score rests on three samples, and some
   models move by more than 15 points between runs of the same prompt.
 - **Single-turn.** Every scenario is one prompt and one response.
@@ -373,7 +399,7 @@ verdicts/               recorded judge labels, one file per scenario and model
 mondaybench/            the implementation
 runs/                   raw model responses (immutable evidence)
 evaluations/            scored evaluations, versioned by suite
-leaderboard/            scenario boards (v1.5/ is current) and overall/ boards
+leaderboard/            scenario boards (v1.10/ is current) and overall/ boards
 releases/               one frozen manifest per suite version
 taxonomy/, analysis/    capability taxonomy and profiles
 audits/, experiments/   cross-judge audits and off-board experiments

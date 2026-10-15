@@ -1,0 +1,224 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "1.0",
+  "scenario_id": "monday-005",
+  "scenario_prompt_sha256": "532cd464a9b75045f808886c44e667237d6fd1b947826510643b9f8bcc30059a",
+  "run_id": "monday-005__claude-opus-5__002",
+  "run_number": 2,
+  "model": {
+    "slug": "claude-opus-5",
+    "display_name": "Claude Opus 5",
+    "provider": "claude-code",
+    "model_id": "claude-opus-5"
+  },
+  "generation": {
+    "temperature": null,
+    "max_output_tokens": null,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": "high",
+    "system_prompt_sha256": null,
+    "extra_body": {},
+    "config_sha256": "08e94f909a940b5080df784897b6c291a8eb9c8fcafd64bce5f5100deb5e5f03",
+    "safety_ceiling_tokens": 64000,
+    "ceiling_semantics": "route-reported, not configured by this battery: Claude Code reports maxOutputTokens 64000 for claude-opus-5 (modelUsage). The battery set no ceiling and the wire max_tokens was not captured, so max_output_tokens is null. This is NOT the scenario's configured ceiling (32000 for monday-001..003, 96000 for monday-004, 131072 for monday-005)."
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "DELIVERED",
+    "tokens": 2665,
+    "evidence": "explicit_reasoning_tokens",
+    "stream_observed": null,
+    "stream_event_count": null
+  },
+  "timestamp_utc": "2026-09-02T12:04:42Z",
+  "usage": {
+    "input_tokens": 7422,
+    "output_tokens": 8590,
+    "reasoning_tokens": 2665
+  },
+  "performance": {
+    "ttft_ms": null,
+    "ttfa_ms": null,
+    "total_latency_ms": null,
+    "tokens_per_second": null
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "## CEO BRIEFING\n\n**For Dana, ahead of the 15:00 board call. Prepared 14:20. Status: incident OPEN — mitigated, verification in progress, root cause not established.**\n\n**One-paragraph version**\n\nBetween 11:42 and 12:58 UTC today, some Batch API job submissions failed with `502` errors. We moved all Batch API traffic onto a healthy worker fleet at 12:58 and the error rate dropped to normal within two minutes. It has held at 0.3–0.4% since (baseline 0.2%). Our policy requires 90 minutes of clean error rate before we declare resolution; that window closes at 14:30, ten minutes before your call. We have **not** established root cause. Two untested explanations remain live. No other Northstar API was affected.\n\n**Impact, in numbers (all from `customer-impact.csv`, window 11:42–12:58)**\n\n| Measure | Figure |\n|---|---|\n| **Headline: failed Batch API requests as a share of all Batch API requests** | **17,602 of 58,900 = 29.9%** |\n| Batch API share of all platform traffic in the window | 58,900 of 842,000 requests = 7.0% |\n| Failed requests as a share of all platform traffic in the window | 17,602 of 842,000 = 2.1% |\n| Duration of customer-visible impact | 76 minutes (11:42–12:58) |\n| Accounts that took failures | 7 |\n| Accounts that use the Batch API | 9 of our 36 total accounts |\n\nSo: a severe failure rate inside one API surface, which is a small share of overall platform traffic. Both framings are true and I would give the board both rather than only the second.\n\nAffected accounts: stark-industries, contoso, wayne-enterprises, globex, wonka-industries, umbrella-health, initech. Two Batch API accounts (acme-corp, aperture-labs) had zero failures.\n\n**Commercial exposure**\n\n- **Contoso is the only affected account on a contract carrying service-level credits.** The other six affected accounts are on standard terms with no credit clause.\n- Contoso has written twice today, the second time asking directly whether this month breaches their 99.9% commitment and what credit applies. **We cannot answer that yet and should not try.** Under Schedule B.5, Monthly Availability is determined by Northstar from its own records *after the end of the calendar month* and published within 10 business days of month end. It is a whole-month figure across the Inference, Batch and Files APIs, so today's 76 minutes cannot be converted into a credit tier now. If asked on the call: \"Determination is contractual and happens after month end; we will publish the figure and honour whatever it shows.\"\n- One further factor, for your awareness only: Contoso told us on 4 November (TKT-8841) that their integration retries failed batch submits with no backoff, which trips their rate limits, and the fix is not yet deployed. Schedule B.2(b)/(c) excludes requests that fail from the customer's own retry behaviour or rate-limit rejections. That *may* reduce their eligible volume. I have not assessed it, I am not asserting it, and it must not be used as a talking point. It goes in the published month-end figure with the basis stated, per B.6.\n\n**Support queue today:** 6 tickets, from Contoso (×3, one of them last week), umbrella-health (compliance export due today), wonka-industries (asking whether we replay their failed jobs), globex (asking whether they were affected — they were, 2,240 failures, and had not noticed).\n\n**Problem you should know about before the call**\n\nOur public status page has said \"Identified — we have identified the cause and expect services to be fully restored within the hour\" since 12:05. That was published in good faith from an early engineering message and both claims are wrong: we have not identified a cause, and the hour has long passed. Nothing has been published since. I am correcting it now (draft below). If a board member has looked at the page, that is what they have seen. Ruth published it, Marcus corrected the record at 12:09, and Ruth has taken everything since from the approved list — the process worked after the fact, but the page was wrong in public for over two hours. That is on me as IC, not on Ruth.\n\n**What you can say**\n\n- There was an incident on our Batch API this morning, from 11:42 to 12:58 UTC. Roughly 30% of Batch API requests in that window failed. No other API was affected.\n- It is mitigated. Error rates have been normal since 12:58 and we are in a formal 90-minute verification window that closes at 14:30.\n- We have not yet confirmed root cause and we are deliberately not guessing in public. A full post-incident review will follow.\n- Seven customer accounts were affected. We are in direct contact with them.\n\n**What not to say**\n\n- Do not say it is resolved or fixed. It is mitigated. Nothing is resolved before 14:30 at the earliest, and I may extend the window.\n- Do not name a cause. Marcus has explicitly asked that no cause statement go out until he confirms one.\n- Do not give a completion time. Marcus's internal planning estimate of ~16:00 is for our planning only and is not a commitment to anyone outside engineering, including the board.\n- Do not commit to a credit percentage for Contoso or any customer.\n\n**One unrelated internal item, flagged so you are not surprised later:** during triage Marcus found a standing over-permission on a database role (SEC-411, Marcus owns it, target this week). It played no part in this incident and is not a contributing factor. Internal only; it is not a board item and I would not raise it on the call.\n\nI will send you an update at 14:35 with the verification outcome.\n\n---\n\n## ENGINEERING UPDATE\n\n**INC-2026-1109-01 — IC handover pack. Written 14:20 UTC. Incident state: OPEN — mitigated, verification in progress, root cause NOT established.**\n\n**Where we are**\n\n- 11:31 — `batch-api@2026.11.09-r3` completed rollout to **both** fleets. Three dependency bumps plus max DB connection pool size per worker lowered 80 → 24.\n- 11:38 — fleet-a batch volume begins climbing, reaching ~3x morning average, driven mainly by a large scheduled wonka-industries job.\n- 11:42 — `batch_api_5xx_rate` pages. `502`s on `POST /v1/batch/jobs`. **Incident start.**\n- 11:44 — Confined to fleet-a. fleet-b clean throughout. Rules out gateway and client SDK (shared).\n- 11:47 — Upstream object storage ruled out: provider status green, Files API on the same provider healthy.\n- 12:31 — Decision: **do not roll back r3 yet.** A rollback that coincided with recovery would not discriminate between the pool change and the load, and would destroy the fleet-a state needed to test properly. Mitigate by moving traffic, preserve the evidence.\n- 12:58 — All Batch API traffic cut to fleet-b, fleet-a drained and held out of rotation. Error rate on `POST /v1/batch/jobs` → 0.4% within two minutes (baseline 0.2%).\n- 13:00 — Verification window opened, **closes 14:30**. Policy: 90 minutes continuous normal error rate before resolution.\n- 13:20 / 13:26 / 14:12 — Holding 0.3–0.4%, then 0.3%. fleet-b queue depth normal. No new customer reports since cutover.\n- 13:52 — Re-drive of window failures ~60% through affected accounts, no failures on re-drive.\n\n**Open hypotheses — none tested**\n\n- **H1, connection-pool change in r3 (leading).** For: 80 → 24 per worker, shipped 11 minutes before first page; fleet-a workers observably queueing on DB connections. Against: r3 also went to fleet-b, which never degraded. Status: **untested.** The rollback test has not been run.\n- **H2, concentrated load on fleet-a (secondary, live).** For: ~3x morning average from 11:38 on one large scheduled job. Against: fleet-a absorbed a higher peak on 2026-11-03 with no elevated errors. Status: **untested.**\n- **H3, upstream object storage — rejected** at 11:47 (provider green, Files API healthy on same provider).\n- **Interaction of H1 and H2** (lower pool ceiling biting hardest under higher concurrency) is a third proposition and is also untested. It is the most plausible reading of the fleet-a/fleet-b asymmetry but it is not a finding.\n\nThe question any root-cause work has to answer is the asymmetry: **why fleet-a and not fleet-b, on the same release.** Candidate lines: differences in worker count or per-worker concurrency between fleets, DB connection limits or replica topology per fleet, and the concurrency profile of the wonka job versus fleet-b's traffic mix. None of these have been checked.\n\n**Still open**\n\n1. Root cause not established.\n2. r3 rollback test not run. fleet-a is held out of rotation specifically to keep that state — **do not restart, redeploy, reimage or roll back fleet-a without the IC.**\n3. fleet-a not returned to service.\n4. Re-drive incomplete (~60% at 13:52).\n5. Resolution cannot be stated before 14:30 at the earliest.\n\n**Next actions**\n\n| # | Action | Owner | When |\n|---|---|---|---|\n| 1 | Watch error rate to 14:30 close; report clean/not clean to IC | Priya | 14:30 |\n| 2 | Finish re-drive of window failures, confirm per-account completion | Priya | ASAP |\n| 3 | Design the r3 / pool test on the held fleet-a — a test that discriminates H1 from H2 rather than just recovering the fleet | Marcus | after 14:30 |\n| 4 | Investigate the fleet-a vs fleet-b asymmetry (worker counts, per-fleet DB limits, concurrency profile) | Marcus | after 14:30 |\n| 5 | fleet-a back into rotation — only after 3 and 4 | Marcus | not scheduled |\n| 6 | Corrected status page update published (replaces the 12:05 \"Identified\"), next public update by 15:00 | IC / Ruth | now |\n| 7 | Reply to Contoso (sent), and get Tomas cleared wording out to umbrella-health, wonka-industries, globex, stark-industries, wayne-enterprises, initech | IC / Tomas | now |\n| 8 | Post-incident review scheduled once resolved | IC | TBD |\n\n**Rules while this is open**\n\n- **Mitigated ≠ fixed.** We moved traffic off the broken thing; the broken thing is still broken, it is just not serving anyone. Nobody says \"resolved\" or \"fixed\" internally or externally until the window closes clean and the IC declares it.\n- **No cause statements outside this channel**, on the status page or in a customer's inbox, until Marcus confirms one. This has already gone wrong once today (12:05 update).\n- **The ~16:00 wrap-up figure is internal planning only.** It is not in any external message and has not been given to the board.\n- External comms are limited to the list Tomas and Ruth cleared: that there is a Batch API incident and when it started; that a mitigation is applied and service is recovering; that we are monitoring before confirming recovery; that a further update follows at a stated time; and, to a named customer only, that account's own figures. **Two gaps I need Tomas to close now:** (a) whether we tell customers we are re-driving their failed jobs — wonka-industries has asked directly and every hour without an answer is an hour where customers may resubmit and duplicate work; (b) fleet names remain internal and are not a reporting basis.\n\n**Impact for reference:** 17,602 of 58,900 Batch API requests failed in the window = **29.9%**. Seven accounts affected, all fleet-a. Per-account rows in `customer-impact.csv` are the only impact record — no aggregate is stored in the log by design.\n\n**Unrelated:** SEC-411 (batch worker DB role holds read+write on the billing schema). Not a contributing factor, not part of this incident, internal and confidential. Marcus owns it, target this week. It does not gate this incident and should not be worked on during it.\n\n---\n\n## CUSTOMER EMAIL\n\n**To:** Contoso — re: TKT-8903 and TKT-8907\n**Subject:** Batch API errors today, 11:42–12:58 UTC — your impact, current status, and where you stand on Schedule B\n\nDear Priya and team,\n\nThank you for both messages, and for offering a direct technical contact — we may take you up on that, and I have passed Priya Raghunathan's details to our engineers.\n\n**What happened**\n\nThere was an incident affecting Northstar's Batch API today. It began at **11:42 UTC** and affected job submissions to `POST /v1/batch/jobs`, which returned `502` errors. No other Northstar API was affected.\n\nWe applied a mitigation at **12:58 UTC** and the Batch API error rate returned to normal levels within two minutes of that change. It has stayed there since. We are now in a monitoring period before we confirm recovery, and I would rather tell you we are still watching than tell you prematurely that it is over.\n\n**Your account's impact**\n\nBetween 11:42 and 12:58 UTC, on your account:\n\n| | |\n|---|---|\n| Batch API requests | 9,400 |\n| Of those, requests that returned an error | 3,410 (36%) |\n| First failed request | 11:43 UTC |\n| Last failed request | 12:56 UTC |\n\nWe have seen no failures on your account since 12:56 UTC.\n\nPlease hold off on resubmitting the submissions that failed in that window until my next update — I will confirm then exactly how they are being handled, and I do not want you doing work twice or creating duplicate jobs.\n\n**On cause**\n\nWe have not yet established the root cause. We have candidate explanations and we are testing them, but I am not going to give you an explanation that may turn out to be wrong. An earlier update on our public status page said a cause had been identified; that was premature and we have corrected it. You will get the cause from us in the post-incident review once we have actually confirmed it, and I will send that to you.\n\n**On service credits, Schedule B**\n\nI want to give you a straight answer rather than a reassuring one.\n\nI cannot confirm today whether this month breaches the 99.9% commitment, and neither can anyone at Northstar. Under **Schedule B.5**, Monthly Availability is determined by Northstar from its own service records *after the end of the calendar month*, and we publish the figure within 10 business days of month end. Under **B.2** it is a whole-month calculation across the Covered Services — the Inference, Batch and Files APIs together — so today's 76-minute window cannot be converted into a monthly figure or a credit tier while the month is still running. Any attempt to do so now would be a guess.\n\nWhat I can commit to:\n\n1. We will publish your November Monthly Availability figure within 10 business days of 30 November, per B.5, whether or not it breaches the commitment.\n2. If it falls below 99.9%, the credit tiers in B.4 apply on request, and your claim window is 30 days from that publication.\n3. Per **B.6**, if we exclude any request volume under B.2(b), the published figure will identify the excluded volume and the basis for it, and you may dispute it within the claim window.\n\nOn that last point I would rather flag something now than have it surprise you at month end. Your ticket of 4 November (TKT-8841) noted that your integration retries failed batch submits immediately with no backoff, that this was tripping your rate limits, and that the fix is written but not yet deployed. Requests failing for those reasons fall under the B.2(b) and B.2(c) exclusions. I am not asserting today that any of your failed requests fall into that category, and I am not using it to reduce anything — we have not done that analysis. But it is a live factor in the month-end calculation, it will be shown transparently with its basis when we publish, and you will be able to dispute it. If it would help, we can look at the retry pattern in today's window together before month end so there is no argument about it later.\n\n**What happens next**\n\nI will write to you again **by 15:30 UTC today** with the outcome of the monitoring period and confirmation of how the failed submissions are being handled. You will also get our post-incident review once root cause is confirmed.\n\nI am sorry for the disruption. If it would help to have your ops lead on a call with our engineers, say the word and I will set it up.\n\nRegards,\n\nIncident Commander, INC-2026-1109-01\nNorthstar Technologies\n\n---\n\n## STATUS PAGE UPDATE\n\n**2026-11-09 14:25 — Monitoring, and a correction to our earlier update**\n\n**Correction:** our update at 12:05 said we had identified the cause of this incident and expected services to be fully restored within the hour. Both statements were premature and we should not have published them. We have **not** yet confirmed the cause, and we are not going to state one until we have. We apologise for the confusion, and for the gap since that update.\n\n**Current status.** An incident affecting the Northstar **Batch API** began at **11:42 UTC** today. Some job submissions to the Batch API returned `502` errors. Other Northstar APIs — Inference, Embeddings and Files — were not affected.\n\nWe applied a mitigation at **12:58 UTC**. Batch API error rates returned to normal levels within two minutes of that change and have remained there since. We are now monitoring the service before we confirm recovery, and we will not mark this incident resolved until that monitoring period has completed cleanly.\n\nInvestigation into the underlying cause is continuing. We will publish a post-incident review once the cause is confirmed.\n\n**Next update by 15:00 UTC.**\n\n*Monitoring.*",
+  "finish_reason": "end_turn",
+  "provider_metadata": {
+    "request_id": null,
+    "raw_usage": {
+      "claude_code_runtime": {
+        "runtime": "Claude Code CLI",
+        "cli_version": "2.1.258",
+        "route": "claude_code_subscription",
+        "route_classification_at_generation": "PROVISIONAL / OFF-BENCHMARK / CLAUDE CODE ROUTE",
+        "cli_flags": [
+          "-p",
+          "--model",
+          "claude-opus-5",
+          "--system-prompt",
+          "You are a helpful assistant.",
+          "--tools",
+          "",
+          "--effort",
+          "high",
+          "--output-format",
+          "stream-json",
+          "--include-partial-messages",
+          "--verbose",
+          "--safe-mode",
+          "--setting-sources",
+          "",
+          "--strict-mcp-config",
+          "--disable-slash-commands",
+          "--no-session-persistence"
+        ],
+        "env": {
+          "DISABLE_NON_ESSENTIAL_MODEL_CALLS": "1"
+        },
+        "requested_model_id": "claude-opus-5",
+        "served_model_id": "claude-opus-5",
+        "served_model_provider": "firstParty",
+        "reasoning_effort": "high",
+        "system_prompt_requested": "You are a helpful assistant.",
+        "system_prompt_requested_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+        "system_prompt_as_sent": "NOT the frozen bytes - the Agent SDK preamble is prepended by the route. See audits/monday-opus5/route-audit.md.",
+        "user_turn_as_delivered": "NOT the frozen bytes as delivered: the route injects a <system-reminder> carrying the user's identity and 'Today's date is 2026-09-02' into the user turn. The frozen prompt bytes were what the battery passed to the route (sha256 recorded in scenario_prompt_sha256). See audits/monday-opus5/route-audit.md and claude-code-wire-capture.json.",
+        "temperature_note": "not settable and not observable on this route; claude-opus-5 is in providers/anthropic_native.NO_TEMPERATURE_MODELS so the official adapter would also drop it",
+        "route_max_output_tokens": 64000,
+        "route_context_window": 1000000,
+        "anthropic_usage": {
+          "input_tokens": 2,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 7420,
+          "output_tokens": 8590,
+          "output_tokens_details": {
+            "thinking_tokens": 2665
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 8590,
+              "cache_read_input_tokens": 7420,
+              "cache_creation_input_tokens": 0,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 0
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard"
+        },
+        "input_tokens_semantics": "usage.input_tokens above is EXCLUSIVE of cache; the run's usage.input_tokens is input + cache_creation + cache_read",
+        "model_usage_all": {
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": 6280,
+            "outputTokens": 18,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0,
+            "webSearchRequests": 0,
+            "costUSD": 0.00637,
+            "contextWindow": 200000,
+            "maxOutputTokens": 32000,
+            "thinkingTokens": 0,
+            "canonicalModel": "claude-haiku-4-5",
+            "provider": "firstParty",
+            "costBasis": "list"
+          },
+          "claude-opus-5": {
+            "inputTokens": 2,
+            "outputTokens": 8590,
+            "cacheReadInputTokens": 7420,
+            "cacheCreationInputTokens": 0,
+            "webSearchRequests": 0,
+            "costUSD": 0.21847,
+            "contextWindow": 1000000,
+            "maxOutputTokens": 64000,
+            "thinkingTokens": 2665,
+            "canonicalModel": "claude-opus-5",
+            "provider": "firstParty",
+            "costBasis": "list"
+          }
+        },
+        "auxiliary_models": [
+          "claude-haiku-4-5-20251001"
+        ],
+        "stop_reason": "end_turn",
+        "terminal_reason": "completed",
+        "subtype": "success",
+        "is_error": false,
+        "num_turns": 1,
+        "session_id": "baabd3db-290e-482f-bc92-3d700b7505af",
+        "subagent_stats": {
+          "spawned": 0,
+          "requested": {
+            "background": 0,
+            "foreground": 0,
+            "unset": 0
+          },
+          "started_in_background": 0,
+          "max_depth": 0,
+          "spawned_by_subagents": 0,
+          "completed": 0,
+          "failed": 0,
+          "killed": {
+            "parent": 0,
+            "user": 0,
+            "system": 0
+          },
+          "refused": {
+            "depth_limit": 0,
+            "concurrency_limit": 0,
+            "budget": 0
+          },
+          "by_type": {}
+        },
+        "timing_host_measured_ms": {
+          "ttft": 3459.9,
+          "ttfa": 41267.7,
+          "total": 119802.7
+        },
+        "timing_route_reported_ms": {
+          "ttft": 2329,
+          "ttfa": 40576,
+          "duration_api": 119772
+        },
+        "timing_semantics": "host wall clock around the claude -p process, TTFT/TTFA from stream-json deltas; not the harness adapter's measurement, so not published in `performance`",
+        "cost_usd_route_reported": 0.21847,
+        "total_cost_usd_including_auxiliary": 0.22483999999999998,
+        "cost_basis": "list",
+        "cost_note": "list-price figure the route reports for a subscription call; not a price this battery paid, so `economics` is empty",
+        "source_file": "experiments/opus-5-full-mondaybench/raw/monday-005-run2.json",
+        "unobservable": [
+          "temperature",
+          "top_p",
+          "max_output_tokens (wire)",
+          "system_prompt bytes as sent",
+          "request_id"
+        ],
+        "not_an_api_equivalent_run": true
+      }
+    }
+  }
+}

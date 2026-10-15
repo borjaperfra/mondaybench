@@ -1,0 +1,121 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "1.0",
+  "scenario_id": "monday-002",
+  "scenario_prompt_sha256": "740e627cbc7413c321ede0d54000504de54821d34ff4677f82731b89600423a8",
+  "run_id": "monday-002__claude-fable-5-1__002",
+  "run_number": 2,
+  "model": {
+    "slug": "claude-fable-5-1",
+    "display_name": "Claude Fable 5.1",
+    "provider": "claude-code",
+    "model_id": "claude-fable-5-1"
+  },
+  "generation": {
+    "temperature": null,
+    "max_output_tokens": null,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": "high",
+    "system_prompt_sha256": null,
+    "extra_body": {},
+    "config_sha256": "131c10c70517c8b8638f855ced5a84a7b391a2e735d384ffa3e7fc6deda79385",
+    "safety_ceiling_tokens": 64000,
+    "ceiling_semantics": "route-reported, not configured by this battery: Claude Code reports a 64000-token output ceiling for claude-fable-5-1. The battery set no ceiling and the wire max_tokens was not captured, so max_output_tokens is null. This is NOT the scenario's configured ceiling (32000 for monday-001..003, 96000 for monday-004, 131072 for monday-005)."
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "DELIVERED",
+    "tokens": 4235,
+    "evidence": "explicit_reasoning_tokens",
+    "stream_observed": null,
+    "stream_event_count": null
+  },
+  "timestamp_utc": "2026-09-02T07:56:56Z",
+  "usage": {
+    "input_tokens": 3806,
+    "output_tokens": 7436,
+    "reasoning_tokens": 4235
+  },
+  "performance": {
+    "ttft_ms": null,
+    "ttfa_ms": null,
+    "total_latency_ms": null,
+    "tokens_per_second": null
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "# 1. CURRENT STATE (Mon 14 Sep, 09:07)\n\n**Enterprise Controls release**\n- 2.9.4 passed staging (session-preservation test + Priya's verification, Fri). Friday's production attempt failed on shard eu-03 before rollout opened; no customer impact.\n- Two recovery options ready; Product (me) must choose. Maya has explicitly declined to be an approval gate — governance is Priya's release policy + Sam's rollout process.\n- Hard constraint: Atlas rollout must **begin before 12:00** or migration slips to Thursday (renewal already signed; slip = exec noise only).\n- Availability: Marcus 09:15–10:20 (deploys); Priya 09:00–09:35 and 10:25–12:30 (review/verify); Sam and Daniel 09:00–12:30.\n- Comms: Sarah is out; Daniel holds the final announcement + Atlas recipient list and sends only after Sam confirms rollout open.\n\n**Path viability**\n- **Option A (2.9.4, no code change, 20 min, 8% session-reset risk):** no delta review needed → deploy 09:15–09:35 → Priya verifies 10:25–10:45 → Sam opens 10:45–11:00 → rollout begins ~11:00. Works, with 45 min of Marcus buffer.\n- **Option B (2.9.5-patch, code change, 45 min, <1% risk):** needs 25-min delta review *before* deploy and deploy finished by 10:20 (Marcus leaves) → review would have to run 09:10–09:35 from a diff already submitted and deploy run 09:35–10:20 with zero margin. Marcus isn't online until 09:15 to submit the diff, and Priya leaves 09:35. **Not viable today.**\n- Superseded: the \"10:30 launch\" figure (impossible — Priya unavailable until 10:25); the \"Maya approval\" task.\n\n**Customers / revenue**\n- Zenith: fully resolved — fix validated, countersigned €96k ARR / 24 months, back to normal cadence. The \"renewal risk\" task is stale.\n- Atlas: renewal signed; only today's migration window is at stake.\n- Orion: conflicting org IDs (71A in Slack vs 17A on ticket); live flag for 71A shows scim_enabled=false. No status to be sent until resolved.\n- Pricing: no authoritative external workbook; the pinned \"v4-final\" is *not* authoritative; internal scenario values only (€2,500 / 40 seats / €55); no announcement date. Nothing external.\n- Board pack: Maya needs the €54k expansion reconciliation by 11:00 (pack locks 11:30). The arithmetic fully reconciles from account data (below).\n\n*(Note: system date shows 2026‑09‑02, but all evidence places today as Monday 14 Sep; I am acting on the evidence.)*\n\n# 2. MY PLAN FOR TODAY\n\n1. **09:07–09:15 — Decide and announce path.** Post in #enterprise-launch: Product selects **Option A** (retry 2.9.4 with eu-03 shard precheck). Rationale: only path that fits Marcus/Priya availability and the 12:00 deadline; exact staged build → post-deploy check only per policy. Tag Marcus (deploy at 09:15), Priya (post-deploy verification at 10:25, no delta review), Sam (open rollout after Priya), Daniel (hold announcement). Ask Marcus to confirm at 09:15 that the precheck covers Friday's eu-03 failure.\n2. **09:15–09:35 — Marcus deploys 2.9.4 with precheck.** I monitor. If it fails, Marcus retries within his window (until 10:20); no code changes without Priya's delta review.\n3. **09:35–09:45 — Update Atlas via Laura:** deploy status, rollout expected to begin ~11:00, inside their window. Do not quote 10:30.\n4. **09:35–10:25 (Priya offline window) — Board pack reconciliation** to Maya, well before 11:00 (see §3 for the arithmetic). Facts separated from hypotheses.\n5. **10:00–10:20 — Orion:** ask Laura/Support to confirm the org ID from the ticket (17A vs 71A) and have Sam read the live scim flag for that org. No customer reply until confirmed.\n6. **10:25–10:45 — Priya post-deploy verification.**\n7. **10:45–11:00 — Sam opens and sanity-checks rollout.** Once Sam confirms open, Daniel sends the customer announcement; Laura confirms to Atlas that migration can proceed.\n8. **~11:00–11:30 — Globex escalation** (see §3), then Wonka/Soylent outreach setup with Laura.\n9. **Fallback (if production isn't healthy by 10:20):** stop; inform Laura/Atlas before 12:00 that migration moves to Thursday; Daniel holds the announcement; reconsider Option B for Thursday with a scheduled delta review.\n\n# 3. CUSTOMER / REVENUE PRIORITIES\n\n**Board pack arithmetic (€180k target − €126k expected = €54k gap):**\n- Wayne −€18k — *established cause:* expansion moved to October by signed amendment.\n- Globex −€12k — *established cause:* September expansion pending procurement.\n- Soylent −€10k — **no stated cause.** Observations only: usage −22%, admin logins −28%, ticket SO‑19 (slower onboarding).\n- Wonka −€14k — **no stated cause.** Observations only: usage −35%, admin logins −49%, no tickets.\n- Stark €0 change (on plan); Acme €0 change (never forecast).\n- Total: 18+12+10+14 = €54k ✓. Wayne+Globex = €30k; Soylent+Wonka = the remaining €24k.\n\n**Accounts needing attention today**\n- **Globex (highest):** renewal in 18 days, €12k expansion stuck in procurement, high-severity G‑441 (admins can't complete SSO setup) plus G‑447/G‑451 open, admin logins −61%. Action: escalate G‑441 today, get an owner/ETA on all three tickets, align with sales on procurement status. Report the tickets as a risk observation, not as the cause of the slip.\n- **Wonka:** renewal in 31 days, expansion halved with no explanation, steep usage/login decline, zero tickets (so no signal from support). Action: Laura books a discovery call this week; treat as unexplained.\n- **Soylent:** renewal in 44 days, expansion cut €10k unexplained, SO‑19 onboarding slowness. Action: CS check-in + push SO‑19 resolution.\n- **Acme — not a problem:** −45% usage is the approved, expected 40–50% batch-processing shift. Only action: confirm the 9‑day renewal paperwork is progressing (status still \"active\", not \"renewed\").\n- **No action:** Wayne (renewed, amendment), Stark (on plan, low-severity doc ticket), Zenith (resolved), Atlas (renewal signed; today is operational only).\n\n# 4. DO NOT DO\n\n- Do not seek Maya's approval for the release — she explicitly refused to be a gate.\n- Do not call Zenith about \"renewal risk\" — resolved and countersigned Friday.\n- Do not choose Option B today — cannot fit delta review + 45‑min deploy inside Marcus/Priya windows.\n- Do not deploy any code change without Priya's 25‑min delta review; do not open rollout before her post-deploy verification.\n- Do not confirm a 10:30 launch to Atlas; do not let Atlas start migration before Sam confirms rollout open.\n- Do not send or let anyone send the customer announcement before Sam's confirmation (Daniel sends, not me).\n- Do not send pricing to Initech procurement or quote the pinned v4-final workbook or the internal scenario values externally.\n- Do not reply to Orion on SCIM status until org ID and live flag are confirmed.\n- Do not invent causes for Soylent/Wonka reductions or attribute Globex's expansion slip to its tickets.\n- Do not flag Acme's usage drop as churn risk in the board pack.\n- Do not act on the Thursday pricing numbers (declared obsolete).\n\n# 5. UNCLEAR / MUST VERIFY\n\n- **Does Option A's shard precheck address Friday's eu-03 root cause?** Marcus to confirm at 09:15; no root-cause statement exists in the record.\n- **Is 8% session-reset risk acceptable to Security for the Atlas migration?** Priya's policy allows A, but Maya wants Security \"comfortable\" — get Priya's explicit OK in-channel at 09:15–09:35.\n- **Can Priya's 10:25 post-deploy verification proceed with Marcus offline?** Not stated; if a fix is needed after 10:20, there is no engineer — confirm whether anyone else can act.\n- **Orion:** which org (17A or 71A) is theirs, and the live scim flag for that org.\n- **Acme renewal (9 days):** is renewal paperwork in motion? Contract shows only \"active\".\n- **Globex:** procurement ETA for the €12k expansion and whether it still lands in September or moves.\n- **Laura's availability today** (not on the calendar) for Atlas/Orion/Globex outreach.",
+  "finish_reason": "end_turn",
+  "provider_metadata": {
+    "request_id": null,
+    "raw_usage": {
+      "claude_code_runtime": {
+        "runtime": "Claude Code CLI",
+        "cli_version": "2.1.258",
+        "route": "claude -p (Claude Code CLI 2.1.258), OAuth subscription",
+        "cli_invocation": "documented in experiments/fable-5.1-full-mondaybench/METHODOLOGY.md (not recorded per run)",
+        "requested_model_id": "claude-fable-5-1",
+        "served_model_id": "claude-fable-5-1",
+        "served_model_provider": "firstParty",
+        "generation_as_recorded": {
+          "system_prompt_requested": "You are a helpful assistant.",
+          "effort_requested": "high",
+          "temperature": null,
+          "top_p": null,
+          "route_max_output_tokens": 64000,
+          "tools": []
+        },
+        "reasoning_effort": "high",
+        "system_prompt_as_sent": "NOT the frozen bytes: the route prepends the Agent SDK preamble to the requested system prompt.",
+        "user_turn_as_delivered": "NOT the frozen bytes as delivered: the route injects a <system-reminder> carrying the user's identity and 'Today's date is 2026-09-02' into the user turn. The frozen prompt bytes were what the battery passed to the route (sha256 recorded in scenario_prompt_sha256). See audits/monday-002/fable-5.1-preflight.md.",
+        "route_max_output_tokens": 64000,
+        "usage_as_recorded": {
+          "input_tokens": 2,
+          "output_tokens": 7436,
+          "thinking_tokens": 4235,
+          "cache_read_input_tokens": 3804,
+          "cache_creation_input_tokens": 0
+        },
+        "input_tokens_semantics": "usage_as_recorded.input_tokens is EXCLUSIVE of cache; the run's usage.input_tokens is input + cache_creation + cache_read",
+        "finish_reason": "end_turn",
+        "is_error": false,
+        "num_turns": 1,
+        "timing_host_measured_ms": {
+          "ttft_ms": 6588.1,
+          "ttfa_ms": 60656.2,
+          "total_latency_ms": 98642.6,
+          "duration_api_ms": 99800
+        },
+        "timing_semantics": "host wall clock around the claude -p process, TTFT/TTFA from stream-json deltas; not the harness adapter's measurement, so not published in `performance`",
+        "economics_as_recorded": {
+          "cost_usd_route_reported": 0.372771,
+          "cost_basis": "list",
+          "models_billed": [
+            "claude-fable-5-1",
+            "claude-haiku-4-5-20251001"
+          ]
+        },
+        "cost_note": "list-price figure the route reports for a subscription call; not a price this battery paid, so `economics` is empty",
+        "source_file": "experiments/fable-5.1-date-sensitivity/run-A2-frozen.json",
+        "source_label": "RUN_A2_FROZEN",
+        "unobservable": [
+          "temperature",
+          "top_p",
+          "max_output_tokens (wire)",
+          "system_prompt bytes as sent",
+          "request_id"
+        ],
+        "not_an_api_equivalent_run": true,
+        "battery_note": "a frozen arm of experiments/fable-5.1-date-sensitivity/; the date-neutralised arm B_NEUTRALIZED is not part of this battery"
+      }
+    }
+  }
+}

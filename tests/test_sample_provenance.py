@@ -163,6 +163,25 @@ def test_E_monday_005_official_samples_are_mutually_distinct():
     assert len(ids) == len(set(ids)), "two official monday-005 samples are the same response"
 
 
+# Runtimes that expose no request id, and the key under which each records the
+# session identity that stands in for one.
+SESSION_IDENTITY_KEYS = {
+    "codex_runtime": "codex_thread_id",
+    "claude_code_runtime": "session_id",
+}
+
+# Batteries whose route recorded NO per-call identity at all, so the content hash
+# is the only identity their samples have. Named here with the reason rather than
+# passed silently, and each run must still declare `request_id` unobservable.
+# Added with suite v1.10, when these two closed models became board rows; their
+# monday-005 responses are distinct from each other and from every archived run
+# (tests D and E), which is what the second identity exists to corroborate.
+NO_CALL_IDENTITY = {
+    "claude-fable-5-1": "claude -p battery whose generation script kept no session id",
+    "gemini-3-8-flash-high": "Antigravity GetModelResponse returns the answer text only",
+}
+
+
 def test_E2_every_monday_005_run_carries_a_provider_request_id():
     """Corroborating identity present on the real battery, both sides.
 
@@ -175,24 +194,34 @@ def test_E2_every_monday_005_run_carries_a_provider_request_id():
     to say so explicitly - `request_id` null AND the field listed among the
     values the runtime did not expose - and supply a session identity in its
     place. A run that is simply missing a request id, with no such record, still
-    fails.
+    fails. The only exceptions are the batteries named in NO_CALL_IDENTITY, which
+    must still declare the absence.
     """
     paths = sorted((REPO_ROOT / "runs" / "monday-005").glob("*/run-*.json")) + archived_run_paths(
         "monday-005", REPO_ROOT
     )
     missing = []
+    excepted: set[str] = set()
     for path in paths:
         record = read_run_record(path)
         if sample_identity(record)[1]:
             continue
-        runtime = ((record.get("provider_metadata") or {}).get("raw_usage") or {}).get(
-            "codex_runtime"
-        ) or {}
+        raw_usage = (record.get("provider_metadata") or {}).get("raw_usage") or {}
+        blocks = [(key, raw_usage[key]) for key in raw_usage if key.endswith("_runtime")]
+        runtime_key, runtime = blocks[0] if len(blocks) == 1 else (None, {})
         declared = "request_id" in (runtime.get("unobservable") or [])
-        session = runtime.get("codex_thread_id")
+        session = runtime.get(SESSION_IDENTITY_KEYS.get(runtime_key, ""))
+        slug = (record.get("model") or {}).get("slug")
+        if declared and not session and slug in NO_CALL_IDENTITY:
+            excepted.add(slug)
+            continue
         if not (declared and session):
             missing.append(path)
     assert not missing, f"runs without a request_id or a declared substitute: {missing[:3]}"
+    assert excepted == set(NO_CALL_IDENTITY), (
+        f"NO_CALL_IDENTITY names batteries that no longer need it: "
+        f"{sorted(set(NO_CALL_IDENTITY) - excepted)}"
+    )
 
 
 # --------------------------------------------------------------------------

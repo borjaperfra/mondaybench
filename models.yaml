@@ -641,6 +641,134 @@ models:
       recorded as null rather than guessed. Runs, verdicts and evaluations live
       in astra-mondaybench-challenger/.
 
+  # ---------------------------------------------------------------------------
+  # THREE CLOSED MODELS ON NON-API ROUTES, OFFICIAL FROM SUITE v1.10.
+  #
+  # Claude Opus 5, Claude Fable 5.1 and Gemini 3.8 Flash (High) were measured on
+  # 2026-09-02 through routes other than this harness's provider adapter, and
+  # were published on the site as provisional rows. On 2026-10-15 the owner
+  # decided they are official board rows; the site distinguishes open from
+  # closed weights and nothing else. They enter the board the way GPT-6 Astra
+  # did (commit 4d51bda): a build script beside each source turns the preserved
+  # responses into run files, byte-identical, and every field the route does
+  # not expose is null, never a number.
+  #
+  # Why not through the harness: claude-opus-5 IS on the Helmcode allowlist but
+  # returned credits_exhausted (a per-token third-party model not covered by
+  # any subscription tier); claude-fable-5-1 was on no allowlist under any
+  # spelling; the direct Anthropic API is closed by a hard project rule. Gemini
+  # 3.8 Flash was driven through Antigravity; the repository records the route,
+  # not why an API route was not used. See audits/monday-opus5/route-audit.md,
+  # audits/monday-002/fable-5.1-preflight.md and
+  # gemini-3.8-mondaybench-challenger/audits/route-preflight.md.
+  #
+  # What every run of these three DOES establish: the bytes the battery passed
+  # to the route hash to the frozen prompt on all five scenarios (re-checked by
+  # each build script against the prompt the harness assembles today), one
+  # call per run with no tools and no carry-over, and each response preserved
+  # byte-exact.
+  #
+  # WHAT IS NOT EQUIVALENT, stated per route:
+  #
+  #   claude -p (Opus 5, Fable 5.1)  the route prepends the Agent SDK preamble to
+  #     the requested system prompt and injects a <system-reminder> carrying the
+  #     user's identity and "Today's date is 2026-09-02" into the user turn, so
+  #     the user turn as delivered is not the frozen bytes. temperature is not
+  #     settable. The route reports a 64,000-token output ceiling for both
+  #     models; it is recorded as the run's `safety_ceiling_tokens` with its
+  #     provenance, and it is NOT the scenario's configured ceiling (32,000 /
+  #     96,000 / 131,072). `max_output_tokens` - the wire value - is null,
+  #     because the battery never set one and the wire was not captured. Every
+  #     run finished with stop_reason end_turn well under 64,000 output tokens.
+  #
+  #   Antigravity (Gemini 3.8 Flash)  the RPC carries only the prompt and a model
+  #     placeholder: no system prompt is sent (Google-side instructions apply
+  #     and cannot be inspected), and temperature, the served model id, token
+  #     usage, finish reason and the output ceiling are all unobservable.
+  #
+  # These entries cannot generate runs: there is no base_url_env, so
+  # `mondaybench run` fails on them by design. api_style is the same
+  # placeholder Astra carries; there is no API behind it.
+  #
+  # THE LABELS ARE NOT ALL FROM THE BOARD'S JUDGE, and each `notes` names its
+  # judge. The evaluations are written under evaluator-opus5-v0.N, whose
+  # recorded identity is claude-opus-5, for the same reason DeepSeek V4.1
+  # Flash's GPT-5.6 Sol labels are: that is the evaluator whose rubric and
+  # contract the labels were produced against.
+  # ---------------------------------------------------------------------------
+  claude-opus-5:
+    display_name: "Claude Opus 5"
+    provider: claude-code
+    api_style: openai_compatible
+    model_id: "claude-opus-5"
+    generation:
+      # Not settable on the route. Null is "not measured", never "unset".
+      temperature: null
+      # The wire max_tokens was never set or captured. The route-reported
+      # 64,000 ceiling is on each run as safety_ceiling_tokens.
+      max_output_tokens: null
+    capabilities:
+      reasoning: true
+    notes: >
+      Generated 2026-09-02 through `claude -p` (Claude Code CLI 2.1.258, OAuth
+      subscription, effort high), not through this harness's provider adapter;
+      route classification at the time NON_EQUIVALENT (system prompt preamble,
+      injected date and identity in the user turn, temperature not settable).
+      Unobservable fields are null. LABELS: the independent blind re-judge by
+      GPT-5.6 Sol (audits/blind-rejudge/inter-judge/source/), not the Opus 5
+      session judge - which is the same model as the candidate and scored this
+      battery 97.10. Monday Score 97.07. Runs built by
+      experiments/opus-5-full-mondaybench/build-runs.py; verdicts by
+      audits/capabilities/build-board-verdicts.py.
+
+  claude-fable-5-1:
+    display_name: "Claude Fable 5.1"
+    provider: claude-code
+    api_style: openai_compatible
+    model_id: "claude-fable-5-1"
+    generation:
+      temperature: null
+      max_output_tokens: null
+    capabilities:
+      reasoning: true
+    notes: >
+      Generated 2026-09-02 through `claude -p` (Claude Code CLI 2.1.258, OAuth
+      subscription, effort high, adaptive thinking), not through this
+      harness's provider adapter; same route caveats as claude-opus-5.
+      monday-002's three runs are the frozen arms A1/A2/A3 of
+      experiments/fable-5.1-date-sensitivity/; the date-neutralised arm is not
+      part of the battery. Unobservable fields are null. LABELS: the original
+      recorded Claude Opus 5 judge, POST-AUDIT - the ten corrections in
+      experiments/fable-5.1-full-mondaybench/AUDIT.md section 5 applied. Monday
+      Score 94.90. Runs built by
+      experiments/fable-5.1-full-mondaybench/build-runs.py; verdicts by
+      audits/capabilities/build-board-verdicts.py.
+
+  gemini-3-8-flash-high:
+    display_name: "Gemini 3.8 Flash (High)"
+    provider: antigravity
+    api_style: openai_compatible
+    model_id: "gemini-3.8-flash-high"
+    generation:
+      # Not part of the RPC schema; backend-managed.
+      temperature: null
+      # The IDE registry lists 65,536 but it is not transmitted.
+      max_output_tokens: null
+    capabilities:
+      reasoning: true
+    notes: >
+      Generated 2026-09-02 through the Antigravity Language Server (ide-2.4.5,
+      Connect-RPC GetModelResponse, thinking budget High), not through this
+      harness's provider adapter; route classification NON_EQUIVALENT. No
+      system prompt is sent; temperature, top_p, the served model id, token
+      usage, finish reason and the output ceiling are unobservable and null.
+      LABELS: a blind criterion-by-criterion re-judge by Claude Opus 5.5
+      (experiments/gemini-3.8-flash-high-opus-judge/), not the Claude Opus 5
+      that labelled the incumbents. Monday Score 86.00 (the earlier 88.37 had
+      no criterion labels and is superseded). Runs built by
+      gemini-3.8-mondaybench-challenger/scripts/build-runs.py; verdicts by
+      audits/capabilities/build-board-verdicts.py.
+
   glm5.2:
     display_name: "GLM 5.2"
     provider: helmcode

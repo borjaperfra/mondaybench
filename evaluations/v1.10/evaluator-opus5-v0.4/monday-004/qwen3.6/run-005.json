@@ -1,0 +1,298 @@
+{
+  "schema_version": "1",
+  "evaluator_id": "evaluator-opus5-v0.4",
+  "benchmark_version": "0.4",
+  "rubric_version": "0.3",
+  "scenario_id": "monday-004",
+  "run_id": "monday-004__qwen3.6__005",
+  "model_slug": "qwen3.6",
+  "scenario_prompt_sha256": "3a0cbb569ca4f711b8907177af9204cec267d26f35f732829df56b03ed23ef99",
+  "timestamp_utc": "2026-10-15T17:40:26Z",
+  "judge": {
+    "provider": "anthropic",
+    "model_id": "claude-opus-5",
+    "temperature": 0.0,
+    "effort": null,
+    "unsupported_parameters": [],
+    "prompt_fingerprint": "45998b3c03939498",
+    "route": "recorded",
+    "verdict_source": "official.jsonl",
+    "contract_fingerprint": "5ef5dc8dc34221ac",
+    "contract_schema_version": "1",
+    "judge_session_id": null
+  },
+  "suite_version": "1.10",
+  "migrated_from": "evaluations/v1.5/evaluator-opus5-v0.4/monday-004/qwen3.6/run-005.json",
+  "dimensions": {
+    "revenue_reasoning": {
+      "score": 9.0,
+      "max_score": 20.0
+    },
+    "customer_health": {
+      "score": 8.5,
+      "max_score": 15.0
+    },
+    "acquisition_reasoning": {
+      "score": 12.0,
+      "max_score": 19.0
+    },
+    "plan_economics": {
+      "score": 12.5,
+      "max_score": 19.0
+    },
+    "cross_table_data_quality": {
+      "score": 7.0,
+      "max_score": 18.0
+    },
+    "decision_quality": {
+      "score": 4.5,
+      "max_score": 9.0
+    }
+  },
+  "criteria": {
+    "duplicate_detected": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'Soylent has two identical subscription invoices in October (INV-2026-10-0209 from stripe and billing_sync). If not deduplicated, October revenue is overstated by EUR 19,500.'",
+      "reason": "Identified by id and both sources, quantified, and its own revenue figures come from the plan file rather than a naive invoice sum."
+    },
+    "annual_prepayment_normalized": {
+      "result": "PARTIAL",
+      "points_awarded": 3.0,
+      "points_possible": 6.0,
+      "evidence": "'Gringotts converted to an annual contract in Oct (EUR 120k upfront), boosting October cash flow but not monthly recurring revenue.'",
+      "reason": "The invoice is identified and correctly kept out of the recurring line, with the cash effect named. The EUR 10,000 monthly equivalent is never stated, which is what the PASS bar asks for beyond noticing."
+    },
+    "headline_vs_recurring_growth": {
+      "result": "FAIL",
+      "points_awarded": 0.0,
+      "points_possible": 6.0,
+      "evidence": "'Monthly subscription revenue is stable: EUR 659k (Sept) -> EUR 659.5k (Oct) for Enterprise; EUR 63k -> EUR 66.2k for Pro; EUR 24.1k -> EUR 32k for Starter'",
+      "reason": "Three plan lines, all exact, and no company total on any basis. Neither the headline growth nor a normalised figure refuting it is ever computed, so there is no month-on-month comparison to make."
+    },
+    "revenue_conclusion": {
+      "result": "PARTIAL",
+      "points_awarded": 2.0,
+      "points_possible": 4.0,
+      "evidence": "'Monthly subscription revenue is stable' with the professional-services drop and the Gringotts cash effect both separated out",
+      "reason": "The right direction - stability rather than growth - reached by keeping the one-off items apart, but never stated as the section's conclusion and never set against the number a dashboard would report."
+    },
+    "segment_retention_quantified": {
+      "result": "PARTIAL",
+      "points_awarded": 2.5,
+      "points_possible": 5.0,
+      "evidence": "'5 customers churned in October: Nakatomi (Mid-market/Pro), and four SMB/Starters ... SMB churn is acute' and, in the summary, '44% monthly churn rate (4 of 9 starters churned)'",
+      "reason": "The rate is correct and correctly labelled as the Starter plan on its September base, and the churn is placed by segment. But no rate is given for Mid-market or Enterprise, so the three populations are never ranked on retention."
+    },
+    "sample_size_arr_context": {
+      "result": "FAIL",
+      "points_awarded": 0.0,
+      "points_possible": 4.0,
+      "evidence": "'support costs that are disproportionately high relative to ARR' and 'low usage relative to included limits' as the context for the 44%",
+      "reason": "The churn is never sized in ARR, never netted against the new logos, and never compared with the Mid-market loss. The context offered is plan economics rather than the size or value of what was lost."
+    },
+    "acme_false_positive_avoided": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'Acme Corp dropped 45% in requests, aligning with the operational note about migrating to batch runs. This is expected and non-alarming.' with Acme absent from every risk list",
+      "reason": "The migration named, the conclusion stated in terms, and 'All other active customers grew usage 5-10%' supplied as the contrast."
+    },
+    "no_churn_overreach": {
+      "result": "PASS",
+      "points_awarded": 2.0,
+      "points_possible": 2.0,
+      "evidence": "'Soylent's drop is unexplained and correlates with high-severity tickets' in the uncertainties",
+      "reason": "Reports the correlation and calls the cause unexplained rather than supplying one."
+    },
+    "raw_attribution_not_equivalent_new_business": {
+      "result": "PARTIAL",
+      "points_awarded": 2.5,
+      "points_possible": 5.0,
+      "evidence": "'Paid Search: Highest volume but lowest conversion. Drove significant expansion bookings (Stark EUR 84k, Umbrella EUR 48k, Globex EUR 42k) alongside new logos.'",
+      "reason": "All three expanding accounts named with their exact amounts, and they are separated from the new logos. But paid search's EUR 274,800 attributed total never appears, so the expansion is never expressed as a share of it and the channel is not disqualified on that basis."
+    },
+    "existing_customer_expansion_removed": {
+      "result": "PARTIAL",
+      "points_awarded": 2.5,
+      "points_possible": 5.0,
+      "evidence": "'Partner: Brought in Vandelay (EUR 132k ARR) and Clampett Oil (EUR 34.8k ARR)' and 'Content: Planet Express, Cogswell Cogs, Bishop Co (all new logos), and Massive Dynamic (expansion)'",
+      "reason": "New logos are separated from expansions channel by channel, with the accounts named and partner's two figures exact. But no new-logo ARR total is computed for any channel and no ranking is produced, so the reversal against the attributed table is left implicit."
+    },
+    "conversion_rate_vs_absolute_volume": {
+      "result": "PARTIAL",
+      "points_awarded": 2.0,
+      "points_possible": 4.0,
+      "evidence": "the funnel table gives Sept and Oct conversion rates for all four channels - Partner 25.0% -> 22.7%, Paid Search 8.5% -> 6.4% - and 'Paid Search: Highest volume but lowest conversion'",
+      "reason": "The falling rate is exact for every channel and volume is characterised, but no lead or conversion count appears, so the rise in absolute conversions alongside the falling rate is never shown."
+    },
+    "no_unsupported_channel_scale_decision": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "'Paid Search ... needs creative/landing page optimization to lift conversion' with no spend increase for it, and 'Finance must supply channel-level ad/ops budgets to compute CAC and payback periods'",
+      "reason": "Declines to scale paid search and names the missing input."
+    },
+    "cac_payback_unavailable": {
+      "result": "PASS",
+      "points_awarded": 2.0,
+      "points_possible": 2.0,
+      "evidence": "'The pack does not contain marketing spend, CAC, or channel budget data. CAC and payback periods cannot be calculated.' with both formulas written out",
+      "reason": "Refused, the missing input named, and the method specified for when it arrives."
+    },
+    "contribution_calculated": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "the six-row table: EUR 212,000 / 194,700 / 42,500 / 41,500 / 8,400 / 10,300, with profit per customer beside each",
+      "reason": "All exact, and the per-customer figures - EUR 15,143 / 13,907 / 5,313 / 4,611 / 933 / 792 - all check out."
+    },
+    "margin_calculated_or_correctly_compared": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "profit per customer for both months and all three plans, with 'Support cost per customer (~EUR 792) is ~32% of ARR (~EUR 2,462)'",
+      "reason": "A correct ordering expressed numerically as contribution per customer, which the criterion accepts, and the Starter ratio is exact."
+    },
+    "absolute_vs_scalable_economics": {
+      "result": "PARTIAL",
+      "points_awarded": 2.5,
+      "points_possible": 5.0,
+      "evidence": "'Enterprise remains the profit engine (~EUR 14k/cust), but infra costs are high (~45% of revenue)' against 'Pro is stable and healthy (~EUR 4.6-5.3k/cust)'",
+      "reason": "Both figures are present and the per-customer contrast is drawn, but it never says which question each answers - and the engineering recommendation then goes to Starter, the weakest on both measures, on grounds of fixing it rather than of where the economics are."
+    },
+    "plan_trajectory_evidence": {
+      "result": "PARTIAL",
+      "points_awarded": 1.5,
+      "points_possible": 3.0,
+      "evidence": "the plan table's utilisation column - Enterprise 1.89M/3.0M (63%), Pro 442k/600k (74%), Starter 84k/200k (42%) - with 'Pro ... usage is high relative to limits, creating natural overage revenue at renewal'",
+      "reason": "Utilisation is quantified for every plan across both months and the Starter fall from 57% to 42% is tracked. But it reads the averages only: no account above its included volume is named, and 'Usage is only 42% of included limits, meaning no overage revenue is generated' is true of Starter and is the same reasoning that is false one row up."
+    },
+    "product_focus_supported": {
+      "result": "PARTIAL",
+      "points_awarded": 2.5,
+      "points_possible": 5.0,
+      "evidence": "'Direct next quarter's engineering focus to the Starter plan' on onboarding automation, usage-growth triggers and a pricing review",
+      "reason": "A plan other than Pro, argued from support load, churn and utilisation - all cost-adjusted, and absolute revenue is never invoked, so it clears the FAIL bar. But the case is 'fix the weakest' rather than an economic argument for where investment returns most, and its own section 4 calls Pro the healthiest."
+    },
+    "customer_id_alias_resolved": {
+      "result": "FAIL",
+      "points_awarded": 0.0,
+      "points_possible": 4.0,
+      "evidence": "no account-level join between billing and usage is attempted; Wayne appears only in a list of accounts with high-severity tickets, which comes from support.csv alone",
+      "reason": "The FAIL clause applies: with no billing-to-usage join attempted there is no evidence the alias was handled."
+    },
+    "support_normalized": {
+      "result": "PARTIAL",
+      "points_awarded": 2.0,
+      "points_possible": 4.0,
+      "evidence": "'Support cost per customer (~EUR 792) is ~32% of ARR (~EUR 2,462), indicating heavy CS overhead for low-value accounts' and 'Support costs are rising but justified by ARR' for Enterprise",
+      "reason": "Starter is normalised on two denominators and Enterprise's load is explicitly weighed against its ARR rather than counted raw. But no rate is computed for Enterprise or Pro, so the comparison across plans is asserted rather than shown."
+    },
+    "cross_table_customer_signal": {
+      "result": "PARTIAL",
+      "points_awarded": 2.0,
+      "points_possible": 4.0,
+      "evidence": "'Soylent dropped 27% in requests and generated 6 high/critical support tickets in October. This is a churn risk signal.'",
+      "reason": "Usage and support joined on one account with the right conclusion drawn, but the third table is missing: Soylent's invoice reduction from EUR 22,000 to EUR 19,500 is never brought in, and no other account is built from three sources."
+    },
+    "figures_carried_correctly": {
+      "result": "PARTIAL",
+      "points_awarded": 1.5,
+      "points_possible": 3.0,
+      "evidence": "'Soylent ... generated 6 high/critical support tickets in October (mostly api_errors)' - Soylent filed 8 tickets in October, of which one is critical and three are high",
+      "reason": "One wrong count, repeated once in the recommendations, and it changes nothing: Soylent is escalated for immediate intervention either way. Everything else checkable is exact - all twelve plan figures, both months of profit per customer, the utilisation percentages, the professional services split by account, all eight funnel rates, the four churned accounts' usage declines to the decimal, and the Starter support ratio."
+    },
+    "causal_boundary": {
+      "result": "PARTIAL",
+      "points_awarded": 1.5,
+      "points_possible": 3.0,
+      "evidence": "'Soylent's drop is unexplained and correlates with high-severity tickets' in the uncertainties, and 'Soylent's unexplained 27% usage drop and critical tickets warrant immediate CS intervention' in the summary",
+      "reason": "Two of the three movements reported together, treated as a pattern to investigate, and the cause explicitly called unexplained. The revenue contraction - the third movement, and the one that makes it a pattern rather than a support problem - is absent."
+    },
+    "segment_recommendation": {
+      "result": "FAIL",
+      "points_awarded": 0.0,
+      "points_possible": 3.0,
+      "evidence": "'Reduce investment in the SMB/Starters segment: Reallocate CS and marketing resources away from cold outreach to Starter-tier prospects.'",
+      "reason": "Recommends the reduction on churn and support cost. It softens it - retention effort stays with existing accounts, and a price review is proposed - but resources are moved out of the segment, and the pack has no segment-level economics to support the move."
+    },
+    "acquisition_recommendation": {
+      "result": "PARTIAL",
+      "points_awarded": 1.5,
+      "points_possible": 3.0,
+      "evidence": "'Increase spend on the Partner channel. It delivers the highest trial conversion rate (~23%) and consistently sources higher-ARR new logos.'",
+      "reason": "Partner on a new-logo basis, with a lead-quality condition attached. But the spend increase is not conditioned on the missing cost data, which its own section 5 says is required before channel decisions can be made."
+    },
+    "product_recommendation": {
+      "result": "PASS",
+      "points_awarded": 1.0,
+      "points_possible": 1.0,
+      "evidence": "'Direct next quarter's engineering focus to the Starter plan' with three named workstreams",
+      "reason": "Single, actionable, and consistent with its own section 4's identification of Starter as the weakest plan. Whether it is the right plan is priced under product_focus_supported."
+    },
+    "uncertainty_discipline": {
+      "result": "PASS",
+      "points_awarded": 2.0,
+      "points_possible": 2.0,
+      "evidence": "six items including the funnel measuring paid-trial starts rather than closed deals, the support cost being fixed rather than marginal, and whether batch traffic is even counted in usage.csv",
+      "reason": "Every gap real, and the last is an observation no other run in the battery makes: if Acme's batch traffic is not in the usage file, platform utilisation is understated everywhere."
+    }
+  },
+  "false_actions": {},
+  "penalties": {
+    "items": [
+      {
+        "type": "PROHIBITED_ACTION",
+        "points": -7.0,
+        "evidence": "'Reduce investment in the SMB/Starters segment: Reallocate CS and marketing resources away from cold outreach to Starter-tier prospects.' - stated as the first line of the executive summary and repeated as recommendation 1.",
+        "reason": "Moving marketing and CS resources out of SMB on a churn rate is the action the pack rules out. It is the most carefully bounded of qwen3.6's three versions - retention effort stays with existing accounts and a pricing review is proposed instead of an exit - but leadership is still told to pull resources, and no segment-level economics exist to justify it."
+      }
+    ],
+    "dismissed": [],
+    "raw_total": -7.0,
+    "total": -7.0,
+    "capped": false
+  },
+  "deterministic_checks": [
+    {
+      "id": "contoso_11_00",
+      "matched": false,
+      "detail": "'11:00' appears near a mention of Contoso"
+    },
+    {
+      "id": "churn_3_1_to_4_4",
+      "matched": false,
+      "detail": "both churn figures 3.1 and 4.4 are present"
+    },
+    {
+      "id": "umbrella_metrics_present",
+      "matched": false,
+      "detail": "at least two of 163 / 1821 / 41 appear near a mention of Umbrella"
+    },
+    {
+      "id": "umbrella_named",
+      "matched": true,
+      "detail": "Umbrella is named in the response"
+    },
+    {
+      "id": "wednesday_present",
+      "matched": false,
+      "detail": "'Wednesday' appears in the response"
+    },
+    {
+      "id": "julia_present",
+      "matched": false,
+      "detail": "'Julia' appears in the response"
+    },
+    {
+      "id": "pied_piper_and_hooli",
+      "matched": false,
+      "detail": "both known cancellations are named"
+    }
+  ],
+  "disagreements": [],
+  "base_score": 53.5,
+  "final_score": 46.5
+}

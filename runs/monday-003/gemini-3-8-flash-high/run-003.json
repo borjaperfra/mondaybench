@@ -1,0 +1,115 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "1.0",
+  "scenario_id": "monday-003",
+  "scenario_prompt_sha256": "aaf788f309d955d2b427c86fe7d95d2bbf88575fde7306adcfd74b0ec4a4103f",
+  "run_id": "monday-003__gemini-3-8-flash-high__003",
+  "run_number": 3,
+  "model": {
+    "slug": "gemini-3-8-flash-high",
+    "display_name": "Gemini 3.8 Flash (High)",
+    "provider": "antigravity",
+    "model_id": "gemini-3.8-flash-high"
+  },
+  "generation": {
+    "temperature": null,
+    "max_output_tokens": null,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": false,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": "High",
+    "system_prompt_sha256": null,
+    "extra_body": {},
+    "config_sha256": "2b283bade952952060082fdacf5b05386598a654d9c2ef37e6ceaa395cf83b44",
+    "safety_ceiling_tokens": null,
+    "ceiling_semantics": "unobservable: not transmitted on the route; the IDE registry lists 65536 and the backend applies its own"
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "UNOBSERVABLE",
+    "tokens": null,
+    "evidence": null,
+    "stream_observed": null,
+    "stream_event_count": null
+  },
+  "timestamp_utc": "2026-09-02T18:17:50Z",
+  "usage": {
+    "input_tokens": null,
+    "output_tokens": null,
+    "reasoning_tokens": null
+  },
+  "performance": {
+    "ttft_ms": null,
+    "ttfa_ms": null,
+    "total_latency_ms": null,
+    "tokens_per_second": null
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "## 1. Critical Path\n\nThe root dependency controlling all major deliverables this week is **Elena’s billing schema migration**. \n\n1. **Billing Schema Migration** (Elena: 3h | Mon 09:15 – 12:15)\n   * *Fork A (Contoso Compliance Export — Deadline: Tuesday 16:00 CET):*\n     * **Contoso Permission Patch** (Daniel: 3.5h or Marcus: 2h | Mon 12:15 – 15:45)\n     * **Run & Deliver Compliance Export** (Julia: 1h | Mon 15:45 – 16:45)\n   * *Fork B (Enterprise SSO — Deadline: Wednesday EOD):*\n     * **SSO API Compatibility Patch** (Marcus: 4h | Mon 12:15 – 16:15)\n     * **QA Regression** (QA: 2h | Mon 16:15 – 17:30, finishes Tue 09:00 – 09:45)\n     * *[Marcus blocked Tue 09:00 – 13:00 by Atlas technical session]*\n     * **SSO Production Rollout** (Marcus: 1h | Tue 13:00 – 14:00)\n   * *Fork C (Board Pack Revenue Section — Deadline: Friday 10:00):*\n     * **Reconciliation Backfill** (Automated: 1.5h | Mon 12:15 – 13:45)\n     * Unblocks Sarah’s revenue metrics pack.\n\n---\n\n## 2. My Plan for Today (Monday from 09:10)\n\n1. **Elena (Immediate / 09:15):** Confirm she starts `billing_schema_migration` immediately. Target completion: 12:15.\n2. **Sarah (Immediate / 09:15):** Unblock her packaging approval submission. Clarify that Priya’s committee accepts design mockups (live screenshots are not required). Sarah should submit the approval pack (1.5h) before 12:00 today to guarantee same-day approval.\n3. **Marcus & Daniel (09:20):**\n   * Clear Marcus's stale task: `onboarding_instrumentation` (3h) is removed from launch scope; do not spend time on it.\n   * Clear Marcus's security blocker: Security review closed and approved by Maya on Friday (SEC-4471).\n   * Direct Marcus to spend 30 minutes this morning (09:30 – 10:00) walking Daniel through the delegated-admin path.\n   * Assign `contoso_permission_patch` to Daniel (starts 12:15). This protects Marcus’s focus for the SSO compatibility patch (starts 12:15).\n4. **Julia (09:30):**\n   * Task Julia with `contoso_export_formatter` (2h) this morning (09:30 – 11:30) so the date format fix (`DD/MM/YYYY`) is ready ahead of Tuesday's demo.\n   * Have Julia run and send `contoso_compliance_export` (1h) this afternoon as soon as Daniel’s permission patch lands (~15:45 – 16:45).\n5. **Customer Communications (10:00):**\n   * **Contoso (Anja Weber & Peter Lawson):** Confirm delegated admin access is being deployed today and the compliant export (with European date formatting) will be delivered by end of day today, well ahead of the Tuesday 16:00 CET auditor deadline.\n   * **CEO:** Brief on Contoso export resolution plan.\n\n---\n\n## 3. Parallel Work\n\nWork that can proceed immediately without waiting for Elena's schema migration:\n* **Sarah:** Packaging approval pack submission (1.5h, 09:30 – 11:00) using mockups, followed by building the `pricing_page` (3h) or `board_pack_non_revenue` (4h).\n* **Julia:** `contoso_export_formatter` (2h, 09:30 – 11:30) updating date formatting and fixtures.\n* **Daniel & Marcus:** 30-minute knowledge transfer on delegated admin path (between 09:30 and 12:00).\n* **Sarah:** Non-revenue sections of the board pack (narrative, customer sections).\n\n---\n\n## 4. Blockers & Dependencies\n\n### Real Blockers\n* `api_compatibility_patch` (Marcus) and `contoso_permission_patch` (Daniel) cannot begin until `billing_schema_migration` lands.\n* `contoso_compliance_export` cannot be run by delegated admins until `contoso_permission_patch` is deployed.\n* `sso_regression` requires `api_compatibility_patch`.\n* `sso_production_rollout` requires QA green light.\n* `board_pack_revenue` requires automated backfill completion.\n* Marcus is unavailable Tuesday 09:00 – 13:00 (Atlas technical walkthrough).\n* Elena leaves Wednesday at 12:00 through Friday.\n\n### Stale Information / False Blockers Cleared\n* **SSO Security Review:** Task list marked this urgent, but Maya closed and approved SEC-4471 Friday at 16:48. No action needed.\n* **Onboarding Event Instrumentation:** Task list held 3h of Marcus's time as a launch blocker, but Julia confirmed Friday existing analytics are sufficient; instrumentation ships post-launch.\n* **Onboarding Launch Support:** Task list had Marcus; Friday meeting moved this ownership entirely to Julia.\n* **Pricing Live Page Dependency:** Sarah believed live page screenshots were required before packaging approval; Priya confirmed mockups are accepted.\n\n---\n\n## 5. Earliest Delivery\n\n* **Contoso Compliance Export & Demo Formatting:** **Monday ~16:45** (over 23 hours ahead of Tuesday 16:00 CET deadline).\n* **Enterprise SSO (Atlas):** **Tuesday ~14:00** (Marcus rolls out right after the Atlas morning technical session; over 24 hours ahead of Wednesday EOD commitment).\n* **Packaging Approval:** **Monday EOD** (clears today if Sarah submits before 12:00).\n* **Clean Revenue Dataset:** **Monday ~13:45** (backfill ends 90 min after schema change).\n\n---\n\n## 6. Risks / Unknowns\n\n1. **Elena Knowledge Transfer:** Elena is completely offline from Wednesday noon through Friday. Even though migration finishes Monday, a 30-minute runbook and permission transfer with Daniel must happen before Wednesday noon to mitigate any late-week billing platform issues.\n2. **Atlas Technical Session Changes:** If Atlas requests functional changes to the auth flow during Tuesday’s 09:00 – 13:00 session, Maya noted that auth flow changes require a Security re-review.\n3. **Contoso Account Risk:** The tenant owner is out until October; if the delegated-admin scope fix exposes unforeseen permission layer gaps, Contoso will have no fallback before the auditor cutoff.",
+  "finish_reason": null,
+  "provider_metadata": {
+    "request_id": null,
+    "raw_usage": {
+      "antigravity_runtime": {
+        "runtime": "Antigravity Language Server",
+        "language_server_version": "ide-2.4.5",
+        "rpc": "exa.language_server_pb.LanguageServerService/GetModelResponse",
+        "request_fields": [
+          "prompt",
+          "model"
+        ],
+        "requested_model_id": "gemini-3.8-flash-high",
+        "raw_model_identifier": "MODEL_PLACEHOLDER_M318",
+        "served_model_id": null,
+        "platform": "antigravity",
+        "model_provider": "google",
+        "session_isolation": "independent stateless RPC, no conversation/session reuse",
+        "route_equivalence_classification": "NON_EQUIVALENT",
+        "system_prompt": "none sent: the RPC has no system-prompt field; backend-managed Google instructions apply and cannot be inspected",
+        "thinking_budget": -1,
+        "thinking_budget_label": "High",
+        "ide_registry_max_output_tokens": 65536,
+        "ide_registry_max_output_tokens_note": "registry value; not transmitted on the wire, the backend applies its own ceiling",
+        "tool_status": "DISABLED (stateless direct RPC, 0 tools declared)",
+        "conversation_status": "STATELESS (0 memory carryover across calls)",
+        "web_access_status": "DISABLED",
+        "started_at": "2026-09-02T18:17:50Z",
+        "finished_at": "2026-09-02T18:18:23Z",
+        "latency_ms_host_wall_clock": 33542.97,
+        "latency_semantics": "host wall clock of one non-streaming RPC round trip",
+        "pack_finish_reason": "stop",
+        "pack_truncation_status": "COMPLETE",
+        "pack_finish_reason_semantics": "computed by the generation script from a character-count heuristic (>= 65536*4 chars -> length), not returned by the route",
+        "response_sha256": "9bba92a0702e732d0778781b17c4aa207e6f4a7045a8219019ffacd7e278052c",
+        "raw_envelope_sha256": "dc4869836dc42fc37bb49aeed7ff0d0a6142d494a037856bd8c8d7e9803f49e0",
+        "source_files": {
+          "metadata": "gemini-3.8-mondaybench-challenger/metadata/monday-003/run-003.json",
+          "response": "gemini-3.8-mondaybench-challenger/responses/monday-003/run-003.txt",
+          "raw": "gemini-3.8-mondaybench-challenger/raw/monday-003/run-003.json"
+        },
+        "pack_run_id": "monday-003__gemini-3.8-flash-high__run-003",
+        "unobservable": [
+          "temperature",
+          "top_p",
+          "served_model_id",
+          "system_prompt",
+          "max_output_tokens",
+          "finish_reason",
+          "request_id",
+          "usage",
+          "reasoning_tokens",
+          "TTFT",
+          "TTFA"
+        ],
+        "not_an_api_equivalent_run": true
+      }
+    }
+  }
+}

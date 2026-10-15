@@ -1,0 +1,121 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "1.0",
+  "scenario_id": "monday-004",
+  "scenario_prompt_sha256": "3a0cbb569ca4f711b8907177af9204cec267d26f35f732829df56b03ed23ef99",
+  "run_id": "monday-004__claude-fable-5-1__002",
+  "run_number": 2,
+  "model": {
+    "slug": "claude-fable-5-1",
+    "display_name": "Claude Fable 5.1",
+    "provider": "claude-code",
+    "model_id": "claude-fable-5-1"
+  },
+  "generation": {
+    "temperature": null,
+    "max_output_tokens": null,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": "high",
+    "system_prompt_sha256": null,
+    "extra_body": {},
+    "config_sha256": "131c10c70517c8b8638f855ced5a84a7b391a2e735d384ffa3e7fc6deda79385",
+    "safety_ceiling_tokens": 64000,
+    "ceiling_semantics": "route-reported, not configured by this battery: Claude Code reports a 64000-token output ceiling for claude-fable-5-1. The battery set no ceiling and the wire max_tokens was not captured, so max_output_tokens is null. This is NOT the scenario's configured ceiling (32000 for monday-001..003, 96000 for monday-004, 131072 for monday-005)."
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "DELIVERED",
+    "tokens": 11451,
+    "evidence": "explicit_reasoning_tokens",
+    "stream_observed": null,
+    "stream_event_count": null
+  },
+  "timestamp_utc": "2026-09-02T08:22:37Z",
+  "usage": {
+    "input_tokens": 12632,
+    "output_tokens": 17980,
+    "reasoning_tokens": 11451
+  },
+  "performance": {
+    "ttft_ms": null,
+    "ttfa_ms": null,
+    "total_latency_ms": null,
+    "tokens_per_second": null
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "# Northstar — Monday Business Review: Analysis\n\n## 1. EXECUTIVE SUMMARY\n\n1. **Headline revenue growth is largely an artefact.** Invoiced revenue rises from €797.1k (Sep) to €892.9k (Oct) as loaded, +12%. Strip out a duplicated Soylent invoice (−€19.5k) and normalise Gringotts' 12‑month prepayment to its monthly equivalent (−€110k) and underlying MRR grew only **€746.1k → €757.7k (+1.6%)**.\n\n2. **October churn is invisible in October revenue.** Five customers churned between 8–27 October, *after* all October invoices were issued on the 1st. They represent €25.3k MRR / €303.6k ARR. The run‑rate entering November is **€732.4k MRR — below September**. Net of churn, the business shrank.\n\n3. **Costs are growing faster than revenue.** Plan‑level contribution (revenue − infra − support) fell from €262.9k to €246.5k (−6.2%) while MRR grew 1.6%. Enterprise plan margin fell 32.2% → 29.5%.\n\n4. **The Acme −45% usage drop is explained** by the planned batch migration (40–50% forecast). Tokens fell only 12% and active users 3%. It is not a churn signal, and it masks +8.8% ex‑Acme request growth.\n\n5. **Two real risk clusters:** (a) Soylent (€234k ARR, already downsold €30k, usage −27%, 8 tickets incl. a *critical*), and (b) chronic high‑severity `api_errors`/`performance` tickets at 6–7 of 8 Enterprise accounts every month, with Wayne Enterprises (€1.008M ARR) renewing 30 Nov.\n\n6. **None of the three decisions is supported as framed.** Segment cut: not supported (churn is a retention problem in old Starter accounts, not a segment‑wide signal). Paid search increase: not supported (73% of its October \"revenue\" is expansion at 2–3‑year‑old enterprise accounts; new‑logo ARR fell 46%; no spend data). Plan focus: Enterprise reliability is the risk‑weighted priority; Pro is the monetisation opportunity.\n\n7. **CAC payback by channel cannot be calculated** — there is no spend data anywhere in the pack.\n\n---\n\n## 2. REVENUE & CUSTOMER HEALTH\n\n### 2.1 Reconciling the headline\n\n| | September | October (as loaded) | October (corrected) |\n|---|---|---|---|\n| Subscription invoices | 746,100 | 887,200 | 867,700 (dedupe Soylent) |\n| Professional services | 51,000 | 5,700 | 5,700 |\n| **Total invoiced** | **797,100** | **892,900 (+12.0%)** | **873,400 (+9.6%)** |\n| Annual→monthly normalisation (Gringotts 120,000 → 10,000) | — | — | −110,000 |\n| **Subscription MRR** | **746,100** | | **757,700 (+1.6%)** |\n\nMRR by plan reconciles exactly to `plans.csv` (659,000/63,000/24,100 → 659,500/66,200/32,000), confirming `plans.csv` already normalises annual contracts.\n\nThe +€11.6k MRR bridge: five new SMB logos +€11.1k (Spacely 3,200; Cogswell 2,100; Bishop 1,700; Gekko 2,200; Paper Street 1,900) + Hooli expansion +€3,000 − Soylent downsell −€2,500.\n\nProfessional services fell €51k → €5.7k; this is lumpy and should not be read as trend, but it accounts for most of the difference between \"invoiced\" and \"recurring\" views.\n\n### 2.2 Churn — the November cliff\n\n| Customer | Segment / Plan | Churn date | MRR lost | ARR lost | Leading indicators |\n|---|---|---|---|---|---|\n| Nakatomi | Mid‑market / Pro | 19 Oct | 15,000 | 180,000 | 2 high tickets Sep; open high `api_errors` Oct; requests −16% |\n| Slate Rock | SMB / Starter | 8 Oct | 2,000 | 24,000 | High `api_errors` open since Sep, another in Oct; requests −35% |\n| Mega‑Lo‑Mart | SMB / Starter | 15 Oct | 2,700 | 32,400 | Billing tickets both months; requests −37% |\n| Dinoco | SMB / Starter | 22 Oct | 2,300 | 27,600 | High `api_errors` Oct; requests −36% |\n| Buy‑n‑Large | SMB / Starter | 27 Oct | 3,300 | 39,600 | Billing tickets both months; requests −37% |\n| **Total** | | | **25,300** | **303,600** | |\n\nRun‑rate entering November: 757,700 − 25,300 = **€732,400** (−1.8% vs September). Active ARR = €8.79M (Enterprise 6.78M / 77%; Mid‑market 1.53M / 17%; SMB 0.48M / 5%).\n\nSegment churn rates for October (on start‑of‑month base):\n- SMB: 4 of 13 logos (31%); €123.6k of €469.2k ARR (26%).\n- Mid‑market: 1 of 10 logos; €180k of €1.71M ARR (10.5%), plus Soylent downsell −€30k.\n- Enterprise: 0.\n\nNote the churned Starter accounts are all 2024–25 cohorts, all showed a ~35–37% request decline in the month of churn, and four of five churned customers had `api_errors` or `billing` tickets in both months. The five *new* SMB logos from September show the opposite pattern (Planet Express +49%, Monsters Inc +53%, Clampett +47% requests). This is a retention failure in a specific cohort, not a statement about the segment.\n\n### 2.3 Usage\n\nTotal requests 31.04M → 31.51M (+1.5%). Excluding Acme: 26.84M → 29.20M (**+8.8%**). Acme: requests −45% (in the planned 40–50% band), tokens −12%, users 240→232 — consistent with consolidation into batch runs, not disengagement. Every other Enterprise account grew 5–10%; surviving Mid‑market/Pro accounts grew 13–33%.\n\nTwo accounts show genuine deterioration: **Soylent** (requests −27%, users 56→41, 8 tickets including 1 critical and 3 open/pending) and (already churned) Nakatomi.\n\n### 2.4 Support signals\n\nTickets 59 → 74 (+25%) against a customer base that grew 31 → 36.\n\n- **Enterprise:** high‑severity `api_errors` at 7/8 accounts in Sep and 6/8 in Oct, plus recurring high `performance` tickets. This is chronic, not incidental. Open/pending high tickets at Stark, Contoso, Wayne (renews 30 Nov, €1.008M).\n- **Pro:** `rate_limits` tickets 5 → 13, all on Pro. Wonka (1.02M requests vs 600k included), Aperture (705k), Vandelay (690k) are above their included volume; overage is only billed at renewal.\n- **Starter:** 0.85 tickets/customer; problems are `api_errors` and `billing`, not product depth.\n\n---\n\n## 3. ACQUISITION\n\n### 3.1 What the data allows\n\n`funnel.csv` gives lead → *paid trial*; `acquisition.csv` gives closed deals with marketing‑platform attribution. Trial → paid is not tracked, and there is **no spend data**. Therefore:\n\n- **Cannot** be calculated: CAC, CAC payback, cost per lead, ROI by channel, trial→paid conversion.\n- **Can** be observed: lead volumes, lead→trial rates, attributed ARR split between new logo and expansion.\n\n### 3.2 Funnel\n\n| Channel | Leads Sep→Oct | Trials Sep→Oct | Lead→trial Sep → Oct |\n|---|---|---|---|\n| Paid search | 520 → 900 (+73%) | 44 → 58 | 8.5% → 6.4% |\n| Content | 260 → 330 | 31 → 34 | 11.9% → 10.3% |\n| Partner | 60 → 75 | 15 → 17 | 25.0% → 22.7% |\n| Outbound | 160 → 195 | 10 → 11 | 6.3% → 5.6% |\n\nLead→trial conversion fell on every channel; paid search fell the most as volume rose — consistent with (but not proof of) declining lead quality at higher spend.\n\n### 3.3 Attributed revenue — the expansion problem\n\n| Channel | New‑logo ARR (Sep+Oct) | Expansion ARR (Sep+Oct) | Total | % expansion |\n|---|---|---|---|---|\n| Paid search | 64,800 (Spacely, Gekko) | 210,000 (Hooli, Stark, Umbrella, Globex) | 274,800 | 76% |\n| Partner | 166,800 (Vandelay, Clampett) | 0 | 166,800 | 0% |\n| Content | 91,200 (Planet Express, Cogswell, Bishop) | 18,000 (Massive Dynamic) | 109,200 | 16% |\n| Outbound | 56,400 (Monsters, Paper Street) | 24,000 (Cyberdyne) | 80,400 | 30% |\n\nPaid search's October total (€238.8k) looks like the strongest channel, but €174k of it is expansion at Stark, Umbrella and Globex — customers of 2–3 years' standing — credited to a campaign that started on 28 September. The marketing platform is claiming account‑managed expansion. Only Hooli's September expansion (+€3,000/month from 1 Oct) can be verified in invoices; the October expansions take effect in November and are not yet in `revenue.csv` or in `arr_eur` (Stark's `arr_eur` is still 95,000 × 12).\n\n**New‑logo ARR fell** €246k (Sep) → €133k (Oct), −46%, while paid‑search leads rose 73%. Average new‑logo ARR fell €61.5k → €26.6k; all five October logos are SMB, four on Starter — the cohort type that just churned at 26% in a month.\n\nPartner delivered the largest new‑logo ARR on the fewest leads (60), but produced no October closes from 17 trials — two months is too short to call this either way.\n\n### 3.4 CAC payback (CFO request)\n\nCannot be produced. Required inputs missing: (a) spend by channel by month; (b) trial→paid conversion by channel; (c) which plan/margin each channel's customers land on. Formula once available: *CAC payback (months) = channel spend ÷ (new MRR from channel × plan contribution margin)*, using new‑logo MRR only. With current data, paid search's payback would be overstated roughly 4× if expansion is included.\n\n---\n\n## 4. PLAN ECONOMICS\n\n| Plan (Oct) | Cust. | MRR | Infra | Support | Contribution | Margin | Contribution / cust. | Δ margin vs Sep |\n|---|---|---|---|---|---|---|---|---|\n| Enterprise | 14 | 659,500 | 296,800 | 168,000 | 194,700 | 29.5% | 13,907 | −2.7 pts |\n| Pro | 9 | 66,200 | 16,100 | 8,600 | 41,500 | 62.7% | 4,611 | −4.8 pts |\n| Starter | 13 | 32,000 | 11,400 | 10,300 | 10,300 | 32.2% | 792 | −2.7 pts |\n| **Total** | 36 | 757,700 | 324,300 | 186,900 | **246,500** | 32.5% | | −2.7 pts |\n\nTotal costs grew €483.2k → €511.2k (+5.8%) against MRR +1.6%. These are direct infra and support only — no S&M, R&D or G&A — so true margins are lower.\n\n**Enterprise:** 87% of MRR but the thinnest margin. Support is €12k/customer/month (€4,800 per ticket at 35 tickets). Infra is €9.70 per M tokens vs €5.78 on Pro. Stark (4.29M) and Wayne (3.41M) run above the 3M included requests — overage upside at renewal, but Wayne's is the one at risk. Margin is eroding while the chronic `api_errors` pattern persists; this is where reliability spend pays back.\n\n**Pro:** highest margin and fastest usage growth among retained customers, but margin slipping as usage grows without interim revenue (overage only at renewal). Three customers exceed included requests; `rate_limits` tickets nearly tripled. This is under‑monetised demand and a clear upgrade path (Wonka at 170% of included on €4,200/month is an obvious case).\n\n**Starter:** €10.3k total monthly contribution — 4% of the total — with 4/13 churned in October. Starter infra is the most expensive per token (€20.78/M), suggesting fixed per‑tenant overhead. The plan is economically marginal and does not justify engineering focus; its problems (errors, billing tickets) are operational.\n\nSegment‑level economics **cannot** be computed: costs are reported by plan, and the six Mid‑market customers on the Enterprise plan share its cost pool.\n\n---\n\n## 5. RECOMMENDATIONS\n\n**Decision 1 — Reduce investment in a segment: Not supported this week.**\n- SMB churn is real (26% ARR churn in Oct) but is concentrated in 2024–25 Starter accounts showing a common pattern (usage −35%, unresolved `api_errors`/billing tickets). New SMB logos are growing 47–53%. Fix retention before deciding; a segment cut would also remove the only pipeline the current acquisition mix produces.\n- Mid‑market: one churn (Nakatomi) and one downsell are offset by Hooli's expansion, Gringotts' annual prepay, and 13–22% usage growth elsewhere. No case for cutting.\n- What *is* supported: stop paying to acquire low‑ARR Starter logos at scale until Starter retention and unit economics (CAC unknown) are understood.\n\n**Decision 2 — Increase paid‑search spend: Not supported.**\n- 76% of its attributed ARR is expansion at long‑tenured accounts; new‑logo yield is €64.8k from 1,420 leads; lead→trial rate fell to 6.4%; no spend data exists to judge efficiency.\n- Before any increase: (a) get spend by channel, (b) exclude expansion from channel attribution unless the account had no CS involvement, (c) instrument trial→paid.\n- Partner deserves a look (highest lead→trial, largest new‑logo ARR per lead) but on 2 months and 2 closes it is a hypothesis, not a conclusion.\n\n**Decision 3 — Plan for engineering focus: Enterprise reliability first, Pro monetisation second.**\n- Enterprise: 87% of MRR, margin down to 29.5%, 6–7 of 8 accounts raising high `api_errors`/`performance` tickets every month, €1.008M Wayne renewal on 30 Nov, Soylent at critical. Root‑causing the API error pattern also addresses the failure mode seen in Nakatomi, Slate Rock and Dinoco before they churned.\n- Pro: ship usage‑based overage or mid‑cycle upgrade so growth converts to revenue before renewal; proactively upgrade Wonka, Aperture, Vandelay.\n- Starter: no engineering focus; operational fixes only.\n\n**Immediate account actions (this week):**\n- Wayne Enterprises renewal plan (open/pending high tickets; overage discussion).\n- Soylent executive save plan (critical ticket, −27% usage, 3 tickets unresolved).\n- Close open high tickets at Stark and Contoso.\n- Build a usage‑decline alert (>25% MoM drop) — it preceded all five churns.\n\n**Data fixes before next review:**\n- Deduplicate INV‑2026‑10‑0209 and block `billing_sync` from double‑loading Stripe records.\n- Report MRR (normalised) alongside invoiced revenue; show churn on the month it occurs, not when invoices stop.\n- Collect channel spend; separate new‑logo from expansion attribution.\n\n---\n\n## 6. UNCERTAINTIES / DATA ISSUES\n\n1. **Duplicate invoice:** INV‑2026‑10‑0209 (Soylent, €19,500) appears from both `stripe` and `billing_sync`. Inflates October by €19.5k.\n2. **Annual prepayment distortion:** Gringotts' €120k invoice inflates October invoiced revenue by €110k vs. monthly equivalent. Correct in `plans.csv`, wrong in a naive sum of `revenue.csv`.\n3. **Churn timing:** all five churns post‑date October invoicing; October revenue is overstated by €25.3k relative to the going‑forward book. Whether Nakatomi (churned 19 Oct after a full‑month invoice) receives a credit is not shown.\n4. **Usage join keys:** `wayne-enterprises` → `wayne_ent` and `prestige-worldwide` → `prestige_ww`. Joining on `customer_id` would silently drop €1.12M ARR of usage. Must use `usage_account_id`.\n5. **Expansion attribution unverifiable:** five October expansions (€216k ARR) are not in invoices or `arr_eur`; only Hooli's is confirmed. Attribution of 2–3‑year‑old enterprise expansions to a 28‑Sep paid‑search campaign is not credible without evidence.\n6. **No spend data:** CAC, payback and channel ROI cannot be computed.\n7. **Funnel \"conversions\" are trials, not customers**; the trial→paid step is untracked, so the 58 paid‑search \"conversions\" and 2 paid‑search new logos cannot be connected.\n8. **Costs are direct only** (infra + support). No S&M/R&D/G&A allocation; segment‑level margins cannot be derived because costs are by plan.\n9. **Two months of data:** all growth/decline rates are single‑period comparisons; lead→trial declines, partner performance and margin trends need more history.\n10. **Acme causality:** the operational note explains the request decline, but the data cannot confirm the batch migration is the sole cause; tokens and users support the interpretation.\n11. **Uniform −35–37% decline at the four churned Starters** is unusually consistent; could be partial‑month truncation of usage, but the magnitudes don't match the churn dates (e.g. Slate Rock churned on the 8th yet shows only −35%). Treat the metric as a leading indicator but verify how usage is recorded for churned accounts.\n12. **Date inconsistency:** the pack describes September and October 2026 as complete, but the system date is 2 September 2026. Confirm the pack's period labels before circulation.",
+  "finish_reason": "end_turn",
+  "provider_metadata": {
+    "request_id": null,
+    "raw_usage": {
+      "claude_code_runtime": {
+        "runtime": "Claude Code CLI",
+        "cli_version": "2.1.258",
+        "route": "claude -p (Claude Code CLI 2.1.258), OAuth subscription",
+        "cli_invocation": "documented in experiments/fable-5.1-full-mondaybench/METHODOLOGY.md (not recorded per run)",
+        "requested_model_id": "claude-fable-5-1",
+        "served_model_id": "claude-fable-5-1",
+        "served_model_provider": "firstParty",
+        "generation_as_recorded": {
+          "system_prompt_requested": "You are a helpful assistant.",
+          "effort_requested": "high",
+          "temperature": null,
+          "top_p": null,
+          "route_max_output_tokens": 64000,
+          "tools": []
+        },
+        "reasoning_effort": "high",
+        "system_prompt_as_sent": "NOT the frozen bytes: the route prepends the Agent SDK preamble to the requested system prompt.",
+        "user_turn_as_delivered": "NOT the frozen bytes as delivered: the route injects a <system-reminder> carrying the user's identity and 'Today's date is 2026-09-02' into the user turn. The frozen prompt bytes were what the battery passed to the route (sha256 recorded in scenario_prompt_sha256). See audits/monday-002/fable-5.1-preflight.md.",
+        "route_max_output_tokens": 64000,
+        "usage_as_recorded": {
+          "input_tokens": 2,
+          "output_tokens": 17980,
+          "thinking_tokens": 11451,
+          "cache_read_input_tokens": 12630,
+          "cache_creation_input_tokens": 0
+        },
+        "input_tokens_semantics": "usage_as_recorded.input_tokens is EXCLUSIVE of cache; the run's usage.input_tokens is input + cache_creation + cache_read",
+        "finish_reason": "end_turn",
+        "is_error": false,
+        "num_turns": 1,
+        "timing_host_measured_ms": {
+          "ttft_ms": 5228.7,
+          "ttfa_ms": 146810.0,
+          "total_latency_ms": 225547.4,
+          "duration_api_ms": 225312
+        },
+        "timing_semantics": "host wall clock around the claude -p process, TTFT/TTFA from stream-json deltas; not the harness adapter's measurement, so not published in `performance`",
+        "economics_as_recorded": {
+          "cost_usd_route_reported": 0.9021775000000001,
+          "cost_basis": "list",
+          "models_billed": [
+            "claude-fable-5-1",
+            "claude-haiku-4-5-20251001"
+          ]
+        },
+        "cost_note": "list-price figure the route reports for a subscription call; not a price this battery paid, so `economics` is empty",
+        "source_file": "experiments/fable-5.1-full-mondaybench/raw/monday-004-run2.json",
+        "source_label": "M004_RUN2",
+        "unobservable": [
+          "temperature",
+          "top_p",
+          "max_output_tokens (wire)",
+          "system_prompt bytes as sent",
+          "request_id"
+        ],
+        "not_an_api_equivalent_run": true,
+        "source_scenario_id_field": "the source file records scenario_id 'monday-002'; its label, prompt_file and prompt_sha256 all say monday-004, which is used"
+      }
+    }
+  }
+}
