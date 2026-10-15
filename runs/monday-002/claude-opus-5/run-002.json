@@ -1,0 +1,224 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "1.0",
+  "scenario_id": "monday-002",
+  "scenario_prompt_sha256": "740e627cbc7413c321ede0d54000504de54821d34ff4677f82731b89600423a8",
+  "run_id": "monday-002__claude-opus-5__002",
+  "run_number": 2,
+  "model": {
+    "slug": "claude-opus-5",
+    "display_name": "Claude Opus 5",
+    "provider": "claude-code",
+    "model_id": "claude-opus-5"
+  },
+  "generation": {
+    "temperature": null,
+    "max_output_tokens": null,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": "high",
+    "system_prompt_sha256": null,
+    "extra_body": {},
+    "config_sha256": "08e94f909a940b5080df784897b6c291a8eb9c8fcafd64bce5f5100deb5e5f03",
+    "safety_ceiling_tokens": 64000,
+    "ceiling_semantics": "route-reported, not configured by this battery: Claude Code reports maxOutputTokens 64000 for claude-opus-5 (modelUsage). The battery set no ceiling and the wire max_tokens was not captured, so max_output_tokens is null. This is NOT the scenario's configured ceiling (32000 for monday-001..003, 96000 for monday-004, 131072 for monday-005)."
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "DELIVERED",
+    "tokens": 2469,
+    "evidence": "explicit_reasoning_tokens",
+    "stream_observed": null,
+    "stream_event_count": null
+  },
+  "timestamp_utc": "2026-09-02T11:36:56Z",
+  "usage": {
+    "input_tokens": 3805,
+    "output_tokens": 5719,
+    "reasoning_tokens": 2469
+  },
+  "performance": {
+    "ttft_ms": null,
+    "ttfa_ms": null,
+    "total_latency_ms": null,
+    "tokens_per_second": null
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "## 1. CURRENT STATE\n\n**Release (Enterprise Controls)**\n- 2.9.4 passed staging + Priya's Security verification Fri (session-preservation test OK), but **failed in production on shard eu-03** Fri 13:46 — no customer impact. Rollout was never opened.\n- Two recovery paths ready (Marcus): **A** = retry 2.9.4 + shard precheck, no code change, 20m deploy, 8% session-reset risk. **B** = 2.9.5-patch, code change, 45m deploy, <1% risk, avoids the failing migration path.\n- Policy (Priya, authoritative): code-changing patch → 25m **async** delta review from a submitted diff → deploy → 20m post-deploy verification (requires Priya). No-code-change → deploy → 20m verification. Then Sam needs 15m to open/sanity-check rollout.\n- **Maya has already granted approval-by-policy** (Thu 16:52: \"not adding another executive gate\"). The task \"Get Maya approval\" is superseded.\n- Hard constraint: **Atlas rollout must BEGIN before 12:00** or migration slips to Thursday. Renewal is signed; slipping costs schedule + exec noise, not revenue.\n- Windows: Marcus 09:15–10:20 only. Priya 09:00–**09:35**, then dark until **10:25**, then free. Sam and Daniel free all morning.\n\n**Comms**\n- Sarah is out; Daniel holds Julia's final draft + Atlas recipient list and sends **only after Sam confirms rollout open**. Announcement is not mine to send.\n\n**Pricing**\n- Pinned `enterprise-pricing-v4-final.xlsx` is **not** authoritative. Daniel's 09:07 Fri figures (€2,500 platform / 40 seats / €55 extra seat) are internal-only. No public announcement date → nothing goes to any procurement team.\n\n**Revenue / board pack**\n- Maya needs the expansion reconciliation by **11:00** (pack locks 11:30), arithmetic separated from hypotheses.\n- Target €180k, expected €126k, gap **€54k**. Wayne €18k + Globex €12k = €30k. Remainder €24k = **Soylent €10k (28→18) + Wonka €14k (24→10)**. Stark on plan (€32k). Acme had no expansion in either period — it does not touch the gap.\n\n**Accounts closed out**\n- Zenith: fix validated, countersigned €96k ARR / 24 months, back to normal cadence — the \"renewal risk call\" task is stale.\n- Orion: unresolved identity conflict — Laura read org_71A (`scim_enabled=false`), their ticket says org_17A. Sam froze status updates until the org ID is confirmed and the live flag read for *that* org.\n\n---\n\n## 2. MY PLAN FOR TODAY\n\n**Chosen path: Option B (2.9.5-patch).** It fits the window and avoids the code path that already failed in production; 8% session-reset risk on A is unacceptable given Maya's condition that Security be comfortable with the migration. Priya's delta review is async and does not consume Marcus.\n\n| Time | Action |\n|---|---|\n| **09:07–09:12** | Post decision in #enterprise-launch: Option B. Ask Marcus to **submit the 2.9.5-patch diff to Priya now** (must land before 09:35 — her only pre-10:25 window). Tag Sam and Daniel on the projected ~11:00 rollout open. |\n| 09:12–09:35 | Priya runs the 25m async delta review. Marcus stands by. I draft the expansion reconciliation. |\n| **09:35 (gate)** | Review clear → Marcus deploys **09:35–10:20** (45m, exactly his window). Marcus may go offline at 10:20; verification does not need him. |\n| **09:50 (fallback gate)** | If the delta review is *not* cleared, abandon B and run **Option A**: Marcus deploys 09:55–10:15, no review needed. Same 11:00 rollout time, higher risk — fallback only. |\n| 09:40–10:25 | Parallel work: Globex escalation, Acme renewal check, Orion org-ID verification, finish reconciliation. |\n| **10:25–10:45** | Priya post-deploy verification (20m). |\n| **~10:30** | Send expansion reconciliation to Maya (buffer before 11:00). |\n| **10:45–11:00** | Sam opens and sanity-checks rollout. |\n| **~11:00** | Sam confirms open → I notify Atlas that rollout has begun → Daniel sends the customer announcement. **Inside the 12:00 window.** |\n| Afternoon | Orion reply (once verified), Wonka/Soylent CS follow-ups, post-rollout monitoring. |\n\nDo **not** confirm \"10:30 launch\" to Atlas — that task's time is wrong under both paths. Give Atlas a \"rollout opening ~11:00, will confirm on Sam's go\" note instead.\n\n---\n\n## 3. CUSTOMER / REVENUE PRIORITIES\n\n1. **Atlas — highest priority.** Renewal already signed, so this is delivery risk, not revenue risk: get rollout open before 12:00 or their admins vanish until Thursday.\n2. **Globex — top revenue risk.** Renewal in **18 days**, €12k expansion sitting in procurement, and three open tickets including **high-sev G-441 (admins can't complete SSO setup)**. Admin logins −61% and usage −18% are consistent with being blocked, not with disengagement. Action today: escalate G-441 with an owner and ETA, and give procurement a clean unblock path. This is the one place a support fix likely unlocks pipeline.\n3. **Acme — renewal in 9 days, but not a churn story.** Usage −45% is *inside* the approved 40–50% reduction from the agreed shift to annual batch processing. Do not raise a usage alarm. Do confirm the renewal is actually in motion — 9 days is the shortest clock on the book.\n4. **Wonka — quiet erosion, needs discovery.** €14k expansion cut, usage −35%, admin logins −49%, **zero tickets**, renewal in 31 days. No stated cause anywhere. Ask CS for a discovery call this week; do not assert a reason.\n5. **Soylent — watch.** €10k cut, usage −22%, renewal 44 days, SO-19 \"slower onboarding\" is a *plausible* but unconfirmed link. CS check-in, not an escalation.\n6. **No action:** Wayne (expansion moved to October by signed amendment — documented, not a loss), Stark (on plan; S-120 is a low-sev doc question), Zenith (closed and signed).\n\n---\n\n## 4. DO NOT DO\n\n- **Don't chase Maya for release approval.** She explicitly declined an extra gate; policy compliance *is* the approval. Pinging her burns her pre-board time.\n- **Don't call Zenith about renewal risk.** Superseded — validated, countersigned, normal cadence.\n- **Don't tell Atlas \"launch confirmed at 10:30.\"** Not achievable on either path; commit only after Sam's go.\n- **Don't send the customer announcement myself, or before Sam confirms rollout open.** Daniel owns it with the final draft and recipient list.\n- **Don't send pricing to Initech procurement** — or anyone external. Workbook non-authoritative, figures internal-only, no announcement date. This task should be closed as blocked, not executed.\n- **Don't quote or forward the pinned v4-final workbook internally either;** use Daniel's 09:07 figures if needed.\n- **Don't reply to Orion on SCIM** until the org ID is settled and the flag re-read for the correct org. Sam's hold stands.\n- **Don't run Option A by default** just because it's faster to deploy — it's the build that already failed in production and carries 8% session-reset risk.\n- **Don't attribute Soylent's or Wonka's reductions to any cause** in the board pack. Maya explicitly forbade invented causes.\n- **Don't flag Acme's −45% usage as a red metric,** and don't ask Marcus to stay past 10:20 — verification doesn't need him.\n\n---\n\n## 5. UNCLEAR / MUST VERIFY\n\n1. **Is the 2.9.5-patch diff submittable immediately?** Marcus said \"both options ready,\" but B's whole timeline depends on the diff reaching Priya before 09:35. Verify in the first five minutes; this is the single point of failure.\n2. **Does the 45m Option B deploy include any post-deploy soak before Priya starts?** If it overruns 10:20 with Marcus gone, who holds the deploy. Confirm with Marcus/Sam.\n3. **Orion's real org ID** (org_17A vs org_71A) and the live `scim_enabled` value for it — needs CRM record + a fresh flag read, not the Friday bot line.\n4. **Soylent and Wonka expansion reductions** — no contract or ticket evidence of cause. Missing: CS/AE call notes or procurement correspondence. Report as unexplained.\n5. **Globex causality** — whether G-441 is what's holding procurement. Missing: a statement from Globex or the AE. Present as hypothesis in the board pack.\n6. **Acme renewal status at 9 days** — contract shows \"active,\" no evidence renewal paperwork has started. Verify owner and stage.\n7. **Enterprise pricing public announcement date** — none given; until it exists, every external pricing task stays blocked.",
+  "finish_reason": "end_turn",
+  "provider_metadata": {
+    "request_id": null,
+    "raw_usage": {
+      "claude_code_runtime": {
+        "runtime": "Claude Code CLI",
+        "cli_version": "2.1.258",
+        "route": "claude_code_subscription",
+        "route_classification_at_generation": "PROVISIONAL / OFF-BENCHMARK / CLAUDE CODE ROUTE",
+        "cli_flags": [
+          "-p",
+          "--model",
+          "claude-opus-5",
+          "--system-prompt",
+          "You are a helpful assistant.",
+          "--tools",
+          "",
+          "--effort",
+          "high",
+          "--output-format",
+          "stream-json",
+          "--include-partial-messages",
+          "--verbose",
+          "--safe-mode",
+          "--setting-sources",
+          "",
+          "--strict-mcp-config",
+          "--disable-slash-commands",
+          "--no-session-persistence"
+        ],
+        "env": {
+          "DISABLE_NON_ESSENTIAL_MODEL_CALLS": "1"
+        },
+        "requested_model_id": "claude-opus-5",
+        "served_model_id": "claude-opus-5",
+        "served_model_provider": "firstParty",
+        "reasoning_effort": "high",
+        "system_prompt_requested": "You are a helpful assistant.",
+        "system_prompt_requested_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+        "system_prompt_as_sent": "NOT the frozen bytes - the Agent SDK preamble is prepended by the route. See audits/monday-opus5/route-audit.md.",
+        "user_turn_as_delivered": "NOT the frozen bytes as delivered: the route injects a <system-reminder> carrying the user's identity and 'Today's date is 2026-09-02' into the user turn. The frozen prompt bytes were what the battery passed to the route (sha256 recorded in scenario_prompt_sha256). See audits/monday-opus5/route-audit.md and claude-code-wire-capture.json.",
+        "temperature_note": "not settable and not observable on this route; claude-opus-5 is in providers/anthropic_native.NO_TEMPERATURE_MODELS so the official adapter would also drop it",
+        "route_max_output_tokens": 64000,
+        "route_context_window": 1000000,
+        "anthropic_usage": {
+          "input_tokens": 2,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 3803,
+          "output_tokens": 5719,
+          "output_tokens_details": {
+            "thinking_tokens": 2469
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 5719,
+              "cache_read_input_tokens": 3803,
+              "cache_creation_input_tokens": 0,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 0
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard"
+        },
+        "input_tokens_semantics": "usage.input_tokens above is EXCLUSIVE of cache; the run's usage.input_tokens is input + cache_creation + cache_read",
+        "model_usage_all": {
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": 3474,
+            "outputTokens": 14,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0,
+            "webSearchRequests": 0,
+            "costUSD": 0.0035440000000000003,
+            "contextWindow": 200000,
+            "maxOutputTokens": 32000,
+            "thinkingTokens": 0,
+            "canonicalModel": "claude-haiku-4-5",
+            "provider": "firstParty",
+            "costBasis": "list"
+          },
+          "claude-opus-5": {
+            "inputTokens": 2,
+            "outputTokens": 5719,
+            "cacheReadInputTokens": 3803,
+            "cacheCreationInputTokens": 0,
+            "webSearchRequests": 0,
+            "costUSD": 0.1448865,
+            "contextWindow": 1000000,
+            "maxOutputTokens": 64000,
+            "thinkingTokens": 2469,
+            "canonicalModel": "claude-opus-5",
+            "provider": "firstParty",
+            "costBasis": "list"
+          }
+        },
+        "auxiliary_models": [
+          "claude-haiku-4-5-20251001"
+        ],
+        "stop_reason": "end_turn",
+        "terminal_reason": "completed",
+        "subtype": "success",
+        "is_error": false,
+        "num_turns": 1,
+        "session_id": "209bde1e-44dd-46e2-8b2e-fc1e6234a998",
+        "subagent_stats": {
+          "spawned": 0,
+          "requested": {
+            "background": 0,
+            "foreground": 0,
+            "unset": 0
+          },
+          "started_in_background": 0,
+          "max_depth": 0,
+          "spawned_by_subagents": 0,
+          "completed": 0,
+          "failed": 0,
+          "killed": {
+            "parent": 0,
+            "user": 0,
+            "system": 0
+          },
+          "refused": {
+            "depth_limit": 0,
+            "concurrency_limit": 0,
+            "budget": 0
+          },
+          "by_type": {}
+        },
+        "timing_host_measured_ms": {
+          "ttft": 2851.3,
+          "ttfa": 32572.2,
+          "total": 72311.9
+        },
+        "timing_route_reported_ms": {
+          "ttft": 1549,
+          "ttfa": 31973,
+          "duration_api": 72232
+        },
+        "timing_semantics": "host wall clock around the claude -p process, TTFT/TTFA from stream-json deltas; not the harness adapter's measurement, so not published in `performance`",
+        "cost_usd_route_reported": 0.1448865,
+        "total_cost_usd_including_auxiliary": 0.1484305,
+        "cost_basis": "list",
+        "cost_note": "list-price figure the route reports for a subscription call; not a price this battery paid, so `economics` is empty",
+        "source_file": "experiments/opus-5-full-mondaybench/raw/monday-002-run2.json",
+        "unobservable": [
+          "temperature",
+          "top_p",
+          "max_output_tokens (wire)",
+          "system_prompt bytes as sent",
+          "request_id"
+        ],
+        "not_an_api_equivalent_run": true
+      }
+    }
+  }
+}

@@ -1,0 +1,115 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "1.0",
+  "scenario_id": "monday-002",
+  "scenario_prompt_sha256": "740e627cbc7413c321ede0d54000504de54821d34ff4677f82731b89600423a8",
+  "run_id": "monday-002__gemini-3-8-flash-high__001",
+  "run_number": 1,
+  "model": {
+    "slug": "gemini-3-8-flash-high",
+    "display_name": "Gemini 3.8 Flash (High)",
+    "provider": "antigravity",
+    "model_id": "gemini-3.8-flash-high"
+  },
+  "generation": {
+    "temperature": null,
+    "max_output_tokens": null,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": false,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": "High",
+    "system_prompt_sha256": null,
+    "extra_body": {},
+    "config_sha256": "2b283bade952952060082fdacf5b05386598a654d9c2ef37e6ceaa395cf83b44",
+    "safety_ceiling_tokens": null,
+    "ceiling_semantics": "unobservable: not transmitted on the route; the IDE registry lists 65536 and the backend applies its own"
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "UNOBSERVABLE",
+    "tokens": null,
+    "evidence": null,
+    "stream_observed": null,
+    "stream_event_count": null
+  },
+  "timestamp_utc": "2026-09-02T18:14:51Z",
+  "usage": {
+    "input_tokens": null,
+    "output_tokens": null,
+    "reasoning_tokens": null
+  },
+  "performance": {
+    "ttft_ms": null,
+    "ttfa_ms": null,
+    "total_latency_ms": null,
+    "tokens_per_second": null
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "### 1. CURRENT STATE\n\n* **Enterprise Controls Release:** Build 2.9.4 failed on shard eu-03 on Friday before rollout opened; no customer impact. Two recovery paths exist: Option A (retry 2.9.4 with shard precheck, no code change, 20m deploy, 8% session reset risk) and Option B (2.9.5-patch, code change, 45m deploy, <1% session reset risk). Atlas requires rollout to begin before 12:00 Monday to catch their admin migration window.\n* **Release Approvals & Ownership:** Maya explicitly waived executive release gates; release follows Security policy and Sam’s rollout process. Marcus deploys, Priya verifies, Sam opens rollout. Daniel owns sending customer announcements once rollout is open (Sarah is out).\n* **Pricing:** The pinned `enterprise-pricing-v4-final.xlsx` workbook is obsolete. Current pricing is strictly internal scenario planning (€2,500 base / 40 seats / €55 extra seat) from Daniel’s Friday 09:07 Slack update. External quotes are strictly prohibited.\n* **Zenith:** Resolved. Audit export bug was fixed; Zenith countersigned a 24-month contract at €96k ARR Friday. Account returned to normal CS cadence.\n* **Orion SCIM:** Status is on hold. Rollout Bot reported `scim_enabled=false` on `org_71A`, but the support ticket lists `org_17A`. No communication may go out until the correct org ID and live flag are confirmed.\n* **September Expansion Reconciliation:** Target is €180k, expected is €126k, leaving a €54k gap:\n  * **Wayne Enterprises (-€18k):** Contract amendment signed, moving expansion to October.\n  * **Globex (-€12k):** Expansion slipped; pending procurement.\n  * **Soylent (-€10k):** Dropped from €28k to €18k; no contract explanation.\n  * **Wonka (-€14k):** Dropped from €24k to €10k; no contract explanation.\n  * *Total arithmetic:* €18k + €12k + €10k + €14k = €54k.\n\n---\n\n### 2. MY PLAN FOR TODAY\n\n#### Chosen Release Path: **Option A (Build 2.9.4 with shard precheck)**\n* **Why Option A is the only viable path:** Option B requires a 25-minute Security delta review *before* deploy, plus a 45-minute deploy (70 minutes total). Marcus is only available 09:15–10:20 (65 minutes), and Priya is unavailable 09:35–10:25. Option B cannot complete deployment before Marcus departs. Option A has no code changes, requiring no pre-deploy Security review. Marcus can deploy within his window, Priya conducts the 20-minute post-deploy verification upon returning at 10:25, and Sam opens the rollout by 11:00—safely ahead of Atlas’s 12:00 cutoff.\n\n#### Ordered Schedule & Approximate Timing:\n* **09:08 – 09:15 | Release Greenlight & Orion Check**\n  * Post in `#enterprise-launch`: Direct Marcus to deploy Option A at 09:15 with shard precheck. Alert Priya and Sam of the timeline.\n  * Check database/support tool to clarify Orion’s true Org ID (`org_17A` vs `org_71A`).\n* **09:15 – 09:35 | Production Deploy (Marcus)**\n  * Marcus deploys Option A (20 mins). Production deploy completes at 09:35. Marcus is free to leave by 10:20.\n* **09:35 – 10:25 | Board Pack Expansion Reconciliation (Deliver to Maya by 11:00)**\n  * Draft and send the €54k expansion reconciliation memo to Maya in `#leadership` (due 11:00; board pack locks 11:30). Present exact arithmetic and separate contractual facts from hypotheses.\n  * Sync with CS/Support on Globex’s open high-severity SSO/SCIM tickets.\n* **10:25 – 10:45 | Post-Deploy Verification (Priya)**\n  * Priya performs 20-minute post-deploy Security verification on production.\n* **10:45 – 11:00 | Rollout Sanity Check & Open (Sam)**\n  * Sam executes 15-minute sanity check and opens rollout. Rollout live by 11:00 (well before the 12:00 Atlas deadline).\n* **11:00 – 11:15 | Launch Comms Trigger**\n  * Confirm rollout is live in `#launch-comms`. Daniel sends the customer announcement draft and Atlas-specific notification.\n* **11:15 – 12:30 | Account Actions & Escalations**\n  * Triage Globex support blockers with Engineering.\n  * Review Orion live SCIM flag and notify Laura.\n  * Direct CS outreach for Wonka and Soylent.\n\n---\n\n### 3. CUSTOMER / REVENUE PRIORITIES\n\n1. **Globex (CRITICAL ATTENTION TODAY — Churn & Revenue Risk)**\n   * *Data:* €84k ARR, renewal in 18 days, logins down 61%, usage down 18%. Slipped €12k expansion pending procurement.\n   * *Support:* 3 open tickets including G-441 (High: SSO setup blocker) and G-447 (Medium: SCIM sync delay).\n   * *Action:* Prioritize engineering resolution for G-441 and G-447 immediately. Admins cannot configure authentication, directly driving the login drop and endangering the 18-day renewal and expansion.\n2. **Wonka (HIGH ATTENTION TODAY — Silent Churn Risk)**\n   * *Data:* €48k ARR, renewal in 31 days. Expansion dropped by €14k (€24k → €10k) with no contract explanation. Usage down 35%, admin logins down 49%.\n   * *Support:* 0 open tickets.\n   * *Action:* High risk of silent churn. Have CS initiate proactive executive check-in today to identify causes behind steep engagement drops before renewal window closes.\n3. **Soylent (MEDIUM ATTENTION TODAY — Onboarding Friction)**\n   * *Data:* €60k ARR, renewal in 44 days. Expansion dropped by €10k (€28k → €18k) with no contract explanation. Usage down 22%, logins down 28%.\n   * *Support:* Ticket SO-19 (team reports slower onboarding).\n   * *Action:* Assign CS to assist onboarding bottlenecks identified in SO-19 to protect remaining €18k expansion.\n4. **Atlas (OPERATIONAL PRIORITY TODAY)**\n   * *Data:* Renewal signed.\n   * *Action:* Ensure Enterprise Controls rollout opens by 11:00 so migration starts before 12:00, preventing a slip to Thursday and executive friction.\n5. **Acme (NO INTERVENTION NEEDED — False Positive)**\n   * *Data:* €150k ARR, renewal in 9 days, interactive usage down 45%, logins down 42%.\n   * *Context:* Contract confirms an approved architectural shift to annual batch-processing with expected interactive usage drops of 40–50%. Do not treat as churn risk; ensure standard renewal signing.\n6. **Wayne Enterprises & Stark Industries (NO ACTION NEEDED)**\n   * *Wayne:* Renewed (€120k ARR); €18k expansion moved to October by signed amendment.\n   * *Stark:* Healthy (+4% usage, €32k expansion on track).\n\n---\n\n### 4. DO NOT DO\n\n* **DO NOT seek Maya’s approval for the release:** Maya explicitly waived executive gates on Thursday (\"I'm not adding another executive gate. Follow Security's release policy and Sam's rollout process\").\n* **DO NOT choose Release Option B:** Option B cannot fit within Marcus’s departure constraint (10:20) and Priya’s availability gap (09:35–10:25).\n* **DO NOT call Zenith about renewal risk:** Outdated task. Zenith signed a 24-month, €96k ARR renewal on Friday.\n* **DO NOT quote or send enterprise pricing to Initech or any external party:** Daniel confirmed pinned workbooks are invalid and Friday scenario figures are internal-only. External distribution is strictly barred.\n* **DO NOT promise Atlas a 10:30 launch:** Verification and sanity checks run until 11:00. Communicating 10:30 creates false expectations; the operational requirement is simply before 12:00.\n* **DO NOT send the Enterprise Controls announcement yourself:** Daniel is explicitly assigned to send the announcement once Sam confirms the rollout.\n* **DO NOT respond to Orion regarding SCIM status yet:** Live status must first be verified against the correct Org ID (`org_17A`).\n* **DO NOT invent causes for Soylent and Wonka expansion drops in the Board memo:** Maya explicitly mandated sticking to actual arithmetic and separating data facts from hypotheses.\n\n---\n\n### 5. UNCLEAR / MUST VERIFY\n\n* **Orion Org ID & SCIM State:** Need production engineering to confirm whether Orion is `org_17A` or `org_71A`, and inspect the live database flag for `scim_enabled`.\n* **Root Cause for Soylent & Wonka Expansion Reductions:** Account and contract files do not record why Soylent dropped €10k and Wonka dropped €14k. CS must verify whether Soylent’s reduction is solely onboarding delays (SO-19) and determine what caused Wonka’s severe login/usage drops.\n* **Globex Procurement & SSO Escalation:** Need CS/Sales confirmation on the expected procurement timeline for the €12k expansion, and engineering confirmation on ETA for SSO ticket G-441.",
+  "finish_reason": null,
+  "provider_metadata": {
+    "request_id": null,
+    "raw_usage": {
+      "antigravity_runtime": {
+        "runtime": "Antigravity Language Server",
+        "language_server_version": "ide-2.4.5",
+        "rpc": "exa.language_server_pb.LanguageServerService/GetModelResponse",
+        "request_fields": [
+          "prompt",
+          "model"
+        ],
+        "requested_model_id": "gemini-3.8-flash-high",
+        "raw_model_identifier": "MODEL_PLACEHOLDER_M318",
+        "served_model_id": null,
+        "platform": "antigravity",
+        "model_provider": "google",
+        "session_isolation": "independent stateless RPC, no conversation/session reuse",
+        "route_equivalence_classification": "NON_EQUIVALENT",
+        "system_prompt": "none sent: the RPC has no system-prompt field; backend-managed Google instructions apply and cannot be inspected",
+        "thinking_budget": -1,
+        "thinking_budget_label": "High",
+        "ide_registry_max_output_tokens": 65536,
+        "ide_registry_max_output_tokens_note": "registry value; not transmitted on the wire, the backend applies its own ceiling",
+        "tool_status": "DISABLED (stateless direct RPC, 0 tools declared)",
+        "conversation_status": "STATELESS (0 memory carryover across calls)",
+        "web_access_status": "DISABLED",
+        "started_at": "2026-09-02T18:14:51Z",
+        "finished_at": "2026-09-02T18:15:30Z",
+        "latency_ms_host_wall_clock": 38782.37,
+        "latency_semantics": "host wall clock of one non-streaming RPC round trip",
+        "pack_finish_reason": "stop",
+        "pack_truncation_status": "COMPLETE",
+        "pack_finish_reason_semantics": "computed by the generation script from a character-count heuristic (>= 65536*4 chars -> length), not returned by the route",
+        "response_sha256": "74f84aeb9d6c708bcdbf48a149fbf2c83b06d6a85627d993d02a00a11728f253",
+        "raw_envelope_sha256": "ca7b67cdac90f2d825529a01547dbd04be19926ee1358d340dc1ab8dca7bf4cb",
+        "source_files": {
+          "metadata": "gemini-3.8-mondaybench-challenger/metadata/monday-002/run-001.json",
+          "response": "gemini-3.8-mondaybench-challenger/responses/monday-002/run-001.txt",
+          "raw": "gemini-3.8-mondaybench-challenger/raw/monday-002/run-001.json"
+        },
+        "pack_run_id": "monday-002__gemini-3.8-flash-high__run-001",
+        "unobservable": [
+          "temperature",
+          "top_p",
+          "served_model_id",
+          "system_prompt",
+          "max_output_tokens",
+          "finish_reason",
+          "request_id",
+          "usage",
+          "reasoning_tokens",
+          "TTFT",
+          "TTFA"
+        ],
+        "not_an_api_equivalent_run": true
+      }
+    }
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "1.0",
+  "scenario_id": "monday-003",
+  "scenario_prompt_sha256": "aaf788f309d955d2b427c86fe7d95d2bbf88575fde7306adcfd74b0ec4a4103f",
+  "run_id": "monday-003__claude-fable-5-1__002",
+  "run_number": 2,
+  "model": {
+    "slug": "claude-fable-5-1",
+    "display_name": "Claude Fable 5.1",
+    "provider": "claude-code",
+    "model_id": "claude-fable-5-1"
+  },
+  "generation": {
+    "temperature": null,
+    "max_output_tokens": null,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": "high",
+    "system_prompt_sha256": null,
+    "extra_body": {},
+    "config_sha256": "131c10c70517c8b8638f855ced5a84a7b391a2e735d384ffa3e7fc6deda79385",
+    "safety_ceiling_tokens": 64000,
+    "ceiling_semantics": "route-reported, not configured by this battery: Claude Code reports a 64000-token output ceiling for claude-fable-5-1. The battery set no ceiling and the wire max_tokens was not captured, so max_output_tokens is null. This is NOT the scenario's configured ceiling (32000 for monday-001..003, 96000 for monday-004, 131072 for monday-005)."
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "DELIVERED",
+    "tokens": 3445,
+    "evidence": "explicit_reasoning_tokens",
+    "stream_observed": null,
+    "stream_event_count": null
+  },
+  "timestamp_utc": "2026-09-02T08:15:44Z",
+  "usage": {
+    "input_tokens": 5229,
+    "output_tokens": 6539,
+    "reasoning_tokens": 3445
+  },
+  "performance": {
+    "ttft_ms": null,
+    "ttfa_ms": null,
+    "total_latency_ms": null,
+    "tokens_per_second": null
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "# Northstar — Monday 09:10 execution plan (week of 21 Sep)\n\n## 0. What's actually changed since Friday (stale info corrected)\n\n| Task list / tracker says | Reality (source) |\n|---|---|\n| Security review for SSO outstanding (🔴) | **Closed & approved** Fri 16:48 (Maya). Permission-check fixes inside scope need no re-review. Not a blocker. |\n| Marcus must finish onboarding instrumentation before launch (🔴) | **Not a launch blocker** (Julia, Fri 17:06). Frees 3h of Marcus. |\n| \"Broken Contoso exports\" (🔴) | Export is **not broken**. Two separate items: (a) cosmetic DD/MM/YYYY change for a Tuesday demo (Julia, 2h, nice-to-have); (b) **new, contractual**: delegated admins get scope errors → compliance export due **Tue 22 Sep 16:00** (section 8.3, auditor window can't move). |\n| Pricing page must finish before approval meeting | Committee accepts **mockups**, meets rolling, clears same day if submitted **before 12:00**. Page is not a prerequisite for approval. |\n| Marcus owns onboarding launch support | Moved to **Julia** Friday. |\n| `contoso_permission_patch` → Marcus | Marcus is the SSO bottleneck (and loses Tue 09:00–13:00 to Atlas). **Reassign to Daniel** (3.5h + 30 min with Marcus). |\n\n## 1. CRITICAL PATH (Enterprise SSO → Atlas, Wed EOD)\n\n```\nElena: billing schema migration (3h)          Mon 09:15 → ~12:15\n  └─ Marcus: API compatibility patch (4h)     Mon 12:30 → 16:30\n       └─ QA: SSO regression (2h)             Mon 16:30–17:30 + Tue 09:00–10:00\n            └─ Marcus: production rollout (1h) Tue 13:00 → 14:00  (Marcus in Atlas session 09:00–13:00)\n```\nThe schema migration is the head of the path for **both** SSO and the Contoso compliance fix. Everything hinges on Elena starting now.\n\nSecondary hard-deadline chain (Contoso, Tue 16:00):\n```\nSchema lands (~12:15) → Daniel: permission patch (3.5h) 12:30 → 16:00 → Julia: produce & send export (1h) 16:00 → 17:00 Mon\n```\n\n## 2. MY PLAN FOR TODAY (in order)\n\n| When | Action | Owner |\n|---|---|---|\n| 09:15 | Tell Elena to **start the schema migration immediately**; nothing else first. | Elena |\n| 09:15 | Reassign `contoso_permission_patch` Marcus → **Daniel** (confirm with Rachel). Book Marcus + Daniel 30 min now (before schema lands, so it costs zero critical-path time). | Me / Rachel |\n| 09:20 | Tell Marcus: **drop instrumentation** this week; morning = Daniel walkthrough + pre-stage compat branch; **12:30 onward is protected** for the compat patch. No other pulls. | Marcus |\n| 09:30 | Update task list: remove security-review item (done); demote instrumentation; split Contoso into formatter vs. compliance; onboarding launch support → Julia. | Me |\n| 09:30 | **Reply to Anja (Contoso Compliance) today** confirming delivery before Tue 16:00; brief CEO that export isn't \"broken\", real issue is delegated-admin scope and it's owned. Reply to Peter: format change lands before Tue afternoon. | Noah (me drafting) |\n| 09:30 | Sarah: build **packaging approval pack from mockups now** (1.5h) and **submit before 12:00** → same-day clearance. Pricing page after. | Sarah |\n| 09:15 | Julia: exporter date-format change + fixtures (2h) this morning; hold 16:00–17:00 for the compliance export. | Julia |\n| ~12:15 | Checkpoint: schema landed? If yes → Marcus compat, Daniel permission patch, Elena kicks backfill (done ~13:45). If no → escalate; Contoso plan slips. | Me |\n| 16:30 | QA starts regression on the compat patch (1h today, 1h Tue 09:00). | Sam/QA |\n| ~16:00–17:00 | Daniel's patch verified/deployed → Julia produces and sends compliance export to Anja. | Daniel → Julia |\n| EOD | Confirm Tue: QA finish 10:00, Marcus rollout 13:00–14:00, Elena→Daniel 30-min runbook handover (Tue, as insurance in case anything needs re-running after Wed noon). | Me |\n\n## 3. PARALLEL WORK (no waiting)\n\n- **Sarah**: approval pack (mockups) → submit <12:00; then pricing page (3h, Wed 17:00 deadline; publish once approval clears); board pack non-revenue sections (4h) Mon–Thu.\n- **Julia**: date-format fix (2h) this morning; onboarding launch prep (2h, Thu 12:00 deadline) any time; launch support.\n- **Daniel**: 30 min with Marcus in the morning; SCIM/other work until schema lands.\n- **Marcus (morning only)**: Daniel walkthrough; prep compat patch — cannot finish before schema.\n- **QA**: prep regression suite/environment for 16:30.\n- **Sarah revenue charts (2h)**: only after backfill completes (~13:45 Mon); safer Tuesday once data is checked.\n\n## 4. BLOCKERS & DEPENDENCIES\n\n| Item | Blocked by | Status |\n|---|---|---|\n| SSO compat patch | Schema migration | Real. Unblocked ~12:15 if Elena starts now. |\n| Contoso permission patch | Schema migration (same account-mapping layer) | Real. Same unblock. |\n| Contoso compliance export | Permission patch accepting delegated admins | Real. Owner shift to Daniel removes Marcus contention. |\n| SSO rollout | QA green + Marcus free | Marcus unavailable Tue 09:00–13:00 → rollout 13:00. |\n| Security review | — | **Not a blocker** (approved). |\n| Instrumentation \"launch blocker\" | — | **Not a blocker.** |\n| Packaging approval | Sarah thinks it needs live page | **Not true** — mockups accepted; submit before 12:00. |\n| Board revenue charts | Backfill completion | Real but short (~13:45 Mon). |\n| Billing migration after Wed 12:00 | Daniel lacks prod permissions | Mitigate with 30-min handover Tue. |\n\n## 5. EARLIEST DELIVERY\n\n- **Enterprise SSO in production: Tuesday ~14:00** (10h of sequential work from a 09:15 start, with Marcus's Tuesday-morning gap). ~27h buffer to Wednesday EOD. Wednesday is the only recovery day; Elena is gone after Wed noon.\n- **Contoso compliance export: Monday ~17:00** (~23h before the Tue 16:00 obligation). If the schema slips past ~13:00 today, this moves to Tuesday and gets tight (Marcus unavailable Tue morning; Daniel path preserves it).\n- **Packaging approval: Monday afternoon** if submitted before 12:00. **Date-format fix: Monday.**\n\n## 6. RISKS / UNKNOWNS\n\n- **Single point of failure**: Elena's 3h migration. Any slip cascades into SSO, Contoso and board charts. No stated fallback until Daniel has prod permissions.\n- **Marcus is not substitutable** on the compat branch; \"heads-down either side\" of Tuesday's Atlas session — any interruption or QA surprise pushes rollout into Wednesday.\n- **Two changes on the same account-mapping layer** (Marcus's compat branch, Daniel's permission patch) landing the same afternoon — merge/regression interaction not assessed. Permission patch may need its own verification/deploy path before Julia can produce the file; not stated.\n- **Date-format change is in the same exporter** as the compliance export. Whether the auditor expects ISO or DD/MM is unknown — don't change format globally without checking; the compliance file might need ISO.\n- **Timezone**: Anja says \"16:00 CET\"; work item says 16:00 +02:00 (CEST). Treat the earlier plausible time as the deadline — deliver Monday to make it moot.\n- Sam's 2h QA estimate assumes \"nothing surprising.\"\n- Whether Priya's committee actually sits today, and whether Sarah has mockups ready, is not confirmed.\n- Whether the Atlas rollout Thursday needs anything beyond production availability (docs, config) is not stated.\n- \"Product\" as task owner is undefined — I'm assuming it's me.",
+  "finish_reason": "end_turn",
+  "provider_metadata": {
+    "request_id": null,
+    "raw_usage": {
+      "claude_code_runtime": {
+        "runtime": "Claude Code CLI",
+        "cli_version": "2.1.258",
+        "route": "claude -p (Claude Code CLI 2.1.258), OAuth subscription",
+        "cli_invocation": "documented in experiments/fable-5.1-full-mondaybench/METHODOLOGY.md (not recorded per run)",
+        "requested_model_id": "claude-fable-5-1",
+        "served_model_id": "claude-fable-5-1",
+        "served_model_provider": "firstParty",
+        "generation_as_recorded": {
+          "system_prompt_requested": "You are a helpful assistant.",
+          "effort_requested": "high",
+          "temperature": null,
+          "top_p": null,
+          "route_max_output_tokens": 64000,
+          "tools": []
+        },
+        "reasoning_effort": "high",
+        "system_prompt_as_sent": "NOT the frozen bytes: the route prepends the Agent SDK preamble to the requested system prompt.",
+        "user_turn_as_delivered": "NOT the frozen bytes as delivered: the route injects a <system-reminder> carrying the user's identity and 'Today's date is 2026-09-02' into the user turn. The frozen prompt bytes were what the battery passed to the route (sha256 recorded in scenario_prompt_sha256). See audits/monday-002/fable-5.1-preflight.md.",
+        "route_max_output_tokens": 64000,
+        "usage_as_recorded": {
+          "input_tokens": 2,
+          "output_tokens": 6539,
+          "thinking_tokens": 3445,
+          "cache_read_input_tokens": 5227,
+          "cache_creation_input_tokens": 0
+        },
+        "input_tokens_semantics": "usage_as_recorded.input_tokens is EXCLUSIVE of cache; the run's usage.input_tokens is input + cache_creation + cache_read",
+        "finish_reason": "end_turn",
+        "is_error": false,
+        "num_turns": 1,
+        "timing_host_measured_ms": {
+          "ttft_ms": 5152.5,
+          "ttfa_ms": 50608.2,
+          "total_latency_ms": 88353.2,
+          "duration_api_ms": 87999
+        },
+        "timing_semantics": "host wall clock around the claude -p process, TTFT/TTFA from stream-json deltas; not the harness adapter's measurement, so not published in `performance`",
+        "economics_as_recorded": {
+          "cost_usd_route_reported": 0.32827675,
+          "cost_basis": "list",
+          "models_billed": [
+            "claude-fable-5-1",
+            "claude-haiku-4-5-20251001"
+          ]
+        },
+        "cost_note": "list-price figure the route reports for a subscription call; not a price this battery paid, so `economics` is empty",
+        "source_file": "experiments/fable-5.1-full-mondaybench/raw/monday-003-run2.json",
+        "source_label": "M003_RUN2",
+        "unobservable": [
+          "temperature",
+          "top_p",
+          "max_output_tokens (wire)",
+          "system_prompt bytes as sent",
+          "request_id"
+        ],
+        "not_an_api_equivalent_run": true,
+        "source_scenario_id_field": "the source file records scenario_id 'monday-002'; its label, prompt_file and prompt_sha256 all say monday-003, which is used"
+      }
+    }
+  }
+}

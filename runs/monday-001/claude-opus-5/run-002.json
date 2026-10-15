@@ -1,0 +1,224 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "1.0",
+  "scenario_id": "monday-001",
+  "scenario_prompt_sha256": "ed4d7beb1d7d1029c36eb8533e449027e0dc1a1047f8a38951a91781a0a5e398",
+  "run_id": "monday-001__claude-opus-5__002",
+  "run_number": 2,
+  "model": {
+    "slug": "claude-opus-5",
+    "display_name": "Claude Opus 5",
+    "provider": "claude-code",
+    "model_id": "claude-opus-5"
+  },
+  "generation": {
+    "temperature": null,
+    "max_output_tokens": null,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": "high",
+    "system_prompt_sha256": null,
+    "extra_body": {},
+    "config_sha256": "08e94f909a940b5080df784897b6c291a8eb9c8fcafd64bce5f5100deb5e5f03",
+    "safety_ceiling_tokens": 64000,
+    "ceiling_semantics": "route-reported, not configured by this battery: Claude Code reports maxOutputTokens 64000 for claude-opus-5 (modelUsage). The battery set no ceiling and the wire max_tokens was not captured, so max_output_tokens is null. This is NOT the scenario's configured ceiling (32000 for monday-001..003, 96000 for monday-004, 131072 for monday-005)."
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "DELIVERED",
+    "tokens": 525,
+    "evidence": "explicit_reasoning_tokens",
+    "stream_observed": null,
+    "stream_event_count": null
+  },
+  "timestamp_utc": "2026-09-02T11:33:39Z",
+  "usage": {
+    "input_tokens": 4833,
+    "output_tokens": 2531,
+    "reasoning_tokens": 525
+  },
+  "performance": {
+    "ttft_ms": null,
+    "ttfa_ms": null,
+    "total_latency_ms": null,
+    "tokens_per_second": null
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "# Monday Briefing — 09:07\n\n## 1. What happened while you were away\n\n**Thursday**\n- **Acme P1 incident**: `/v2/events` returning intermittent 500s after the 2.18.0 deploy. Marcus traced it to a new worker config exhausting the connection pool, rolled it back by 09:48. Baseline restored, Acme (Rachel Kim) confirmed stability from ~10:00. Marcus owns the incident write-up. Closed.\n- QA found two regressions in Analytics v2 saved reports, one affecting exports.\n\n**Friday**\n- **Analytics v2 release moved Monday → Wednesday** (Daniel approved: \"ship Wednesday cleanly\"). Sam owns release coordination, Julia owns launch comms — explicitly nothing needed from you on the launch email.\n- **Contoso**: commercial terms agreed (€72k ARR renewal), but their legal flagged one blocker — see below.\n- **Enterprise churn up 3.1% → 4.4%**. Known cancellations: Pied Piper (vendor consolidation post-acquisition), Hooli (low adoption). Team did *not* conclude these fully explain the move. Daniel wants a breakdown before the board meeting.\n- **Enterprise pricing**: new tiers reviewed but still a proposal, numbers still being modeled. Strictly confidential until approved and announced. Next review Wednesday.\n- Design: keeping the existing **outlined** icon for this release (decided).\n- Partner sync done, nothing major, October integration still the target.\n- Finance weekly: New €31k / Expansion €18k / Churn €27k → net new ~€22k. Pipeline created €214k. Cash in line with plan.\n\n## 2. Requires your attention today, by priority\n\n**1. Contoso data-retention confirmation — hard deadline 11:00 today (~2h)**\nSarah Mitchell needs *written* confirmation that admin-deleted data is also purged from disaster-recovery backups within the DPA retention period. Miss it and the €72k signature slips to their next approval window. Noah won't guess; Marcus is the right source. Action: ping Marcus now, get the factual answer, and have Noah or you send it in writing before 11:00. Do not improvise the answer — it's a legal/DPA commitment.\n\n**2. Initech pricing request (Mark Benson) — reply today**\nHe's asking for the new Enterprise tiers \"even a rough version\" for next-quarter budgeting. Per Friday's leadership decision, you cannot share this. Action: reply declining to share unapproved numbers, confirm you'll come back once finalized, and offer current pricing / a budgeting placeholder conversation. Also worth telling Noah what he communicated on the last call.\n\n**3. Umbrella — unflagged health problem (nobody raised this)**\nAug 31 data: **163 API errors** (highest of any account by far relative to volume), **p95 latency 1,821ms** (~6x every other customer), **usage −41% over 7 days**, €54k ARR. Given the churn concern, this is the profile of an account about to leave. Action: raise with Marcus (latency/errors) and Laura (customer contact) today.\n\n**4. Enterprise churn breakdown — due for the board meeting**\nStart today; the meeting is referenced as Tuesday in the leadership notes. You need to show whether Pied Piper + Hooli mathematically account for 3.1% → 4.4% or whether there's a residual trend. Include the Umbrella signal.\n\n**5. Globex — confirm Q3 planning session (Elena Rossi)**\nWants to move Tuesday → Thursday afternoon so her Head of Product can attend. Low effort, she asked for confirmation early this week. Note: if the reschedule frees Tuesday, that helps with board prep.\n\n**6. Task list hygiene (5 min)**\n- \"Investigate Acme API failures\" (urgent, overdue) → close, resolved by Marcus.\n- \"Prepare Analytics v2 launch email\" → remove, Julia owns it.\n- \"Review Analytics v2 launch readiness\" (due Monday) → re-date to align with Wednesday release; confirm with Sam whether he needs anything from you at all.\n- \"Review Q3 research survey\" (low, overdue Friday) → reschedule.\n\n## 3. Important to know, no action from you\n\n- Acme is stable and satisfied; Marcus owns the write-up. No customer follow-up required.\n- Analytics v2 comms fully covered by Julia (confirmed twice, Slack + email).\n- Icon debate resolved (outlined).\n- Pricing proposal is not final; Daniel owns the review Wednesday.\n- Partner October integration on track.\n- Finance monthly numbers land next week.\n\n## 4. Unclear / needs more information\n\n- **Contoso's actual backup deletion behaviour** — nobody in the thread knows; this is the whole blocker. Unverified.\n- **Board meeting date**: leadership notes say \"before Tuesday's board meeting,\" but Daniel wrote on Friday it's \"next week.\" Confirm the actual date before planning your churn work.\n- **Whether Pied Piper + Hooli explain the churn increase** — explicitly *not* established. Don't present them as the cause.\n- **Friday conversion drop**: Julia thought conversion \"tanked,\" Noah saw it too, both only glanced. She guessed noisy Friday traffic. No conversion data was provided to me — worth pulling the actual numbers before dismissing it.\n- **Umbrella's root cause** — the metrics show a problem but there's no incident, ticket, or customer conversation on record explaining the latency spike or the 41% usage drop.\n- **Analytics v2 launch readiness review**: unclear if this task is still yours, given Sam owns release coordination. Confirm with Sam.\n- Metrics snapshot is a single day (2026-08-31) with no trend history, so I can't tell whether Umbrella's numbers are a spike or sustained.",
+  "finish_reason": "end_turn",
+  "provider_metadata": {
+    "request_id": null,
+    "raw_usage": {
+      "claude_code_runtime": {
+        "runtime": "Claude Code CLI",
+        "cli_version": "2.1.258",
+        "route": "claude_code_subscription",
+        "route_classification_at_generation": "PROVISIONAL / OFF-BENCHMARK / CLAUDE CODE ROUTE",
+        "cli_flags": [
+          "-p",
+          "--model",
+          "claude-opus-5",
+          "--system-prompt",
+          "You are a helpful assistant.",
+          "--tools",
+          "",
+          "--effort",
+          "high",
+          "--output-format",
+          "stream-json",
+          "--include-partial-messages",
+          "--verbose",
+          "--safe-mode",
+          "--setting-sources",
+          "",
+          "--strict-mcp-config",
+          "--disable-slash-commands",
+          "--no-session-persistence"
+        ],
+        "env": {
+          "DISABLE_NON_ESSENTIAL_MODEL_CALLS": "1"
+        },
+        "requested_model_id": "claude-opus-5",
+        "served_model_id": "claude-opus-5",
+        "served_model_provider": "firstParty",
+        "reasoning_effort": "high",
+        "system_prompt_requested": "You are a helpful assistant.",
+        "system_prompt_requested_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+        "system_prompt_as_sent": "NOT the frozen bytes - the Agent SDK preamble is prepended by the route. See audits/monday-opus5/route-audit.md.",
+        "user_turn_as_delivered": "NOT the frozen bytes as delivered: the route injects a <system-reminder> carrying the user's identity and 'Today's date is 2026-09-02' into the user turn. The frozen prompt bytes were what the battery passed to the route (sha256 recorded in scenario_prompt_sha256). See audits/monday-opus5/route-audit.md and claude-code-wire-capture.json.",
+        "temperature_note": "not settable and not observable on this route; claude-opus-5 is in providers/anthropic_native.NO_TEMPERATURE_MODELS so the official adapter would also drop it",
+        "route_max_output_tokens": 64000,
+        "route_context_window": 1000000,
+        "anthropic_usage": {
+          "input_tokens": 2,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 4831,
+          "output_tokens": 2531,
+          "output_tokens_details": {
+            "thinking_tokens": 525
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 2531,
+              "cache_read_input_tokens": 4831,
+              "cache_creation_input_tokens": 0,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 0
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard"
+        },
+        "input_tokens_semantics": "usage.input_tokens above is EXCLUSIVE of cache; the run's usage.input_tokens is input + cache_creation + cache_read",
+        "model_usage_all": {
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": 4045,
+            "outputTokens": 11,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0,
+            "webSearchRequests": 0,
+            "costUSD": 0.0041,
+            "contextWindow": 200000,
+            "maxOutputTokens": 32000,
+            "thinkingTokens": 0,
+            "canonicalModel": "claude-haiku-4-5",
+            "provider": "firstParty",
+            "costBasis": "list"
+          },
+          "claude-opus-5": {
+            "inputTokens": 2,
+            "outputTokens": 2531,
+            "cacheReadInputTokens": 4831,
+            "cacheCreationInputTokens": 0,
+            "webSearchRequests": 0,
+            "costUSD": 0.0657005,
+            "contextWindow": 1000000,
+            "maxOutputTokens": 64000,
+            "thinkingTokens": 525,
+            "canonicalModel": "claude-opus-5",
+            "provider": "firstParty",
+            "costBasis": "list"
+          }
+        },
+        "auxiliary_models": [
+          "claude-haiku-4-5-20251001"
+        ],
+        "stop_reason": "end_turn",
+        "terminal_reason": "completed",
+        "subtype": "success",
+        "is_error": false,
+        "num_turns": 1,
+        "session_id": "b2a7b7c4-6af7-4d02-b3a5-d244f87580de",
+        "subagent_stats": {
+          "spawned": 0,
+          "requested": {
+            "background": 0,
+            "foreground": 0,
+            "unset": 0
+          },
+          "started_in_background": 0,
+          "max_depth": 0,
+          "spawned_by_subagents": 0,
+          "completed": 0,
+          "failed": 0,
+          "killed": {
+            "parent": 0,
+            "user": 0,
+            "system": 0
+          },
+          "refused": {
+            "depth_limit": 0,
+            "concurrency_limit": 0,
+            "budget": 0
+          },
+          "by_type": {}
+        },
+        "timing_host_measured_ms": {
+          "ttft": 9431.9,
+          "ttfa": 15936.8,
+          "total": 41984.9
+        },
+        "timing_route_reported_ms": {
+          "ttft": 7700,
+          "ttfa": 14921,
+          "duration_api": 41276
+        },
+        "timing_semantics": "host wall clock around the claude -p process, TTFT/TTFA from stream-json deltas; not the harness adapter's measurement, so not published in `performance`",
+        "cost_usd_route_reported": 0.0657005,
+        "total_cost_usd_including_auxiliary": 0.0698005,
+        "cost_basis": "list",
+        "cost_note": "list-price figure the route reports for a subscription call; not a price this battery paid, so `economics` is empty",
+        "source_file": "experiments/opus-5-full-mondaybench/raw/monday-001-run2.json",
+        "unobservable": [
+          "temperature",
+          "top_p",
+          "max_output_tokens (wire)",
+          "system_prompt bytes as sent",
+          "request_id"
+        ],
+        "not_an_api_equivalent_run": true
+      }
+    }
+  }
+}

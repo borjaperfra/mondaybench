@@ -1,0 +1,224 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "1.0",
+  "scenario_id": "monday-004",
+  "scenario_prompt_sha256": "3a0cbb569ca4f711b8907177af9204cec267d26f35f732829df56b03ed23ef99",
+  "run_id": "monday-004__claude-opus-5__002",
+  "run_number": 2,
+  "model": {
+    "slug": "claude-opus-5",
+    "display_name": "Claude Opus 5",
+    "provider": "claude-code",
+    "model_id": "claude-opus-5"
+  },
+  "generation": {
+    "temperature": null,
+    "max_output_tokens": null,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": "high",
+    "system_prompt_sha256": null,
+    "extra_body": {},
+    "config_sha256": "08e94f909a940b5080df784897b6c291a8eb9c8fcafd64bce5f5100deb5e5f03",
+    "safety_ceiling_tokens": 64000,
+    "ceiling_semantics": "route-reported, not configured by this battery: Claude Code reports maxOutputTokens 64000 for claude-opus-5 (modelUsage). The battery set no ceiling and the wire max_tokens was not captured, so max_output_tokens is null. This is NOT the scenario's configured ceiling (32000 for monday-001..003, 96000 for monday-004, 131072 for monday-005)."
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "DELIVERED",
+    "tokens": 13385,
+    "evidence": "explicit_reasoning_tokens",
+    "stream_observed": null,
+    "stream_event_count": null
+  },
+  "timestamp_utc": "2026-09-02T11:51:41Z",
+  "usage": {
+    "input_tokens": 12631,
+    "output_tokens": 18899,
+    "reasoning_tokens": 13385
+  },
+  "performance": {
+    "ttft_ms": null,
+    "ttfa_ms": null,
+    "total_latency_ms": null,
+    "tokens_per_second": null
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "# Northstar — Monday Business Review\n**Prepared by: Product & Growth Lead** | Data: Sept–Oct 2026 (both months complete)\n\n---\n\n## 1. EXECUTIVE SUMMARY\n\n1. **The +12% October revenue headline is not real.** Billed revenue was €892,900 (Oct) vs €797,100 (Sept). Removing a duplicated invoice, a 12-month prepayment booked at full value, and one-off professional services leaves **recurring revenue up 1.6% (€746,100 → €757,700)**.\n2. **October MRR still includes €25,300/month from five customers that have already churned.** Forward MRR on today's active book is **€732,400 (–1.8% vs September)**. Total active ARR = €8,788,800.\n3. **Churn is concentrated in the starter plan by count, but in one mid-market account by value.** Nakatomi (€180,000 ARR, pro) is 59% of the €303,600 ARR lost in October. Four starter customers make up the other €123,600.\n4. **The \"SMB is bleeding\" story is only half true, and cutting SMB saves little** — SMB is 5.4% of ARR. Meanwhile the **enterprise plan has the *worst* contribution margin of the three plans (29.5%)** and 77% of revenue. That is the real economics story.\n5. **Acme's –45% request collapse is not a health event.** It is the documented batch migration (estimated 40–50% reduction). Tokens fell only 12%, active users 3%, revenue is flat, and its high-severity tickets went to zero.\n6. **Do not increase paid_search spend on this data.** 73% of paid_search's October attributed revenue (€174,000 of €238,800) is *expansion on existing multi-year enterprise accounts* credited to a campaign that started 28 September. And **CAC payback cannot be calculated at all — there is no channel spend anywhere in the pack.**\n7. **The pro plan deserves engineering focus**: best margin (62.7%), and **100% of all rate-limit tickets (13 of 74 in October)** come from it, with customers running up to 170% of included volume.\n\n---\n\n## 2. REVENUE & CUSTOMER HEALTH\n\n### Unwinding the headline\n\n| Step | Sept | Oct |\n|---|---|---|\n| Billed revenue as recorded | €797,100 | €892,900 |\n| Less duplicate invoice (INV-2026-10-0209 appears twice: `stripe` 10-01 and `billing_sync` 10-02, same ID) | — | –€19,500 |\n| Less Gringotts annual booked at full value (€120,000 covering 12 months → €10,000/mo) | — | –€110,000 |\n| Less one-off professional services (Globex €33k, Hooli €18k / Aperture €5.7k) | –€51,000 | –€5,700 |\n| **Comparable recurring revenue (MRR)** | **€746,100** | **€757,700 (+1.6%)** |\n\nThis reconciles exactly to plans.csv (659,000+63,000+24,100 and 659,500+66,200+32,000), which correctly amortises the annual contract. **revenue.csv does not — the two files will disagree by €110,000 unless normalised.**\n\n### MRR movement, Sept → Oct\n\n- New logos: +€11,100 (spacely 3,200; cogswell 2,100; bishop 1,700; gekko 2,200; paper-street 1,900)\n- Expansion: +€3,000 (Hooli, the September paid_search booking, landing as promised)\n- Contraction: –€2,500 (Soylent, €22,000 → €19,500)\n- **Churn recognised in October revenue: €0.** All five churned customers were invoiced 1–3 October, before churn dates of 8–27 October.\n\n**Forward net revenue retention = (746,100 + 3,000 – 2,500 – 25,300) / 746,100 = 96.7%.**\nNovember run-rate: €732,400 + €18,000 of expansion effective next cycle = **~€750,400 before new logos.**\n\n### Segment health\n\n| Segment | Active ARR | Share | Oct churn | Contraction | Signal |\n|---|---|---|---|---|---|\n| Enterprise (8) | €6,780,000 | 77.1% | 0 | 0 | Usage +5–10% MoM; €174k expansion booked |\n| Mid-market (9 active) | €1,530,000 | 17.4% | €180,000 (Nakatomi) | €30,000 (Soylent) | Highest-value loss; one at-risk account |\n| SMB (14 active) | €478,800 | 5.4% | €123,600 (4 starter) | 0 | 4 of 13 logos lost in one month |\n\n**The at-risk account to act on today is Soylent, not Acme**: 8 tickets in October (1 critical + 4 high, api_errors/performance) vs 3 in September, requests –27%, and it has already contracted €2,500/mo. This is the same signature Nakatomi showed the month before it churned (2 high-severity tickets, usage –16%).\n\n**Caveat on the churners' usage:** slate-rock (–34.7%), mega-lo-mart (–37.1%), dinoco (–35.5%), buy-n-large (–37.0%), nakatomi (–16.1%) all churned mid-month, so October is a partial month. Those declines are largely arithmetic, **not** evidence of disengagement, and must not be used as churn predictors.\n\n---\n\n## 3. ACQUISITION — what can and cannot be concluded\n\n### What cannot be concluded\n- **CAC and CAC payback by channel: not computable.** There is no marketing spend, headcount cost or campaign budget in the pack. This is a hard blocker on the CFO's request, not an estimate we can bridge.\n- **Channel conversion efficiency: not computable.** funnel.csv `conversions` = leads reaching a **paid trial in the same month**; trial-to-paid \"is not tracked in this pack.\" That is why Sept shows 100 funnel \"conversions\" but only 5 closed deals.\n\n### What can be concluded\n\n**Attributed revenue is dominated by expansion, not acquisition:**\n\n| Channel | New-logo ARR (Sep+Oct) | New logos | Expansion ARR credited | Leads (Sep+Oct) | Trial rate Sep → Oct |\n|---|---|---|---|---|---|\n| paid_search | €64,800 | 2 | **€174,000** (Oct) + €36,000 (Sep) | 1,420 | 8.5% → **6.4%** |\n| content | €91,200 | 3 | €18,000 | 590 | 11.9% → 10.3% |\n| partner | €166,800 | 2 | €0 | 135 | 25.0% → **22.7%** |\n| outbound | €56,400 | 2 | €24,000 | 355 | 6.3% → 5.6% |\n\n- **Paid_search's October result is an attribution artefact.** Stark (customer since 2023), Umbrella (2024) and Globex (2024) expansions — €174,000 — are credited to a campaign with `campaign_start 2026-09-28`. Multi-year enterprise expansions are not caused by a two-week-old search campaign. Strip them and paid_search delivered **2 SMB logos worth €64,800 from 1,420 leads.**\n- Paid_search leads grew **+73% (520 → 900)** while trial rate fell **–25% relatively**. That is the signature of buying lower-quality volume.\n- Two paid_search \"conversions\" (spacely, gekko) have campaign_start 28 Sept and conversion 1 Oct — a 3-day cycle. Either backdated or misattributed.\n- **Partner is the most interesting channel on available evidence**: 135 leads → highest trial rate (22.7–25%) and the highest ARR per logo (€83,400 avg, incl. Vandelay at €132,000). But n=2 logos and no cost data — this is a hypothesis to test, not a conclusion.\n\n**Verdict on Decision 2: the case to increase paid_search spend is not supported.** The one channel that looks efficient (partner) cannot be validated without spend data.\n\n---\n\n## 4. PLAN ECONOMICS\n\n### October contribution margin (revenue – infra – support)\n\n| Plan | Customers | Revenue | Infra | Support | Contribution | Margin % | €/customer margin |\n|---|---|---|---|---|---|---|---|\n| enterprise | 14 | €659,500 | €296,800 | €168,000 | **€194,700** | **29.5%** | €13,907 |\n| pro | 9 | €66,200 | €16,100 | €8,600 | **€41,500** | **62.7%** | €4,611 |\n| starter | 13 | €32,000 | €11,400 | €10,300 | **€10,300** | **32.2%** | €792 |\n\nSeptember for trend: enterprise 32.2%, pro 67.5%, starter 34.9% — **all three margins deteriorated MoM.**\n\n**Infra cost per million tokens:** starter €20.78 · enterprise €9.70 · pro €5.78. Small starter workloads are ~3.6× more expensive per token than pro.\n\n### Post-churn view (the number that matters for Q4)\n\n- **Starter: revenue drops €10,300 to €21,700 — exactly equal to its October cost base.** Even assuming infra falls with the churners' ~30% of starter requests (~€8,000) and support scales with headcount (~€7,100), contribution is €3,400–€6,500 on 9 customers. Starter is effectively a break-even plan carrying 100% of SMB churn.\n- **Pro: revenue €51,200 after Nakatomi, margin still ~57%.** Best plan in the book.\n- **Enterprise: 87% of revenue, 70% of cost, 29.5% margin,** with recurring unresolved high-severity api_errors/performance tickets on Stark, Wayne, Contoso and Cyberdyne in *both* months. Cost-to-serve, not attention, is the problem.\n\n### The pro-plan capacity signal (strongest product finding)\n\n`included_requests_per_customer` = 600,000 on pro. October actuals:\n\n| Customer | Requests | % of allowance | Oct rate_limit tickets |\n|---|---|---|---|\n| wonka-industries (SMB!) | 1,020,000 | **170%** | 4 |\n| aperture-labs | 705,000 | 118% | 2 |\n| vandelay | 690,000 | 115% | 1 |\n| prestige-worldwide | 545,000 | 91% | 2 |\n| oscorp / pied-piper / planet-express | 198k / 186k / 112k | 33% / 31% / 19% | 2 / 1 / 1 |\n\n**All 13 rate-limit tickets in October (and all 5 in September) came from the pro plan.** Pro tickets per customer rose 2.38 → 3.11 (+31%). Overage is only billable at renewal — Wonka renews March 2027, Aperture April 2027, Vandelay Sept 2027 — so **we are absorbing the infra cost now and the friction now, and billing 5–11 months later, if at all.**\n\nNote also **Wayne Enterprises at 3.41M requests vs 3.0M included, renewing 2026-11-30** — the nearest commercial event in the book.\n\n---\n\n## 5. RECOMMENDATIONS\n\n**Decision 1 — reduce investment in a segment: partially supported, but not as framed.**\nDo not cut \"SMB.\" SMB is 5.4% of ARR, so the savings are trivial, and SMB-on-pro (Wonka, Oscorp, Pied Piper, Planet Express) is growing and profitable. Instead: **freeze discretionary spend on the *starter plan*** — move it to self-serve/automated support, stop paid acquisition into it (its four October logos average €1,975/mo), and reprice or migrate the plan. Simultaneously open an **enterprise cost-to-serve review**, which is where the actual margin is (a 3-point enterprise margin improvement is worth €19,800/mo — twice the entire starter plan's contribution).\n\n**Decision 2 — increase paid_search spend: not supported.** Hold spend flat. Before the next review: (a) load channel spend so CAC can be computed; (b) re-run attribution with expansions excluded from channel credit; (c) instrument trial→paid. Run a small, cost-instrumented **partner** expansion test as the alternative hypothesis.\n\n**Decision 3 — product focus: pro plan.** Rationale: highest margin, the only plan where customers are systematically breaching included limits, 100% of rate-limit pain, the bridge between SMB and enterprise, and the plan that just lost our largest single ARR churn (Nakatomi). Scope: usage visibility/alerting, graceful rate-limit handling, in-cycle overage billing, and a packaging tier between pro (600k) and enterprise (3M).\n\n**This week, operationally:**\n1. **Soylent save plan** — exec sponsor, critical/high ticket backlog cleared, root-cause on api_errors.\n2. **Wayne renewal (30 Nov)** — build the overage case now (114% of allowance).\n3. **Confirm and reverse the duplicate €19,500 invoice**; check whether October invoices to the five churned customers require credit notes.\n4. **Stop reporting Acme on request volume** — its metric definition changed in late September; report tokens and active users instead.\n\n---\n\n## 6. UNCERTAINTIES / DATA ISSUES\n\n**Blocking gaps**\n1. **No marketing spend of any kind → CAC, CAC payback, LTV:CAC and ROAS are all uncomputable.** This must be stated to the CFO as a data gap, not answered with a proxy.\n2. **Trial-to-paid conversion is not in the pack** (stated explicitly), so funnel.csv `conversions` cannot be read as sales conversions.\n3. **Costs exist only at plan level, and plans span segments** (6 mid-market accounts sit on the enterprise plan; pro mixes mid-market and SMB). **Segment-level margin, and therefore segment-level profitability, cannot be calculated.** Do not let \"SMB is unprofitable\" enter the record — it is not derivable.\n\n**Data quality**\n4. Duplicate transaction ID INV-2026-10-0209 loaded from two systems with different dates (+€19,500). Almost certainly a `billing_sync` double-load, but needs confirmation.\n5. revenue.csv books a 12-month prepayment at full value in October (+€110,000). Any month-on-month revenue comparison from this file is invalid without normalisation.\n6. **Identifier mismatch:** `wayne_ent` and `prestige_ww` in usage.csv vs `wayne-enterprises` / `prestige-worldwide` in revenue/support. A naive join on customer_id silently drops €84,000 MRR and 3.41M requests (~11% of platform volume).\n7. Churned customers' October usage is partial-month; their –35% declines are artefacts of the churn date, not behaviour.\n8. Support has no timestamps and no SLA field → **no resolution time, first-response or backlog-age metrics.** 20+ tickets remain open/pending with no ageing visible.\n9. `active_users` is undefined (no seat or licence baseline), so per-user metrics are not interpretable.\n\n**Unsupported causal claims to avoid**\n10. **\"Paid_search drove €238,800.\"** Last-touch attribution of enterprise expansions to a 3-day-old campaign is not causal evidence.\n11. **\"Acme is churning.\"** The –45% is explained by a planned architecture change within its own 40–50% estimate.\n12. **\"SMB churned because of product quality.\"** Of the four starter churns, two had only billing/how-to tickets. No churn reason, exit survey or competitive field exists in the pack.\n13. **Small-n statistics.** 5 churns, 9 new logos and 2 months of data. Do not annualise 4/13 starter logo churn into a 31% monthly rate — the confidence interval is enormous.\n14. **October expansion bookings (€216,000 ARR / €18,000 MRR) appear in no revenue record and are not reflected in `arr_eur`.** ARR is understated by that amount if they land, and the November forecast depends on them landing — unverified.",
+  "finish_reason": "end_turn",
+  "provider_metadata": {
+    "request_id": null,
+    "raw_usage": {
+      "claude_code_runtime": {
+        "runtime": "Claude Code CLI",
+        "cli_version": "2.1.258",
+        "route": "claude_code_subscription",
+        "route_classification_at_generation": "PROVISIONAL / OFF-BENCHMARK / CLAUDE CODE ROUTE",
+        "cli_flags": [
+          "-p",
+          "--model",
+          "claude-opus-5",
+          "--system-prompt",
+          "You are a helpful assistant.",
+          "--tools",
+          "",
+          "--effort",
+          "high",
+          "--output-format",
+          "stream-json",
+          "--include-partial-messages",
+          "--verbose",
+          "--safe-mode",
+          "--setting-sources",
+          "",
+          "--strict-mcp-config",
+          "--disable-slash-commands",
+          "--no-session-persistence"
+        ],
+        "env": {
+          "DISABLE_NON_ESSENTIAL_MODEL_CALLS": "1"
+        },
+        "requested_model_id": "claude-opus-5",
+        "served_model_id": "claude-opus-5",
+        "served_model_provider": "firstParty",
+        "reasoning_effort": "high",
+        "system_prompt_requested": "You are a helpful assistant.",
+        "system_prompt_requested_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+        "system_prompt_as_sent": "NOT the frozen bytes - the Agent SDK preamble is prepended by the route. See audits/monday-opus5/route-audit.md.",
+        "user_turn_as_delivered": "NOT the frozen bytes as delivered: the route injects a <system-reminder> carrying the user's identity and 'Today's date is 2026-09-02' into the user turn. The frozen prompt bytes were what the battery passed to the route (sha256 recorded in scenario_prompt_sha256). See audits/monday-opus5/route-audit.md and claude-code-wire-capture.json.",
+        "temperature_note": "not settable and not observable on this route; claude-opus-5 is in providers/anthropic_native.NO_TEMPERATURE_MODELS so the official adapter would also drop it",
+        "route_max_output_tokens": 64000,
+        "route_context_window": 1000000,
+        "anthropic_usage": {
+          "input_tokens": 2,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 12629,
+          "output_tokens": 18899,
+          "output_tokens_details": {
+            "thinking_tokens": 13385
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 18899,
+              "cache_read_input_tokens": 12629,
+              "cache_creation_input_tokens": 0,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 0
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard"
+        },
+        "input_tokens_semantics": "usage.input_tokens above is EXCLUSIVE of cache; the run's usage.input_tokens is input + cache_creation + cache_read",
+        "model_usage_all": {
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": 11185,
+            "outputTokens": 19,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0,
+            "webSearchRequests": 0,
+            "costUSD": 0.01128,
+            "contextWindow": 200000,
+            "maxOutputTokens": 32000,
+            "thinkingTokens": 0,
+            "canonicalModel": "claude-haiku-4-5",
+            "provider": "firstParty",
+            "costBasis": "list"
+          },
+          "claude-opus-5": {
+            "inputTokens": 2,
+            "outputTokens": 18899,
+            "cacheReadInputTokens": 12629,
+            "cacheCreationInputTokens": 0,
+            "webSearchRequests": 0,
+            "costUSD": 0.4787995,
+            "contextWindow": 1000000,
+            "maxOutputTokens": 64000,
+            "thinkingTokens": 13385,
+            "canonicalModel": "claude-opus-5",
+            "provider": "firstParty",
+            "costBasis": "list"
+          }
+        },
+        "auxiliary_models": [
+          "claude-haiku-4-5-20251001"
+        ],
+        "stop_reason": "end_turn",
+        "terminal_reason": "completed",
+        "subtype": "success",
+        "is_error": false,
+        "num_turns": 1,
+        "session_id": "52d358a7-487c-42bc-ba7f-70ac9e3e0f84",
+        "subagent_stats": {
+          "spawned": 0,
+          "requested": {
+            "background": 0,
+            "foreground": 0,
+            "unset": 0
+          },
+          "started_in_background": 0,
+          "max_depth": 0,
+          "spawned_by_subagents": 0,
+          "completed": 0,
+          "failed": 0,
+          "killed": {
+            "parent": 0,
+            "user": 0,
+            "system": 0
+          },
+          "refused": {
+            "depth_limit": 0,
+            "concurrency_limit": 0,
+            "budget": 0
+          },
+          "by_type": {}
+        },
+        "timing_host_measured_ms": {
+          "ttft": 2962.9,
+          "ttfa": 159695.7,
+          "total": 229641.7
+        },
+        "timing_route_reported_ms": {
+          "ttft": 1624,
+          "ttfa": 159091,
+          "duration_api": 229791
+        },
+        "timing_semantics": "host wall clock around the claude -p process, TTFT/TTFA from stream-json deltas; not the harness adapter's measurement, so not published in `performance`",
+        "cost_usd_route_reported": 0.4787995,
+        "total_cost_usd_including_auxiliary": 0.4900795,
+        "cost_basis": "list",
+        "cost_note": "list-price figure the route reports for a subscription call; not a price this battery paid, so `economics` is empty",
+        "source_file": "experiments/opus-5-full-mondaybench/raw/monday-004-run2.json",
+        "unobservable": [
+          "temperature",
+          "top_p",
+          "max_output_tokens (wire)",
+          "system_prompt bytes as sent",
+          "request_id"
+        ],
+        "not_an_api_equivalent_run": true
+      }
+    }
+  }
+}

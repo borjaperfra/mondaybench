@@ -1,0 +1,115 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "1.0",
+  "scenario_id": "monday-005",
+  "scenario_prompt_sha256": "532cd464a9b75045f808886c44e667237d6fd1b947826510643b9f8bcc30059a",
+  "run_id": "monday-005__gemini-3-8-flash-high__001",
+  "run_number": 1,
+  "model": {
+    "slug": "gemini-3-8-flash-high",
+    "display_name": "Gemini 3.8 Flash (High)",
+    "provider": "antigravity",
+    "model_id": "gemini-3.8-flash-high"
+  },
+  "generation": {
+    "temperature": null,
+    "max_output_tokens": null,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": false,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": "High",
+    "system_prompt_sha256": null,
+    "extra_body": {},
+    "config_sha256": "2b283bade952952060082fdacf5b05386598a654d9c2ef37e6ceaa395cf83b44",
+    "safety_ceiling_tokens": null,
+    "ceiling_semantics": "unobservable: not transmitted on the route; the IDE registry lists 65536 and the backend applies its own"
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "UNOBSERVABLE",
+    "tokens": null,
+    "evidence": null,
+    "stream_observed": null,
+    "stream_event_count": null
+  },
+  "timestamp_utc": "2026-09-02T18:21:55Z",
+  "usage": {
+    "input_tokens": null,
+    "output_tokens": null,
+    "reasoning_tokens": null
+  },
+  "performance": {
+    "ttft_ms": null,
+    "ttfa_ms": null,
+    "total_latency_ms": null,
+    "tokens_per_second": null
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "## CEO BRIEFING\n\n### Situation Summary (as of 14:20 UTC)\n- **Incident Status:** INC-2026-1109-01 is **OPEN but mitigated**. Service error rates have returned to normal operating levels (0.3% vs. 0.2% baseline).\n- **Current Action:** A mandatory 90-minute verification window opened at 13:00 UTC and will close at 14:30 UTC (10 minutes from now). Under Northstar incident policy, the incident cannot be declared resolved until this window completes clean.\n- **Root Cause:** Not yet established. Two live, untested hypotheses remain under investigation: a database connection-pool reduction in release `r3` (deployed at 11:31 UTC) and an elevated traffic spike (beginning at 11:38 UTC).\n\n### What Happened\n- **11:42 UTC:** Incident began when automated alerts fired for elevated 502 errors on `POST /v1/batch/jobs`.\n- **Scope:** The issue was strictly isolated to the Batch API. Northstar’s other surfaces (Inference, Embeddings, and Files APIs) remained completely healthy. Upstream object-storage providers were confirmed fully operational.\n- **12:58 UTC:** Mitigation applied by shifting all Batch API traffic to our secondary worker fleet (fleet-b) and draining the degraded fleet (fleet-a) out of rotation. Error rates dropped from peak failure rates to 0.4% within two minutes.\n- **13:52 UTC:** Failed job re-drives reached ~60% completion with zero re-drive errors.\n\n### Who Is Hit & Overall Impact (11:42 – 12:58 UTC)\n- **Headline Impact:** Failed Batch API requests accounted for **29.9%** of all Batch API traffic during the incident window (17,602 failures out of 58,900 total Batch requests).\n- **Platform Context:** Across all Northstar APIs, 842,000 total requests were processed during the window; batch failures represented **2.1%** of total platform volume.\n- **Customer Breakdown:** Northstar has 36 total customer accounts; 9 accounts use the Batch API.\n  - **7 accounts experienced failures** (all pinned to fleet-a):\n    - *stark-industries:* 5,180 failures (out of 14,200 requests)\n    - *contoso:* 3,410 failures (out of 9,400 requests)\n    - *wayne-enterprises:* 2,790 failures (out of 7,850 requests)\n    - *globex:* 2,240 failures (out of 6,100 requests)\n    - *wonka-industries:* 2,020 failures (out of 5,900 requests)\n    - *umbrella-health:* 1,560 failures (out of 4,300 requests)\n    - *initech:* 402 failures (out of 1,150 requests)\n  - **2 Batch API accounts experienced zero failures:** *acme-corp* (6,700 requests) and *aperture-labs* (3,300 requests).\n  - **27 accounts** do not use the Batch API and had zero exposure.\n\n### Commercial & SLA Exposure\n- **Contoso** is the only impacted customer with an SLA providing service credits (Schedule B). They have submitted a support ticket asking if this triggers a credit against their 99.9% Monthly Availability commitment.\n- **Contractual Reality:** Under Schedule B, Monthly Availability is calculated across all Covered Services (Batch, Inference, and Files) across the entire calendar month after the month ends. This incident alone does not automatically determine a breach; determination occurs after November concludes.\n- The other 6 impacted accounts are on standard terms with no service-credit provisions.\n\n### Recommended Board Talking Points (15:00 Call)\n1. **Core Platform Resilient:** Northstar's real-time Inference, Embeddings, and Files APIs operated with 100% normal reliability throughout. Platform-wide request success rate was 97.9% during the incident window.\n2. **Incident Isolated & Mitigated:** Elevated 502 errors affected Batch API submissions between 11:42 and 12:58 UTC. Traffic was diverted to our standby worker fleet at 12:58 UTC, immediately stabilizing error rates to normal levels (0.3%).\n3. **Data Integrity & Re-drive:** Submissions that failed during the window are being systematically re-driven; over 60% are already processed with zero failures.\n4. **Resolution Schedule:** Our formal 90-minute operational verification window concludes at 14:30 UTC, at which point we expect to declare the incident formally resolved and proceed with controlled root-cause testing.\n5. **Contractual Impact Contained:** Only one impacted customer has a credit-bearing SLA, which evaluates multi-service availability over the entire month.\n\n---\n\n## ENGINEERING UPDATE\n\n### Current State (14:20 UTC)\n- **Incident ID:** INC-2026-1109-01\n- **Severity / Status:** OPEN — Mitigated, Verification in Progress.\n- **Traffic Routing:** 100% of live Batch API traffic is currently serving on **fleet-b**.\n- **fleet-a Status:** Drained, held out of rotation, preserved for diagnostic testing.\n- **Current Metrics:** `POST /v1/batch/jobs` error rate is holding steady at **0.3%** (baseline 0.2%). Queue depth on fleet-b is normal.\n- **Verification Window:** Started at 13:00 UTC; **closes at 14:30 UTC** (10 minutes remaining). Per incident policy, do NOT declare the incident resolved before 14:30 UTC.\n\n### In-Flight Operations\n- **Failed Job Re-Drive:** Priya is managing the replay of failed jobs from the 11:42–12:58 window. As of 13:52 UTC, ~60% of failed submissions across the 7 affected accounts had been re-driven with zero errors. Monitor to 100% completion.\n\n### Root-Cause Hypotheses & Diagnostic Plan\nRoot cause is **not established**. Do not communicate or assume `r3` is confirmed cause.\n1. **Hypothesis 1 (Leading):** Connection pool ceiling reduction in `batch-api@2026.11.09-r3` (shipped 11:31 UTC; lowered worker pool ceiling from 80 to 24). Workers on fleet-a were queued on DB connections. *Counter-evidence:* `r3` was deployed concurrently to fleet-b, which experienced zero elevated errors.\n2. **Hypothesis 2 (Secondary):** Concurrency spike on fleet-a starting 11:38 UTC (~3x morning volume, initiated by wonka-industries scheduled job). *Counter-evidence:* fleet-a handled higher peak load on 2026-11-03 without degradation.\n3. **Hypothesis Interaction:** Pool constraint in `r3` may only manifest under specific load/concurrency profiles.\n4. **Hypothesis 3 (Ruled Out):** Upstream object-storage provider (green status; Files API healthy throughout).\n\n### Handoff Action Items\n1. **14:30 UTC — Close Verification Window:** If error rates remain at baseline (<= 0.4%), formally mark the active incident resolved. Coordinate with Ruth for the final status page resolution notice.\n2. **Post-14:30 UTC — fleet-a Testing:** Execute controlled testing on isolated fleet-a. Run the `r3` rollback test while isolated to evaluate whether the pool setting change caused connection starvation under load.\n3. **fleet-a Restoration:** Once testing concludes, restore fleet-a configuration and safely return it to rotation (Marcus' internal planning estimate for full fleet-a wrap-up is ~16:00 UTC).\n4. **SEC-411 Tracking:** Unrelated standing over-permission identified during triage (batch worker role holds write permissions on billing schema). Ticket SEC-411 assigned to Marcus; target fix this week.\n\n---\n\n## CUSTOMER EMAIL\n\n**To:** Priya Raghunathan <priya.raghunathan@contoso.example>  \n**From:** Incident Commander, Northstar Technologies <support@northstar.example>  \n**Date:** 2026-11-09 14:20 UTC  \n**Subject:** Re: Batch submits failing / SLA inquiry [TKT-8903, TKT-8907]  \n\nDear Priya,\n\nThank you for contacting Northstar Support. I am writing to provide a direct update on the Batch API service issues you reported earlier today.\n\n**Incident Status & Mitigation**  \nAt 11:42 UTC, Northstar identified an incident resulting in elevated 502 error rates on the Batch API (`POST /v1/batch/jobs`). A mitigation was applied at 12:58 UTC, and service performance has returned to normal operating levels. We are currently actively monitoring service stability before confirming full recovery. Northstar’s other API surfaces (Inference and Files APIs) were not affected and have remained fully operational.\n\n**Contoso Account Impact**  \nDuring the incident window between 11:42 UTC and 12:58 UTC, Contoso’s account traffic recorded the following:\n- **Total Batch API requests submitted:** 9,400\n- **Failed requests (502 errors):** 3,410\n- **Timestamp of first failure:** 11:43 UTC\n- **Timestamp of last failure:** 12:56 UTC\n\nNo further submission failures have occurred on your account since 12:56 UTC.\n\n**Schedule B Service Level Inquiry**  \nIn response to your query regarding Schedule B service credits:\nUnder Section B.2 and B.3 of our Master Services Agreement, Monthly Availability is evaluated across all Covered Services (Inference, Batch, and Files APIs) across the entire calendar month against a 99.9% commitment. Per Section B.5, Monthly Availability is determined from Northstar service records following the conclusion of the calendar month and published within 10 business days of month end. \n\nBecause availability is calculated cumulatively across all Covered Services over the complete calendar month, whether this incident results in a monthly breach below 99.9% cannot be determined mid-month, and will be assessed and published following the close of November.\n\nWe are continuing to monitor the Batch API closely and will follow up with you with a further operational update by 15:00 UTC.\n\nSincerely,  \nIncident Commander, Northstar Technologies\n\n---\n\n## STATUS PAGE UPDATE\n\n**Update — Monitoring**  \nA mitigation was applied at 12:58 UTC to address the elevated 502 error rates affecting Batch API requests, which began at 11:42 UTC. Error rates have returned to normal operating levels and service performance is recovering. We are actively monitoring service health before confirming full recovery. \n\nAll other Northstar API services (Inference, Embeddings, and Files) remain unaffected and continue to operate normally.\n\nWe will provide our next update by 14:45 UTC.",
+  "finish_reason": null,
+  "provider_metadata": {
+    "request_id": null,
+    "raw_usage": {
+      "antigravity_runtime": {
+        "runtime": "Antigravity Language Server",
+        "language_server_version": "ide-2.4.5",
+        "rpc": "exa.language_server_pb.LanguageServerService/GetModelResponse",
+        "request_fields": [
+          "prompt",
+          "model"
+        ],
+        "requested_model_id": "gemini-3.8-flash-high",
+        "raw_model_identifier": "MODEL_PLACEHOLDER_M318",
+        "served_model_id": null,
+        "platform": "antigravity",
+        "model_provider": "google",
+        "session_isolation": "independent stateless RPC, no conversation/session reuse",
+        "route_equivalence_classification": "NON_EQUIVALENT",
+        "system_prompt": "none sent: the RPC has no system-prompt field; backend-managed Google instructions apply and cannot be inspected",
+        "thinking_budget": -1,
+        "thinking_budget_label": "High",
+        "ide_registry_max_output_tokens": 65536,
+        "ide_registry_max_output_tokens_note": "registry value; not transmitted on the wire, the backend applies its own ceiling",
+        "tool_status": "DISABLED (stateless direct RPC, 0 tools declared)",
+        "conversation_status": "STATELESS (0 memory carryover across calls)",
+        "web_access_status": "DISABLED",
+        "started_at": "2026-09-02T18:21:55Z",
+        "finished_at": "2026-09-02T18:22:42Z",
+        "latency_ms_host_wall_clock": 46555.32,
+        "latency_semantics": "host wall clock of one non-streaming RPC round trip",
+        "pack_finish_reason": "stop",
+        "pack_truncation_status": "COMPLETE",
+        "pack_finish_reason_semantics": "computed by the generation script from a character-count heuristic (>= 65536*4 chars -> length), not returned by the route",
+        "response_sha256": "25f70141fb4a631e7e4219c2ef210053a5d2b38b3bf2ee429cb64b756d53b125",
+        "raw_envelope_sha256": "495622a31474335f18ba4f210d6847c33a992773afa0f3a77dffbd3480586770",
+        "source_files": {
+          "metadata": "gemini-3.8-mondaybench-challenger/metadata/monday-005/run-001.json",
+          "response": "gemini-3.8-mondaybench-challenger/responses/monday-005/run-001.txt",
+          "raw": "gemini-3.8-mondaybench-challenger/raw/monday-005/run-001.json"
+        },
+        "pack_run_id": "monday-005__gemini-3.8-flash-high__run-001",
+        "unobservable": [
+          "temperature",
+          "top_p",
+          "served_model_id",
+          "system_prompt",
+          "max_output_tokens",
+          "finish_reason",
+          "request_id",
+          "usage",
+          "reasoning_tokens",
+          "TTFT",
+          "TTFA"
+        ],
+        "not_an_api_equivalent_run": true
+      }
+    }
+  }
+}

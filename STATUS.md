@@ -1,30 +1,59 @@
-# MondayBench suite v1.9 — Overall v3.4, published 2026-10-15
+# MondayBench suite v1.10 — Overall v3.5, published 2026-10-15
 
-Five scenarios, ten models, 150 official runs, all judged, one board. The suite
-is released as `v1.9` and the board it carries is Overall v3.4, unchanged.
-Everything below was verified on 2026-10-15 against this working tree, not
-remembered.
+Five scenarios, thirteen models, 195 official runs, all judged, one board. The
+suite is released as `v1.10` and the board it carries is Overall v3.5. Everything
+below was verified on 2026-10-15 against this working tree, not remembered.
 
 ## Verified state
 
 ```
-pytest                                             974 passed
-verify-release --version 1.9 --strict              identical, 1,765 artefacts
+pytest                                             985 passed
+verify-release --version 1.10 --strict             identical, 2,042 artefacts
+verify-release --version 1.9                       verified within policy
 freeze check, all five scenarios                   frozen content intact
-official runs behind the v3.4 board                150 / 150
-recorded evaluations, v1.5 subtree                 151
-criterion verdicts behind them                     3,560
+official runs behind the v3.5 board                195 / 195
+recorded evaluations, v1.10 subtree                196
+criterion verdicts behind them                     4,622
 ```
 
-**v1.9 adds an off-board result and nothing on the board.** Gemini 3.8 Flash
-(High), a provisional row on the site, had a published 88.37 and no
+**v1.10 puts three closed models on the board as official rows.** Claude Opus
+5, Claude Fable 5.1 and Gemini 3.8 Flash (High) had been shown on the site as
+provisional; on 2026-10-15 the owner decided they are official, and the only
+distinction the site keeps is open versus closed weights. Nothing was generated
+and nothing was judged for this release. The fifteen preserved responses of
+each became run files byte for byte, through a build script kept beside each
+source (the GPT-6 Astra pattern, commit 4d51bda), and the labels are the exact
+sets that already reproduced the published scores:
+
+| Model | Monday Score | Generated through | Labels by |
+|---|---:|---|---|
+| Claude Opus 5 | 97.07 | `claude -p`, Claude Code CLI 2.1.258 | GPT-5.6 Sol, independent blind re-judge |
+| Claude Fable 5.1 | 94.90 | `claude -p`, Claude Code CLI 2.1.258 | the recorded Claude Opus 5 judge, after a ten-label audit |
+| Gemini 3.8 Flash (High) | 86.00 | Antigravity Language Server, Connect-RPC | Claude Opus 5.5, blind re-judge |
+
+All 45 per-run scores from `evaluate --suite-version 1.10` equal the ones
+`audits/capabilities/build-provisional-capabilities.py` computes, and all three
+Monday Scores reproduce exactly (`audits/capabilities/build-board-verdicts.py
+--check`). The 151 v1.5 evaluations were re-stamped into the v1.10 subtree with
+zero labels and zero scores changed, so **no incumbent number moved**:
+`tests/test_v1_10_closed_models.py` pins the three new scores and every
+incumbent row of v3.4 against v3.5.
+
+No harness check was changed to admit them. One test was:
+`test_sample_provenance.py::test_E2` required every monday-005 run without a
+provider request id to carry a Codex thread id. It now accepts the session id of
+any declared runtime block (Opus 5's `claude -p` session ids qualify), and names
+Fable 5.1 and Gemini 3.8 Flash as the two batteries whose route recorded no
+per-call identity at all - an explicit, checked exception, not a silent one.
+
+**v1.9 gave Gemini 3.8 Flash (High) its labels.** Its published 88.37 had no
 criterion-level labels, so it could not enter the capability profiles. Its
 fifteen responses were re-judged blind, criterion by criterion, by Claude Opus
-5.5 (not the Opus 5 that labelled the board): **86.00**, with labels, scores and
-the brief in `experiments/gemini-3.8-flash-high-opus-judge/` and its profile in
-`audits/capabilities/gemini-3-8-flash-high.json`. Most of the 2.37-point drop is
-monday-004, where every run now carries an `UNSUPPORTED_CAUSALITY` penalty for
-inventing why customers churned. No board row moved.
+5.5 (not the Opus 5 that labelled the incumbents): **86.00**, with labels,
+scores and the brief in `experiments/gemini-3.8-flash-high-opus-judge/`. Most
+of the 2.37-point drop is monday-004, where every run now carries an
+`UNSUPPORTED_CAUSALITY` penalty for inventing why customers churned. v1.10 is
+the release that puts that number on the board.
 
 **v1.8 is documentation, not a measurement.** The README, `docs/methodology.md`
 and `docs/benchmarking-a-new-model.md` were still written for v1.0 — seven
@@ -41,10 +70,10 @@ harness not pinning LF, so on Windows it wrote the release manifest itself with
 line endings this repository forbids. v1.5 remains published and remains
 non-verifying; that is the honest record.
 
-The suite digest is recorded in `releases/v1.7/SUITE-FROZEN.yaml` and nowhere
-else. It must not be quoted in a file the manifest hashes — this one included —
-or re-cutting the release changes the file that states the digest, which changes
-the digest.
+Each suite digest is recorded in that release's `releases/v<N>/SUITE-FROZEN.yaml`
+and nowhere else. It must not be quoted in a file the manifest hashes — this one
+included — or re-cutting the release changes the file that states the digest,
+which changes the digest.
 
 ## The suite
 
@@ -61,41 +90,45 @@ points are the noise-resistance dimension, scored at dimension granularity. All
 five scenarios contribute exactly 100. A model that clears all five records 354
 criterion verdicts.
 
-## Overall v3.4
+## Overall v3.5
 
 ```
- #  model                 Monday    001    002    003    004    005   range   sigma
- 1  GPT-6 Astra            98.80  100.0  100.0  100.0   98.0   96.0    4.00    1.79
- 2  Qwen 3.8 Flash         95.07   92.5   94.8   94.5   96.5   97.0    4.50    1.79
- 3  GLM 5.3 Flash          94.93   98.0   87.3   92.8   98.0   98.5   11.17    4.84
- 4  DeepSeek V4.1 Flash    94.53   95.0   93.0   96.3   90.0   98.3    8.33    3.19
- 5  GLM 5.3                93.73   97.5   87.7   94.8   91.7   97.0    9.83    4.10
- 6  DeepSeek V4 Flash      91.70   90.8   89.3   95.0   86.0   97.3   11.33    4.51
- 7  MIMO v2.5              86.67   88.2   81.2   90.3   78.5   95.2   16.67    6.80
- 8  GLM 5.2                86.50   84.3   91.2   87.3   71.2   98.5   27.33   10.08
- 9  Qwen 3.6               68.77   82.8   70.2   65.5   46.0   79.3   36.83   14.49
-10  Gemma 4                63.00   70.7   54.2   65.3   35.2   89.7   54.50   20.17
+ #  model                    Monday    001    002    003    004    005   range   sigma
+ 1  GPT-6 Astra               98.80  100.0  100.0  100.0   98.0   96.0    4.00    1.79
+ 2  Claude Opus 5             97.07   98.5   98.0   98.3   90.8   99.7    8.84    3.54
+ 3  Qwen 3.8 Flash            95.07   92.5   94.8   94.5   96.5   97.0    4.50    1.79
+ 4  GLM 5.3 Flash             94.93   98.0   87.3   92.8   98.0   98.5   11.17    4.84
+ 5  Claude Fable 5.1          94.90   97.5   91.0   96.7   89.3  100.0   10.67    4.53
+ 6  DeepSeek V4.1 Flash       94.53   95.0   93.0   96.3   90.0   98.3    8.33    3.19
+ 7  GLM 5.3                   93.73   97.5   87.7   94.8   91.7   97.0    9.83    4.10
+ 8  DeepSeek V4 Flash         91.70   90.8   89.3   95.0   86.0   97.3   11.33    4.51
+ 9  MIMO v2.5                 86.67   88.2   81.2   90.3   78.5   95.2   16.67    6.80
+10  GLM 5.2                   86.50   84.3   91.2   87.3   71.2   98.5   27.33   10.08
+11  Gemini 3.8 Flash (High)   86.00   95.3   80.0   84.7   72.2   97.8   25.66   10.68
+12  Qwen 3.6                  68.77   82.8   70.2   65.5   46.0   79.3   36.83   14.49
+13  Gemma 4                   63.00   70.7   54.2   65.3   35.2   89.7   54.50   20.17
 ```
 
 Monday Score is the arithmetic mean of the five scenario scores, equal weight,
 nothing else folded in. Range and sigma describe dispersion **across
 scenarios** and are published beside the score, never inside it. Run-to-run
-stability is a separate table in `leaderboard/overall/overall-v3.4.md`.
+stability is a separate table in `leaderboard/overall/overall-v3.5.md`.
 
-Overall v0 (three scenarios), v1 (four), v2, and v3 through v3.3 are untouched
+Overall v0 (three scenarios), v1 (four), v2, and v3 through v3.4 are untouched
 and stay byte-frozen. They are different claims about different scenario sets
 and different suite versions, not superseded views of this one.
 
-**Three caveats travel with this board.**
+**Six caveats travel with this board.**
 
 - **DeepSeek V4.1 Flash is scored from a different judge's labels.** Its
   battery was judged blind twice: 93.03 by the Opus session judge that scored
-  every other row (labels in
+  the other nine v3.4 rows (labels in
   `experiments/deepseek-v4.1-flash-rerun-v1/blind-verdicts/`), and 94.53 by
   GPT-5.6 Sol (labels in `verdicts/monday-00N/deepseek-v4.1-flash-rerun-v1.verdicts.jsonl`).
-  The board publishes 94.53. Under the Opus labels the row would rank 5th, below
-  GLM 5.3. Kept as published and declared, by decision on 2026-10-15; the site
-  brackets positions 2–5 as one group whose order is not established.
+  The board publishes 94.53. Under the Opus labels the row would rank 7th on
+  v3.5, below GLM 5.3. Kept as published and declared, by decision on
+  2026-10-15; on v3.4 the site bracketed positions 2–5 as one group whose order
+  is not established.
 
 - **GPT-6 Astra was generated through the Codex CLI**, because no authenticated
   Astra API route exists. The frozen prompts match by sha256 and each candidate
@@ -104,6 +137,33 @@ and different suite versions, not superseded views of this one.
   finish reason, every token count — is recorded as `null` and never as a
   number. For that row, non-truncation rests on the Codex completion events and
   not on this harness.
+- **Claude Opus 5 and Claude Fable 5.1 were generated through `claude -p`**
+  (Claude Code CLI 2.1.258, OAuth subscription, effort high), because
+  `claude-opus-5` returned credits_exhausted through Helmcode, Fable 5.1 is on
+  no allowlist, and the Anthropic API is closed by project rule. The bytes
+  passed to the route match the frozen prompts by sha256, but the route
+  prepends its Agent SDK preamble to the system prompt and injects the user's
+  identity and the runtime date (2026-09-02) into the user turn, so the user
+  turn as delivered is not the frozen bytes. Temperature is not settable. The
+  route reports its own 64,000-token output ceiling, recorded on each run as
+  `safety_ceiling_tokens` with that provenance; it is not the scenarios'
+  configured ceiling, and it bound nothing - every run ended `end_turn`, the
+  largest at 24,674 output tokens. `max_output_tokens`, temperature, top_p,
+  request ids and latency are `null`; the host timings and the route's
+  list-price cost stay in each run's runtime block.
+- **The three new rows are labelled by three different judges.** Claude Opus 5
+  by GPT-5.6 Sol (the Opus 5 session judge is the candidate, and gave 97.10);
+  Claude Fable 5.1 by the recorded Opus 5 judge after the ten corrections in
+  `experiments/fable-5.1-full-mondaybench/AUDIT.md`; Gemini 3.8 Flash by Claude
+  Opus 5.5, not the Opus 5 that labelled the incumbents. Each `models.yaml`
+  entry says which.
+- **Gemini 3.8 Flash (High) was generated through Antigravity** (Language
+  Server ide-2.4.5, Connect-RPC `GetModelResponse`, thinking budget High). The
+  RPC carries the prompt and a model placeholder only: no system prompt is
+  sent, and temperature, the served model id, token usage, finish reason and
+  the output ceiling are unobservable and recorded as `null`. Its pack's
+  `finish_reason: stop` came from a character-count heuristic, so it is not
+  carried into the run.
 - **qwen3.6's three official monday-004 runs came from NaN, not Helmcode**,
   which was unreachable during generation. NaN serves that model as a
   *reasoning* model and Helmcode does not, on a byte-identical request.
@@ -122,7 +182,8 @@ and different suite versions, not superseded views of this one.
 | v1.6 | 2026-09-12 | Overall v3.4 | Manifest repair; no measurement changed |
 | v1.7 | 2026-09-12 | Overall v3.4 | The release writer now writes LF |
 | v1.8 | 2026-10-15 | Overall v3.4 | Documentation brought up to v1.7 |
-| v1.9 | 2026-10-15 | Overall v3.4 | Gemini 3.8 Flash re-judged off-board, with its capability profile |
+| v1.9 | 2026-10-15 | Overall v3.4 | Gemini 3.8 Flash re-judged with criterion labels, and its capability profile |
+| v1.10 | 2026-10-15 | Overall v3.5 | Claude Opus 5, Claude Fable 5.1 and Gemini 3.8 Flash as official rows |
 
 **Why DeepSeek was re-measured.** The gateway serves V4.1 Flash under the same
 id as V4 Flash and replaced the deployment in place rather than publishing a
@@ -247,8 +308,10 @@ sees it.
   global deduction; attributing it to a capability would mean inventing the
   attribution. qwen3.6's −7 monday-005 breach shows in its Monday Score and not
   in its `information_boundaries` profile.
-- **Capability profiles have not been published for the models added since
-  v1.1.** The board ranks them; `capabilities` does not cover them.
+- **Capability profiles cover the whole board.**
+  `analysis/capability-profiles-suite-v1.10-taxonomy-v0.2.json` profiles all
+  thirteen models; the three new rows reproduce the profiles in
+  `audits/capabilities/` exactly, and the ten incumbents are identical to v1.5.
 
 ## Benchmarking a new model
 
@@ -260,8 +323,8 @@ version before a board can show it.
 
 ```
 mondaybench challenge --model <slug>            # what exists, what qualifies, what is left
-mondaybench evaluate --scenario <id> --model <slug> --suite-version 1.10
-mondaybench verify-release --version 1.9        # frozen content intact, evidence may only grow
+mondaybench evaluate --scenario <id> --model <slug> --suite-version 1.11
+mondaybench verify-release --version 1.10       # frozen content intact, evidence may only grow
 ```
 
 Pass `--suite-version` to `evaluate` from the first run of the battery. It is
@@ -269,8 +332,11 @@ the difference between evidence that is already where its release will look for
 it and evidence that has to be moved afterwards.
 
 Full runbook in `docs/benchmarking-a-new-model.md`. New models publish as
-Overall **v3.5, v3.6, …** against a new suite version. Every earlier board stays
-byte-frozen.
+Overall **v3.6, v3.7, …** against a new suite version. Every earlier board stays
+byte-frozen. A new suite needs the previous suite's evaluations re-stamped into
+its subtree first (`mondaybench.migrate.migrate_scenario` with
+`source_suite_version` set to the previous one; v1.10 re-stamped from v1.5),
+because a scenario board reads only its own suite's evaluations.
 
 ## Things not to redo
 
@@ -306,13 +372,14 @@ byte-frozen.
 
 ## The judge
 
-Every board label except DeepSeek V4.1 Flash's comes from one judge: Claude
-Opus 5 reading each response in a recorded session. Two cross-checks have
-criterion-level labels on disk:
+Ten of the thirteen board rows are labelled by one judge: Claude Opus 5
+reading each response in a recorded session. DeepSeek V4.1 Flash and Claude
+Opus 5 are labelled by GPT-5.6 Sol, and Gemini 3.8 Flash (High) by Claude Opus
+5.5. Two cross-checks have criterion-level labels on disk:
 
 | Battery | Opus judge | Second blind judge | Agreement | Largest run gap |
 |---|---:|---:|---|---:|
-| Claude Opus 5 (off-board) | 97.10 | 97.07 (GPT-5.6 Sol) | 343 / 354, κ 0.74 | 1.5 |
+| Claude Opus 5 (board row, scored 97.07) | 97.10 | 97.07 (GPT-5.6 Sol) | 343 / 354, κ 0.74 | 1.5 |
 | DeepSeek V4.1 Flash (board row) | 93.03 | 94.53 (GPT-5.6 Sol) | 317 / 354 | 10.0 |
 
 Two more pairs are stated without their second label set:
@@ -321,7 +388,9 @@ guardrail figures above. Quote them as stated, not as checked.
 
 **What this supports.** No evidence of self-judge inflation on the Opus battery.
 On a board row the choice of judge moved the Monday Score by 1.50 and one run by
-10.0, so positions 2–5 (1.34 points apart) are not ordered by this suite.
+10.0, so positions 3–7 (1.34 points apart) are not ordered by this suite, and a
+gap of that size between rows labelled by different judges is not established
+either.
 
 ## What the suite does not measure
 

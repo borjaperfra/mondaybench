@@ -1,0 +1,224 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "1.0",
+  "scenario_id": "monday-003",
+  "scenario_prompt_sha256": "aaf788f309d955d2b427c86fe7d95d2bbf88575fde7306adcfd74b0ec4a4103f",
+  "run_id": "monday-003__claude-opus-5__001",
+  "run_number": 1,
+  "model": {
+    "slug": "claude-opus-5",
+    "display_name": "Claude Opus 5",
+    "provider": "claude-code",
+    "model_id": "claude-opus-5"
+  },
+  "generation": {
+    "temperature": null,
+    "max_output_tokens": null,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": "high",
+    "system_prompt_sha256": null,
+    "extra_body": {},
+    "config_sha256": "08e94f909a940b5080df784897b6c291a8eb9c8fcafd64bce5f5100deb5e5f03",
+    "safety_ceiling_tokens": 64000,
+    "ceiling_semantics": "route-reported, not configured by this battery: Claude Code reports maxOutputTokens 64000 for claude-opus-5 (modelUsage). The battery set no ceiling and the wire max_tokens was not captured, so max_output_tokens is null. This is NOT the scenario's configured ceiling (32000 for monday-001..003, 96000 for monday-004, 131072 for monday-005)."
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "DELIVERED",
+    "tokens": 3320,
+    "evidence": "explicit_reasoning_tokens",
+    "stream_observed": null,
+    "stream_event_count": null
+  },
+  "timestamp_utc": "2026-09-02T11:40:09Z",
+  "usage": {
+    "input_tokens": 5228,
+    "output_tokens": 6925,
+    "reasoning_tokens": 3320
+  },
+  "performance": {
+    "ttft_ms": null,
+    "ttfa_ms": null,
+    "total_latency_ms": null,
+    "tokens_per_second": null
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "# Northstar — Monday 09:10 Execution Plan\n\n## What changed while you were offline (stale info to correct)\n\n| Task list says | Reality |\n|---|---|\n| 🔴 Unblock Security review for SSO | **Done.** Maya closed SEC-4471 Fri 16:48. Permission/config fixes inside scope need no re-review. |\n| 🔴 Marcus — instrumentation blocks onboarding launch | **Not a blocker** (Julia, Fri 17:06). Frees 3h of Marcus. |\n| 🔴 Contoso export \"broken\" | **Not broken.** Two separate things: (a) cosmetic date format for Peter's Tue demo, (b) **real** issue — delegated admins get a scope error, blocking a **contractual** compliance export due **Tue 22 Sept 16:00 CET**. |\n| 🔴 Pricing page before packaging approval | **False dependency.** Priya accepts mockups; page not required. Committee clears same day if submitted **before 12:00**. |\n| `contoso_permission_patch` assigned to Marcus | **Reassign to Daniel.** Marcus is the single bottleneck; Daniel costs 3.5h + 0.5h of Marcus vs 2h of Marcus — but it runs *in parallel* and takes 2h off the critical path. |\n\n---\n\n## 1. CRITICAL PATH\n\nEverything real converges on **Elena's billing schema migration** — it gates both the SSO compatibility patch and the Contoso permission patch (same account-mapping layer).\n\n**Path A — Contoso contractual export (hardest deadline: Tue 16:00):**\n`billing_schema_migration (Elena, 3h)` → `contoso_permission_patch (Daniel, 3.5h + 0.5h with Marcus)` → `contoso_compliance_export (Julia, 1h)`\n\n**Path B — Atlas Enterprise SSO (committed Wed EOD):**\n`billing_schema_migration (Elena, 3h)` → `api_compatibility_patch (Marcus, 4h)` → `sso_regression (QA, 2h)` → `sso_production_rollout (Marcus, 1h)`\nConstraint: Marcus is unavailable Tue 09:00–13:00 (Atlas session).\n\n**Path C — Board revenue charts:**\n`migration` → `billing_backfill (Elena, 1.5h, automated)` → `board_pack_revenue (Sarah, 2h)`\n\n---\n\n## 2. MY PLAN FOR TODAY (in order)\n\n| # | Time | Action | Owner |\n|---|---|---|---|\n| 1 | 09:10 | Tell Elena to **start the schema migration now** — it gates three workstreams. Nothing else takes priority for her today. | Me → Elena |\n| 2 | 09:15 | **Reassign `contoso_permission_patch` from Marcus to Daniel.** Tell Rachel. Book Marcus+Daniel 09:30–10:00 for the delegated-admin walkthrough — do it **now, before** the migration lands (it doesn't depend on it). | Me → Rachel/Daniel/Marcus |\n| 3 | 09:20 | **Kill the two false blockers on Marcus:** security review is closed; instrumentation is not a launch blocker. Marcus's only jobs today: 30 min with Daniel, then 4h compat patch the moment Elena's migration lands. | Me → Marcus |\n| 4 | 09:25 | **Reply to Anja Weber (Contoso Compliance)** confirming delivery — target today/EOD, deadline Tue 16:00 comfortably met. This is the contractual one; treat it as the CEO-level item, not the date format. | Me |\n| 5 | 09:30 | Tell Sarah: **packaging approval pack does not need the pricing page.** Build it with mockups (1.5h) and **submit to Priya before 12:00** for same-day clearance. Pricing page moves to this afternoon. | Me → Sarah |\n| 6 | 09:35 | Julia: `contoso_export_formatter` (2h) this morning — unblocked, no dependencies. Hold 1h this afternoon for the compliance export. Onboarding launch → Tuesday. | Me → Julia |\n| 7 | 09:45 | Book QA regression slot for **Tue 09:00** (Sam has a slot open); confirm Marcus's rollout window Tue 13:00–14:00. | Me → Sam |\n| 8 | ~12:15 | Confirm migration landed; Marcus starts compat patch, Daniel starts permission patch. | Me |\n| 9 | Tue AM | **Contingency only:** if the migration has *not* landed by Tue noon, take Elena's 30-min permission/runbook handover to Daniel before she leaves Wed 12:00. Otherwise unnecessary. | Me → Elena/Daniel |\n| 10 | 08:00 Tue | Email Laura Chen (Atlas) with the confirmed Tuesday rollout window — a day ahead of her Wed deadline. | Me |\n\n---\n\n## 3. PARALLEL WORK (no waiting)\n\n- **Julia** — `contoso_export_formatter` (2h) this morning; `onboarding_launch` (2h) Tuesday. Neither touches the migration.\n- **Sarah** — `packaging_approval_pack` (1.5h) this morning with mockups → submit <12:00; `pricing_page` (3h) this afternoon (deadline Wed 17:00); `board_pack_non_revenue` (4h) Tuesday.\n- **Marcus & Daniel** — after the walkthrough, both work their own patches in parallel once the migration lands.\n- **QA** — regression prep on the existing branch; slot reserved Tue 09:00.\n- **Elena** — kicks off the backfill immediately after the migration; it's automated from there.\n\n---\n\n## 4. BLOCKERS & DEPENDENCIES\n\n**Genuinely blocking:**\n- `billing_schema_migration` blocks `api_compatibility_patch` **and** `contoso_permission_patch`. Single root dependency — highest priority in the company today.\n- `contoso_permission_patch` blocks `contoso_compliance_export` (contractual, Tue 16:00).\n- `api_compatibility_patch` → `sso_regression` → `sso_production_rollout`, strictly serial.\n- `billing_backfill` blocks `board_pack_revenue` only.\n- **Marcus's capacity** is the real constraint, not any technical dependency: he holds the branch (nobody else has been inside it), he loses Tue 09:00–13:00, and he was nominally on 4 items.\n\n**Unblocked today by decision, not by work:**\n- Security review — already approved; remove from the checklist.\n- Onboarding launch — instrumentation is not required; Julia can ship.\n- Packaging approval — mockups suffice; decouple from the pricing page and submit before 12:00.\n- Contoso permission patch — reassigned to Daniel, removing 2h from Marcus's serial chain.\n- Elena→Daniel migration handover — contingency only, not a live blocker.\n\n---\n\n## 5. EARLIEST DELIVERY\n\nAssuming Elena starts ~09:15 and estimates hold:\n\n- **Migration** 09:15 → **12:15**; backfill 12:15 → **13:45** (automated).\n- **Contoso compliance export:** Daniel 12:30–16:30 → Julia 16:30–**17:30 Monday**. ~22h ahead of the Tue 16:00 contractual deadline.\n- **Contoso date format:** **Monday midday** (Julia) — ahead of Peter's Tuesday demo.\n- **Enterprise SSO:** Marcus compat patch 12:30–17:30 Mon → QA regression Tue 09:00–11:00 → Marcus rollout Tue **13:00–14:00** (first slot after his Atlas session). **~27h ahead of the Wed EOD commitment to Laura.**\n- **Pricing page:** Mon EOD. **Packaging approval:** cleared Monday if submitted before 12:00.\n- **Board pack:** non-revenue Tue, revenue charts Tue/Wed on post-backfill data. Comfortable for Friday 10:00.\n- **Onboarding launch:** Tuesday (deadline Thu 12:00).\n- **Instrumentation** (3h, Marcus): Wednesday/Thursday, after rollout. Not a blocker.\n\nThe Wednesday buffer is the point: if Marcus's patch or QA overruns, SSO still lands Wednesday, and Elena is present Mon/Tue for any migration fallout.\n\n---\n\n## 6. RISKS / UNKNOWNS\n\n- **Marcus's 4h is contiguous and unbuffered.** If the compat patch slips past Monday EOD, he can't resume until Tue 13:00, pushing QA + rollout to Wednesday. That consumes the entire buffer. Check in with him at 15:00.\n- **Estimates are self-reported and conditional.** Sam said 2h \"if nothing surprising appears\"; Elena's 3h is \"roughly.\" No evidence of contingency in any figure.\n- **Daniel's 3.5h is on a module he last touched two weeks ago** for different work (SCIM). He is slower than Marcus here by his own estimate; a significant overrun still meets Tue 16:00 but is worth monitoring at ~14:30.\n- **Not stated: whether the Contoso permission patch needs its own QA pass or deploy window,** or whether it can ship independently of the SSO rollout. Confirm with Sam before assuming Julia can run the export at 16:30.\n- **Not stated: whether the migration requires a maintenance window or has a rollback path.** Elena's runbook is referenced but its contents are unknown.\n- **Not stated: whether the backfill must complete before the compat patch.** I've assumed not — evidence only links the backfill to revenue reporting.\n- **Priya's committee availability today is not confirmed** — only the \"before 12:00 → same day\" rule. If it doesn't clear Monday, the pricing page still can't go public, though the Wed 17:00 page deadline is unaffected.\n- **Contoso is two customers, effectively.** Peter says the format is not blocking; Anja has a contractual deadline. The CEO's urgency is attached to the cosmetic issue. Manage that expectation explicitly — the risk is attention flowing to the wrong item.\n- **Elena leaves Wed 12:00.** If anything about the migration or backfill needs rework after that, there is no owner unless the 30-min handover happened. That's the main tail risk this week.",
+  "finish_reason": "end_turn",
+  "provider_metadata": {
+    "request_id": null,
+    "raw_usage": {
+      "claude_code_runtime": {
+        "runtime": "Claude Code CLI",
+        "cli_version": "2.1.258",
+        "route": "claude_code_subscription",
+        "route_classification_at_generation": "PROVISIONAL / OFF-BENCHMARK / CLAUDE CODE ROUTE",
+        "cli_flags": [
+          "-p",
+          "--model",
+          "claude-opus-5",
+          "--system-prompt",
+          "You are a helpful assistant.",
+          "--tools",
+          "",
+          "--effort",
+          "high",
+          "--output-format",
+          "stream-json",
+          "--include-partial-messages",
+          "--verbose",
+          "--safe-mode",
+          "--setting-sources",
+          "",
+          "--strict-mcp-config",
+          "--disable-slash-commands",
+          "--no-session-persistence"
+        ],
+        "env": {
+          "DISABLE_NON_ESSENTIAL_MODEL_CALLS": "1"
+        },
+        "requested_model_id": "claude-opus-5",
+        "served_model_id": "claude-opus-5",
+        "served_model_provider": "firstParty",
+        "reasoning_effort": "high",
+        "system_prompt_requested": "You are a helpful assistant.",
+        "system_prompt_requested_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+        "system_prompt_as_sent": "NOT the frozen bytes - the Agent SDK preamble is prepended by the route. See audits/monday-opus5/route-audit.md.",
+        "user_turn_as_delivered": "NOT the frozen bytes as delivered: the route injects a <system-reminder> carrying the user's identity and 'Today's date is 2026-09-02' into the user turn. The frozen prompt bytes were what the battery passed to the route (sha256 recorded in scenario_prompt_sha256). See audits/monday-opus5/route-audit.md and claude-code-wire-capture.json.",
+        "temperature_note": "not settable and not observable on this route; claude-opus-5 is in providers/anthropic_native.NO_TEMPERATURE_MODELS so the official adapter would also drop it",
+        "route_max_output_tokens": 64000,
+        "route_context_window": 1000000,
+        "anthropic_usage": {
+          "input_tokens": 2,
+          "cache_creation_input_tokens": 5226,
+          "cache_read_input_tokens": 0,
+          "output_tokens": 6925,
+          "output_tokens_details": {
+            "thinking_tokens": 3320
+          },
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": "standard",
+          "cache_creation": {
+            "ephemeral_1h_input_tokens": 5226,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": "not_available",
+          "iterations": [
+            {
+              "input_tokens": 2,
+              "output_tokens": 6925,
+              "cache_read_input_tokens": 0,
+              "cache_creation_input_tokens": 5226,
+              "cache_creation": {
+                "ephemeral_5m_input_tokens": 0,
+                "ephemeral_1h_input_tokens": 5226
+              },
+              "type": "message"
+            }
+          ],
+          "speed": "standard"
+        },
+        "input_tokens_semantics": "usage.input_tokens above is EXCLUSIVE of cache; the run's usage.input_tokens is input + cache_creation + cache_read",
+        "model_usage_all": {
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": 4435,
+            "outputTokens": 14,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0,
+            "webSearchRequests": 0,
+            "costUSD": 0.0045049999999999995,
+            "contextWindow": 200000,
+            "maxOutputTokens": 32000,
+            "thinkingTokens": 0,
+            "canonicalModel": "claude-haiku-4-5",
+            "provider": "firstParty",
+            "costBasis": "list"
+          },
+          "claude-opus-5": {
+            "inputTokens": 2,
+            "outputTokens": 6925,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 5226,
+            "webSearchRequests": 0,
+            "costUSD": 0.225395,
+            "contextWindow": 1000000,
+            "maxOutputTokens": 64000,
+            "thinkingTokens": 3320,
+            "canonicalModel": "claude-opus-5",
+            "provider": "firstParty",
+            "costBasis": "list"
+          }
+        },
+        "auxiliary_models": [
+          "claude-haiku-4-5-20251001"
+        ],
+        "stop_reason": "end_turn",
+        "terminal_reason": "completed",
+        "subtype": "success",
+        "is_error": false,
+        "num_turns": 1,
+        "session_id": "1cbad764-7645-4443-9984-cfdbeb030009",
+        "subagent_stats": {
+          "spawned": 0,
+          "requested": {
+            "background": 0,
+            "foreground": 0,
+            "unset": 0
+          },
+          "started_in_background": 0,
+          "max_depth": 0,
+          "spawned_by_subagents": 0,
+          "completed": 0,
+          "failed": 0,
+          "killed": {
+            "parent": 0,
+            "user": 0,
+            "system": 0
+          },
+          "refused": {
+            "depth_limit": 0,
+            "concurrency_limit": 0,
+            "budget": 0
+          },
+          "by_type": {}
+        },
+        "timing_host_measured_ms": {
+          "ttft": 9498.3,
+          "ttfa": 51694.3,
+          "total": 94894.3
+        },
+        "timing_route_reported_ms": {
+          "ttft": 8203,
+          "ttfa": 51062,
+          "duration_api": 94762
+        },
+        "timing_semantics": "host wall clock around the claude -p process, TTFT/TTFA from stream-json deltas; not the harness adapter's measurement, so not published in `performance`",
+        "cost_usd_route_reported": 0.225395,
+        "total_cost_usd_including_auxiliary": 0.22990000000000002,
+        "cost_basis": "list",
+        "cost_note": "list-price figure the route reports for a subscription call; not a price this battery paid, so `economics` is empty",
+        "source_file": "experiments/opus-5-full-mondaybench/raw/monday-003-run1.json",
+        "unobservable": [
+          "temperature",
+          "top_p",
+          "max_output_tokens (wire)",
+          "system_prompt bytes as sent",
+          "request_id"
+        ],
+        "not_an_api_equivalent_run": true
+      }
+    }
+  }
+}
