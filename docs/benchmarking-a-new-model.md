@@ -1,16 +1,16 @@
 # Benchmarking a new model against the frozen suite
 
-**Applies to:** MondayBench suite v1.7 — monday-001 … monday-005, 500 rubric
-points, 10 incumbent models, current board Overall v3.4.
+**Applies to:** MondayBench suite v1.11 — monday-001 … monday-005, 500 rubric
+points, 13 incumbent models, current board Overall v3.5.
 
-The suite is closed. This is how an eleventh model gets a Monday Score **without
+The suite is closed. This is how a fourteenth model gets a Monday Score **without
 regenerating or rejudging a single incumbent run.**
 
 **Publishing a model is a suite release.** `runs`, `verdicts`, `evaluations` and
 `leaderboards` are `append_only` in the release manifest, and a scenario board is
 a ranking — it cannot gain a row without changing. So the new evidence goes into
-suite **v1.8**, the board becomes Overall **v3.5**, and every earlier release and
-board stays byte-frozen. Below, `<N>` is the next suite version (1.8 today).
+suite **v1.12**, the board becomes Overall **v3.6**, and every earlier release and
+board stays byte-frozen. Below, `<N>` is the next suite version (1.12 today).
 
 ---
 
@@ -60,7 +60,7 @@ per platform.
 already dirty you will not be able to tell your drift from someone else's.
 
 ```bash
-uv run mondaybench verify-release --version 1.7 --strict
+uv run mondaybench verify-release --version 1.11 --strict
 ```
 
 **3. Look at where you stand.** This is safe to run at any point and generates
@@ -150,7 +150,7 @@ not a revision. Never rejudge incumbents to "match" a challenger.
 ```bash
 uv run mondaybench leaderboard --scenario monday-001 --official \
     --evaluator evaluator-opus5-v0.1 \
-    --models <the ten incumbent slugs>,<slug> --suite-version <N>
+    --models <the thirteen incumbent slugs>,<slug> --suite-version <N>
 ```
 
 Pass `--evaluator` explicitly for monday-001: `evaluator-opus5-v0.1` declares no
@@ -163,13 +163,13 @@ so incumbent scores must come out identical — step 6 checks that they did.
 
 ### Step 5 — publish an Overall revision
 
-Overall v3.4 is **byte-frozen forever**. A new model is published as the next
+Overall v3.5 is **byte-frozen forever**. A new model is published as the next
 *revision* of the same scenario set, pinned to the new suite:
 
 ```
 leaderboard/overall/
-  overall-v3.4.json   10 models   frozen, still the citable artifact
-  overall-v3.5.json   11 models   same 5 scenarios, same arithmetic, suite <N>
+  overall-v3.5.json   13 models   frozen, still the citable artifact
+  overall-v3.6.json   14 models   same 5 scenarios, same arithmetic, suite <N>
 ```
 
 Get the block to append to `overall-releases.yaml`:
@@ -186,7 +186,7 @@ scenario set or aggregation differs from the release it extends.
 Flip `status: draft` → `released` only after step 6, then:
 
 ```bash
-uv run mondaybench overall --version 3.5
+uv run mondaybench overall --version 3.6
 ```
 
 ### Step 6 — verify nothing moved
@@ -195,7 +195,7 @@ Four checks. Run all four.
 
 ```bash
 # 1. Frozen content is untouched; evidence grew but was not rewritten.
-uv run mondaybench verify-release --version 1.7
+uv run mondaybench verify-release --version 1.11
 #    scenarios / evaluators / taxonomy -> must be "identical"
 #    runs / verdicts / evaluations / leaderboards -> "N added" is expected
 

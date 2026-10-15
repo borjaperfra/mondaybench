@@ -160,19 +160,21 @@ def test_E_glm5_3_displaces_nobody_on_the_provider_frontier():
 
 
 # ---------------------------------------------------------------------------
-# F - provisional models cannot move an official frontier
+# F - no provisional rows remain (suite v1.10 made every row official)
 # ---------------------------------------------------------------------------
+#
+# Until v1.10 this test asserted that provisional models could not move an
+# official frontier, against a recorded `frontier_without_provisional`. Claude
+# Opus 5 and Claude Fable 5.1 became official in v1.10, so there is one
+# frontier per view and the "without" lists are retired. A row that turns
+# provisional again would need that guarantee back; this fails first.
 
 
 @pytest.mark.parametrize("view", ["primary", "extended_provider"])
-def test_F_provisional_models_do_not_change_the_official_frontier(view):
-    provisional = {m["model"] for m in PUB["models"] if m.get("provisional")}
-    assert provisional, "the fixture assumes at least one provisional model"
-    with_them = [e["model"] for e in PARETO[view]["frontier"]]
-    recorded_without = PARETO[view]["frontier_without_provisional"]
-    assert [m for m in with_them if m not in provisional] == recorded_without
-    # and no provisional model is itself on a frontier
-    assert not (set(with_them) & provisional)
+def test_F_every_cost_row_is_official_and_there_is_one_frontier(view):
+    assert not [m["model"] for m in PUB["models"] if m.get("provisional")]
+    assert "frontier_without_provisional" not in PARETO[view]
+    assert PARETO[view]["frontier"]
 
 
 # ---------------------------------------------------------------------------
