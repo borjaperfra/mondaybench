@@ -1,8 +1,18 @@
-# MondayBench suite v1.11 — Overall v3.5, published 2026-10-15
+# MondayBench suite v1.12 — Overall v3.5, published 2026-10-16
 
 Five scenarios, thirteen models, 195 official runs, all judged, one board. The
-suite is released as `v1.11` and the board it carries is Overall v3.5. Everything
-below was verified on 2026-10-15 against this working tree, not remembered.
+suite is released as `v1.12` and the board it carries is Overall v3.5. Everything
+below was verified against this working tree, not remembered.
+
+**v1.12 adds estimated costs for GPT-6 Astra and Gemini 3.8 Flash (High).**
+Neither route reports billing, so both were unpriced. On 2026-10-16 the owner
+decided they should appear on the site's quality-vs-cost chart as labelled
+estimates. `audits/pricing/gpt-6-astra/` and `audits/pricing/gemini-3.8-flash/`
+price the fifteen existing runs of each at the vendor's verified API list rates
+from tokens counted offline: Astra at **$136.83** per 1,000 tasks (Codex's own
+output counter, reasoning included; MEDIUM), Gemini at **at least $12.06**
+(visible answer only, o200k_base as a proxy tokenizer, thinking unrecorded;
+LOW). No score, run, verdict or board changed; the new files are additive.
 
 ## Verified state
 
@@ -324,8 +334,8 @@ version before a board can show it.
 
 ```
 mondaybench challenge --model <slug>            # what exists, what qualifies, what is left
-mondaybench evaluate --scenario <id> --model <slug> --suite-version 1.12
-mondaybench verify-release --version 1.11       # frozen content intact, evidence may only grow
+mondaybench evaluate --scenario <id> --model <slug> --suite-version 1.13
+mondaybench verify-release --version 1.12       # frozen content intact, evidence may only grow
 ```
 
 Pass `--suite-version` to `evaluate` from the first run of the battery. It is
