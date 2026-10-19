@@ -148,7 +148,8 @@ def _official_monday_005_runs():
 def test_D_monday_005_official_has_zero_overlap_with_its_calibration_archive():
     archived = archived_run_paths("monday-005", REPO_ROOT)
     live = _official_monday_005_runs()
-    assert len(archived) == 21, f"expected the archived calibration battery, found {len(archived)}"
+    calibration = [p for p in archived if "monday-005-v0.4-calibration" in p.parts]
+    assert len(calibration) == 21, f"expected the archived calibration battery, found {len(calibration)}"
     assert live, "no official monday-005 battery found"
     assert len(live) % 3 == 0, f"the battery is not three runs per model: {len(live)}"
 
@@ -243,7 +244,9 @@ def test_F2_the_guard_finds_archived_material_for_every_scenario_that_has_it():
         s: len(archived_run_paths(s, REPO_ROOT))
         for s in ("monday-001", "monday-002", "monday-003", "monday-004", "monday-005")
     }
-    assert counts["monday-005"] == 21
+    # 21 from the v0.4 calibration battery, plus the 3 unseeded NaN cache-hit
+    # runs archived 2026-10-19 (archive/nan-unseeded-2026-10-19/).
+    assert counts["monday-005"] == 24
     assert sum(counts.values()) > 50, counts
 
 

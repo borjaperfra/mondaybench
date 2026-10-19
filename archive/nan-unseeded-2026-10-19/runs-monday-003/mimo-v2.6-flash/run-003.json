@@ -1,0 +1,70 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.3",
+  "scenario_id": "monday-003",
+  "scenario_prompt_sha256": "aaf788f309d955d2b427c86fe7d95d2bbf88575fde7306adcfd74b0ec4a4103f",
+  "run_id": "monday-003__mimo-v2.6-flash__003",
+  "run_number": 3,
+  "model": {
+    "slug": "mimo-v2.6-flash",
+    "display_name": "MiMo v2.6 Flash",
+    "provider": "nan",
+    "model_id": "mimo-v2.6-flash"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 32000,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+    "extra_body": {
+      "caching": false
+    },
+    "config_sha256": "9ff03e7517093baa8debd77f1bec59d68ea10da53242f503f3b33f31eda30c98",
+    "safety_ceiling_tokens": 32000,
+    "ceiling_semantics": "provider_specific"
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "NOT_DELIVERED",
+    "tokens": 0,
+    "evidence": null,
+    "stream_observed": false,
+    "stream_event_count": 0
+  },
+  "timestamp_utc": "2026-10-19T09:51:07Z",
+  "usage": {
+    "input_tokens": 3262,
+    "output_tokens": 2317,
+    "reasoning_tokens": 0
+  },
+  "performance": {
+    "ttft_ms": 1022.0,
+    "ttfa_ms": 1022.0,
+    "total_latency_ms": 1029.1,
+    "tokens_per_second": 326338.0
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "## 1. CRITICAL PATH\n\n**billing_schema_migration (Elena, 3h) → api_compatibility_patch (Marcus, 4h) → sso_regression (QA, 2h) → sso_production_rollout (Marcus, 1h)**\n\nThis chain has 10 hours of serial work, is blocked by a single unstarted dependency, and routes entirely through Marcus — who is unavailable Tuesday 09:00–13:00 for the Atlas pre-rollout session. Nothing on this path can advance until Elena's schema migration lands.\n\nA second chain branches from the same root for the Contoso contractual deadline:\n\n**billing_schema_migration (Elena, 3h) → contoso_permission_patch (Daniel, 3.5h) → contoso_compliance_export (Julia, 1h)** — 7.5 hours serial.\n\nBoth paths start with Elena. She is the root unblock for the entire week.\n\n---\n\n## 2. MY PLAN FOR TODAY (Monday)\n\n| # | Action | Owner | Window | Why |\n|---|--------|-------|--------|-----|\n| 1 | **Start billing_schema_migration immediately (3h).** Kick off the 90-min reconciliation backfill right after, then run the 30-min permissions/runbook handoff with Daniel as insurance before Wednesday. | Elena (+ Daniel for handoff) | 09:10 → 12:10 (migration), 12:10 → 13:40 (backfill), 12:10 → 12:40 (handoff) | Root dependency for both the SSO and Contoso critical paths. Elena is out Wednesday noon. |\n| 2 | **Walk Daniel through the delegated-admin path (30 min).** Knowledge transfer only — does not depend on the migration. | Marcus → Daniel | 09:10 → 09:40 | Frees Marcus to go straight to the compat patch; Daniel can start permission patch as soon as migration lands. |\n| 3 | **Update the task tracker — three items are stale:** close \"unblock Security review\" (approved by Maya, Fri 16:48), de-prioritise \"onboarding instrumentation\" (Julia confirmed it is NOT a launch blocker), and close \"investigate broken Contoso exports\" (already diagnosed — format is a preference; the permission issue has its own ticket). Also reassign onboarding launch support from Marcus to Julia per Friday's decision. | Me | 09:10 → 09:20 | Stops three people holding time for work that doesn't exist anymore. Marcus releases his 3-hour instrumentation hold. |\n| 4 | **Start the date-format fix (2h)** — change format string and fixtures to DD/MM/YYYY. | Julia | 09:10 → 11:10 | No dependencies. Needed for Contoso's Tuesday demo (Peter's email). |\n| 5 | **Start pricing page build (3h)**, then assemble the packaging approval pack (1.5h) and submit to Priya's committee. | Sarah | 09:10 → 12:10 (page), 12:10 → 13:40 (approval pack), submit 13:40 | Submitted after 12:00 so it rolls to Tuesday morning clearance. Pricing page deadline is Thursday — ample buffer. |\n| 6 | **Once migration lands (12:10): Marcus starts api_compatibility_patch (4h).** Use 09:40–12:10 to prep — review the new schema, identify affected code paths — so he can start writing the moment Elena lands it. | Marcus | 12:10 → 16:10 | Critical path. Marcus is the only person who can do this work. |\n| 7 | **Once migration lands (12:10): Daniel starts contoso_permission_patch (3.5h).** | Daniel | 12:10 → 15:40 | Parallel to Marcus. Matches his stated timeline with the walkthrough already done. |\n| 8 | **Start board pack — non-revenue sections (4h).** Revenue charts are unblocked as soon as backfill finishes (13:40). | Sarah | 13:40 → 17:30 | Deadline Friday 10:00. Most of this is independent. |\n| 9 | **Once Daniel finishes (15:40): Julia runs the compliance export (1h).** | Julia | 15:40 → 16:40 | Delivers the contractual commitment a full day early (deadline: Tuesday 16:00 CET). |\n| 10 | **Once Marcus finishes (16:10): QA starts regression (2h).** | QA (Sam) | 16:10 → 17:30 (1h20m), resumes Tuesday 09:00 → 09:40 | Gets the maximum head start today. |\n\n---\n\n## 3. PARALLEL WORK (no waiting required)\n\n| Work | Owner | Today | Notes |\n|------|-------|-------|-------|\n| Contoso date-format fix (2h) | Julia | 09:10 → 11:10 | Independent of migration and permission patch. |\n| Pricing page build (3h) | Sarah | 09:10 → 12:10 | Independent of all engineering work. |\n| Packaging approval pack (1.5h) | Sarah | 12:10 → 13:40, submit by 13:40 | Needs page built (or mockups — Priya confirmed mockups are acceptable, so could submit even earlier if mockups exist). Rolls to Tuesday AM clearance. |\n| Board pack non-revenue (4h) | Sarah | 13:40 → 17:30 | Explicitly independent per Noah. |\n| Onboarding launch prep (2h) | Julia | Whenever she has capacity this week | Not due until Friday 12:00. |\n| Elena / Daniel handoff (30 min) | Elena + Daniel | Any time today | Insurance against a migration issue. Do it today while both are available. |\n| Board pack revenue (2h) | Sarah | Unblocked Monday ~13:40 | Once backfill completes, Sarah can build revenue charts. |\n\n---\n\n## 4. BLOCKERS & DEPENDENCIES\n\n**Hard blockers (cannot start until):**\n\n| Blocked work | Blocked by | ETA unblocked |\n|-------------|------------|---------------|\n| api_compatibility_patch (Marcus) | billing_schema_migration (Elena) | Mon 12:10 |\n| contoso_permission_patch (Daniel) | billing_schema_migration (Elena) | Mon 12:10 |\n| sso_regression (QA) | api_compatibility_patch (Marcus) | Mon 16:10 (partial), Tue 09:40 (complete) |\n| sso_production_rollout (Marcus) | sso_regression (QA) | Tue 13:00 (Marcus free after Atlas session) |\n| contoso_compliance_export (Julia) | contoso_permission_patch (Daniel) | Mon 15:40 |\n| board_pack_revenue (Sarah) | billing_backfill (Elena) | Mon 13:40 |\n\n**Already unblocked / stale blockers to remove:**\n\n- **Security review:** Approved Friday 16:48 by Maya. The task list still shows it as outstanding. **Close it.**\n- **Onboarding instrumentation:** Julia confirmed it is NOT a launch blocker. **De-prioritise. Release Marcus's 3-hour hold.**\n- **Contoso \"broken export\":** Investigated — format is a preference, not a break; permission issue is a separate ticket. **Close the investigation task.**\n- **Onboarding launch support:** Moved from Marcus to Julia on Friday. **Reassign in tracker.**\n\n---\n\n## 5. EARLIEST DELIVERY\n\n| Commitment | Deadline | Earliest completion | Buffer |\n|-----------|----------|-------------------|--------|\n| Contoso format fix (demo) | Tue afternoon | **Mon 11:10** | ~29 hours |\n| Contoso compliance export | Tue 16:00 CET | **Mon 16:40** | ~23 hours |\n| Enterprise SSO to Atlas | Wed 17:00 CEST | **Tue 14:00** | ~27 hours |\n| Billing migration + backfill | Thu 15:00 | **Mon 13:40** | ~2.5 days |\n| Pricing page live | Thu 17:00 | **Tue PM** (after approval clears) | ~1.5 days |\n| Board pack | Fri 10:00 | **Thu** (with time to spare) | ~1 day |\n| Onboarding launch | Fri 12:00 | **Fri morning** | Same morning |\n\n**Critical path earliest delivery: Enterprise SSO ships Tuesday at 14:00** — 27 hours ahead of the Wednesday EOD commitment.\n\n---\n\n## 6. RISKS / UNKNOWNS\n\n1. **Migration overruns.** Elena said \"roughly three hours.\" If it takes 4h+, everything downstream shifts by an hour. Marcus's compat patch then needs 1h+ on Tuesday afternoon instead of finishing Monday — still within deadline but thinner margin. **Mitigation:** Daniel has been walked through the runbook today as insurance.\n\n2. **QA finds surprises.** Sam said \"two hours if nothing surprising appears.\" Regression issues would push rollout past Tuesday 14:00. **Mitigation:** QA starts Monday at 16:10 for maximum lead time. If issues emerge, Marcus has Wednesday fully free.\n\n3. **Marcus context-switching.** He carries the compat patch, the Atlas session, and potentially the rollout — all in a 2.5-day window (Mon PM, Tue PM, Wed). One blocker or surprise compresses his buffer. **Mitigation:** Daniel absorbed the permission patch; instrumentation deprioritised; launch support already moved to Julia.\n\n4. **Pricing approval timing unknowns.** If mockups are not ready to attach (rather than screenshots from the built page), Sarah may need the full page first. Submitted Mon 13:40 (after noon cutoff) → clears Tuesday. **If mockups exist independently, she could submit before Mon 12:00 and clear the same day.** Worth checking with Sarah.\n\n5. **Elena's departure risk.** She leaves Wednesday noon and is gone Thu–Fri. If billing production issues surface later in the week, Daniel has the permissions (assuming the handoff runs today), but he is not Elena. **The 30-minute handoff is non-negotiable.**\n\n6. **Onboarding launch readiness.** Julia confirmed the flow is ready and existing analytics suffice. But her Monday load is now format fix + compliance export + board pack-adjacent work. She has ample time through the week — the risk is low but she owns Friday's launch.\n\n7. **Cannot assess:** Whether Marcus needs to prep for the Tuesday Atlas session (he said he's \"heads-down either side of it\" — unclear if prep work is required), whether the backfill will surface data quality issues, and whether Priya's committee has capacity for a Tuesday AM review.",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "chatcmpl-b0d112e6-b029-493d-a226-05bf52e2c3e4_403475f410e54d5a95d56787c646f3de",
+    "raw_usage": {
+      "completion_tokens": 2317,
+      "prompt_tokens": 3262,
+      "total_tokens": 5579,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      }
+    }
+  }
+}

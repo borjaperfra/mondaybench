@@ -1,0 +1,70 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.2",
+  "scenario_id": "monday-002",
+  "scenario_prompt_sha256": "740e627cbc7413c321ede0d54000504de54821d34ff4677f82731b89600423a8",
+  "run_id": "monday-002__mimo-v2.6-flash__003",
+  "run_number": 3,
+  "model": {
+    "slug": "mimo-v2.6-flash",
+    "display_name": "MiMo v2.6 Flash",
+    "provider": "nan",
+    "model_id": "mimo-v2.6-flash"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 32000,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+    "extra_body": {
+      "caching": false
+    },
+    "config_sha256": "9ff03e7517093baa8debd77f1bec59d68ea10da53242f503f3b33f31eda30c98",
+    "safety_ceiling_tokens": 32000,
+    "ceiling_semantics": "provider_specific"
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "NOT_DELIVERED",
+    "tokens": 0,
+    "evidence": null,
+    "stream_observed": false,
+    "stream_event_count": 0
+  },
+  "timestamp_utc": "2026-10-19T09:38:42Z",
+  "usage": {
+    "input_tokens": 2304,
+    "output_tokens": 2355,
+    "reasoning_tokens": 0
+  },
+  "performance": {
+    "ttft_ms": 858.0,
+    "ttfa_ms": 858.0,
+    "total_latency_ms": 864.8,
+    "tokens_per_second": 351492.5
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "# 1. CURRENT STATE\n\n**Enterprise Controls release:** Staging build 2.9.4 was verified by Priya Friday. The production attempt that afternoon failed on shard eu-03 before rollout opened — no customer impact. Two recovery options are prepared: A (retry 2.9.4 + shard precheck, no code change, 20-min deploy, 8% session reset) and B (2.9.5-patch, code change, 45-min deploy, <1% session reset). Product must choose. Marcus is online 09:15–10:20 only. Priya is available 09:00–09:35 and 10:25 onward (dark 09:35–10:25). Sam is available all morning. Atlas needs rollout to **begin before 12:00** or their admins aren't available until Thursday. Maya has delegated to Security's release policy and Sam's rollout process — no additional executive gate.\n\n**Task \"Get Maya approval\"** is superseded: Maya explicitly stated she is not adding an executive gate. She wants confirmation that Security's release policy is being followed, not a new sign-off.\n\n**Task \"Call Zenith about renewal risk\"** is superseded: Laura confirmed Friday — contract countersigned, €96k ARR for 24 months, no Monday escalation needed, back to normal CS cadence.\n\n**Task \"Send Enterprise pricing to Initech procurement\"** is blocked: Daniel states nothing goes to procurement/customers until a public announcement, and no announcement date exists. The pinned workbook (enterprise-pricing-v4-final.xlsx) is not authoritative. Daniel's 09:07 values are internal scenario planning only.\n\n**Task \"Confirm Enterprise Controls launch at 10:30 to Atlas\"** contains a stale timeline. With Priya's unavailability gap, the realistic rollout-open time is **~11:00**, not 10:30. Atlas must receive the corrected timeline by 09:45.\n\n**Orion SCIM status is disputed:** Laura reported SCIM working (org_71A), but the rollout bot shows `scim_enabled=false` for that org. Laura's support ticket references org_17A — she may have checked the wrong account. Sam instructed no further status until the org ID and live flag are confirmed.\n\n**Board pack:** Maya needs the September enterprise expansion reconciliation by **11:00**; board pack locks 11:30. Gap is €54k (target €180k vs expected €126k). Wayne + Globex account for €30k; the remaining €24k comes from Soylent (−€10k) and Wonka (−€14k), neither of which has a stated cause.\n\n---\n\n# 2. MY PLAN FOR TODAY\n\n**Release path: Option A** (retry verified build 2.9.4 with shard precheck, no code change).\n\n**Rationale:** Option A requires no delta review (exact build already verified in staging per Priya's policy = post-deploy check only), fits every availability window with comfortable margin, and does not depend on submitting a patch diff I may not be able to produce before Marcus arrives. Option B is tighter — the diff must be submitted by ~09:10 for Priya's 25-min review to fit before her 09:35 departure, and Marcus's 45-min deploy would run exactly to his 10:20 departure with zero buffer. The shard precheck specifically addresses Friday's eu-03 failure. The 8% session reset risk is known; Sam will sanity-check rollout.\n\n| Time | Action |\n|---|---|\n| **09:07** | Return online. Scan messages. Choose Option A. |\n| **09:07–09:12** | Message Priya: confirm Option A selected — 2.9.4 already staging-verified, post-deploy verification only. Message Maya: proceeding under her directive (Security's release policy + Sam's rollout process), no additional gate needed. Confirm chosen path. |\n| **09:15** | Marcus begins production deploy of 2.9.4 with shard precheck (20 min → ~09:35). |\n| **09:15–09:35** | Draft the expansion explanation for Maya (due 11:00). |\n| **09:35** | Deploy complete. Marcus monitors / confirms health. Notify Priya production is ready for verification (will resume at 10:25). |\n| **09:45** | Send Atlas corrected timeline: rollout expected to open ~11:00 (not 10:30), well before the 12:00 window deadline. Confirm their admins should be ready by 11:00. |\n| **09:45–11:00** | Finalize expansion explanation for Maya. Send by **11:00** (board locks 11:30). |\n| **10:20** | Marcus departs (deploy long since complete). |\n| **10:25** | Priya available. Begins post-deploy verification (20 min → 10:45). |\n| **10:45** | Verification complete. Sam opens and sanity-checks rollout (15 min). |\n| **~11:00** | **Rollout opens.** Atlas migration window active. Notify Sam to signal Daniel, who sends the customer announcement. |\n| **11:00** | Send expansion reconciliation to Maya. |\n| **11:00+** | Monitor rollout channel, respond to any Atlas or Daniel queries. |\n\n**Parallel throughout:** Do not act on Zenith, Initech pricing, or Orion SCIM tasks (see section 4).\n\n---\n\n# 3. CUSTOMER / REVENUE PRIORITIES\n\n**Tier 1 — act today:**\n\n- **Globex (€84k ARR, 18 days to renewal):** Highest combined risk. Three open tickets including **high-severity G-441** (admins intermittently cannot complete SSO setup — this directly blocks product usage). Usage down −18%, admin logins down −61%. Expansion (€12k) pending procurement. The SSO blocker likely needs engineering attention today; a broken login path 18 days before renewal is actionable regardless of the expansion gap.\n\n- **Acme (€150k ARR, 9 days to renewal):** Nearest renewal date of any account. However, the −45% usage drop is **explained and expected** — they approved a shift to annual batch-processing with a stated expected interactive usage reduction of 40–50%. Actual (−45%) is within range. No open tickets. The action item is ensuring the renewal process is on track, not chasing the metric.\n\n**Tier 2 — investigate this week:**\n\n- **Wonka (€48k ARR, 31 days to renewal):** Expansion dropped from €24k to €10k (−€14k) with **no stated contract cause**. Usage −35%, logins −49%. No open tickets, so the decline is invisible on the support radar. Needs outreach to understand whether the usage drop and expansion reduction are related — but do not assume they are.\n\n- **Soylent (€60k ARR, 44 days to renewal):** Expansion dropped from €28k to €18k (−€10k) with **no stated contract cause**. Usage −22%, logins −28%. Open ticket SO-19 (medium: slower onboarding) may be relevant but must not be assumed as cause.\n\n**Not a problem:**\n\n- **Wayne Enterprises:** Renewed, 210 days to renewal, −3%/−4% usage (noise), expansion moved to October by signed amendment. Normal.\n- **Stark Industries:** On plan, positive usage metrics, full €32k expansion expected, one low-severity docs ticket. Healthy.\n- **Acme's usage decline:** Already addressed above — within the stated expected range for their approved transition.\n\n---\n\n# 4. DO NOT DO\n\n1. **Call Zenith about renewal risk** — superseded; contract signed (€96k ARR / 24 months), Laura confirmed no escalation needed.\n2. **Send pricing to Initech procurement** — Daniel explicitly prohibits anything to procurement/customers until public announcement; no announcement date exists.\n3. **Quote or forward enterprise-pricing-v4-final.xlsx** externally — Daniel says the pinned workbook is not authoritative.\n4. **Quote Daniel's 09:07 Slack values** (€2,500 platform / 40 seats / €55 extra seat) externally — internal scenario planning only.\n5. **Send Orion a SCIM status update** — Sam explicitly instructed: confirm which org ID is theirs and read the live flag first. Current evidence is contradictory (org_71A flag is `false`, ticket references org_17A).\n6. **Invent causes for Soylent or Wonka expansion reductions** — Maya explicitly said: if there is no stated cause, do not invent one.\n7. **Send the customer announcement before Sam confirms rollout is open** — Daniel has the draft but is waiting for Sam's signal.\n8. **Seek additional executive approval from Maya** — she explicitly rejected adding another gate; follow Security's release policy (which you are doing with Option A).\n9. **Confirm a 10:30 launch time to Atlas** — stale estimate; realistic timeline is ~11:00 based on Priya's availability gap.\n10. **Change the build to 2.9.5-patch after Priya's staging verification** without a delta review — this would trigger Priya's 25-minute delta review requirement and risks blowing the schedule given Marcus's 10:20 departure.\n\n---\n\n# 5. UNCLEAR / MUST VERIFY\n\n1. **Accessibility of the 2.9.5-patch diff** — Marcus says both options are \"ready,\" and Priya says delta review doesn't require Marcus online, but it's unclear whether the diff file is in a shared location I can access at 09:07 or only on Marcus's machine. If it *is* immediately accessible, Option B (<1% session reset) could be executed: submit diff at 09:07 → Priya reviews 09:07–09:32 → Marcus deploys 09:35–10:20 → same downstream timeline. This is worth a 30-second check but should not delay Option A's start.\n\n2. **Orion's correct org ID and live SCIM flag** — Laura may have queried org_71A while the ticket references org_17A. The rollout bot shows `scim_enabled=false` for org_71A, contradicting her report. Need to confirm which org belongs to Orion and read that org's live flag before any customer communication.\n\n3. **Why Soylent and Wonka expansion figures dropped** — No contract cause stated for either (−€10k and −−€14k respectively). This is genuinely unknown, not just unreported. For the board pack, state the arithmetic; flag the absence of stated causes explicitly rather than hypothesizing.\n\n4. **Globex SSO blocker (G-441) severity of impact on 18-day renewal** — The high-severity ticket exists, and renewal is close, but there is no data linking the two (e.g., procurement citing the SSO issue). Needs CS to confirm whether this is driving the expansion delay or is a separate concern.",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "chatcmpl-6a0f94c9-d4dd-4506-83e7-f25a54282934_4df48a42a4a74effb5abb5b1992a6e4f",
+    "raw_usage": {
+      "completion_tokens": 2355,
+      "prompt_tokens": 2304,
+      "total_tokens": 4659,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      }
+    }
+  }
+}

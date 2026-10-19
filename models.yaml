@@ -979,3 +979,71 @@ models:
     notes: "1M context. Not on Helmcode. NaN quota 1.0B tokens/month. Streams a
       thinking phase but reports reasoning_tokens=0; delivery is established
       from the pre-answer stream instead of the counter."
+
+  # ---------------------------------------------------------------------------
+  # DEEPSEEK V4-FLASH, 4.1-1017 VERSION, ON NAN. ADDED 2026-10-19.
+  #
+  # NaN replaced its `deepseek-v4-flash` deployment in place with the 4.1-1017
+  # version; the id did not change. The version is STATED by NaN's operator
+  # (Borja, 2026-10-19), not observed: `/v1/models` lists only
+  # `deepseek-v4-flash`, and asked directly the model names no version. Same
+  # trap as 2026-09-10 on Helmcode - see deepseek-v4.1-flash above.
+  #
+  # Generation config copies deepseek-v4.1-flash-rerun-v1 exactly, EXCEPT the
+  # endpoint: that row is Helmcode, this one is NaN. Latency, TTFA and token
+  # counts are therefore properties of NaN and not comparable with it.
+  deepseek-v4.1-flash-1017:
+    display_name: "DeepSeek V4.1 Flash (1017)"
+    provider: nan
+    api_style: openai_compatible
+    model_id: "deepseek-v4-flash"
+    base_url_env: NAN_BASE_URL
+    api_key_env: NAN_API_KEY
+    generation:
+      temperature: 0
+      max_output_tokens: 32000
+      # NaN ignores `caching: false` for this model (2026-10-19): identical
+      # bodies return the stored response. A per-run seed busts the cache
+      # without touching the prompt. See archive/nan-unseeded-2026-10-19/.
+      seed_per_run: true
+    extra_body:
+      caching: false
+    capabilities:
+      reasoning: true
+    pricing:
+      input_per_million_usd: null
+      output_per_million_usd: null
+      source: "NaN is quota-based; no per-token cost reported"
+    notes: >
+      1M context. Served on NaN under the shared `deepseek-v4-flash` id; the
+      1017 version is stated by the operator, not verifiable from the endpoint.
+      Runs are distinguishable from earlier DeepSeek batteries by date,
+      endpoint and provider_metadata.request_id, not by the id that was called.
+
+  # MiMo v2.6 Flash on NaN. Added 2026-10-19. Same generation config as
+  # mimo-v2.5. Unlike v2.5 it reports `completion_tokens_details.reasoning_tokens`
+  # and streams `reasoning_content` (probed 2026-10-19: 79 reasoning tokens on a
+  # trivial prompt), so delivery is visible in the counter as well as the stream.
+  mimo-v2.6-flash:
+    display_name: "MiMo v2.6 Flash"
+    provider: nan
+    api_style: openai_compatible
+    model_id: "mimo-v2.6-flash"
+    base_url_env: NAN_BASE_URL
+    api_key_env: NAN_API_KEY
+    generation:
+      temperature: 0
+      max_output_tokens: 32000
+      # NaN ignores `caching: false` for this model (2026-10-19): identical
+      # bodies return the stored response. A per-run seed busts the cache
+      # without touching the prompt. See archive/nan-unseeded-2026-10-19/.
+      seed_per_run: true
+    extra_body:
+      caching: false
+    capabilities:
+      reasoning: true
+    pricing:
+      input_per_million_usd: null
+      output_per_million_usd: null
+      source: "NaN is quota-based; no per-token cost reported"
+    notes: "Not on Helmcode. Streams reasoning_content and reports reasoning_tokens."
