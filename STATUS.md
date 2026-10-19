@@ -1,10 +1,16 @@
-# MondayBench suite v1.13 — Overall v3.6, published 2026-10-19
+# MondayBench suite v1.14 — Overall v3.6, published 2026-10-19
 
 Five scenarios, fifteen models, 225 official runs, all judged, one board. The
-suite is released as `v1.13` and the board it carries is Overall v3.6. Everything
+suite is released as `v1.14` and the board it carries is Overall v3.6. Everything
 below was verified against this working tree, not remembered.
 
-**v1.13 adds two NaN models as official rows.** DeepSeek V4.1 Flash (1017),
+**v1.14 adds the capability profiles for the v1.13 board.**
+`analysis/capability-profiles-suite-v1.13-taxonomy-v0.2.json` profiles all
+fifteen models on taxonomy v0.2. The thirteen v1.10 profiles come out
+identical, and DeepSeek V4.1 Flash (1017) and MiMo v2.6 Flash gain one. No run,
+verdict, evaluation, score or board changed.
+
+**v1.13 added two NaN models as official rows.** DeepSeek V4.1 Flash (1017),
 **91.23**, rank 9, and MiMo v2.6 Flash, **87.87**, rank 10, were generated on
 NaN on 2026-10-19 and judged blind the same day by Claude Opus 5.5
 (`experiments/nan-challengers-2026-10-19-opus-judge/`). NaN ignored
@@ -30,8 +36,8 @@ LOW). No score, run, verdict or board changed; the new files are additive.
 
 ```
 pytest                                             993 passed
-verify-release --version 1.13 --strict             identical, 2,341 artefacts
-verify-release --version 1.12                      verified within policy
+verify-release --version 1.14 --strict             identical, 2,342 artefacts
+verify-release --version 1.13                      verified within policy
 freeze check, all five scenarios                   frozen content intact
 official runs behind the v3.6 board                225 / 225
 recorded evaluations, v1.13 subtree                226
@@ -221,6 +227,7 @@ and different suite versions, not superseded views of this one.
 | v1.11 | 2026-10-15 | Overall v3.5 | Cost artefacts and the new-model runbook brought up to v1.10; no measurement changed |
 | v1.12 | 2026-10-16 | Overall v3.5 | Estimated costs for GPT-6 Astra and Gemini 3.8 Flash (High) |
 | v1.13 | 2026-10-19 | Overall v3.6 | DeepSeek V4.1 Flash (1017) and MiMo v2.6 Flash, seeded on NaN |
+| v1.14 | 2026-10-19 | Overall v3.6 | Capability profiles for the v1.13 board; no measurement changed |
 
 **Why DeepSeek was re-measured.** The gateway serves V4.1 Flash under the same
 id as V4 Flash and replaced the deployment in place rather than publishing a
@@ -345,12 +352,11 @@ sees it.
   global deduction; attributing it to a capability would mean inventing the
   attribution. qwen3.6's −7 monday-005 breach shows in its Monday Score and not
   in its `information_boundaries` profile.
-- **Capability profiles cover the v3.5 board, not the two v1.13 rows.**
-  `analysis/capability-profiles-suite-v1.10-taxonomy-v0.2.json` profiles the
-  thirteen v3.5 models; the three v1.10 rows reproduce the profiles in
-  `audits/capabilities/` exactly, and the ten incumbents are identical to v1.5.
-  DeepSeek V4.1 Flash (1017) and MiMo v2.6 Flash have criterion labels on disk
-  but no profile yet - an additive step, not a score.
+- **Capability profiles cover the whole board.**
+  `analysis/capability-profiles-suite-v1.13-taxonomy-v0.2.json` profiles all
+  fifteen models. Its thirteen v3.5 rows are identical to the v1.10 file. The
+  three v1.10 rows reproduce the profiles in `audits/capabilities/` exactly, and
+  the ten incumbents are identical to v1.5.
 
 ## Benchmarking a new model
 

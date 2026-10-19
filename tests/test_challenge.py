@@ -289,7 +289,7 @@ def test_overall_v2_still_builds_and_ranks_only_complete_models():
 def test_the_runbook_exists_and_names_the_four_verification_gates():
     text = (REPO_ROOT / "docs" / "benchmarking-a-new-model.md").read_text(encoding="utf-8")
     for phrase in (
-        "verify-release --version 1.13",
+        "verify-release --version 1.14",
         "check_sample_provenance",
         "overall-v3.7.json",
         "challenge --model",
