@@ -1,0 +1,73 @@
+{
+  "record_type": "pricing_snapshot",
+  "snapshot_id": "gpt-6-astra-pricing-2026-10-16",
+  "scope": "GPT-6 Astra only. Additive: no file under analysis/cost-value/ is read for rates or modified.",
+
+  "model": "GPT-6 Astra",
+  "model_id": "gpt-6-astra",
+  "provider": "OpenAI API (first party)",
+  "pricing_tier": "Standard, short context (<= 272K input tokens). Not Batch, not Flex, not Priority, no regional uplift.",
+
+  "rates_usd_per_million_tokens": {
+    "input": 10.00,
+    "cached_input": 1.00,
+    "cache_write": 12.50,
+    "output": 50.00
+  },
+
+  "long_context": {
+    "threshold_input_tokens": 272000,
+    "rates_usd_per_million_tokens": {"input": 20.00, "cached_input": 2.00, "cache_write": 25.00, "output": 75.00},
+    "applies_to_these_runs": "No. The largest MondayBench prompt (monday-004) is under 10K tokens; calculate.py stops if any run crosses the threshold."
+  },
+
+  "retrieved_at": "2026-10-16",
+  "sources": [
+    {
+      "url": "https://developers.openai.com/api/docs/pricing",
+      "party": "first_party",
+      "note": "openai.com/api/pricing returned HTTP 403 to the fetcher; platform.openai.com/docs/pricing 301-redirects here. Standard tab, Flagship models table.",
+      "row_verbatim": "| gpt-6-astra | $10.00 | $1.00 | $12.50 | $50.00 | $20.00 | $2.00 | $25.00 | $75.00 |",
+      "column_order": "Model | Short context input | Short context cached input | Short context cache writes | Short context output | Long context input | Long context cached input | Long context cache writes | Long context output",
+      "long_context_definition": "Long context: >272K input tokens."
+    },
+    {
+      "url": "https://developers.openai.com/api/docs/guides/reasoning",
+      "party": "first_party",
+      "quote": "they still occupy space in the model's context window and are billed as output tokens"
+    },
+    {
+      "url": "https://openrouter.ai/openai/gpt-6-astra",
+      "party": "secondary",
+      "note": "Cited by the task as the secondary source; the fetched page carried no prices, so it corroborates nothing."
+    },
+    {
+      "url": "analysis/cost-value/publication-data.json",
+      "party": "repository",
+      "note": "unknown_pricing_remaining already quotes $10/1M input, $50/1M output, $1/1M cached input. Read, not modified."
+    }
+  ],
+  "verification": "VERIFIED_FIRST_PARTY: input, cached input and output rates and the 272K long-context threshold read off OpenAI's own pricing page on 2026-10-16. The reasoning-billed-as-output rule read off OpenAI's reasoning guide.",
+
+  "identity": {
+    "requested_model": "gpt-6-astra",
+    "served_model": null,
+    "served_model_evidence": "Codex records requested_model_id 'gpt-6-astra' on all 15 runs; resolved_model_id is null (UNOBSERVABLE through the Codex runtime).",
+    "pricing_sku": "gpt-6-astra",
+    "identity_confidence": "STRONG_MATCH",
+    "identity_justification": "The requested id and the pricing-table row are the same string from the same party. Not EXACT, because Codex does not expose the served model id, so it is not proven the backend served that exact SKU.",
+    "pricing_basis": "ESTIMATED_LIST",
+    "pricing_confidence": "MEDIUM",
+    "confidence_justification": "Rates verified first-hand on OpenAI's page. Output (including reasoning) comes from the Codex session's own counters, and an independent o200k_base count of the visible response reproduces them to a constant 6-token framing residual on all 15 runs. Input is a tokenizer count of the exact frozen prompt. Not HIGH: no provider-side bill or usage object exists to reconcile against, the counters are Codex-reported rather than provider accounting, and the run used Codex's reasoning effort 'medium' with no observable API parameters."
+  },
+
+  "estimate_note": "Estimated: this run's route reports no billing, so tokens were counted offline from the exact prompt and the route's own output counter (reasoning included) and priced at OpenAI's list rates, with no caching discount.",
+
+  "caveats": {
+    "not_metered": "No API bill exists for these runs. The figure is what the same tokens would cost at OpenAI's standard list rate, not what was paid (the runs were made on a ChatGPT sign-in).",
+    "codex_harness_context_excluded": "Codex adds a fixed block of its own instructions to every input (the same count on every run, derived from the Codex counters and reported in summary.json token_method.crosscheck). It is excluded from the headline, because a MondayBench-equivalent API call would not send it; the as-metered figure including it is in summary.json sensitivity.",
+    "reasoning_effort": "Codex reasoning effort was 'medium' (the highest available there). Reasoning volume, and therefore cost, at another effort setting may differ.",
+    "no_caching": "No prompt caching assumed. Codex reported 2,304 cached input tokens on two monday-001 runs; that discount is not applied to the headline.",
+    "ttfa": "TTFA is null: the Codex route does not expose time to first answer, and host wall clock includes Codex startup."
+  }
+}

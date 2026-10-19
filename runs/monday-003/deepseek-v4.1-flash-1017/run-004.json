@@ -1,0 +1,74 @@
+{
+  "schema_version": "1",
+  "benchmark_version": "0.3",
+  "scenario_id": "monday-003",
+  "scenario_prompt_sha256": "aaf788f309d955d2b427c86fe7d95d2bbf88575fde7306adcfd74b0ec4a4103f",
+  "run_id": "monday-003__deepseek-v4.1-flash-1017__004",
+  "run_number": 4,
+  "model": {
+    "slug": "deepseek-v4.1-flash-1017",
+    "display_name": "DeepSeek V4.1 Flash (1017)",
+    "provider": "nan",
+    "model_id": "deepseek-v4-flash"
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 32000,
+    "reasoning_enabled": true,
+    "unsupported_parameters": [],
+    "system_prompt_sent": true,
+    "top_p": null,
+    "reasoning_requested": true,
+    "reasoning_mode": null,
+    "reasoning_effort": null,
+    "system_prompt_sha256": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+    "extra_body": {
+      "caching": false,
+      "seed": 4
+    },
+    "config_sha256": "c17ec8ac337e8552883a18a917bb7a493bf39d3faa02646dd10347e53aa32f2d",
+    "safety_ceiling_tokens": 32000,
+    "ceiling_semantics": "provider_specific"
+  },
+  "reasoning": {
+    "requested": true,
+    "status": "DELIVERED",
+    "tokens": 16508,
+    "evidence": "explicit_reasoning_tokens",
+    "stream_observed": true,
+    "stream_event_count": 16508
+  },
+  "timestamp_utc": "2026-10-19T10:44:53Z",
+  "usage": {
+    "input_tokens": 3332,
+    "output_tokens": 18038,
+    "reasoning_tokens": 16508
+  },
+  "performance": {
+    "ttft_ms": 3083.8,
+    "ttfa_ms": 87702.9,
+    "total_latency_ms": 96060.1,
+    "tokens_per_second": 194.0
+  },
+  "economics": {
+    "input_cost_usd": null,
+    "output_cost_usd": null,
+    "total_cost_usd": null
+  },
+  "response": "**Bottom line:** Two real external paths matter this week: **Contoso’s contractual compliance export due Tue 16:00** and **Atlas SSO due Wed 17:00**. Both gate on Elena’s billing schema migration. The stale items are Security review (already approved), onboarding instrumentation (not a launch blocker), and the original “broken Contoso export” (not broken; formatting is a demo preference). The real Contoso issue is delegated-admin permission scope.\n\n## 1. CRITICAL PATH\n\n**Shared gate:**  \n- **Elena — `billing_schema_migration`, 3h** — start immediately, finish ~12:15 Mon.  \n- **Elena — `billing_backfill`, 1.5h automated** — start after schema lands, finish ~13:45 Mon. Needed for board revenue charts; not needed before code patches.\n\n**Main/longest path — Atlas SSO:**  \n1. Elena: billing schema migration — ~12:15 Mon.  \n2. Marcus: `api_compatibility_patch`, 4h — after schema, ~12:15–16:15 Mon.  \n3. QA: `sso_regression`, 2h — start ~16:15 Mon; can split as 16:15–17:30 Mon + 09:00–09:45 Tue.  \n4. Marcus: `sso_production_rollout`, 1h — after QA green and after Marcus’s Atlas session, earliest **13:00–14:00 Tue**.\n\n**Hard-deadline Contoso path:**  \n1. Elena: billing schema migration — ~12:15 Mon.  \n2. Marcus → Daniel: 30-min delegated-admin walkthrough — ~11:45–12:15 Mon.  \n3. Daniel: `contoso_permission_patch`, 3.5h — ~12:15–15:45 Mon.  \n4. Julia: `contoso_compliance_export`, 1h — ~15:45–16:45 Mon.\n\n## 2. MY PLAN FOR TODAY\n\n1. **09:10 — Start Elena on the billing schema migration.** Ask her to kick off the backfill immediately when schema lands and report status by ~13:45. **Owner: Elena.**\n2. **09:15 — Correct the tracker and comms.** Update that Security review is approved/closed, onboarding instrumentation is not a launch blocker, onboarding launch support is Julia’s, and Contoso formatting is separate from the compliance access issue. **Owner: me.**\n3. **09:15 — Reassign `contoso_permission_patch` from Marcus to Daniel** and tell Rachel/Support. **Owner: me / Rachel.**\n4. **~11:45 — Marcus briefs Daniel on the delegated-admin path** so Daniel can start as soon as schema lands. **Owner: Marcus → Daniel.**\n5. **~12:15 — Daniel starts Contoso permission patch; Marcus starts SSO compatibility patch in parallel.** **Owners: Daniel / Marcus.**\n6. **~15:45 — Julia produces and sends the Contoso compliance export once permission patch lands.** **Owner: Julia.** If the patch is late, escalate immediately; this is the Tue 16:00 contractual deadline.\n7. **~16:15 — QA starts SSO regression.** **Owner: Sam / QA.**\n8. **Sarah: build pricing page, submit packaging approval pack today, then continue board non-revenue work.** Submit after noon if needed; committee rolls to next morning, still well before Thu 17:00. **Owner: Sarah.**\n9. **End of day — I confirm status on schema/backfill, Contoso export, SSO patch, QA progress, and pricing approval submission.**\n\n## 3. PARALLEL WORK\n\n- **Sarah:** pricing page 3h → packaging approval pack 1.5h → board non-revenue 4h. Board revenue 2h only after billing backfill completes (~13:45 Mon).\n- **Julia:** after Contoso compliance export, do Contoso formatter 2h for Tuesday demo; then onboarding launch support 2h before Fri 12:00.\n- **Elena:** billing backfill after schema. If useful, use remaining time to transfer production migration permissions/runbook to Daniel before she leaves Wed noon.\n- **QA:** SSO regression after Marcus’s patch.\n- **Marcus after SSO rollout:** onboarding instrumentation 3h can be deferred; it is not a launch blocker.\n\n## 4. BLOCKERS & DEPENDENCIES\n\n- **Billing schema migration** blocks SSO compatibility, Contoso permission patch, and post-backfill board revenue charts.\n- **Contoso permission patch** cannot go in before schema lands and needs a 30-min Marcus→Daniel handoff. Reassigning to Daniel protects Marcus’s SSO critical path.\n- **SSO compatibility branch is Marcus-only** per available evidence; cannot be parallelized to another engineer.\n- **Marcus unavailable Tue 09:00–13:00** for Atlas pre-rollout session. SSO rollout therefore cannot start before 13:00 Tue.\n- **Security review is not blocking**: Maya’s email approves current scope; re-review only if auth flow changes.\n- **Onboarding instrumentation is not blocking**: existing analytics sufficient for launch.\n- **Pricing page public release is blocked by packaging approval**, but approval can use mockups/screenshots; submit early.\n- **Contoso formatting is not production-blocking**; do not let it displace the delegated-admin compliance fix.\n\n## 5. EARLIEST DELIVERY\n\n- **Billing schema + backfill:** Mon ~13:45.\n- **Contoso compliance export:** Mon ~16:45, assuming Daniel starts at schema completion and Julia turns it in 1h. Meets Tue 16:00.\n- **Main critical path — Atlas SSO:** **Tue ~14:00** production rollout complete. Meets Wed 17:00.\n- **Pricing page public:** earliest Tue morning if approval pack is submitted Mon after noon and clears Tue; deadline Thu 17:00.\n- **Board pack:** earliest Tue if Sarah prioritizes; deadline Fri 10:00.\n\n## 6. RISKS / UNKNOWNS\n\n- Daniel’s estimate is 3.5h plus 0.5h handoff vs Marcus’s 2h estimate. If Daniel cannot take it, Marcus doing the Contoso patch delays SSO to roughly Tue ~16:40, still before Wed but with less buffer.\n- Contoso permission patch has no separate QA/verification duration listed. If it does not fully fix delegated-admin access first time, the Tue 16:00 contractual deadline is at risk.\n- QA regression may uncover issues; no SSO bug-fix buffer is specified.\n- Both Contoso permission and SSO compatibility touch the account-mapping layer; coordinate branches early to avoid merge/rebase delay.\n- Packaging approval depends on tier/price/margin inputs not fully evidenced in the thread.\n- SSO rollout may have release/change-management steps not listed; only Security review evidence is provided.\n- Backfill is automated, but no verification time is provided for data quality before board revenue charts are frozen.",
+  "finish_reason": "stop",
+  "provider_metadata": {
+    "request_id": "chatcmpl-57a008dc-3218-44b1-bdf5-af0f2b5f1bbd",
+    "raw_usage": {
+      "completion_tokens": 18038,
+      "prompt_tokens": 3332,
+      "total_tokens": 21370,
+      "completion_tokens_details": {
+        "reasoning_tokens": 16508
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 3198
+      }
+    }
+  }
+}

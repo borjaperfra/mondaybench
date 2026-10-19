@@ -118,6 +118,12 @@ class ModelConfig:
     # `generation.system_prompt_sha256`.
     system_prompt: str | None = None
     system_prompt_file: str | None = None
+    # Send `seed: <run_number>` with each request. For endpoints whose response
+    # cache ignores `caching: false` and keys on the request body (NaN, measured
+    # 2026-10-19): a distinct seed per run makes each run a fresh generation
+    # without touching the prompt. Off unless a model sets
+    # `generation.seed_per_run: true`, so no existing config changes on the wire.
+    seed_per_run: bool = False
 
     def base_url(self) -> str | None:
         return resolve_env(self.base_url_env, required=self.api_style == "openai_compatible")
@@ -195,6 +201,7 @@ def load_models(path: Path | None = None) -> dict[str, ModelConfig]:
             notes=cfg.get("notes"),
             system_prompt=system_prompt,
             system_prompt_file=str(system_prompt_file) if system_prompt_file else None,
+            seed_per_run=bool(generation.get("seed_per_run", False)),
         )
     return models
 

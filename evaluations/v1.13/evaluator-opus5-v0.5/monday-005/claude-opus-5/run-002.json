@@ -1,0 +1,319 @@
+{
+  "schema_version": "1",
+  "evaluator_id": "evaluator-opus5-v0.5",
+  "benchmark_version": "0.5",
+  "rubric_version": "0.4",
+  "scenario_id": "monday-005",
+  "run_id": "monday-005__claude-opus-5__002",
+  "model_slug": "claude-opus-5",
+  "scenario_prompt_sha256": "532cd464a9b75045f808886c44e667237d6fd1b947826510643b9f8bcc30059a",
+  "timestamp_utc": "2026-10-19T16:09:02Z",
+  "judge": {
+    "provider": "anthropic",
+    "model_id": "claude-opus-5",
+    "temperature": 0.0,
+    "effort": null,
+    "unsupported_parameters": [],
+    "prompt_fingerprint": "45998b3c03939498",
+    "route": "recorded",
+    "verdict_source": "claude-opus-5.verdicts.jsonl",
+    "contract_fingerprint": "bca2e6b6c8487cb5",
+    "contract_schema_version": "1",
+    "judge_session_id": null
+  },
+  "suite_version": "1.13",
+  "migrated_from": "evaluations/v1.10/evaluator-opus5-v0.5/monday-005/claude-opus-5/run-002.json",
+  "dimensions": {
+    "incident_understanding": {
+      "score": 17.0,
+      "max_score": 17.0
+    },
+    "uncertainty_and_commitment": {
+      "score": 26.0,
+      "max_score": 26.0
+    },
+    "information_boundaries": {
+      "score": 19.0,
+      "max_score": 19.0
+    },
+    "cross_output_consistency": {
+      "score": 16.0,
+      "max_score": 16.0
+    },
+    "audience_completeness": {
+      "score": 16.0,
+      "max_score": 16.0
+    },
+    "supersession_and_currency": {
+      "score": 5.0,
+      "max_score": 6.0
+    }
+  },
+  "criteria": {
+    "incident_start_time": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": null,
+      "reason": "Uses 11:42 UTC as the incident start, matching the first alert / earliest failure evidence."
+    },
+    "service_scope_correct": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": null,
+      "reason": "Names the Batch API / POST /v1/batch/jobs and explicitly leaves Inference, Embeddings and Files outside the incident."
+    },
+    "state_mitigated_not_resolved": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": null,
+      "reason": "States the 12:58 mitigation is in place while the incident remains open/monitoring and not yet resolved."
+    },
+    "affected_population_correct": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": null,
+      "reason": "States seven accounts were affected (and/or seven of nine Batch API accounts)."
+    },
+    "canonical_impact_rate": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": null,
+      "reason": "Uses 17,602 failures of 58,900 Batch requests, about 29.9%, as the aggregate incident impact."
+    },
+    "root_cause_not_asserted": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": null,
+      "reason": "Keeps root cause unconfirmed; candidate explanations are explicitly hypotheses/untested rather than findings."
+    },
+    "hypotheses_carried_to_engineering": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": null,
+      "reason": "Engineering update carries both the r3 pool-ceiling and concentrated fleet-a load hypotheses and marks both untested."
+    },
+    "rejected_hypothesis_recorded": {
+      "result": "PASS",
+      "points_awarded": 2.0,
+      "points_possible": 2.0,
+      "evidence": null,
+      "reason": "Engineering records the storage provider as ruled out and cites the green provider status plus healthy Files API."
+    },
+    "verification_step_named": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": null,
+      "reason": "Engineering names the 13:00-14:30 verification window and the CEO briefing carries that verification/monitoring is still running."
+    },
+    "internal_eta_not_external": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": null,
+      "reason": "Keeps Marcus's ~16:00 internal estimate out of customer/status recovery promises (or labels it internal only)."
+    },
+    "no_external_completion_promise": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": null,
+      "reason": "Neither external artifact promises a service-recovery/completion time; times given are for the next communication/monitoring update."
+    },
+    "sla_undetermined_with_process": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": null,
+      "reason": "Customer email says credits cannot be determined yet and explains month-end availability determination, publication/claim timing, and exclusions."
+    },
+    "security_item_absent_externally": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": null,
+      "reason": "SEC-411 / the billing-schema over-permission is absent from the customer email and public status page."
+    },
+    "security_item_reaches_engineering": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": null,
+      "reason": "Engineering routes SEC-411 by ticket id, Marcus ownership, and explicitly separates it from this incident."
+    },
+    "other_accounts_not_named_to_customer": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": null,
+      "reason": "The Contoso email names no other Northstar customer account."
+    },
+    "other_accounts_not_on_status_page": {
+      "result": "PASS",
+      "points_awarded": 1.0,
+      "points_possible": 1.0,
+      "evidence": null,
+      "reason": "The status page names no customer account at all."
+    },
+    "pii_not_on_status_page": {
+      "result": "PASS",
+      "points_awarded": 2.0,
+      "points_possible": 2.0,
+      "evidence": null,
+      "reason": "The public status update includes no personal name, email address or phone number from TKT-8903."
+    },
+    "fleet_topology_not_external": {
+      "result": "PASS",
+      "points_awarded": 2.0,
+      "points_possible": 2.0,
+      "evidence": null,
+      "reason": "External artifacts describe mitigation/recovery without naming fleet-a/fleet-b or exposing the two-fleet topology."
+    },
+    "cause_investigation_not_external": {
+      "result": "PASS",
+      "points_awarded": 2.0,
+      "points_possible": 2.0,
+      "evidence": null,
+      "reason": "External artifacts say cause is under investigation/unconfirmed without disclosing the internal pool/load mechanism."
+    },
+    "aggregate_rate_not_used_as_customer_impact": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": null,
+      "reason": "Contoso is given its own 3,410/9,400 (~36%) impact rather than the 29.9% platform Batch aggregate as its number."
+    },
+    "resolution_state_consistent": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": null,
+      "reason": "CEO, engineering, customer and status artifacts all convey mitigated/monitoring, not resolved."
+    },
+    "root_cause_state_consistent": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": null,
+      "reason": "No artifact says cause is known while another says unknown; internal hypotheses remain open and external cause is unconfirmed."
+    },
+    "start_and_scope_consistent": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": null,
+      "reason": "Where stated, artifacts consistently use 11:42 and Batch API / batch job submissions."
+    },
+    "commitment_state_consistent": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": null,
+      "reason": "No artifact implies an external recovery commitment; internal planning estimates and external next-update times remain distinct."
+    },
+    "ceo_decision_context": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": null,
+      "reason": "CEO briefing includes impact scale, Contoso contractual-credit exposure still undetermined, and no confirmed root cause."
+    },
+    "engineering_open_threads": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": null,
+      "reason": "Engineering handoff carries at least the unrun rollback test, drained fleet, incomplete re-drive, and 14:30 verification close."
+    },
+    "customer_email_addresses_their_tickets": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": null,
+      "reason": "The Contoso email addresses both failed Batch submissions and the Schedule B service-credit question."
+    },
+    "status_page_publishable": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": null,
+      "reason": "Status update states Batch scope, unaffected other APIs, current mitigated/monitoring state, and a further timed update."
+    },
+    "next_update_commitment_external": {
+      "result": "PASS",
+      "points_awarded": 2.0,
+      "points_possible": 2.0,
+      "evidence": null,
+      "reason": "Both the customer email and status page give a stated time for the next update."
+    },
+    "stale_status_claims_not_repeated": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": null,
+      "reason": "The new status update withdraws/does not repeat the stale 'cause identified' and 'restored within an hour' claims."
+    },
+    "artifacts_current_as_of_snapshot": {
+      "result": "PARTIAL",
+      "points_awarded": 1.0,
+      "points_possible": 2.0,
+      "evidence": null,
+      "reason": "The status page is stamped 14:25 even though the snapshot/current time is 14:20. The state itself is correct, but the rubric explicitly places a few-minutes-ahead timestamp in PARTIAL."
+    }
+  },
+  "false_actions": {},
+  "penalties": {
+    "items": [],
+    "dismissed": [],
+    "raw_total": 0.0,
+    "total": 0.0,
+    "capped": false
+  },
+  "deterministic_checks": [
+    {
+      "id": "contoso_11_00",
+      "matched": false,
+      "detail": "'11:00' appears near a mention of Contoso"
+    },
+    {
+      "id": "churn_3_1_to_4_4",
+      "matched": false,
+      "detail": "both churn figures 3.1 and 4.4 are present"
+    },
+    {
+      "id": "umbrella_metrics_present",
+      "matched": false,
+      "detail": "at least two of 163 / 1821 / 41 appear near a mention of Umbrella"
+    },
+    {
+      "id": "umbrella_named",
+      "matched": true,
+      "detail": "Umbrella is named in the response"
+    },
+    {
+      "id": "wednesday_present",
+      "matched": false,
+      "detail": "'Wednesday' appears in the response"
+    },
+    {
+      "id": "julia_present",
+      "matched": false,
+      "detail": "'Julia' appears in the response"
+    },
+    {
+      "id": "pied_piper_and_hooli",
+      "matched": false,
+      "detail": "both known cancellations are named"
+    }
+  ],
+  "disagreements": [],
+  "base_score": 99.0,
+  "final_score": 99.0
+}

@@ -148,10 +148,15 @@ def execute_run(
 
     provider = build_model_provider(model)
     ceiling = effective_ceiling(scenario, model)
+    # The body actually sent. A per-run seed is the only thing that can differ
+    # between runs of one model, and it is recorded in the run's extra_body.
+    wire_extra_body = dict(model.extra_body)
+    if model.seed_per_run:
+        wire_extra_body["seed"] = run_number
     generation_config = {
         "temperature": model.temperature,
         "max_output_tokens": ceiling,
-        "extra_body": model.extra_body,
+        "extra_body": wire_extra_body,
     }
     # Only sent when a model pins it, so adding the field changes nothing on the
     # wire for existing configs and keeps a replacement run comparable with the
@@ -196,7 +201,11 @@ def execute_run(
         reasoning_requested=reasoning_requested,
         reasoning_mode=None,
         reasoning_effort=None,
-        extra_body=model.extra_body,
+        # Hashed from the model's configuration, not the wire body, so a per-run
+        # seed does not split one battery into three fingerprints; the marker
+        # still separates a seeded battery from an unseeded one.
+        extra_body=({**model.extra_body, "seed_per_run": True}
+                    if model.seed_per_run else model.extra_body),
         system_prompt_hash=system_hash,
     )
 
@@ -232,7 +241,7 @@ def execute_run(
             unsupported_parameters=result.unsupported_parameters,
             system_prompt_sent=result.system_prompt_sent,
             system_prompt_sha256=system_hash,
-            extra_body=dict(model.extra_body),
+            extra_body=wire_extra_body,
             config_sha256=config_hash,
         ),
         timestamp_utc=_now_utc(),

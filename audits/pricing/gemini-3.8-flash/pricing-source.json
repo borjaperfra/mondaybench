@@ -1,0 +1,68 @@
+{
+  "record_type": "pricing_snapshot",
+  "snapshot_id": "gemini-3.8-flash-pricing-2026-10-16",
+  "scope": "Gemini 3.8 Flash only. Additive: no file under analysis/cost-value/ is read for rates or modified.",
+
+  "model": "Gemini 3.8 Flash",
+  "model_id": "gemini-3.8-flash",
+  "provider": "Google Gemini API (first party)",
+  "pricing_tier": "Standard, paid tier. Not Batch, no context caching.",
+
+  "rates_usd_per_million_tokens": {
+    "input": 0.75,
+    "output": 3.75
+  },
+  "introductory_until": "2026-12-31",
+  "post_introductory": {
+    "effective_from": "2027-01-01",
+    "rates_usd_per_million_tokens": {"input": 1.50, "output": 7.50}
+  },
+
+  "retrieved_at": "2026-10-16",
+  "sources": [
+    {
+      "url": "https://ai.google.dev/gemini-api/docs/pricing",
+      "party": "first_party",
+      "quotes": [
+        "Input: $0.75 through December 31, 2026. $1.50 starting January 1, 2027.",
+        "Output: $3.75 through December 31, 2026. $7.50 starting January 1, 2027.",
+        "Output price (including thinking tokens)"
+      ],
+      "note": "The page does not use the word 'introductory'; it states the lower rates through 2026-12-31 and the higher ones from 2027-01-01."
+    },
+    {
+      "url": "https://requesty.ai/models/vertex/gemini-3.8-flash",
+      "party": "secondary",
+      "note": "Lists $0.75 input / $3.75 output against a list price of $1.50 / $7.50, described as a 50% discount on that endpoint with no end date. Consistent with Google's page."
+    },
+    {
+      "url": "https://openrouter.ai/google/gemini-3.8-flash",
+      "party": "secondary",
+      "note": "Cited by the task as a secondary source; the fetched page carried no prices, so it corroborates nothing."
+    }
+  ],
+  "verification": "VERIFIED_FIRST_PARTY: both current and from-2027 rates, and the rule that thinking tokens are billed at the output rate, read off Google's own Gemini API pricing page on 2026-10-16.",
+
+  "identity": {
+    "requested_model": "gemini-3-8-flash-high",
+    "served_model": null,
+    "served_model_evidence": "Antigravity requested 'gemini-3.8-flash-high' through the opaque identifier MODEL_PLACEHOLDER_M318; the served model id is UNOBSERVABLE on this route.",
+    "pricing_sku": "Gemini 3.8 Flash",
+    "identity_confidence": "STRONG_MATCH",
+    "identity_justification": "'High' is the thinking budget, not a separate SKU: the Gemini API prices Gemini 3.8 Flash at one rate whatever the thinking level. Not EXACT, because the route hides the served model id behind a placeholder.",
+    "pricing_basis": "ESTIMATED_LIST_LOWER_BOUND",
+    "pricing_confidence": "LOW",
+    "confidence_justification": "Rates are verified first-hand, but the token counts are not: there is no usage of any kind on this route, the tokenizer is a proxy (OpenAI's o200k_base, not Gemini's), and thinking tokens, which Google bills as output and which a 'High' thinking budget can make large, are missing entirely."
+  },
+
+  "estimate_note": "Estimated minimum: this run's route reports no token usage, so only the prompt and the visible answer were counted (with a proxy tokenizer), and the model's hidden thinking, which Google bills as output, is missing - the real cost is higher.",
+
+  "caveats": {
+    "lower_bound": "Thinking tokens are billed as output and not recorded. The true cost is this figure plus (thinking tokens per task x output rate); see thinking_sensitivity in summary.json.",
+    "proxy_tokenizer": "Token counts use o200k_base as a stand-in for Gemini's tokenizer, which has no public offline release. The direction of the error is not known.",
+    "hidden_system_instructions": "The Antigravity RPC sends no system prompt, but the backend may add Google-side instructions that are billed on a real call. They are unseen and not counted, which also pushes the estimate down.",
+    "introductory_rate": "Priced at the rate in force on 2026-10-16. From 2027-01-01 both rates double; the post-intro figure is in summary.json overall.",
+    "no_caching": "No context caching assumed.",
+    "ttfa": "TTFA is null: the route returns one non-streaming response and exposes no time to first answer."
+  }
+}
