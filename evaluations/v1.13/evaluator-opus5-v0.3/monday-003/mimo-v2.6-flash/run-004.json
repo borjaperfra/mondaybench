@@ -1,0 +1,249 @@
+{
+  "schema_version": "1",
+  "evaluator_id": "evaluator-opus5-v0.3",
+  "benchmark_version": "0.3",
+  "rubric_version": "0.3",
+  "scenario_id": "monday-003",
+  "run_id": "monday-003__mimo-v2.6-flash__004",
+  "model_slug": "mimo-v2.6-flash",
+  "scenario_prompt_sha256": "aaf788f309d955d2b427c86fe7d95d2bbf88575fde7306adcfd74b0ec4a4103f",
+  "timestamp_utc": "2026-10-19T16:09:14Z",
+  "judge": {
+    "provider": "anthropic",
+    "model_id": "claude-opus-5",
+    "temperature": 0.0,
+    "effort": null,
+    "unsupported_parameters": [],
+    "prompt_fingerprint": "45998b3c03939498",
+    "route": "recorded",
+    "verdict_source": "mimo-v2.6-flash.verdicts.jsonl",
+    "contract_fingerprint": "db0cb9aa9b9d8272",
+    "contract_schema_version": "1",
+    "judge_session_id": null
+  },
+  "suite_version": "1.13",
+  "migrated_from": null,
+  "dimensions": {
+    "critical_path_and_dependencies": {
+      "score": 21.0,
+      "max_score": 21.0
+    },
+    "resource_allocation": {
+      "score": 22.0,
+      "max_score": 25.0
+    },
+    "planning_and_parallelization": {
+      "score": 18.0,
+      "max_score": 18.0
+    },
+    "decision_quality": {
+      "score": 14.0,
+      "max_score": 14.0
+    },
+    "state_reconstruction": {
+      "score": 8.5,
+      "max_score": 10.0
+    },
+    "accuracy_and_uncertainty": {
+      "score": 12.0,
+      "max_score": 12.0
+    }
+  },
+  "criteria": {
+    "sso_chain": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'Elena: billing_schema_migration -> Marcus: api_compatibility_patch -> QA: sso_regression -> Marcus: sso_production_rollout'; 'SSO chain is the overall critical path'",
+      "reason": "Full dependent chain with correct owners setting the Atlas date."
+    },
+    "contoso_blocker_chain": {
+      "result": "PASS",
+      "points_awarded": 6.0,
+      "points_possible": 6.0,
+      "evidence": "'Marcus walkthrough -> Daniel: contoso_permission_patch (3.5h) -> Julia: contoso_compliance_export'; formatter 'independent - no dependencies'",
+      "reason": "Permission fix gates the compliance export; formatting off the chain."
+    },
+    "pricing_dependency": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'Packaging approval not cleared | Pricing page cannot go public'; 'submit packaging_approval_pack using mockups (Priya explicitly allows them) - get it in before 12:00'",
+      "reason": "States both the approval gate and the mockup route."
+    },
+    "security_state_stale": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "'Security review outstanding -> Closed (Maya's email, Friday 16:48)'; 'Close stale urgent items on tracker: security review is closed'",
+      "reason": "Closed for scope, tracker stale, no Security action."
+    },
+    "board_dependency": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "'Backfill not complete | board_pack_revenue | Completes Monday 13:30'; backfill kicked off after migration",
+      "reason": "Revenue section depends on the post-migration backfill."
+    },
+    "scarce_resource_allocation": {
+      "result": "PASS",
+      "points_awarded": 10.0,
+      "points_possible": 10.0,
+      "evidence": "'Reassign contoso_permission_patch from Marcus to Daniel (with 0.5h Marcus walkthrough). This splits Marcus's bottleneck and finishes the SSO chain ~1.5 hours earlier.'",
+      "reason": "Contention resolved with Daniel plus walkthrough and a reason given."
+    },
+    "marcus_reserved_for_sso": {
+      "result": "PARTIAL",
+      "points_awarded": 3.0,
+      "points_possible": 6.0,
+      "evidence": "Instrumentation closed as 'Not a launch blocker'; Marcus kept on compat/rollout; branch uniqueness only appears as an unknown: 'whether anyone outside Marcus/Daniel can support the SSO patch'",
+      "reason": "Frees and protects Marcus but treats the no-substitute fact as an open question rather than the ground; lower label."
+    },
+    "formatter_ownership": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'09:00-11:00 contoso_export_formatter (2h). Independent' | Julia; compliance export 15:30-16:30",
+      "reason": "Julia owns the format change without touching Marcus or the compliance delivery."
+    },
+    "elena_migration_fallback": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "Migration Mon 09:00-12:00; 'do the Daniel handover (permissions + runbook) today rather than Wednesday'; risk 5 on Wed noon",
+      "reason": "Monday migration, Daniel fallback with transfer before Elena leaves."
+    },
+    "monday_plan": {
+      "result": "PASS",
+      "points_awarded": 7.0,
+      "points_possible": 7.0,
+      "evidence": "Elena told to start at 09:10; Rachel, Julia, Sarah messaged at 09:15; walkthrough 09:30-10:00; Marcus/Daniel at 12:00",
+      "reason": "Migration first, dependents behind, delegable work handed out the same morning."
+    },
+    "concurrent_sso_and_contoso": {
+      "result": "PASS",
+      "points_awarded": 7.0,
+      "points_possible": 7.0,
+      "evidence": "'12:00-16:00 api_compatibility_patch | Marcus'; '12:00-15:30 contoso_permission_patch | Daniel'",
+      "reason": "Both chains run concurrently with clear owners."
+    },
+    "pricing_board_parallel": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'These can all proceed immediately: ... packaging_approval_pack (mockups) ... pricing_page ... board_pack_non_revenue (explicitly independent)'",
+      "reason": "Approval pack, board narrative and non-revenue work start independent of engineering."
+    },
+    "formatting_urgent_not_blocking": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'Investigate broken Contoso exports -> Done - format preference, not broken; real issue is permission patch'; Julia 2h fix before Tuesday afternoon",
+      "reason": "Cosmetic demo preference identified and handled without displacing committed work."
+    },
+    "contoso_compliance_is_urgent": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'Reply to Anja Weber confirming Tuesday 16:00 CET delivery will be met'; export Mon 15:30-16:30",
+      "reason": "Dated commitment, owned, confirmed."
+    },
+    "stale_task_list_overridden": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "Overrides Security review, instrumentation, broken Contoso exports, and pricing page before approval meeting",
+      "reason": "All four stale entries overridden."
+    },
+    "sso_state_reconstructed": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "Chain to run from Monday migration; 'security review is closed'; 'Wed EOD commitment met'",
+      "reason": "All three present."
+    },
+    "onboarding_state_reconstructed": {
+      "result": "PARTIAL",
+      "points_awarded": 1.5,
+      "points_possible": 3.0,
+      "evidence": "'onboarding instrumentation is not a launch blocker (Julia confirmed)'; 'Julia -> onboarding_launch (2h) - due Friday, independent'",
+      "reason": "Instrumentation correct and launch with Julia, but never states the core flow is launch-ready or the launch-support handover; partly right."
+    },
+    "contoso_state_separated": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "'format preference, not broken; real issue is permission patch'",
+      "reason": "Unambiguous which issue gates the Tuesday delivery."
+    },
+    "factual_plan_accuracy": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "Uses 3h/4h/2h/1h, Daniel 3.5h + 0.5h, export 1h, formatter 2h, pack 1.5h, pricing 3h, non-revenue 4h, Tue 16:00 CET, Thu 17:00, Fri 12:00, Elena Wed 09-12, Marcus Tue 09-13",
+      "reason": "Anchored values carried through correctly."
+    },
+    "earliest_feasible_delivery": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "'sso_production_rollout | Tue 13:00-14:00 (after Atlas session 09:00-13:00)'; 'Critical path finishes Tuesday 14:00'",
+      "reason": "Tuesday 14:00 backed by its schedule respecting dependencies and availability."
+    },
+    "uncertainty_discipline": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "Flags merge-conflict risk on shared layer, QA surprises, mockup quality, CET/CEST discrepancy; no invented approvals/owners/durations",
+      "reason": "Genuine unknowns flagged; nothing unsupported relied on (misattribution of the branch remark is minor)."
+    }
+  },
+  "false_actions": {},
+  "penalties": {
+    "items": [],
+    "dismissed": [],
+    "raw_total": 0.0,
+    "total": 0.0,
+    "capped": false
+  },
+  "deterministic_checks": [
+    {
+      "id": "contoso_11_00",
+      "matched": true,
+      "detail": "'11:00' appears near a mention of Contoso"
+    },
+    {
+      "id": "churn_3_1_to_4_4",
+      "matched": false,
+      "detail": "both churn figures 3.1 and 4.4 are present"
+    },
+    {
+      "id": "umbrella_metrics_present",
+      "matched": false,
+      "detail": "at least two of 163 / 1821 / 41 appear near a mention of Umbrella"
+    },
+    {
+      "id": "umbrella_named",
+      "matched": false,
+      "detail": "Umbrella is named in the response"
+    },
+    {
+      "id": "wednesday_present",
+      "matched": true,
+      "detail": "'Wednesday' appears in the response"
+    },
+    {
+      "id": "julia_present",
+      "matched": true,
+      "detail": "'Julia' appears in the response"
+    },
+    {
+      "id": "pied_piper_and_hooli",
+      "matched": false,
+      "detail": "both known cancellations are named"
+    }
+  ],
+  "disagreements": [],
+  "base_score": 95.5,
+  "final_score": 95.5
+}

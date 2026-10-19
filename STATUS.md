@@ -1,10 +1,22 @@
-# MondayBench suite v1.12 — Overall v3.5, published 2026-10-16
+# MondayBench suite v1.13 — Overall v3.6, published 2026-10-19
 
-Five scenarios, thirteen models, 195 official runs, all judged, one board. The
-suite is released as `v1.12` and the board it carries is Overall v3.5. Everything
+Five scenarios, fifteen models, 225 official runs, all judged, one board. The
+suite is released as `v1.13` and the board it carries is Overall v3.6. Everything
 below was verified against this working tree, not remembered.
 
-**v1.12 adds estimated costs for GPT-6 Astra and Gemini 3.8 Flash (High).**
+**v1.13 adds two NaN models as official rows.** DeepSeek V4.1 Flash (1017),
+**91.23**, rank 9, and MiMo v2.6 Flash, **87.87**, rank 10, were generated on
+NaN on 2026-10-19 and judged blind the same day by Claude Opus 5.5
+(`experiments/nan-challengers-2026-10-19-opus-judge/`). NaN ignored
+`caching: false` that day: runs 2-3 came back byte-identical to run 1. So each
+run sends `seed: <run_number>` (`generation.seed_per_run`, new in the harness),
+and the unseeded attempt is archived in `archive/nan-unseeded-2026-10-19/`.
+The 196 v1.10 evaluations were re-stamped into v1.13 with zero scores changed,
+and every incumbent row on all five scenario boards equals its v1.10 row.
+`tests/test_v1_13_nan_challengers.py` pins both scores, the seeds, and that no
+incumbent moved.
+
+**v1.12 added estimated costs for GPT-6 Astra and Gemini 3.8 Flash (High).**
 Neither route reports billing, so both were unpriced. On 2026-10-16 the owner
 decided they should appear on the site's quality-vs-cost chart as labelled
 estimates. `audits/pricing/gpt-6-astra/` and `audits/pricing/gemini-3.8-flash/`
@@ -17,13 +29,13 @@ LOW). No score, run, verdict or board changed; the new files are additive.
 ## Verified state
 
 ```
-pytest                                             985 passed
-verify-release --version 1.11 --strict             identical, 2,042 artefacts
-verify-release --version 1.10                      verified within policy
+pytest                                             993 passed
+verify-release --version 1.13 --strict             identical, 2,341 artefacts
+verify-release --version 1.12                      verified within policy
 freeze check, all five scenarios                   frozen content intact
-official runs behind the v3.5 board                195 / 195
-recorded evaluations, v1.10 subtree                196
-criterion verdicts behind them                     4,622
+official runs behind the v3.6 board                225 / 225
+recorded evaluations, v1.13 subtree                226
+criterion verdicts behind them                     5,330
 ```
 
 **v1.10 puts three closed models on the board as official rows.** Claude Opus
@@ -100,7 +112,7 @@ points are the noise-resistance dimension, scored at dimension granularity. All
 five scenarios contribute exactly 100. A model that clears all five records 354
 criterion verdicts.
 
-## Overall v3.5
+## Overall v3.6
 
 ```
  #  model                    Monday    001    002    003    004    005   range   sigma
@@ -112,31 +124,33 @@ criterion verdicts.
  6  DeepSeek V4.1 Flash       94.53   95.0   93.0   96.3   90.0   98.3    8.33    3.19
  7  GLM 5.3                   93.73   97.5   87.7   94.8   91.7   97.0    9.83    4.10
  8  DeepSeek V4 Flash         91.70   90.8   89.3   95.0   86.0   97.3   11.33    4.51
- 9  MIMO v2.5                 86.67   88.2   81.2   90.3   78.5   95.2   16.67    6.80
-10  GLM 5.2                   86.50   84.3   91.2   87.3   71.2   98.5   27.33   10.08
-11  Gemini 3.8 Flash (High)   86.00   95.3   80.0   84.7   72.2   97.8   25.66   10.68
-12  Qwen 3.6                  68.77   82.8   70.2   65.5   46.0   79.3   36.83   14.49
-13  Gemma 4                   63.00   70.7   54.2   65.3   35.2   89.7   54.50   20.17
+ 9  DeepSeek V4.1 Flash (1017)91.23   90.3   95.2   95.8   79.7   95.2   16.16    6.83
+10  MiMo v2.6 Flash           87.87   82.7   83.7   93.2   80.3   99.5   19.17    8.14
+11  MIMO v2.5                 86.67   88.2   81.2   90.3   78.5   95.2   16.67    6.80
+12  GLM 5.2                   86.50   84.3   91.2   87.3   71.2   98.5   27.33   10.08
+13  Gemini 3.8 Flash (High)   86.00   95.3   80.0   84.7   72.2   97.8   25.66   10.68
+14  Qwen 3.6                  68.77   82.8   70.2   65.5   46.0   79.3   36.83   14.49
+15  Gemma 4                   63.00   70.7   54.2   65.3   35.2   89.7   54.50   20.17
 ```
 
 Monday Score is the arithmetic mean of the five scenario scores, equal weight,
 nothing else folded in. Range and sigma describe dispersion **across
 scenarios** and are published beside the score, never inside it. Run-to-run
-stability is a separate table in `leaderboard/overall/overall-v3.5.md`.
+stability is a separate table in `leaderboard/overall/overall-v3.6.md`.
 
-Overall v0 (three scenarios), v1 (four), v2, and v3 through v3.4 are untouched
+Overall v0 (three scenarios), v1 (four), v2, and v3 through v3.5 are untouched
 and stay byte-frozen. They are different claims about different scenario sets
 and different suite versions, not superseded views of this one.
 
-**Six caveats travel with this board.**
+**Seven caveats travel with this board.**
 
 - **DeepSeek V4.1 Flash is scored from a different judge's labels.** Its
   battery was judged blind twice: 93.03 by the Opus session judge that scored
   the other nine v3.4 rows (labels in
   `experiments/deepseek-v4.1-flash-rerun-v1/blind-verdicts/`), and 94.53 by
   GPT-5.6 Sol (labels in `verdicts/monday-00N/deepseek-v4.1-flash-rerun-v1.verdicts.jsonl`).
-  The board publishes 94.53. Under the Opus labels the row would rank 7th on
-  v3.5, below GLM 5.3. Kept as published and declared, by decision on
+  The board publishes 94.53. Under the Opus labels the row would rank 7th,
+  below GLM 5.3. Kept as published and declared, by decision on
   2026-10-15; on v3.4 the site bracketed positions 2–5 as one group whose order
   is not established.
 
@@ -174,6 +188,16 @@ and different suite versions, not superseded views of this one.
   the output ceiling are unobservable and recorded as `null`. Its pack's
   `finish_reason: stop` came from a character-count heuristic, so it is not
   carried into the run.
+- **DeepSeek V4.1 Flash (1017) and MiMo v2.6 Flash were generated on NaN with
+  a per-run seed** and labelled blind by Claude Opus 5.5, not the Opus 5 that
+  labelled ten rows. No other row carries a seed. The 1017 version is stated by
+  NaN's operator; the endpoint names none, and the row is separate from
+  DeepSeek V4.1 Flash (the September Helmcode deployment). MiMo v2.6 spent the
+  whole 32,000-token ceiling reasoning with no answer on 6 of 6 monday-004
+  attempts before 13:00 UTC and on 2 of 5 monday-002 attempts; from 13:25 UTC
+  monday-004 answered 3 of 3. The ceiling was not raised; failed attempts are
+  in each scenario's `failed-attempts.jsonl`. NaN is quota-priced, so neither
+  row has a cost.
 - **qwen3.6's three official monday-004 runs came from NaN, not Helmcode**,
   which was unreachable during generation. NaN serves that model as a
   *reasoning* model and Helmcode does not, on a byte-identical request.
@@ -195,6 +219,8 @@ and different suite versions, not superseded views of this one.
 | v1.9 | 2026-10-15 | Overall v3.4 | Gemini 3.8 Flash re-judged with criterion labels, and its capability profile |
 | v1.10 | 2026-10-15 | Overall v3.5 | Claude Opus 5, Claude Fable 5.1 and Gemini 3.8 Flash as official rows |
 | v1.11 | 2026-10-15 | Overall v3.5 | Cost artefacts and the new-model runbook brought up to v1.10; no measurement changed |
+| v1.12 | 2026-10-16 | Overall v3.5 | Estimated costs for GPT-6 Astra and Gemini 3.8 Flash (High) |
+| v1.13 | 2026-10-19 | Overall v3.6 | DeepSeek V4.1 Flash (1017) and MiMo v2.6 Flash, seeded on NaN |
 
 **Why DeepSeek was re-measured.** The gateway serves V4.1 Flash under the same
 id as V4 Flash and replaced the deployment in place rather than publishing a
@@ -319,10 +345,12 @@ sees it.
   global deduction; attributing it to a capability would mean inventing the
   attribution. qwen3.6's −7 monday-005 breach shows in its Monday Score and not
   in its `information_boundaries` profile.
-- **Capability profiles cover the whole board.**
-  `analysis/capability-profiles-suite-v1.10-taxonomy-v0.2.json` profiles all
-  thirteen models; the three new rows reproduce the profiles in
+- **Capability profiles cover the v3.5 board, not the two v1.13 rows.**
+  `analysis/capability-profiles-suite-v1.10-taxonomy-v0.2.json` profiles the
+  thirteen v3.5 models; the three v1.10 rows reproduce the profiles in
   `audits/capabilities/` exactly, and the ten incumbents are identical to v1.5.
+  DeepSeek V4.1 Flash (1017) and MiMo v2.6 Flash have criterion labels on disk
+  but no profile yet - an additive step, not a score.
 
 ## Benchmarking a new model
 
@@ -373,7 +401,8 @@ because a scenario board reads only its own suite's evaluations.
   evidence behind documented defects.
 - **Do not remove `extra_body: {caching: false}`** from any model. Without it,
   back-to-back identical prompts return a byte-identical cached response in ~1s
-  and run 3 becomes a copy of run 2.
+  and run 3 becomes a copy of run 2. Since 2026-10-19 NaN ignores the flag;
+  NaN batteries need `generation.seed_per_run: true` as well.
 - **`mondaybench results` writes files** and prints no summary. Run it only at
   publication time, or it overwrites the per-model cards.
 - **Do not write files with CRLF.** `tests/test_line_endings.py` will fail, and
@@ -383,10 +412,10 @@ because a scenario board reads only its own suite's evaluations.
 
 ## The judge
 
-Ten of the thirteen board rows are labelled by one judge: Claude Opus 5
+Ten of the fifteen board rows are labelled by one judge: Claude Opus 5
 reading each response in a recorded session. DeepSeek V4.1 Flash and Claude
-Opus 5 are labelled by GPT-5.6 Sol, and Gemini 3.8 Flash (High) by Claude Opus
-5.5. Two cross-checks have criterion-level labels on disk:
+Opus 5 are labelled by GPT-5.6 Sol, and Gemini 3.8 Flash (High), DeepSeek V4.1
+Flash (1017) and MiMo v2.6 Flash by Claude Opus 5.5. Two cross-checks have criterion-level labels on disk:
 
 | Battery | Opus judge | Second blind judge | Agreement | Largest run gap |
 |---|---:|---:|---|---:|

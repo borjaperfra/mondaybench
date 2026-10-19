@@ -1,0 +1,291 @@
+{
+  "schema_version": "1",
+  "evaluator_id": "evaluator-opus5-v0.4",
+  "benchmark_version": "0.4",
+  "rubric_version": "0.3",
+  "scenario_id": "monday-004",
+  "run_id": "monday-004__claude-opus-5__002",
+  "model_slug": "claude-opus-5",
+  "scenario_prompt_sha256": "3a0cbb569ca4f711b8907177af9204cec267d26f35f732829df56b03ed23ef99",
+  "timestamp_utc": "2026-10-19T16:09:01Z",
+  "judge": {
+    "provider": "anthropic",
+    "model_id": "claude-opus-5",
+    "temperature": 0.0,
+    "effort": null,
+    "unsupported_parameters": [],
+    "prompt_fingerprint": "45998b3c03939498",
+    "route": "recorded",
+    "verdict_source": "claude-opus-5.verdicts.jsonl",
+    "contract_fingerprint": "5ef5dc8dc34221ac",
+    "contract_schema_version": "1",
+    "judge_session_id": null
+  },
+  "suite_version": "1.13",
+  "migrated_from": "evaluations/v1.10/evaluator-opus5-v0.4/monday-004/claude-opus-5/run-002.json",
+  "dimensions": {
+    "revenue_reasoning": {
+      "score": 20.0,
+      "max_score": 20.0
+    },
+    "customer_health": {
+      "score": 12.5,
+      "max_score": 15.0
+    },
+    "acquisition_reasoning": {
+      "score": 19.0,
+      "max_score": 19.0
+    },
+    "plan_economics": {
+      "score": 15.0,
+      "max_score": 19.0
+    },
+    "cross_table_data_quality": {
+      "score": 14.5,
+      "max_score": 18.0
+    },
+    "decision_quality": {
+      "score": 9.0,
+      "max_score": 9.0
+    }
+  },
+  "criteria": {
+    "duplicate_detected": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": null,
+      "reason": "Identifies INV-2026-10-0209 as a duplicated €19,500 Soylent invoice loaded from two sources and removes one copy from October."
+    },
+    "annual_prepayment_normalized": {
+      "result": "PASS",
+      "points_awarded": 6.0,
+      "points_possible": 6.0,
+      "evidence": null,
+      "reason": "Recognises Gringotts' €120,000 invoice as 12 months and normalises it to €10,000/month / removes the €110,000 prepaid future portion."
+    },
+    "headline_vs_recurring_growth": {
+      "result": "PASS",
+      "points_awarded": 6.0,
+      "points_possible": 6.0,
+      "evidence": null,
+      "reason": "Shows the raw ~+12% headline and a normalised view that refutes it, including recurring MRR around +1.6% and/or comparable revenue around -4.2%."
+    },
+    "revenue_conclusion": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": null,
+      "reason": "Carries the conclusion into leadership messaging: underlying recurring revenue is roughly flat and the headline is driven by non-recurring/accounting effects."
+    },
+    "segment_retention_quantified": {
+      "result": "PARTIAL",
+      "points_awarded": 2.5,
+      "points_possible": 5.0,
+      "evidence": null,
+      "reason": "Quantifies some churn populations (notably Starter/SMB and the Nakatomi loss) but does not provide a complete, consistently-labelled retention/churn rate across enough segment/plan populations to support the rubric's full ranking bar."
+    },
+    "sample_size_arr_context": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": null,
+      "reason": "Puts the SMB/starter churn in context with a small denominator and/or €123.6k SMB ARR loss versus the €180k Nakatomi loss."
+    },
+    "acme_false_positive_avoided": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": null,
+      "reason": "Connects Acme's ~-45% requests to the planned batch migration and supports health with tokens/users/revenue/support evidence."
+    },
+    "no_churn_overreach": {
+      "result": "PASS",
+      "points_awarded": 2.0,
+      "points_possible": 2.0,
+      "evidence": null,
+      "reason": "Does not claim a proven cause for the observed churn cluster; causal explanations are left unestablished."
+    },
+    "raw_attribution_not_equivalent_new_business": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": null,
+      "reason": "Separates paid-search attributed revenue from new business and shows that most of it is expansion on existing customers."
+    },
+    "existing_customer_expansion_removed": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": null,
+      "reason": "Recomputes new-logo performance with expansion removed and reaches Partner first, Content second, Paid Search third (or equivalent new-logo ordering)."
+    },
+    "conversion_rate_vs_absolute_volume": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": null,
+      "reason": "Shows trial/conversion rate falling while absolute lead/trial volume rises, so the two directions are not conflated."
+    },
+    "no_unsupported_channel_scale_decision": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": null,
+      "reason": "Rejects a material paid-search spend increase without channel spend/CAC evidence and asks for the missing cost data."
+    },
+    "cac_payback_unavailable": {
+      "result": "PASS",
+      "points_awarded": 2.0,
+      "points_possible": 2.0,
+      "evidence": null,
+      "reason": "States CAC/CAC payback cannot be calculated because acquisition/marketing spend by channel is absent."
+    },
+    "contribution_calculated": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": null,
+      "reason": "Computes October contribution as revenue minus infra and support: Enterprise €194.7k, Pro €41.5k, Starter €10.3k."
+    },
+    "margin_calculated_or_correctly_compared": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": null,
+      "reason": "Gets the October margin ordering/figures right: Pro ~62.7%, Starter ~32.2%, Enterprise ~29.5%."
+    },
+    "absolute_vs_scalable_economics": {
+      "result": "PARTIAL",
+      "points_awarded": 2.5,
+      "points_possible": 5.0,
+      "evidence": null,
+      "reason": "Shows Enterprise's €194.7k contribution and Pro's 62.7% margin, but does not clearly separate what absolute contribution/revenue-per-customer answers from what scalable margin answers; lower-label rule => PARTIAL."
+    },
+    "plan_trajectory_evidence": {
+      "result": "PARTIAL",
+      "points_awarded": 1.5,
+      "points_possible": 3.0,
+      "evidence": null,
+      "reason": "Quantifies the Pro over-entitlement/rate-limit trajectory, but does not carry a comparable forward-looking usage signal for each plan; this meets the one-plan/partial bar."
+    },
+    "product_focus_supported": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": null,
+      "reason": "Chooses Pro and supports it with margin plus multiple non-margin signals such as over-entitlement customers and concentrated rate-limit tickets."
+    },
+    "customer_id_alias_resolved": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": null,
+      "reason": "Uses/resolves the Wayne usage alias and carries Wayne's 3.41M October requests rather than dropping the account."
+    },
+    "support_normalized": {
+      "result": "PARTIAL",
+      "points_awarded": 2.0,
+      "points_possible": 4.0,
+      "evidence": null,
+      "reason": "Normalises Pro support as tickets per customer, but does not provide a comparable normalized support rate across the other plans; the rubric's partial bar explicitly covers one-plan normalization."
+    },
+    "cross_table_customer_signal": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": null,
+      "reason": "Builds a multi-table Soylent finding from revenue contraction, request/user decline, and the rising critical/high support load."
+    },
+    "figures_carried_correctly": {
+      "result": "PARTIAL",
+      "points_awarded": 1.5,
+      "points_possible": 3.0,
+      "evidence": null,
+      "reason": "Contains minor secondary quantitative/base slips that do not change the recommendations; the main revenue, margin, acquisition and plan conclusions still stand on correct figures."
+    },
+    "causal_boundary": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": null,
+      "reason": "Treats Soylent's revenue, usage and ticket movements as a pattern/risk signal without claiming one caused the others."
+    },
+    "segment_recommendation": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": null,
+      "reason": "Rejects cutting SMB wholesale and points to missing segment economics/CAC/retention evidence before a segment-level decision."
+    },
+    "acquisition_recommendation": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": null,
+      "reason": "Identifies Partner (and/or Content) as stronger on new-logo evidence and conditions any scaling decision on missing spend data."
+    },
+    "product_recommendation": {
+      "result": "PASS",
+      "points_awarded": 1.0,
+      "points_possible": 1.0,
+      "evidence": null,
+      "reason": "States an actionable Pro-focused product plan in the recommendations section, consistent with the economics analysis."
+    },
+    "uncertainty_discipline": {
+      "result": "PASS",
+      "points_awarded": 2.0,
+      "points_possible": 2.0,
+      "evidence": null,
+      "reason": "Names material missing inputs (channel spend, segment economics, churn reasons, trial-to-paid) and avoids presenting unsupported figures as established."
+    }
+  },
+  "false_actions": {},
+  "penalties": {
+    "items": [],
+    "dismissed": [],
+    "raw_total": 0.0,
+    "total": 0.0,
+    "capped": false
+  },
+  "deterministic_checks": [
+    {
+      "id": "contoso_11_00",
+      "matched": false,
+      "detail": "'11:00' appears near a mention of Contoso"
+    },
+    {
+      "id": "churn_3_1_to_4_4",
+      "matched": false,
+      "detail": "both churn figures 3.1 and 4.4 are present"
+    },
+    {
+      "id": "umbrella_metrics_present",
+      "matched": false,
+      "detail": "at least two of 163 / 1821 / 41 appear near a mention of Umbrella"
+    },
+    {
+      "id": "umbrella_named",
+      "matched": true,
+      "detail": "Umbrella is named in the response"
+    },
+    {
+      "id": "wednesday_present",
+      "matched": false,
+      "detail": "'Wednesday' appears in the response"
+    },
+    {
+      "id": "julia_present",
+      "matched": false,
+      "detail": "'Julia' appears in the response"
+    },
+    {
+      "id": "pied_piper_and_hooli",
+      "matched": true,
+      "detail": "both known cancellations are named"
+    }
+  ],
+  "disagreements": [],
+  "base_score": 90.0,
+  "final_score": 90.0
+}

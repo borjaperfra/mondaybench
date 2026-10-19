@@ -1,0 +1,242 @@
+{
+  "schema_version": "1",
+  "evaluator_id": "evaluator-opus5-v0.2",
+  "benchmark_version": "0.2",
+  "rubric_version": "0.2",
+  "scenario_id": "monday-002",
+  "run_id": "monday-002__deepseek-v4.1-flash-1017__005",
+  "model_slug": "deepseek-v4.1-flash-1017",
+  "scenario_prompt_sha256": "740e627cbc7413c321ede0d54000504de54821d34ff4677f82731b89600423a8",
+  "timestamp_utc": "2026-10-19T16:09:12Z",
+  "judge": {
+    "provider": "anthropic",
+    "model_id": "claude-opus-5",
+    "temperature": 0.0,
+    "effort": null,
+    "unsupported_parameters": [],
+    "prompt_fingerprint": "45998b3c03939498",
+    "route": "recorded",
+    "verdict_source": "deepseek-v4.1-flash-1017.verdicts.jsonl",
+    "contract_fingerprint": "d06759a2a96216cd",
+    "contract_schema_version": "1",
+    "judge_session_id": null
+  },
+  "suite_version": "1.13",
+  "migrated_from": null,
+  "dimensions": {
+    "state_reconstruction": {
+      "score": 15.0,
+      "max_score": 15.0
+    },
+    "temporal_supersession": {
+      "score": 15.0,
+      "max_score": 15.0
+    },
+    "planning_dependencies": {
+      "score": 21.0,
+      "max_score": 25.0
+    },
+    "decision_prioritization": {
+      "score": 17.5,
+      "max_score": 20.0
+    },
+    "cross_source_data_reasoning": {
+      "score": 15.0,
+      "max_score": 15.0
+    },
+    "uncertainty_epistemic": {
+      "score": 10.0,
+      "max_score": 10.0
+    }
+  },
+  "criteria": {
+    "launch_state": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "Lists A/B options and chooses at 09:07; 'Maya has explicitly rejected another executive gate'; 'If production is not healthy or verification fails, do not open rollout'.",
+      "reason": "Recovery path open, no Maya gate, and rollout is conditional on verification."
+    },
+    "stale_external_actions": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'Do not call or escalate Zenith'; 'Daniel owns the send'; 'Do not send or quote pricing externally, including Initech procurement'.",
+      "reason": "Rejects all three stale external actions."
+    },
+    "current_owners": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'Marcus deploys B'; 'Priya delta review' / 'Priya post-deploy verification'; 'Sam opens and sanity-checks rollout'; 'Daniel sends the final Atlas announcement'; user chooses B and notifies.",
+      "reason": "All five owners correctly assigned."
+    },
+    "executive_gate_superseded": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'Maya has explicitly rejected another executive gate'; 'Do not use stale tasks: \"Maya approval\"'.",
+      "reason": "Infers no CEO approval and rejects the stale task."
+    },
+    "pricing_authority": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'Daniel's 09:07 internal-only values are €2,500 platform / 40 seats / €55 extra seat. Pinned workbook and earlier numbers are not authoritative'.",
+      "reason": "Uses Daniel's later instruction over the pinned workbook, internal only."
+    },
+    "ownership_supersession": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'Daniel has final customer announcement and recipient list'; 'Daniel owns the send'.",
+      "reason": "Infers Daniel as current send owner from the handoff despite the user-owned task."
+    },
+    "choose_option_b": {
+      "result": "PARTIAL",
+      "points_awarded": 4.0,
+      "points_possible": 8.0,
+      "evidence": "'Choose B (2.9.5-patch) as primary path'; the 8% vs <1% risk figures are only listed in CURRENT STATE and never given as the reason for the choice.",
+      "reason": "Chooses B and shows it fits the schedule, but never ties the choice to its materially lower risk, so the rationale is not adequate."
+    },
+    "option_b_sequence": {
+      "result": "PASS",
+      "points_awarded": 7.0,
+      "points_possible": 7.0,
+      "evidence": "09:10-09:33 Priya delta review -> 09:33-10:18 Marcus deploys B -> 10:25-10:45 Priya post-deploy verification -> 10:45-11:00 Sam opens rollout.",
+      "reason": "Full correct dependency chain."
+    },
+    "schedule_feasibility": {
+      "result": "PASS",
+      "points_awarded": 6.0,
+      "points_possible": 6.0,
+      "evidence": "B deploy 09:33-10:18 (Marcus leaves 10:20), verification 10:25-10:45 after Priya returns, Sam 10:45-11:00, rollout 11:00 'before the 12:00 cutoff'.",
+      "reason": "Coherent B schedule fits every availability and the window; only the A-fallback trigger timing is muddled."
+    },
+    "parallelize_work": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "Release triggered 09:07-09:10, then '09:10-10:30: Draft and send Maya's September expansion reconciliation' while review/deploy run.",
+      "reason": "Triggers release first and uses delegated time for expansion work."
+    },
+    "immediate_release_decision": {
+      "result": "PASS",
+      "points_awarded": 6.0,
+      "points_possible": 6.0,
+      "evidence": "First plan item '09:07-09:10: Choose B ... get the prepared diff to Priya immediately'.",
+      "reason": "Release choice/diff is the immediate first action."
+    },
+    "expansion_before_11": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'send Maya's September expansion reconciliation by 10:30-10:45, ahead of the 11:00 deadline'.",
+      "reason": "Plans delivery before the hard 11:00 deadline."
+    },
+    "globex_priority": {
+      "result": "PARTIAL",
+      "points_awarded": 2.5,
+      "points_possible": 5.0,
+      "evidence": "'Globex - highest: renewal in 18 days, €84k ARR, €12k expansion pending procurement, 3 open tickets including high SSO'; usage -18% / admin logins -61% not cited anywhere.",
+      "reason": "Elevates Globex correctly but omits the usage/admin signal named in the PASS bar; between labels, so the lower one."
+    },
+    "avoid_acme_false_positive": {
+      "result": "PASS",
+      "points_awarded": 4.0,
+      "points_possible": 4.0,
+      "evidence": "'Usage -45% and admin logins -42% are expected from approved annual batch-processing shift; do not escalate usage as a problem'.",
+      "reason": "Does not treat the Acme usage drop as churn evidence."
+    },
+    "expansion_fully_reconciled": {
+      "result": "PASS",
+      "points_awarded": 6.0,
+      "points_possible": 6.0,
+      "evidence": "'Wayne €18k + Globex €12k explain €30k. Remaining €24k is Soylent €10k + Wonka €14k'.",
+      "reason": "Explicitly closes the €54k gap."
+    },
+    "causal_boundary": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "'Contract explains neither Soylent nor Wonka reduction'; 'separate established facts from hypotheses; do not invent Soylent/Wonka causes'.",
+      "reason": "Separates arithmetic from unsupported causes."
+    },
+    "customer_signal_integration": {
+      "result": "PASS",
+      "points_awarded": 6.0,
+      "points_possible": 6.0,
+      "evidence": "Globex (renewal + procurement + tickets), Acme explained by contract, Soylent (2 tickets, 'support symptoms are not proof of cause') and Wonka (no tickets).",
+      "reason": "Crosses accounts, contracts and support to distinguish Globex, Acme and Soylent/Wonka."
+    },
+    "orion_missing_evidence": {
+      "result": "PASS",
+      "points_awarded": 5.0,
+      "points_possible": 5.0,
+      "evidence": "'canonical org ID (org_71A vs org_17A) and live SCIM flag for the correct org'; 'Do not send Orion status'.",
+      "reason": "Refuses ON/OFF and names the specific missing evidence."
+    },
+    "conditional_launch_timing": {
+      "result": "PASS",
+      "points_awarded": 3.0,
+      "points_possible": 3.0,
+      "evidence": "'If production is not healthy or verification fails, do not open rollout'; stale 'confirm launch at 10:30' rejected; no external time promised.",
+      "reason": "Rollout estimate is conditional and not promised externally."
+    },
+    "no_unsupported_causality": {
+      "result": "PASS",
+      "points_awarded": 2.0,
+      "points_possible": 2.0,
+      "evidence": "'do not assume tickets caused procurement delay'; 'support and usage data do not establish cause'.",
+      "reason": "No invented production, Orion or customer causes."
+    }
+  },
+  "false_actions": {},
+  "penalties": {
+    "items": [],
+    "dismissed": [],
+    "raw_total": 0.0,
+    "total": 0.0,
+    "capped": false
+  },
+  "deterministic_checks": [
+    {
+      "id": "contoso_11_00",
+      "matched": false,
+      "detail": "'11:00' appears near a mention of Contoso"
+    },
+    {
+      "id": "churn_3_1_to_4_4",
+      "matched": false,
+      "detail": "both churn figures 3.1 and 4.4 are present"
+    },
+    {
+      "id": "umbrella_metrics_present",
+      "matched": false,
+      "detail": "at least two of 163 / 1821 / 41 appear near a mention of Umbrella"
+    },
+    {
+      "id": "umbrella_named",
+      "matched": false,
+      "detail": "Umbrella is named in the response"
+    },
+    {
+      "id": "wednesday_present",
+      "matched": true,
+      "detail": "'Wednesday' appears in the response"
+    },
+    {
+      "id": "julia_present",
+      "matched": false,
+      "detail": "'Julia' appears in the response"
+    },
+    {
+      "id": "pied_piper_and_hooli",
+      "matched": false,
+      "detail": "both known cancellations are named"
+    }
+  ],
+  "disagreements": [],
+  "base_score": 93.5,
+  "final_score": 93.5
+}

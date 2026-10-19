@@ -1,16 +1,16 @@
 # Benchmarking a new model against the frozen suite
 
-**Applies to:** MondayBench suite v1.12 — monday-001 … monday-005, 500 rubric
-points, 13 incumbent models, current board Overall v3.5.
+**Applies to:** MondayBench suite v1.13 — monday-001 … monday-005, 500 rubric
+points, 15 incumbent models, current board Overall v3.6.
 
-The suite is closed. This is how a fourteenth model gets a Monday Score **without
+The suite is closed. This is how a sixteenth model gets a Monday Score **without
 regenerating or rejudging a single incumbent run.**
 
 **Publishing a model is a suite release.** `runs`, `verdicts`, `evaluations` and
 `leaderboards` are `append_only` in the release manifest, and a scenario board is
 a ranking — it cannot gain a row without changing. So the new evidence goes into
-suite **v1.13**, the board becomes Overall **v3.6**, and every earlier release and
-board stays byte-frozen. Below, `<N>` is the next suite version (1.13 today).
+suite **v1.14**, the board becomes Overall **v3.7**, and every earlier release and
+board stays byte-frozen. Below, `<N>` is the next suite version (1.14 today).
 
 ---
 
@@ -60,7 +60,7 @@ per platform.
 already dirty you will not be able to tell your drift from someone else's.
 
 ```bash
-uv run mondaybench verify-release --version 1.12 --strict
+uv run mondaybench verify-release --version 1.13 --strict
 ```
 
 **3. Look at where you stand.** This is safe to run at any point and generates
@@ -81,6 +81,12 @@ uv run mondaybench run --scenario monday-001 --model <slug> --runs 3
 ```
 
 Do **not** pass `--all-models`. Do **not** pass `--overwrite`.
+
+> **Check the endpoint's cache first.** Send one prompt twice; if the second
+> comes back byte-identical in about a second, the endpoint is caching despite
+> `caching: false` (NaN did on 2026-10-19). Set `generation.seed_per_run: true`
+> in models.yaml so each run sends `seed: <run_number>`, and say so in the
+> release note: a seeded battery is a different serving configuration.
 
 > **Known sharp edge.** The plain `--runs N` branch schedules run numbers `1..N`
 > and ignores archived run numbers. If this model has archived runs for the
@@ -150,7 +156,7 @@ not a revision. Never rejudge incumbents to "match" a challenger.
 ```bash
 uv run mondaybench leaderboard --scenario monday-001 --official \
     --evaluator evaluator-opus5-v0.1 \
-    --models <the thirteen incumbent slugs>,<slug> --suite-version <N>
+    --models <the fifteen incumbent slugs>,<slug> --suite-version <N>
 ```
 
 Pass `--evaluator` explicitly for monday-001: `evaluator-opus5-v0.1` declares no
@@ -163,13 +169,13 @@ so incumbent scores must come out identical — step 6 checks that they did.
 
 ### Step 5 — publish an Overall revision
 
-Overall v3.5 is **byte-frozen forever**. A new model is published as the next
+Overall v3.6 is **byte-frozen forever**. A new model is published as the next
 *revision* of the same scenario set, pinned to the new suite:
 
 ```
 leaderboard/overall/
-  overall-v3.5.json   13 models   frozen, still the citable artifact
-  overall-v3.6.json   14 models   same 5 scenarios, same arithmetic, suite <N>
+  overall-v3.6.json   15 models   frozen, still the citable artifact
+  overall-v3.7.json   16 models   same 5 scenarios, same arithmetic, suite <N>
 ```
 
 Get the block to append to `overall-releases.yaml`:
@@ -195,7 +201,7 @@ Four checks. Run all four.
 
 ```bash
 # 1. Frozen content is untouched; evidence grew but was not rewritten.
-uv run mondaybench verify-release --version 1.12
+uv run mondaybench verify-release --version 1.13
 #    scenarios / evaluators / taxonomy -> must be "identical"
 #    runs / verdicts / evaluations / leaderboards -> "N added" is expected
 
