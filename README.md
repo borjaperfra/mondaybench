@@ -9,8 +9,8 @@ One question:
 ## Scenarios
 
 **Five scenarios are published and official**, frozen together since suite
-v1.0. The current release is **suite v1.13**
-([`releases/v1.13/SUITE-FROZEN.yaml`](releases/v1.13/SUITE-FROZEN.yaml)):
+v1.0. The current release is **suite v1.14**
+([`releases/v1.14/SUITE-FROZEN.yaml`](releases/v1.14/SUITE-FROZEN.yaml)):
 fifteen models, 225 official runs, 5,310 criterion verdicts. Each scenario is
 frozen independently and scored against its own rubric.
 
@@ -35,7 +35,7 @@ unversioned `leaderboard/<scenario>/` files are the v1.0 boards, all kept byte-f
 A model's **Monday Score** is the arithmetic mean of its official score on every
 scenario in a release. Equal weight per scenario; nothing else folded in.
 
-**Current board: [Overall v3.6](leaderboard/overall/overall-v3.6.md)**, suite v1.13.
+**Current board: [Overall v3.6](leaderboard/overall/overall-v3.6.md)**, suites v1.13–v1.14.
 
 | # | Model | Monday Score | #001 | #002 | #003 | #004 | #005 |
 |---:|---|---:|---:|---:|---:|---:|---:|
@@ -90,7 +90,7 @@ row's route and judge is stated in its `models.yaml` entry.
 | [v3](leaderboard/overall/overall-v3.md) – [v3.3](leaderboard/overall/overall-v3.3.md) | 001–005 | see each board | frozen, suites v1.1–v1.4 |
 | [v3.4](leaderboard/overall/overall-v3.4.md) | 001–005 | GPT-6 Astra — 98.80 | frozen, suites v1.5–v1.9 |
 | [v3.5](leaderboard/overall/overall-v3.5.md) | 001–005 | GPT-6 Astra — 98.80 | frozen, suites v1.10–v1.12 |
-| **[v3.6](leaderboard/overall/overall-v3.6.md)** | **001–005** | **GPT-6 Astra — 98.80** | **current, suite v1.13** |
+| **[v3.6](leaderboard/overall/overall-v3.6.md)** | **001–005** | **GPT-6 Astra — 98.80** | **current, suites v1.13–v1.14** |
 
 Each release names its scenarios explicitly and pins their prompt hashes, so
 adding a scenario later cannot move a number already published. v0, v1, v2 and
@@ -377,7 +377,7 @@ the configuration expected it.
 
 ## Limitations
 
-Suite v1.13, five scenarios, fifteen models. The full list is in
+Suite v1.14, five scenarios, fifteen models. The full list is in
 [`docs/methodology.md`](docs/methodology.md#limitations); the ones that matter
 most when reading the board:
 

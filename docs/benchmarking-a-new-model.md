@@ -1,6 +1,6 @@
 # Benchmarking a new model against the frozen suite
 
-**Applies to:** MondayBench suite v1.13 — monday-001 … monday-005, 500 rubric
+**Applies to:** MondayBench suite v1.14 — monday-001 … monday-005, 500 rubric
 points, 15 incumbent models, current board Overall v3.6.
 
 The suite is closed. This is how a sixteenth model gets a Monday Score **without
@@ -9,8 +9,8 @@ regenerating or rejudging a single incumbent run.**
 **Publishing a model is a suite release.** `runs`, `verdicts`, `evaluations` and
 `leaderboards` are `append_only` in the release manifest, and a scenario board is
 a ranking — it cannot gain a row without changing. So the new evidence goes into
-suite **v1.14**, the board becomes Overall **v3.7**, and every earlier release and
-board stays byte-frozen. Below, `<N>` is the next suite version (1.14 today).
+suite **v1.15**, the board becomes Overall **v3.7**, and every earlier release and
+board stays byte-frozen. Below, `<N>` is the next suite version (1.15 today).
 
 ---
 
@@ -60,7 +60,7 @@ per platform.
 already dirty you will not be able to tell your drift from someone else's.
 
 ```bash
-uv run mondaybench verify-release --version 1.13 --strict
+uv run mondaybench verify-release --version 1.14 --strict
 ```
 
 **3. Look at where you stand.** This is safe to run at any point and generates
@@ -201,7 +201,7 @@ Four checks. Run all four.
 
 ```bash
 # 1. Frozen content is untouched; evidence grew but was not rewritten.
-uv run mondaybench verify-release --version 1.13
+uv run mondaybench verify-release --version 1.14
 #    scenarios / evaluators / taxonomy -> must be "identical"
 #    runs / verdicts / evaluations / leaderboards -> "N added" is expected
 

@@ -1,0 +1,254 @@
+# MondayBench suite release manifest.
+#
+# Every hash here is checked by `mondaybench verify-release`. A published suite
+# is immutable: if a file under one of these groups changes, is removed, or is
+# added, verification fails. That is the point.
+#
+# `content_digest` is sha256 over "<path>\0<file sha256>\n" for every file in
+# the group, sorted by path. The per-file hashes behind it are in the companion
+# `.files.json`, which is what tells you WHICH file moved.
+#
+# `suite_digest` is one hash over every group digest: the whole release in 64
+# characters.
+#
+# NOT COVERED: `archive/` (superseded evidence, kept for re-examination, and no
+# part of it contributed to a published score) and the test suite.
+#
+# The `harness` group covers the code. A change there does not invalidate a
+# recorded score - verdicts are recorded, not recomputed - but it does
+# invalidate the claim that this tree reproduces them.
+#
+# To change a released suite, publish a new version. Do not edit this manifest
+# to make a change pass.
+suite_version: '1.14'
+released: '2026-10-19'
+status: released
+suite_digest: f92a845f4ba0bac7ad97ea693d140618e63038ab6de31be771bad54ed08a36b9
+file_count: 2342
+scenarios:
+- id: monday-001
+  name: Back to Work
+  prompt_sha256: ed4d7beb1d7d1029c36eb8533e449027e0dc1a1047f8a38951a91781a0a5e398
+  rubric_file: rubric-0.2.yaml
+  rubric_version: '0.2'
+  criteria: 19
+  official_runs: 3
+  frozen_manifest_sha256: 1e5e58d730579d71dd64c0ad577912982d64ce169aac0dea8a8984a983244dc1
+- id: monday-002
+  name: Moving Targets
+  prompt_sha256: 740e627cbc7413c321ede0d54000504de54821d34ff4677f82731b89600423a8
+  rubric_file: rubric.yaml
+  rubric_version: '0.2'
+  criteria: 20
+  official_runs: 3
+  frozen_manifest_sha256: 2f4496d2f01036dcd9ca28e2d6c44076b5142b15bc8553d9d61d2741c96a12e0
+- id: monday-003
+  name: Blockers
+  prompt_sha256: aaf788f309d955d2b427c86fe7d95d2bbf88575fde7306adcfd74b0ec4a4103f
+  rubric_file: rubric.yaml
+  rubric_version: '0.3'
+  criteria: 21
+  official_runs: 3
+  frozen_manifest_sha256: 9a5e11fb430bb0a2615149afd476544d727524f82b8614fb147a46924cf4791c
+- id: monday-004
+  name: Numbers Don't Lie
+  prompt_sha256: 3a0cbb569ca4f711b8907177af9204cec267d26f35f732829df56b03ed23ef99
+  rubric_file: rubric-0.3.yaml
+  rubric_version: '0.3'
+  criteria: 27
+  official_runs: 3
+  frozen_manifest_sha256: 99cc67ae10d3aabb5c26baee82e6c444791ff4165fc1a7f1ad9b8d23885d69ed
+- id: monday-005
+  name: Read the Room
+  prompt_sha256: 532cd464a9b75045f808886c44e667237d6fd1b947826510643b9f8bcc30059a
+  rubric_file: rubric-0.4.yaml
+  rubric_version: '0.4'
+  criteria: 31
+  official_runs: 3
+  frozen_manifest_sha256: 3c60309574942840f84b411bd75ca5a18bac6d3de444278adf0f52565808f904
+overall_releases:
+- version: 0
+  status: released
+  scenarios:
+  - monday-001
+  - monday-002
+  - monday-003
+  aggregation: arithmetic_mean
+  artifact_sha256: fcf280d5ad03a030000173ed45fa26b288e968538122a7d5fcabcf486b72d32f
+- version: 1
+  status: released
+  scenarios:
+  - monday-001
+  - monday-002
+  - monday-003
+  - monday-004
+  aggregation: arithmetic_mean
+  artifact_sha256: 778ba5edf8521c105f06dc5744fcf649bd54d8b1b692bddcd4a7fc529f4324df
+- version: 2
+  status: released
+  scenarios:
+  - monday-001
+  - monday-002
+  - monday-003
+  - monday-004
+  - monday-005
+  aggregation: arithmetic_mean
+  artifact_sha256: bc8529a30803a10e4d252009e69adb0d563a323e5f0790f41b3d1b6aaf98132f
+- version: 3
+  status: released
+  scenarios:
+  - monday-001
+  - monday-002
+  - monday-003
+  - monday-004
+  - monday-005
+  aggregation: arithmetic_mean
+  artifact_sha256: b826a861623bdcfe33e72b6dd4a8049f8fc4ef05a77b4bada520189a901b2e7a
+- version: '3.1'
+  status: released
+  scenarios:
+  - monday-001
+  - monday-002
+  - monday-003
+  - monday-004
+  - monday-005
+  aggregation: arithmetic_mean
+  artifact_sha256: 1fe83be54ae12d551e8934b574d4500044489c3b37c7ac4c1cc8176ef11d414a
+- version: '3.2'
+  status: released
+  scenarios:
+  - monday-001
+  - monday-002
+  - monday-003
+  - monday-004
+  - monday-005
+  aggregation: arithmetic_mean
+  artifact_sha256: 9b9fe3e316966119c547e0de4f7223a6537325f387a3e7ecd3323604cd92120e
+- version: '3.3'
+  status: released
+  scenarios:
+  - monday-001
+  - monday-002
+  - monday-003
+  - monday-004
+  - monday-005
+  aggregation: arithmetic_mean
+  artifact_sha256: 97cf9222fe547d1fc949ed6ce3beebfbe55da492b7c03f0acc222b7f18cbe117
+- version: '3.4'
+  status: released
+  scenarios:
+  - monday-001
+  - monday-002
+  - monday-003
+  - monday-004
+  - monday-005
+  aggregation: arithmetic_mean
+  artifact_sha256: 8b226dc716667b6b9b8f0c094b100e01d816481eda3688f71cf79ded881325f5
+- version: '3.5'
+  status: released
+  scenarios:
+  - monday-001
+  - monday-002
+  - monday-003
+  - monday-004
+  - monday-005
+  aggregation: arithmetic_mean
+  artifact_sha256: 3a2878a4bac46e8771e5ba25fb4f5df668ed0c22d267ef2da72a4dd9fb789ede
+- version: '3.6'
+  status: released
+  scenarios:
+  - monday-001
+  - monday-002
+  - monday-003
+  - monday-004
+  - monday-005
+  aggregation: arithmetic_mean
+  artifact_sha256: a01d0aa0f4c51dc91dcff3313b516871a281407f495eb2b65ffe2d557f5a3364
+groups:
+  scenarios:
+    file_count: 75
+    content_digest: 027612dcac93625102ec10fea04ab23795d7ce61b40de42a704aa0def88d42d0
+    policy: immutable
+    patterns:
+    - scenarios/**/*
+  evaluators:
+    file_count: 23
+    content_digest: 5a2c32f52db81d54318458ec052e47d162f59b7f9bd0961d006382a1a6557208
+    policy: immutable
+    patterns:
+    - evaluators/**/*
+  runs:
+    file_count: 322
+    content_digest: 57f40a8ce864a96dad5d6dea88b8dd1d62cf889d43448c4705917f5a2ffdfe59
+    policy: append_only
+    patterns:
+    - runs/**/*
+  verdicts:
+    file_count: 81
+    content_digest: 8dd7ddcebcc02cdb0bee6ba01e440d6204dbbbd8e90d0d730dcbc6f14548d9f6
+    policy: append_only
+    patterns:
+    - verdicts/**/*
+  evaluations:
+    file_count: 1374
+    content_digest: 8de20ebe9dd15659bf22a5523a13ded7521e4b0f1064a1a9214b1aba7b1988a7
+    policy: append_only
+    patterns:
+    - evaluations/**/*
+  leaderboards:
+    file_count: 161
+    content_digest: dc8b6008239221df5668f97556064f78bb839912711ad5b0c16ac06ff8f0997f
+    policy: append_only
+    patterns:
+    - leaderboard/**/*
+  config:
+    file_count: 6
+    content_digest: b3703679c1dc192f6365df6ae36b0c2cc7a023b5bfb981ce854dc1516b11ced2
+    policy: mutable
+    patterns:
+    - models.yaml
+    - overall-releases.yaml
+    - pyproject.toml
+    - uv.lock
+    - .env.example
+    - LICENSE
+  taxonomy:
+    file_count: 3
+    content_digest: b3e7d63a96d00119392a74cb237c70a2c1eadbf0c0a2ec8749c96edfff8db5cd
+    policy: immutable
+    patterns:
+    - taxonomy/*.yaml
+  analysis:
+    file_count: 41
+    content_digest: 3298523800dea05c0148b4d10bb083952e81b050ef1b1c1fa2e78c1d8de000eb
+    policy: append_only
+    patterns:
+    - analysis/**/*
+  pricing:
+    file_count: 38
+    content_digest: 396b070356ffe43a589a2b632df9b9e23f46ce7f514e1aca145e77212217f316
+    policy: mutable
+    patterns:
+    - analysis/cost-value/**/*
+  docs:
+    file_count: 141
+    content_digest: 212e21534bfc8ad1ce41f0784255e5dcbeb0186434683bee20fc71103d753f67
+    policy: mutable
+    patterns:
+    - docs/**/*
+    - audits/**/*
+    - '*.md'
+  harness:
+    file_count: 33
+    content_digest: c3b0ac9fc3dffc9c6c2cb2c6ea6d12e1653047c259546dac3e27a2572d640b83
+    policy: mutable
+    patterns:
+    - mondaybench/**/*.py
+    - tools/**/*.py
+  tests:
+    file_count: 44
+    content_digest: 5d5d9e58ae796619026b3adddaba690bf7360cbabf35f6d9de66f9651d6a5cc0
+    policy: mutable
+    patterns:
+    - tests/**/*.py
+    - tests/**/*.json
